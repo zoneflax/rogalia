@@ -183,7 +183,7 @@ function Chat() {
     };
 
     this.format = function(body) {
-        var matches = body.match(/\${[^}]+}|http:\/\/\S+|#\S+/g);
+        var matches = body.match(/\${[^}]+}|https?:\/\/\S+|#\S+/g);
         var content = document.createElement("span");
         content.className = "body";
         if (matches) {
