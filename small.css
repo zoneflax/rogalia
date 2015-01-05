@@ -1,0 +1,7 @@
+#hotbar, #fight-panel, #minimap-container {
+    position: fixed;
+}
+#minimap-container {
+    left: 952px;
+    right: auto;
+}

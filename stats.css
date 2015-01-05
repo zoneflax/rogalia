@@ -1,0 +1,21 @@
+body {
+    background: url("assets/bg/pattern.png") repeat;
+    font-family: Play, monospace;
+    color: #fff;
+}
+table {
+    margin: auto;
+    border-collapse: collapse;
+}
+td, th {
+    padding: 3px;
+    border: 1px solid #ccc;
+    background: #333;
+}
+td {
+    text-align: left;
+}
+
+h1, h2, h3 {
+    text-align: center;
+}
