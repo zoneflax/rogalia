@@ -237,7 +237,7 @@ function Help() {
         {
             text: [
                 "Осталось добыть нужные ингредиенты и построить респаун",
-                "Добывать камни можно при помощи молота: найдите ${stone-block} и ${rbm} ${Chip}",
+                "Добывать камни можно при помощи молота: найдите ${stone-block} и ${rmb} ${Chip}",
             ],
             check: function() {
                 return (help.lastAction == "build-respawn");

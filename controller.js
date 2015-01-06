@@ -716,6 +716,9 @@ Controller.prototype = {
             return false;
         this.keys[c] = true;
 
+        if (this.modifier.ctrl || this.modifier.shift || this.modifier.alt)
+            return false;
+
         var hotkey = this.hotkeys[e.keyCode] || this.hotkeys[c];
         if (hotkey) {
             hotkey.callback.call(this, e);
