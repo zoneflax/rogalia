@@ -521,6 +521,7 @@ Controller.prototype = {
     resetAction: function(data) {
         if (!data.Ack)
             return;
+        game.network.defaultCallback = null;
         this.clearActionQueue();
         this.hideUnnecessaryPanels();
     },

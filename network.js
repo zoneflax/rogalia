@@ -9,6 +9,9 @@ function Network() {
     this.data = null;
     this.socket = null;
 
+    this.callback = null;
+    this.defaultCallback = null;
+
     this.run = function() {
         var proto = "ws://";
         var port = 49000;
@@ -101,7 +104,7 @@ function Network() {
         }
 
         if (data.Ack || data.Done || data.Warning) {
-            var callback = (this.callback) ? this.callback(data) : null;
+            var callback = (this.callback) ? this.callback(data) : this.defaultCallback;
             this.callback = (callback instanceof Function) ? callback : null;
         }
 
@@ -114,7 +117,7 @@ function Network() {
     }
 
     var lastSend = 0;
-    this.send = function(command, args, callback) {
+    this.send = function(command, args, callback, setAsDefault) {
         var now = Date.now();
         if (now - lastSend < 20)
             return;
@@ -126,6 +129,8 @@ function Network() {
 
         if(callback) {
             this.callback = callback;
+            if (setAsDefault)
+                this.defaultCallback = callback;
         }
     };
 }

@@ -196,9 +196,9 @@ Container.prototype = {
 
         return null;
     },
-    dwim: function(item) {
-        var entity = Entity.get(item.id);
+    dwimCraft: function(item) {
         if (game.controller.craft.panel.visible) {
+            var entity = Entity.get(item.id);
             var slots = game.controller.craft.slots;
             for(var i = 0, l = slots.length; i < l; i++) {
                 if (!slots[i].used && entity.is(slots[i].group)) {
@@ -207,6 +207,9 @@ Container.prototype = {
                 }
             }
         }
+    },
+    dwim: function(item) {
+        this.dwimCraft(item);
         if (Panel.top.name == "craft")
             return;
 
@@ -218,6 +221,7 @@ Container.prototype = {
         if (Panel.top.name == "blank-panel")
             return;
 
+        var entity = Entity.get(item.id);
         var top = Container.getTopExcept(entity.Container);
         if (top) {
             Container.moveItem(entity.Id, game.containers[entity.Container], top);

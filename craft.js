@@ -254,7 +254,7 @@ Craft.prototype = {
         for (var i in game.containers) {
             var container = game.containers[i];
             container.visible && container.items.forEach(function(item) {
-                item  && container.dwim(item);
+                item && container.dwimCraft(item);
             })
         }
     },
@@ -276,12 +276,12 @@ Craft.prototype = {
             if (!data.Done)
                 return done;
             this.cleanUp();
-            this.renderRecipe()
+            this.renderRecipe();
             if (craftAll === true)
                 setTimeout(this.craftAll.bind(this), 100);
         }.bind(this);
 
-        game.network.send("craft", {type: this.type, ingredients: ingredients}, done);
+        game.network.send("craft", {type: this.type, ingredients: ingredients}, done, craftAll);
         return true;
     },
     cancel:  function(from, to) {
