@@ -260,6 +260,7 @@ Controller.prototype = {
                 }
             },
             32: { //space
+                allowedModifiers: ["shift"],
                 button: "action",
                 callback: function() {
                     game.player.defaultAction()
@@ -513,13 +514,24 @@ Controller.prototype = {
             return process;
         var action = game.controller.actionQueue.shift();
         if (!action)
-            return;
+            return null;
         game.network.send(action.command, action.args);
         return process;
     },
+    resetAction: function(data) {
+        if (!data.Ack)
+            return;
+        this.clearActionQueue();
+        this.hideUnnecessaryPanels();
+    },
     clearActionQueue: function(data) {
-        if (data.Ack)
-            game.controller.actionQueue = [];
+        game.controller.actionQueue = [];
+    },
+    hideUnnecessaryPanels: function() {
+        ["fishing"].forEach(function(name) {
+            var panel = game.panels[name];
+            panel && panel.hide();
+        });
     },
     clearCursors: function() {
         this.world.scroll = false;
@@ -716,11 +728,15 @@ Controller.prototype = {
             return false;
         this.keys[c] = true;
 
-        if (this.modifier.ctrl || this.modifier.shift || this.modifier.alt)
-            return false;
 
         var hotkey = this.hotkeys[e.keyCode] || this.hotkeys[c];
         if (hotkey) {
+            for (var mod in this.modifier) {
+                if (!this.modifier[mod])
+                    continue;
+                if (!hotkey.allowedModifiers || hotkey.allowedModifiers.indexOf(mod) == -1)
+                    return false;
+            }
             hotkey.callback.call(this, e);
         }
         return false;

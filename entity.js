@@ -390,13 +390,15 @@ Entity.prototype = {
         case "furnace":
         case "oven":
             this._canUse = true;
+        case "fishing-rod":
         case "table":
         case "bag":
         case "drying-frame":
         case "garbage":
         case "container":
             this.Actions.push("open");
-            this.defaultActionSuccess = this.open.bind(this);
+            if (this.MoveType != Entity.MT_PORTABLE)
+                this.defaultActionSuccess = this.open.bind(this);
             if (this.Type == "altar")
                 this.Actions.push("bugreport");
             break;

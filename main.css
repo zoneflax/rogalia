@@ -208,6 +208,7 @@ button > img {
 }
 .panel .contents {
     overflow: auto;
+    min-width: 150px;
 }
 .panel .close{
     position: absolute;
@@ -1096,4 +1097,18 @@ big {
 }
 #news p {
     margin: 5px 0 0;
+}
+
+#fishing  button {
+    display: block;
+    margin-bottom: 5px;
+    width: 100%;
+}
+#fishing button:last-child {
+    margin-bottom: 0;
+}
+
+#fishing .rating {
+    text-align: center;
+    padding: 7px;
 }

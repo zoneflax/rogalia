@@ -487,7 +487,7 @@ Character.prototype = {
         if (x == this.Dst.X && y == this.Dst.Y)
             return;
 
-        game.network.send("set-dst", {x: x, y: y}, game.controller.clearActionQueue);
+        game.network.send("set-dst", {x: x, y: y}, game.player.resetAction);
         this.dst.radius = 9;
         this.dst.time = Date.now();
         this._setDst(x, y);
@@ -502,6 +502,9 @@ Character.prototype = {
 
         this.Dx = len_x / len;
         this.Dy = len_y / len;
+    },
+    resetAction: function(data) {
+        game.controller.resetAction(data);
     },
     getDrawPoint: function() {
         var p = this.screen();
@@ -853,27 +856,62 @@ Character.prototype = {
             }.bind(this);
             break;
         default:
+            var action = "dig";
+            var callback = null;
             switch (tool.Group) {
-            case "pickaxe":
+            case "fishing-rod":
+                action = "fish";
+                callback = this.fish.bind(this);
             case "shovel":
+            case "pickaxe":
                 button.appendChild(tool.icon());
                 button.onclick = function() {
-                    var dig = new Entity(0, tool.Type);
-                    dig.initSprite();
-                    dig.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
+                    var cursor = new Entity(0, tool.Type);
+                    cursor.initSprite();
+                    cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
                     var icon = tool._icon || tool.icon();
-                    dig.Width = CELL_SIZE;
-                    dig.Height = CELL_SIZE;
-                    dig.Sprite.Dx = 6;
-                    dig.Sprite.Dy = 56;
-                    dig.sprite.image = icon;
-                    dig.sprite.width = icon.width;
-                    dig.sprite.height = icon.height;
-                    game.controller.creatingCursor(dig, "dig");
+                    cursor.Width = CELL_SIZE;
+                    cursor.Height = CELL_SIZE;
+                    cursor.Sprite.Dx = 6;
+                    cursor.Sprite.Dy = 56;
+                    cursor.sprite.image = icon;
+                    cursor.sprite.width = icon.width;
+                    cursor.sprite.height = icon.height;
+                    game.controller.creatingCursor(cursor, action, callback);
                 }
                 break;
             }
         }
+    },
+    fish: function fish(data) {
+        var repeat = fish.bind(this);
+        var panel = game.panels["fishing"];
+        if (data.Done || data.Ack != "fishing") {
+            panel && panel.hide();
+            return repeat;
+        }
+
+        if (!panel) {
+            var rating = document.createElement("div");
+            rating.className = "rating";
+            var buttons = document.createElement("div");
+            var actions = ["Okay", "grlmrg", "wut?", "ZAP", "shoop-da-woop"];
+            actions.forEach(function(action, index) {
+                var button = document.createElement("button");
+                button.textContent = T(action);
+                button.move = index;
+                button.onclick = function() {
+                    panel.hide();
+                    game.network.send("fishing-move", {move: this.move}, repeat);
+                }
+                buttons.appendChild(button);
+            });
+            panel = new Panel("fishing", "Fishing", [rating, buttons]);
+            panel.rating = rating;
+        }
+        panel.rating.textContent = T(data.Rating)
+        panel.show();
+        return repeat;
     },
     updateEffect: function(name, effect) {
         var id = "effect-" + name;
