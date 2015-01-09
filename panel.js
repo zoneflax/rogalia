@@ -1,4 +1,4 @@
-function Panel(name, title, elements, listener) {
+function Panel(name, title, elements, listener, hooks) {
     if (name in game.panels)
         game.panels[name].close();
 
@@ -40,9 +40,10 @@ function Panel(name, title, elements, listener) {
 
     this.toTop();
 
+    hooks = hooks || {}
     this.hooks = {
-        show: null,
-        hide: null,
+        show: hooks.show,
+        hide: hooks.show,
     };
 
     this.insert = function(list) {
