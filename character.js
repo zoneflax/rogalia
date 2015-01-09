@@ -895,7 +895,7 @@ Character.prototype = {
             var rating = document.createElement("div");
             rating.className = "rating";
             var buttons = document.createElement("div");
-            var actions = ["Okay", "grlmrg", "wut?", "ZAP", "shoop-da-woop"];
+            var actions = ["IMMA-FIRIN", "MAH-LAZOR" ,"SHOOP-DA-WOOP", "yoro", "grlmrgl", "zap"];
             actions.forEach(function(action, index) {
                 var button = document.createElement("button");
                 button.textContent = T(action);
