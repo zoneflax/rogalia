@@ -1,11 +1,10 @@
 function Controller(game) {
-    //controll bar for creating objects
+    var controller = this;
     this.ready = false;
     this.adminBar = null;
     this.terraBar = null;
     this.stats = null;
     this.containers = {};
-    var controller = this;
     this.callback = [null, null, null];
     this.LEFT = 0;
     this.MIDDLE = 1;
@@ -22,6 +21,8 @@ function Controller(game) {
     };
     this.keys = {};
     this.currentTarget = null;
+    this._hideStatic = false;
+
     this.iface = {
         x: 0,
         y: 0,
@@ -221,6 +222,13 @@ Controller.prototype = {
                 callback: function() {
                     if (this.lastCreatingType)
                         this.creatingCursor(this.lastCreatingType, this.lastCreatingCommand);
+                }
+            },
+            Z: {
+                allowedModifiers: ["shift"],
+                callback: function() {
+                    if (this.modifier.shift)
+                        this._hideStatic = !this._hideStatic;
                 }
             },
             B: {
@@ -786,6 +794,9 @@ Controller.prototype = {
             clearTimeout(anouncement.timeout);
             anouncement.timeout = null;
         }, 5000);
+    },
+    hideStatic: function() {
+        return this._hideStatic || this.keys.Z;
     },
     reset: function() {
         if (!confirm("Reset interface (page will be reloaded) ?"))

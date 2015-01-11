@@ -36,7 +36,7 @@ Loader.prototype = {
             this.loaded();
         }.bind(this);
 
-        image.src = this.assetsDir + name + "?v" + game.build;
+        image.src = this.assetsDir + name;
 
         return image;
     },

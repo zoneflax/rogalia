@@ -1,6 +1,5 @@
 function Game() {
     window.game = this;
-    this.build = "0.10"; //used for loading assets in loader.js
 
     this.screen = {
         width: 1024,

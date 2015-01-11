@@ -455,7 +455,7 @@ Entity.prototype = {
         }
         if ((this.MoveType == Entity.MT_STATIC ||
             this.CanCollide) &&
-            game.controller.keys.Z) {
+            game.controller.hideStatic()) {
             this.drawBox();
         } else if (game.player.inBuilding &&
                    (this.Y + this.X > game.player.Y + game.player.X) &&
@@ -558,7 +558,7 @@ Entity.prototype = {
             return false;
         if (!this.sprite.outline)
             return false;
-        if (this.MoveType == Entity.MT_STATIC && game.controller.modifier.ctrl && game.controller.keys.Z)
+        if (this.MoveType == Entity.MT_STATIC && game.controller.hideStatic())
             return false;
 
 
