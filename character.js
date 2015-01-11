@@ -627,9 +627,15 @@ Character.prototype = {
             }
         }
 
+
         if (this.Fame == 10000) {
             name = "Lord " + name
         }
+        if (this.Citizenship.State) {
+            name += " {" + this.Citizenship.State[0] + "}";
+        }
+
+
 
         var p = this.screen();
         var y = p.y - this.sprite.nameOffset;
