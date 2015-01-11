@@ -796,7 +796,10 @@ Controller.prototype = {
         }, 5000);
     },
     hideStatic: function() {
-        return this._hideStatic || this.keys.Z;
+        if (this._hideStatic)
+            return !this.keys.Z;
+        else
+            return this.keys.Z;
     },
     reset: function() {
         if (!confirm("Reset interface (page will be reloaded) ?"))

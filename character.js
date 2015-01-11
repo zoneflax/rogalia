@@ -422,11 +422,34 @@ Character.prototype = {
             }
             break;
         case "Charles":
+            var id = this.Id;
             actions = {
+                "Set citizenship": function() {
+                    var set = function(name) {
+                        return function() {
+                            game.network.send("set-citizenship", {Id: id, Name: name});
+                        }
+                    }
+                    var citizenships = {
+                        getActions: function() {
+                            return {
+                                "I choose Empire": set("Empire"),
+                                "I choose Confederation": set("Confederation"),
+                                "I want to be free": set(""),
+                            }
+                        }
+                    }
+                    game.menu.show(citizenships, null, null, true);
+                },
+                "Quest": function() {
+                    if (confirm("I'll take 10 food from your bag and give you status point as a reward. Deal?")) {
+                        game.network.send("quest", {Id: id})
+                    }
+                },
                 "Talk": function() {
                     var talks = {
                         getActions: function() {
-                            var actions = {}
+                            var actions = {};
                             for (var i in game.talks.vendor) {
                                 actions[i] = function() {
                                     game.chat.addMessage({From: name, Body: this, IsNpc: true});
@@ -438,7 +461,7 @@ Character.prototype = {
                     }
                     game.menu.show(talks, null, null, true);
                 }
-            }
+            };
             break;
         }
         return actions;
