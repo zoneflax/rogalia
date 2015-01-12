@@ -8,13 +8,14 @@ function Craft() {
     this.current = {};
     this.requirements = null;
 
+    this.searchField = this.createSearchField();
     this.list = this.createList();
     this.recipeDetails = this.createRecipeDetails();
 
     this.panel = new Panel(
         "craft",
         "Craft",
-        [this.list, this.recipeDetails],
+        [this.searchField, this.list, this.recipeDetails],
         this.panelInit.bind(this)
     );
     this.panel.element.style.minWidth = "500px";
@@ -28,6 +29,8 @@ Craft.prototype = {
     update: function() {
         if (!this.panel.visible)
             return;
+        //TODO: we ignore stats updates; fix this
+        return;
         //TODO: this is ugly; refactor
         var list = this.createList()
         var st = this.list.scrollTop;
@@ -131,6 +134,31 @@ Craft.prototype = {
             list.textContent = "You have no recipes";
 
         return list;
+    },
+    createSearchField: function() {
+        var input = document.createElement("input");
+        input.placeholder = T("search");
+        input.addEventListener("keyup", this.search.bind(this));
+        var label = document.createElement("label");
+        label.className = "recipe-search";
+        label.appendChild(input);
+        return label;
+    },
+    search: function(e) {
+        //TODO: fast solution; make another one
+        var id = "#" + this.panel.name + " ";
+        var input = e.target;
+        var pattern = input.value.toLowerCase().replace(" ", "-");
+        util.dom.removeClass(id + ".recipe-list .found", "found");
+        if (!pattern) {
+            this.list.classList.remove("searching");;
+            return;
+        }
+        this.list.classList.add("searching");
+        util.dom.addClass(id + ".recipe[type*='" + pattern + "']", "found")
+        util.dom.forEach(id + ".recipe.found", function() {
+            this.parentNode.parentNode.classList.add("found");
+        })
     },
     createRecipeDetails: function() {
         var recipeDetails = document.createElement("div");

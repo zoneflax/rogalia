@@ -738,6 +738,9 @@ Controller.prototype = {
         this.keys[c] = true;
 
 
+        if (e.target.nodeName == "INPUT")
+            return true;
+
         var hotkey = this.hotkeys[e.keyCode] || this.hotkeys[c];
         if (hotkey) {
             for (var mod in this.modifier) {

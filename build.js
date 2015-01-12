@@ -33,6 +33,7 @@ function Build() {
     this.filter = function(recipe) {
         return recipe.IsBuilding;
     };
+    this.searchField = this.createSearchField();
     this.list = this.createList(this.filter);
     this.recipe = function(type) {
         return Entity.Recipes[type];
@@ -164,7 +165,7 @@ function Build() {
     this.panel = new Panel(
         "build",
         "Build",
-        [this.list, this.recipeDetails],
+        [this.searchField, this.list, this.recipeDetails],
         function(e) {
             var recipe = e.target.recipe;
             if(!recipe)

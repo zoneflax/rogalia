@@ -87,6 +87,11 @@ var util = new function() {
                 callback.call(elem)
             });
         },
+        addClass: function(selector, name) {
+            this.forEach(selector, function() {
+                this.classList.add(name);
+            })
+        },
         removeClass: function(selector, name) {
             this.forEach(selector, function() {
                 this.classList.remove(name);
