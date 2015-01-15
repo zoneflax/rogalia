@@ -43,7 +43,7 @@ function Panel(name, title, elements, listener, hooks) {
     hooks = hooks || {}
     this.hooks = {
         show: hooks.show,
-        hide: hooks.show,
+        hide: hooks.hide,
     };
 
     this.insert = function(list) {
