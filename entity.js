@@ -307,6 +307,7 @@ Entity.prototype = {
         }
     },
     actionApply: function(action) {
+        action = util.lcfirst(action);
         return function() {
             if (this[action]) {
                 this[action]();
@@ -351,15 +352,17 @@ Entity.prototype = {
         }
     },
     //used by container
-    open: function() {
+    open: function(data) {
+        if (data && !data.Done)
+            return this.open.bind(this);
+
         if (!game.player.isNear(this)) {
-            this.defaultAction();
+            game.network.send("Open", {Id: this.Id}, this.open.bind(this))
             return;
         }
         var container = Container.open(this.Id);
         container.panel.show();
     },
-
     disassemble: function() {
         game.network.send("disassemble", {Id: this.Id});
     },
@@ -396,7 +399,6 @@ Entity.prototype = {
         case "drying-frame":
         case "garbage":
         case "container":
-            this.Actions.push("open");
             if (this.MoveType != Entity.MT_PORTABLE)
                 this.defaultActionSuccess = this.open.bind(this);
             if (this.Type == "altar")
