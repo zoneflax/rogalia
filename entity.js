@@ -373,8 +373,16 @@ Entity.prototype = {
     },
 
     split: function() {
-        var amount = prompt("How many?", 1);
-        game.network.send("split", {Id: this.Id, Amount: +amount});
+        var args = {Id: this.Id}
+        if (this.Group == "currency") {
+            var amount = prompt("How many?", 1);
+            if (!amount)
+                return;
+            args.Amount = +amount
+            game.network.send("split", args);
+        } else {
+            game.network.send("Split", args);
+        }
     },
 
     bugreport: function() {
