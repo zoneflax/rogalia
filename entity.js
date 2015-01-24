@@ -312,10 +312,10 @@ Entity.prototype = {
         }
     },
     actionApply: function(action) {
-        action = util.lcfirst(action);
+        localAction = util.lcfirst(action);
         return function() {
-            if (this[action]) {
-                this[action]();
+            if (this[localAction]) {
+                this[localAction]();
                 return;
             }
 
