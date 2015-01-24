@@ -213,7 +213,7 @@ Container.prototype = {
         if (Panel.top.name == "craft")
             return;
 
-        var blank = game.controller.build.blank;
+        var blank = game.controller.craft.blank;
         if (blank.panel && blank.panel.visible) {
             blank.use(item)
             return;

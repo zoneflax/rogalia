@@ -46,7 +46,7 @@ function Info(message, character) {
         break;
     case "build-open":
         var blank = Entity.get(this.data);
-        game.controller.build.open(blank);
+        game.controller.craft.open(blank);
         return;
     }
 

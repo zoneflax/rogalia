@@ -312,7 +312,7 @@ Entity.prototype = {
         }
     },
     actionApply: function(action) {
-        localAction = util.lcfirst(action);
+        var localAction = util.lcfirst(action);
         return function() {
             if (this[localAction]) {
                 this[localAction]();
@@ -412,7 +412,7 @@ Entity.prototype = {
             break;
         case "blank":
             this.defaultActionSuccess = function() {
-                game.controller.build.open(this, game.player.Burden);
+                game.controller.craft.open(this, game.player.Burden);
             }.bind(this);
             break;
         case "currency":

@@ -74,7 +74,7 @@ function Controller(game) {
                         return controller.craft.use(item, hovered);
 
                     if (hovered.build)
-                        return controller.build.blank.use(item);
+                        return controller.craft.blank.use(item);
 
                     if (hovered.vendor)
                         return hovered.use(item, hovered);
@@ -330,7 +330,6 @@ Controller.prototype = {
         this.skills = new Skills();
         this.stats = new Stats();
         this.craft = new Craft();
-        this.build = new Build();
         this.chat = new Chat();
         this.minimap = new Minimap();
         this.system = new System();
@@ -352,7 +351,6 @@ Controller.prototype = {
         this.createButton(this.stats.panel, "stats");
         this.createButton(this.inventory.panel, "inventory");
         this.createButton(this.craft.panel, "craft");
-        this.createButton(this.build.panel, "build");
         this.createButton(this.chat.panel, "chat");
         this.createButton(this.minimap.panel, "map");
 

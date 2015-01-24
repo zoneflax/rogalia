@@ -219,10 +219,10 @@ function Help() {
             duration: 2000,
         },
         {
-            highlight: ["build"],
-            text: "Чтобы построить респаун откройте окно строительства: ${Build}",
+            highlight: ["craft"],
+            text: "Чтобы построить респаун откройте окно крафта: ${Craft}",
             check: function() {
-                return game.controller.build.panel.visible;
+                return game.controller.craft.panel.visible;
             }
         },
         {
@@ -231,7 +231,7 @@ function Help() {
                 "А затем нажмите ${Create} и разместите постройку",
             ],
             check: function() {
-                return (game.controller.build.selected && game.controller.build.selected.type == "respawn");
+                return (game.controller.craft.selected && game.controller.craft.selected.type == "respawn");
             }
         },
         {

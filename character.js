@@ -1083,7 +1083,7 @@ Character.prototype = {
 
         if (this.isPlayer) {
             Container.updateVisibility();
-            game.controller.build.updateVisibility();
+            game.controller.craft.updateVisibility();
             game.controller.minimap.update();
         }
 

@@ -350,7 +350,6 @@ function mainStage() {
         game.controller.skills.update();
         game.controller.fight.update();
         game.controller.craft.update();
-        game.controller.build.update();
         if (data.Chars && game.player.Id in data.Chars) {
             game.controller.stats.sync();
         }

@@ -482,15 +482,24 @@ button > img {
     padding: 0 1em 0 1em;
     margin: 20px 0 0;
 }
-.recipe-search {
-    position: absolute;
-    left: 12px;
+.craft-controls {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 3px;
+    overflow: hidden;
+}
+.craft-controls > * {
+    float: left;
 }
 .recipe-search > input {
     padding: 0 4px;
     border: none;
     height: 18px;
     width: 150px;
+}
+.recipe-list.filter-portable .recipe.portable,
+.recipe-list.filter-liftable .recipe.liftable,
+.recipe-list.filter-static .recipe.static {
+    display: none!important;
 }
 .recipe-list.searching > li {
     display: none;
