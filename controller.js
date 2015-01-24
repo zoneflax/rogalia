@@ -34,6 +34,7 @@ function Controller(game) {
         element: null,
         hovered: null,
         setCursor: function(item, x, y, callback) {
+            var entity = Entity.get(item.id);
             var canvas = document.createElement("canvas");
             canvas.width = item.width;
             canvas.height = item.height;
@@ -44,9 +45,9 @@ function Controller(game) {
             this.cursor.style.display = "block";
             this.cursor.style.left = x + "px";
             this.cursor.style.top = y + "px";
-            this.cursor.style.marginLeft = -item.width / 2 + "px";
-            this.cursor.style.marginTop = -item.height / 2 + "px";
-            this.cursor.entity = Entity.get(item.id);
+            this.cursor.style.marginLeft = -entity.getDrawDx() + "px";
+            this.cursor.style.marginTop = -entity.getDrawDy() + "px";
+            this.cursor.entity = entity;
             this.updateHovered(x, y);
             window.addEventListener('mousemove', this.moveListener);
             controller.callback[controller.RIGHT] = function(e) {
@@ -129,8 +130,6 @@ function Controller(game) {
         moveListener: function(e) {
             var x = e.pageX;
             var y = e.pageY;
-
-            var entity = controller.iface.cursor.entity;
             this.cursor.style.left = x + "px";
             this.cursor.style.top = y + "px";
             controller.iface.updateHovered(e.clientX, e.clientY);
@@ -689,7 +688,7 @@ Controller.prototype = {
             this.drawAlign(cursor, this.world.point);
         } else if(hovered) {
             var iface = this.iface;
-            // If not interface element (like menu) is over
+            // If non-interface element (like menu) is over
             // and item is not outside of the visible area
             if (!iface.hovered && iface.mouseIsValid && this.currentTarget == game.canvas) {
                 hovered.drawHovered();

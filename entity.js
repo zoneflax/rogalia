@@ -150,15 +150,20 @@ Entity.prototype = {
     screen: function() {
         return this.point.toScreen();
     },
-    getDrawPoint: function() {
-        var p = new Point(this.X, this.Y).toScreen();
-        var w = this.Sprite.Dx || this.sprite.width/2;
+    getDrawDx: function() {
+        return this.Sprite.Dx || this.sprite.width/2;
+    },
+    getDrawDy: function() {
+        if (this.Sprite.Dy)
+            return this.Sprite.Dy;
 
         var r = (this.round) ? this.sprite.width/4 : this.Radius;
-        var h = this.Sprite.Dy || this.sprite.height - r;
-
-        p.x -= w;
-        p.y -= h;
+        return this.sprite.height - r;
+    },
+    getDrawPoint: function() {
+        var p = new Point(this.X, this.Y).toScreen();
+        p.x -= this.getDrawDx();
+        p.y -= this.getDrawDy();
         return p.round();
     },
     sortOrder: function() {
@@ -387,6 +392,7 @@ Entity.prototype = {
             this.Actions.push("read");
             break;
         case "processor":
+        case "bonfire":
         case "furnace":
         case "oven":
             this._canUse = true;
@@ -439,8 +445,6 @@ Entity.prototype = {
             return;
         // if (!game.player.see(this))
         //     return;
-
-        //this.id == 0 -> creating mode
 
         if (!this.sprite || !this.sprite.ready) {
             this.drawBox();

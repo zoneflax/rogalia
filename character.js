@@ -115,6 +115,7 @@ Character.prototype = {
     initSprite: function() {
         this.sprite.speed = 14000;
         this.sprite.offset = this.Radius;
+        this.sprite.angle = Math.PI/4;
 	switch (this.Type) {
 	case "kitty":
 	    this.sprite.width = 64
@@ -134,17 +135,27 @@ Character.prototype = {
             break;
         case "dog":
 	case "cat":
-	case "horse":
+	case "pony":
 	case "cow":
 	case "sheep":
 	case "wolf":
 	case "butterfly":
-	    this.sprite.width = 32
-	    this.sprite.height = 32
+	    this.sprite.width = 32;
+	    this.sprite.height = 32;
             this.sprite.angle = Math.PI/2;
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 3],
+            }
+            break;
+	case "horse":
+	    this.sprite.width = 80;
+	    this.sprite.height = 80;
+            this.sprite.angle = Math.PI/2;
+            this.sprite.speed = 21000;
+            this.sprite.frames = {
+                "idle": 1,
+                "run": [0, 4],
             }
             break;
 	case "rabbit":
@@ -531,10 +542,11 @@ Character.prototype = {
     },
     getDrawPoint: function() {
         var p = this.screen();
+        var dy = (this.mount) ? this.mount.sprite.height/2 : 0;
         return {
             p: p,
             x: Math.round(p.x - this.sprite.width / 2),
-            y: Math.round(p.y - this.sprite.height + this.sprite.offset)
+            y: Math.round(p.y - this.sprite.height + this.sprite.offset) - dy
         };
     },
     draw: function() {
@@ -690,13 +702,15 @@ Character.prototype = {
             animation = "run";
             if (!this.IsNpc)
                 this.sprite = this.sprites["run"];
-            var sector = this.sprite.angle || Math.PI/4;
+
+            var sector = (this.mount) ? this.mount.sprite.angle : this.sprite.angle;
             var sectors = 2*Math.PI / sector;
             var angle = Math.atan2(-this.Dy, this.Dx);
             var index = Math.round(angle / sector);
             index += sectors + 1;
             index %= sectors;
-            this.sprite.position = Math.floor(index);
+            var multiple = sector / this.sprite.angle;
+            this.sprite.position = Math.floor(index) * multiple;
         } else if (!this.IsNpc) {
             var sitting = this.Effects.Sitting;
             if (sitting) {
@@ -804,6 +818,7 @@ Character.prototype = {
                 this.mount = Entity.get(this.Mount);
                 this.mount.rider = this;
             }
+            this.Y = this.mount.Y+1;
         } else {
             if (this.mount) {
                 this.mount.rider = null;
@@ -1077,7 +1092,7 @@ Character.prototype = {
 
         if (this.rider) {
             this.rider.X = this.x;
-            this.rider.Y = this.y;
+            this.rider.Y = this.y+1;
             this.rider.updateBurden();
         }
 
