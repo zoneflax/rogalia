@@ -43,10 +43,15 @@ dict.init = function() {
 dict.getTranslations = function() {
     for (var type in Entity.templates) {
         var entity = Entity.templates[type];
+
         var title = entity.title.replace(/\[.*$/, "");
-        if (title in dict)
-            continue;
-        dict[title] = "";
+        if (!dict[title])
+            dict[title] = "";
+
+        var group = util.symbolToString(entity.Group);
+        if (!dict[group])
+            dict[group] = "";
+
         for (var action in entity.getActions()) {
             action = util.symbolToString(action);
             if (action in dict)
