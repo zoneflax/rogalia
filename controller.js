@@ -802,13 +802,7 @@ Controller.prototype = {
             return this.keys.Z;
     },
     reset: function() {
-        if (!confirm("Reset interface (page will be reloaded) ?"))
-            return;
-        for(var i in localStorage) {
-            if (i.match(/^panels\./)) {
-                localStorage.removeItem(i);
-            }
-        }
+        localStorage.clear();
         game.panels = {}; //dont save positions;
         game.reload();
     }

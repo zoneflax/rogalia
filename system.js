@@ -29,12 +29,6 @@ function System() {
     settings.textContent = T("Settings");
     settings.onclick = this.settings.panel.toggle.bind(this.settings.panel);
 
-    var reset = document.createElement("button")
-    reset.id = "reset-interface";
-    reset.textContent = T("Reset interface");
-    reset.addEventListener('click', game.controller.reset);
-    document.body.appendChild(reset);
-
     this.panel = new Panel(
         "system",
         "System",
@@ -45,6 +39,7 @@ function System() {
             settings,
             news,
             help,
+            users,
             util.hr(),
             game.button.bugtracker(),
             game.button.wiki(),
@@ -53,9 +48,6 @@ function System() {
             game.button.vk(),
             game.button.authors(),
             util.hr(),
-            users,
-            util.hr(),
-            reset,
             game.button.logout(),
         ]
     )
