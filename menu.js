@@ -49,7 +49,7 @@ Menu.prototype = {
     },
     createMenuItem: function(title, action, object) {
         var item_a = document.createElement("a");
-        item_a.textContent = util.symbolToString(title);
+        item_a.textContent = TS(title);
         item_a.className = "action";
 
         if (action instanceof Function) {
