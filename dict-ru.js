@@ -805,4 +805,16 @@ var dict = {
     "Your target is dead": "Ваша цель мертва",
     "You've finished this quest today": "Вы уже выполнили этот квест сегодня",
     "Zero quantity is now allowed": "Нулевая величина запрещена",
+
+    "horse": "Лошадь",
+    "rabbit": "Кролик",
+    "dog": "Собака",
+    "cat": "Кошка",
+    "wolf": "Волк",
+    "cow": "Корова",
+    "pony": "Пони",
+    "chicken": "Курица",
+    "butterfly": "Бабочка",
+    "sheep": "Овца",
+    "kitty": "Кот-Разбойник",
 }
