@@ -48,6 +48,7 @@ dict.getTranslations = function() {
             continue;
         dict[title] = "";
         for (var action in entity.getActions()) {
+            action = util.symbolToString(action);
             if (action in dict)
                 continue;
             dict[action] = "";
