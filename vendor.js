@@ -52,6 +52,7 @@ Vendor.buy = function(data) {
 
         var e = new Entity(item.Id, item.Type);
         e.sync(item);
+        e.initSprite();
         game.sortedEntities.remove(e);
 
         var icon = document.createElement("div");
