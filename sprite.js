@@ -16,6 +16,9 @@ function Sprite(path, width, height, speed) {
     this.frames = {};
     this.ready = false;
     this.loading = false;
+
+    this.pending = [];
+
     if (path)
         this.load(path);
 }
@@ -35,6 +38,11 @@ Sprite.prototype = {
             this.makeOutline()
             this.ready = true;
             this.loading = false;
+
+            var canvas = null;
+            while (canvas = this.pending.pop()) {
+                this.renderIcon(canvas);
+            }
 
         }.bind(this));
     },
@@ -119,6 +127,14 @@ Sprite.prototype = {
     },
     icon: function() {
         var canvas = document.createElement("canvas");
+        if (this.ready) {
+            this.renderIcon(canvas);
+        } else {
+            this.pending.push(canvas);
+        }
+        return canvas;
+    },
+    renderIcon: function(canvas) {
         canvas.width = this.width;
         canvas.height = this.height;
         var ctx = canvas.getContext("2d");
@@ -131,7 +147,5 @@ Sprite.prototype = {
         } catch(e) {
             game.sendError("Cannot load " + this.name + " icon")
         }
-
-        return canvas;
-    },
+    }
 }

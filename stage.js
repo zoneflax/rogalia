@@ -41,6 +41,14 @@ Stage.add(exitStage);
 
 function loadingStage(data) {
     game.addEventListeners();
+    var forceUpdate = ("Version" in data);
+    ["Version", "Recipes", "EntitiesTemplates"].forEach(function(key) {
+        if (forceUpdate) {
+            localStorage.setItem(key, JSON.stringify(data[key]));
+        } else {
+            data[key] = JSON.parse(localStorage.getItem(key));
+        }
+    });
     Character.skillLvls = data.SkillLvls;
     Character.initSprites();
     game.map.init(data.Bioms, data.Map);
@@ -51,6 +59,7 @@ function loadingStage(data) {
     game.initTime(data.Time, data.Tick);
 
     this.sync = function(data) {
+        //TODO: don't send them!
         // ignore non init packets
         if (!("Location" in data))
             return;
@@ -128,16 +137,17 @@ function loginStage() {
         localStorage.setItem("login", game.login);
     }
 
-    function curLang() {
-        return (config.language.Russian) ? "ru" : "en";
-    }
-
     function login(password) {
         error = false;
         saveLogin();
         game.network.send(
             "login",
-            {Login: game.login, Password: password, Lang: curLang(), Captcha: captcha},
+            {
+                Login: game.login,
+                Password: password,
+                Captcha: captcha,
+                Version: game.version,
+            },
             warning
         );
     };
@@ -147,7 +157,7 @@ function loginStage() {
         saveLogin();
         game.network.send(
             "register",
-            {Login: game.login, Password: password, Lang: curLang()},
+            {Login: game.login, Password: password},
             warning
         );
     };

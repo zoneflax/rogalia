@@ -24,6 +24,7 @@ Entity.sync = function(data, remove) {
             game.addEntity(entity);
         }
         entity.sync(edata);
+        entity.initSprite();
         if (entity.MoveType == Entity.MT_STATIC) {
             game.map.updateObject(entity);
         }

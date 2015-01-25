@@ -637,8 +637,8 @@ Character.prototype = {
             default:
                 name = name.replace(/-\d+$/, "");
             }
+            name = T(name);
         }
-
 
         if (this.Fame == 10000) {
             name = "Lord " + name

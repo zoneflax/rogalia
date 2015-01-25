@@ -8,6 +8,7 @@ function Sound() {
         "celtic-forest.webm",
         "aquarel.webm",
     ]
+    this.volume = 0.3;
     this.tracks = [];
     this.sounds = [];
     if (document.location.hash.indexOf("mute") != -1) {
@@ -49,6 +50,7 @@ Sound.prototype = {
         if (this.track.played.length > 0) {
             this.track.load();
         }
+        this.track.volume = this.volume;
         this.track.play();
     },
     toggleMusic: function() {

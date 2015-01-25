@@ -776,10 +776,10 @@ Controller.prototype = {
 
     },
     showError: function(message) {
-        this.showMessage(message, "error");
+        this.showMessage(T(message), "error");
     },
     showWarning: function(message) {
-        this.showMessage(message, "warning");
+        this.showMessage(T(message), "warning");
     },
     showAnouncement: function(message) {
         var anouncement = document.getElementById("anouncement");

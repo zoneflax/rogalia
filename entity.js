@@ -435,8 +435,6 @@ Entity.prototype = {
 
         if ("Amount" in this && this.Amount > 1)
             this.Actions.push("split");
-
-        this.initSprite();
     },
     autoHideable: function() {
         if (this.Height <= 8 || this.Width <= 8)
@@ -663,7 +661,8 @@ Entity.prototype = {
     icon: function() {
         if (this._icon)
             return this._icon.cloneNode();
-
+        if (!this.sprite)
+            this.initSprite();
         return this.sprite.icon();
     },
     rotate: function(delta) {
