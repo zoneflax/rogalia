@@ -48,15 +48,19 @@ dict.getTranslations = function() {
         if (!dict[title])
             dict[title] = "";
 
-        var group = util.symbolToString(entity.Group);
-        if (!dict[group])
-            dict[group] = "";
-
         for (var action in entity.getActions()) {
             action = util.symbolToString(action);
             if (action in dict)
                 continue;
             dict[action] = "";
+        }
+    }
+    for (var type in Entity.recipes) {
+        var recipe = Entity.recipes[type];
+        for (var kind in recipe.Ingredients) {
+            kind = util.symbolToString(kind);
+            if (!dict[kind])
+                dict[kind] = "";
         }
     }
     var textarea = document.createElement("textarea");
