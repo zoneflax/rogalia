@@ -130,6 +130,9 @@ function Chat() {
                     }
                 }
                 break;
+            case "get-translations":
+                dict.getTranslations();
+                break;
             default:
                 local = false;
             }

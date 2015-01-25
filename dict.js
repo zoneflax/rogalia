@@ -40,3 +40,21 @@ dict.init = function() {
 
     dict.update();
 }
+dict.getTranslations = function() {
+    for (var type in Entity.templates) {
+        var entity = Entity.templates[type];
+        var title = entity.title.replace(/\[.*$/, "");
+        if (title in dict)
+            continue;
+        dict[title] = "";
+        for (var action in entity.getActions()) {
+            if (action in dict)
+                continue;
+            dict[action] = "";
+        }
+    }
+    var textarea = document.createElement("textarea");
+    textarea.value = JSON.stringify(dict);
+    var panel = new Panel("Translations", "translations", [textarea]);
+    panel.show();
+}

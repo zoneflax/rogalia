@@ -89,17 +89,15 @@ Entity.prototype = {
     },
     get title() {
         var title = this.Type;
+        var suffix = "";
         switch (this.Group) {
         case "blank":
             title = this.Props.Type;
             break;
         case "liquid-container-liftable":
         case "tanning-tub":
-            title += ' [' +
-                util.toFixed(this.Props.Capacity.Current) +
-                '/' +
-                util.toFixed(this.Props.Capacity.Max) +
-                ']'
+            var cap = this.Props.Capacity
+            suffix = sprintf("[%d/%d]", cap.Current,  cap.Max);
             break;
         default:
             if (this.Name)
@@ -109,7 +107,7 @@ Entity.prototype = {
         if (this.Type.contains("-corpse") || this.Type == "head")
             return T(title);
 
-        return TS(title);
+        return TS(title) + suffix;
     },
     get point() {
         return new Point(this.X, this.Y);
