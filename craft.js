@@ -345,8 +345,7 @@ Craft.prototype = {
         }
     },
     linkRecipe: function(title, recipe) {
-        var base = (recipe.IsBuilding) ? T("Build") : T("Craft");
-        game.chat.send("${" + base + " → " + recipe.Skill + " → " + title + "}");
+        game.chat.send("${" + T("Craft") + " → " + T(recipe.Skill) + " → " + title + "}");
     },
     panelInit: function(e) {
         var recipe = e.target.recipe;
