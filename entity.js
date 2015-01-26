@@ -572,8 +572,12 @@ Entity.prototype = {
             return false;
 
 
-        if (this.Disposition == "roof" && game.player.inBuilding)
-            return false;
+        if (game.player.inBuilding) {
+            if (this.Disposition == "roof")
+                return false;
+            if (this.autoHideable())
+                return false;
+        }
 
         noignore = noignore || game.controller.modifier.ctrl
 
