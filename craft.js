@@ -357,6 +357,11 @@ Craft.prototype = {
             this.linkRecipe(e.target.title, recipe);
             return;
         }
+        if (game.player.IsAdmin && game.controller.modifier.ctrl) {
+            game.controller.creatingCursor(new Entity(0, e.target.type));
+            return;
+        }
+
 
         this.seen(e.target);
         e.target.classList.add("selected");
@@ -482,7 +487,6 @@ Craft.prototype = {
         this.requirements = null; //force renderRequirements append new requirements
         this.renderRequirements(recipe);
         this.recipeDetails.appendChild(ingredients);
-
 
         var create = document.createElement("button");
         create.className = "recipe-create";

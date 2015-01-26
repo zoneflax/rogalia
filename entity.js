@@ -724,5 +724,6 @@ Entity.prototype = {
         this.Height = w;
 
         this.initSprite();
+        game.controller.lastCreatingRotation++;
     }
 };

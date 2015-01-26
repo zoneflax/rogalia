@@ -23,6 +23,10 @@ function Controller(game) {
     this.currentTarget = null;
     this._hideStatic = false;
 
+    this.lastCreatingType = "";
+    this.lastCreatingCommand = "";
+    this.lastCreatingRotation = 0;
+
     this.iface = {
         x: 0,
         y: 0,
@@ -468,14 +472,28 @@ Controller.prototype = {
     },
     creatingCursor: function(arg, command, callback) {
         command = command || "entity-add";
+        var lastType = "";
+
         if (arg instanceof Entity) {
-            this.lastCreatingType = arg.Type;
+            lastType = arg.Type;
             this.world.cursor = arg;
         } else {
-            this.lastCreatingType = arg;
+            lastType = arg;
             this.world.cursor = new Entity(0, arg);
         }
 
+        var rotate = 0;
+        if (this.lastCreatingType == lastType)
+            rotate = this.lastCreatingRotation;
+        else
+            this.lastCreatingRotation = 0;
+
+        while (rotate-- > 0) {
+            this.world.cursor.rotate();
+            this.lastCreatingRotation--;
+        }
+
+        this.lastCreatingType = lastType;
         this.lastCreatingCommand = command;
 
         this.callback[this.LEFT] = function() {
