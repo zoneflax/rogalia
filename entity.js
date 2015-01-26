@@ -575,7 +575,7 @@ Entity.prototype = {
         if (game.player.inBuilding) {
             if (this.Disposition == "roof")
                 return false;
-            if (this.autoHideable())
+            if (this.autoHideable() && this.Group != "gate")
                 return false;
         }
 
