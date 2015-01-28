@@ -337,6 +337,7 @@ Controller.prototype = {
         this.chat = new Chat();
         this.minimap = new Minimap();
         this.system = new System();
+        this.wiki = new Wiki();
         this.fpsStats = this.system.fps;
         this.inventory = Container.open(game.player.Equip[0]) //0 - SLOT_BAG
         this.donate = new Donate();
@@ -358,6 +359,7 @@ Controller.prototype = {
         this.createButton(this.chat.panel, "chat");
         this.createButton(this.minimap.panel, "map");
 
+        this.createButton(this.wiki.panel, "wiki");
         this.createButton(this.system.panel, "system");
         this.createButton(this.donate.panel, "donate");
         this.donate.afterButtonBind();

@@ -1143,3 +1143,14 @@ big {
     text-align: center;
     padding: 7px;
 }
+
+#wiki {
+    max-width: none;
+}
+#wiki .contents {
+    resize: both;
+}
+#wiki iframe {
+    width: 800px;
+    height: 600px;
+}
