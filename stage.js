@@ -60,8 +60,8 @@ function loadingStage(data) {
     game.map.init(data.Bioms, data.Map);
     //for $add
     Entity.init(data.EntitiesTemplates);
-    Entity.Recipes = data.Recipes;
-    Entity.MetaGroups = data.MetaGroups;
+    Entity.recipes = data.Recipes;
+    Entity.metaGroups = data.MetaGroups;
     game.initTime(data.Time, data.Tick);
 
     this.sync = function(data) {

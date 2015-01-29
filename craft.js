@@ -11,6 +11,8 @@ function Craft() {
 
     this.list = this.createList();
 
+    this.searchInpue = null;
+
     this.controls = document.createElement("div");
     this.controls.className = "craft-controls";
     this.controls.appendChild(this.createSearchField());
@@ -27,7 +29,7 @@ function Craft() {
         "craft",
         "Craft",
         [this.controls, this.list, this.recipeDetails],
-        this.panelInit.bind(this)
+        this.clickListener.bind(this)
     );
     this.panel.element.style.minWidth = "500px";
     this.panel.hooks.hide = this.cleanUp.bind(this);
@@ -71,7 +73,7 @@ function Craft() {
 Craft.prototype = {
     visibleGroups: null,
     recipe: function(type) {
-        return Entity.Recipes[type];
+        return Entity.recipes[type];
     },
     render: function(blank) {
         var ingredients = blank.Props.Ingredients;
@@ -229,8 +231,8 @@ Craft.prototype = {
         var list = document.createElement("ul");
         list.className = "recipe-list";
         var groups = {};
-        for(var type in Entity.Recipes) {
-            var recipe = Entity.Recipes[type];
+        for(var type in Entity.recipes) {
+            var recipe = Entity.recipes[type];
             var group = recipe.Skill;
             if (!groups[group])
                 groups[group] = {};
@@ -252,6 +254,7 @@ Craft.prototype = {
                 item.classList.add(["portable", "liftable", "static"][Entity.templates[type].MoveType]);
                 item.recipe = recipe;
                 item.title = TS(type);
+                item.dataset.search = item.title.toLowerCase().replace(" ", "-");
                 item.textContent = item.title;
                 item.type = type;
                 if (this.selected && this.selected.type == item.type) {
@@ -293,7 +296,9 @@ Craft.prototype = {
     createSearchField: function() {
         var input = document.createElement("input");
         input.placeholder = T("search");
-        input.addEventListener("keyup", this.search.bind(this));
+        input.addEventListener("keyup", this.searchHandler.bind(this));
+        this.searchInput = input;
+
         var label = document.createElement("label");
         label.className = "recipe-search";
         label.appendChild(input);
@@ -316,21 +321,44 @@ Craft.prototype = {
         })
         return filters;
     },
-    search: function(e) {
+    searchHandler: function(e) {
+        var input = e.target;
+        this.search(e.target.value);
+    },
+    search: function(pattern, selectMatching) {
         //TODO: fast solution; make another one
         var id = "#" + this.panel.name + " ";
-        var input = e.target;
-        var pattern = input.value.toLowerCase().replace(" ", "-");
         util.dom.removeClass(id + ".recipe-list .found", "found");
         if (!pattern) {
             this.list.classList.remove("searching");;
             return;
         }
         this.list.classList.add("searching");
-        util.dom.addClass(id + ".recipe[type*='" + pattern + "']", "found")
+
+        pattern = pattern.toLowerCase().replace(" ", "-");
+        try {
+            var selector = id + ".recipe[type*='" + pattern + "']," +
+                id + ".recipe[data-search*='" + pattern + "']"
+            util.dom.addClass(selector, "found");
+        } catch(e) {
+            return;
+        }
+
+        var matching = null;
         util.dom.forEach(id + ".recipe.found", function() {
+            if (selectMatching && (this.type == pattern || this.dataset.search == pattern)) {
+                selectMatching = false;
+                matching = this;
+            }
             this.parentNode.parentNode.classList.add("found");
-        })
+        });
+
+        if (matching) {
+            this.searchInput.value = TS(pattern);
+            selectFirst = false;
+            this.clickListener({target: matching}); //omfg it's ugly
+
+        }
     },
     createRecipeDetails: function() {
         var recipeDetails = document.createElement("div");
@@ -344,16 +372,13 @@ Craft.prototype = {
             item.classList.remove("new");
         }
     },
-    linkRecipe: function(title, recipe) {
-        game.chat.send("${" + T("Craft") + " → " + T(recipe.Skill) + " → " + title + "}");
-    },
-    panelInit: function(e) {
+    clickListener: function(e) {
         var recipe = e.target.recipe;
         if(!recipe)
             return;
 
         if (game.controller.modifier.shift) {
-            this.linkRecipe(e.target.title, recipe);
+            game.chat.linkRecipe(e.target.type);
             return;
         }
         if (game.player.IsAdmin && game.controller.modifier.ctrl) {

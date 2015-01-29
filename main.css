@@ -644,6 +644,11 @@ button > img {
 .message .body .rmb {
     background: url("assets/rmb.png");
 }
+.message .body .recipe-link {
+    cursor: pointer;
+    text-decoration: underline;
+    color: green;
+}
 .message .body a {
     color: blue;
 }
@@ -1151,6 +1156,6 @@ big {
     resize: both;
 }
 #wiki iframe {
-    width: 800px;
+    width: 900px;
     height: 600px;
 }

@@ -29,6 +29,7 @@ var dict = {
     "Wooden shovel": "Деревянная лопата",
     "Select recipe": "Выберите рецепт",
     "Craft": "Крафт",
+    "Recipe": "Рецепт",
     "Bark": "Кора",
     "Bark mug": "Кружка из коры",
     "Bear rug": "Медвежья шкура",

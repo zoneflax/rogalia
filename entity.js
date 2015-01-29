@@ -235,7 +235,7 @@ Entity.prototype = {
         if (this.Type == type || this.Group == type) {
             return true;
         }
-        var meta = Entity.MetaGroups[type] || [];
+        var meta = Entity.metaGroups[type] || [];
         return meta.some(function(kind) {
             return this.is(kind);
         }.bind(this));

@@ -79,6 +79,7 @@ function Help() {
             check: function() {
                 return game.controller.skills.panel.visible;
             },
+            highlight: ["skills"],
             text: [
                 "У вас уже должно быть достаточно ${LP} для того чтобы прокачать первый навык",
                 "Откройте окно ${Skills}"
@@ -94,6 +95,7 @@ function Help() {
             check: function() {
                 return game.controller.craft.panel.visible;
             },
+            highlight: ["craft"],
             text: [
                 "Вы получили навык ${Stoneworking} и теперь можете создавать новые предметы",
                 "Для того чтобы посмотреть на них, откройте окно ${Craft}."
@@ -107,10 +109,11 @@ function Help() {
                 "Попробуем создать топор, без которого мы не сможем рубить деревья.",
                 "Выберите рецепт топора:",
                 "${lmb} ${Stoneworking} > ${Stone axe}",
+                "(${recipe:Stone axe})"
             ]
         },
         {
-            text: "Для создания топора нам нужны: ${Sharp stone}, ${Stick} и ${Twig}",
+            text: "Для создания топора нам нужны: ${recipe:Sharp stone}, ${Stick} и ${Twig}",
             duration: 1000,
         },
         {

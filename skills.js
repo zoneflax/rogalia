@@ -106,24 +106,24 @@ Skills.prototype = {
         if (!this.current)
             game.error("No selected skill");
         var name = this.current.name;
-        var oldRecipes = Object.keys(Entity.Recipes)
+        var oldRecipes = Object.keys(Entity.recipes)
         game.network.send("learn-skill", {name: name }, function(data) {
             //TODO: checkme
             if (data.Warning)
                 return;
 
-            var newRecipes = Object.keys(Entity.Recipes).filter(function(i) {
+            var newRecipes = Object.keys(Entity.recipes).filter(function(i) {
                 return (oldRecipes.indexOf(i) == -1);
             });
 
             var newBuildRecipes = false;
             var newCraftRecipes = false;
             newRecipes.map(function(recipe) {
-                if (Entity.Recipes[recipe].IsBuilding)
+                if (Entity.recipes[recipe].IsBuilding)
                     newBuildRecipes = true;
                 else
                     newCraftRecipes = true;
-                Entity.Recipes[recipe].isNew = true;
+                Entity.recipes[recipe].isNew = true;
             });
             if (newBuildRecipes)
                 game.controller.highlight("build");

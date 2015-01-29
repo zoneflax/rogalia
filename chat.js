@@ -37,6 +37,10 @@ function Chat() {
         }
     };
 
+    this.linkRecipe = function(type) {
+        this.send("${recipe:" + type +"}");
+    };
+
     var myMessages = {
         ring: [],
         current: 0,
@@ -191,42 +195,7 @@ function Chat() {
         content.className = "body";
         if (matches) {
             matches.forEach(function(match) {
-                var index = body.indexOf(match);
-                var chunk = body.substr(0, index);
-                content.appendChild(document.createTextNode(chunk));
-
-                var startIndex = 0;
-                var len = match.length;
-                if (match[0] == "$") {
-                    startIndex = 2;
-                    len -= 3;
-                }
-                var object = document.createElement((match.substr(startIndex, 4) == "http") ? "a" : "code");
-                var append = true;
-                switch(match) {
-                case "${lmb}":
-                    object.className = "lmb";
-                    break;
-                case "${rmb}":
-                    object.className = "rmb";
-                    break;
-                case "${hr}":
-                    content.appendChild(document.createElement("hr"));
-                    append = false;
-                    break;
-                default:
-                    var text = match.substr(startIndex, len);
-                    if ("href" in object) {
-                        object.href = text;
-                        object.target = "_blank";
-                        object.textContent = decodeURI(text);
-                    } else {
-                        object.textContent = T(text);
-                    }
-                }
-                if (append)
-                    content.appendChild(object);
-                body = body.substr(index + match.length);
+                body = parseMatch(content, body, match);
             });
 
             if (body.length)
@@ -236,6 +205,86 @@ function Chat() {
         }
         return content;
     };
+
+    function parseMatch (content, body, match) {
+        var index = body.indexOf(match);
+        if (index > 0) {
+            var plain = body.substr(0, index);
+            content.appendChild(document.createTextNode(plain));
+        }
+
+        var element = null;
+        var simple = {type: "code", className: ""};
+
+        switch(match) {
+        case "${lmb}":
+            simple.className = "lmb"
+            break;
+        case "${rmb}":
+            simple.className = "rmb";
+            break;
+        case "${hr}":
+            simple.type = "hr"
+            break;
+        default:
+             element = parseComplexMatch(match);
+        }
+
+        if (!element) {
+            element =  document.createElement(simple.type);
+            element.className = simple.className;
+        }
+        content.appendChild(element);
+
+
+        return body.substr(index + match.length);
+    };
+
+    var complexHandlers = {
+        "https://": linkParser,
+        "http://": linkParser,
+        "recipe:": recipeParser,
+    };
+
+    function parseComplexMatch(match) {
+        var startIndex = 0;
+        var len = match.length;
+        if (match[0] == "$") {
+            startIndex = 2;
+            len -= 3;
+        }
+
+        for(var prefix in complexHandlers) {
+            var n = prefix.length;
+            if (match.substr(startIndex, n) == prefix) {
+                var data = match.substr(startIndex+n, len-n);
+                return complexHandlers[prefix](data)
+            }
+        }
+        var text = match.substr(startIndex, len);
+        var common = document.createElement("code");
+        common.textContent = T(text)
+        return common;
+    }
+
+    function linkParser(data) {
+        var link = document.createElement("a");
+        link.target = "_blank";
+        link.href = data;
+        link.textContent = decodeURI(data)
+        return link;
+    }
+
+    function recipeParser(data) {
+        var link = document.createElement("a");
+        link.textContent = T("Recipe") + ": " + TS(data);
+        link.className = "recipe-link";
+        link.onclick = function() {
+            game.controller.craft.panel.show();
+            game.controller.craft.search(data, true);
+        }
+        return link;
+    }
 
     var appendMessage = function(contents) {
         var messageElement = document.createElement("li");
