@@ -353,8 +353,9 @@ Craft.prototype = {
             this.parentNode.parentNode.classList.add("found");
         });
 
+        this.searchInput.value = TS(pattern);
+
         if (matching) {
-            this.searchInput.value = TS(pattern);
             selectFirst = false;
             this.clickListener({target: matching}); //omfg it's ugly
 
