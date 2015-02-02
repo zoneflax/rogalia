@@ -9,6 +9,8 @@ function Settings() {
         "Settings",
         sections
     );
+
+
     this.triggers = {
         "settings.character.bald": function() {
             game.player.initSprite();
@@ -31,7 +33,10 @@ function Settings() {
         "settings.ui.showDonate": function() {
             game.controller.donate.toggle();
         },
-
+        "settings.gameplay.pathfinding": function() {
+            game.player.Settings.Pathfinding = !game.player.Settings.Pathfinding;
+            game.network.send("set-settings", {Settings: game.player.Settings});
+        },
     };
 }
 
@@ -63,11 +68,22 @@ Settings.prototype = {
                 input.type = "checkbox";
 
                 var key = ["settings", name, prop].join(".");
-                var value = localStorage.getItem(key);
-                if (value !== null) {
-                    group[prop] = JSON.parse(value);
+
+                var value = group[prop];
+                if (value instanceof Function) {
+                    if (game.player) // eval only when player is loaded
+                        value = value();
+                    else
+                        value = false;
+                } else {
+                    var saved = localStorage.getItem(key);
+                    if (saved !== null) {
+                        value = JSON.parse(saved);
+                        group[prop] = value;
+                    }
                 }
-                input.checked = group[prop];
+
+                input.checked = value
                 label.appendChild(input);
                 label.appendChild(document.createTextNode(prop));
                 fieldset.appendChild(label);

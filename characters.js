@@ -25,11 +25,10 @@ Character.sync = function(data, remove) {
     for (var id in data) {
         var from = data[id];
         var to = game.entities.get(id);
-
-        if(!to) {
+        if (!to) {
             to = new Character(id, from.Name);
             game.addCharacter(to);
-            if(from.Name == game.login)
+            if (from.Name == game.login)
                 game.player = to;
             to.init(from)
         } else {

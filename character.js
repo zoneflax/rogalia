@@ -19,6 +19,8 @@ function Character(id, name) {
         Y: 0,
     };
     this.dst = {
+        x: 0,
+        y: 0,
         time: null,
         radius: 0,
     }
@@ -40,6 +42,10 @@ function Character(id, name) {
     this.Effects = {};
     this.Clothes = [];
 
+    this.Settings = {
+        Pathfinding: true,
+    };
+
     this.ballon = null;
     this.shownEffects = {};
     this.isPlayer = (this.Name == game.login);
@@ -56,6 +62,7 @@ function Character(id, name) {
         this.sprites[animation] = s;
     }.bind(this));
     this.sprite = this.sprites.idle;
+
     this._clothes = "";
 }
 
@@ -522,9 +529,14 @@ Character.prototype = {
             return;
 
         game.network.send("set-dst", {x: x, y: y}, game.player.resetAction);
+
+        this.dst.x = x;
+        this.dst.y = y;
         this.dst.radius = 9;
         this.dst.time = Date.now();
-        this._setDst(x, y);
+
+        if (!this.Settings.Pathfinding)
+            this._setDst(x, y);
     },
     _setDst: function(x, y) {
         var len_x = x - this.X;
@@ -604,7 +616,7 @@ Character.prototype = {
         if (this.dst.time + 33 > now) {
             game.ctx.strokeStyle = "#fff";
             game.ctx.beginPath();
-            var p = new Point(this.Dst.X, this.Dst.Y).toScreen()
+            var p = new Point(this.dst.x, this.dst.y).toScreen()
             game.ctx.arc(p.x, p.y, this.dst.radius--, 0, Math.PI * 2);
             game.ctx.stroke();
             this.dst.time = now;
@@ -1039,7 +1051,7 @@ Character.prototype = {
 
         var cell = game.map.getCell(new_x, new_y);
         if (cell) {
-            if(cell.biom.Blocked) {
+            if (cell.biom.Blocked) {
                 this.stop();
                 return;
             }
@@ -1050,20 +1062,20 @@ Character.prototype = {
             new_y = this.Y + dy;
         }
 
-        if(new_x < this.Radius) {
+        if (new_x < this.Radius) {
             dx = this.Radius - this.X;
-        } else if(new_x > game.map.full.width - this.Radius) {
+        } else if (new_x > game.map.full.width - this.Radius) {
             dx = game.map.full.width - this.Radius - this.X;
-        } else if(this.isPlayer && Math.abs(this.Dst.X - this.X) < Math.abs(dx)) {
+        } else if (Math.abs(this.Dst.X - this.X) < Math.abs(dx)) {
             dx = this.Dst.X - this.X;
         }
 
 
-        if(new_y < this.Radius) {
+        if (new_y < this.Radius) {
             dy = this.Radius - this.Y;
-        } else if(new_y > game.map.full.height - this.Radius) {
+        } else if (new_y > game.map.full.height - this.Radius) {
             dy = game.map.full.height - this.Radius - this.Y;
-        } else if(this.isPlayer && Math.abs(this.Dst.Y - this.Y) < Math.abs(dy)) {
+        } else if (Math.abs(this.Dst.Y - this.Y) < Math.abs(dy)) {
             dy = this.Dst.Y - this.Y;
         }
 
@@ -1071,7 +1083,7 @@ Character.prototype = {
         new_y = this.Y + dy;
 
 
-        if(this.willCollide(new_x, new_y)) {
+        if (this.willCollide(new_x, new_y)) {
             this.stop();
             return;
         }
@@ -1096,14 +1108,18 @@ Character.prototype = {
             this.rider.updateBurden();
         }
 
-        if (this.isPlayer && this.X == this.Dst.X && this.Y == this.Dst.Y) {
-            if (this.Path && this.Path.length > 0) {
-                var p = this.Path.pop();
-                this._setDst(p.X, p.Y);
-            } else {
+        if (this.X == this.Dst.X && this.Y == this.Dst.Y) {
+            if (!this.followPath())
                 this.stop();
-            }
         }
+    },
+    followPath: function() {
+        if (this.Path && this.Path.length > 0) {
+            var p = this.Path.pop();
+            this._setDst(p.X, p.Y);
+            return true;
+        }
+        return false;
     },
     updateBurden: function() {
         if (this.burden) {

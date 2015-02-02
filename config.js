@@ -10,6 +10,9 @@ var config = {
     language: {
         Russian: false,
     },
+    gameplay: {
+        pathfinding: function() { return game.player.Settings.Pathfinding },
+    },
     ui: {
         hp: false,
         name: false,
