@@ -116,7 +116,7 @@ function loginStage() {
     var error = false;
     var captcha = null;
 
-    function warning(data) {
+    function onWarning(data) {
         if (data.Warning) {
             error = true;
             if (registering) {
@@ -143,30 +143,23 @@ function loginStage() {
         localStorage.setItem("login", game.login);
     }
 
-    function login(password) {
+    function auth(cmd, password) {
         error = false;
         saveLogin();
         game.network.send(
-            "login",
+            cmd,
             {
                 Login: game.login,
                 Password: password,
                 Captcha: captcha,
                 Version: game.version,
             },
-            warning
+            onWarning
         );
     };
 
-    function register(password) {
-        error = false;
-        saveLogin();
-        game.network.send(
-            "register",
-            {Login: game.login, Password: password},
-            warning
-        );
-    };
+    var login = auth.bind(this, "login");
+    var register = auth.bind(this, "register");
 
     game.login = localStorage.getItem("login");
     if (game.login == "-")
