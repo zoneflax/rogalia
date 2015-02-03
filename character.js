@@ -1043,11 +1043,13 @@ Character.prototype = {
             return;
         }
         k *= this.Speed.Current;
+        var x = this.x;
+        var y = this.y;
         var dx = this.Dx * k;
-        var new_x = this.X + dx;
+        var new_x = x + dx;
 
         var dy = this.Dy * k;
-        var new_y = this.Y + dy;
+        var new_y = y + dy;
 
         var cell = game.map.getCell(new_x, new_y);
         if (cell) {
@@ -1058,30 +1060,27 @@ Character.prototype = {
             this.speed = cell.biom.Speed;
             dx *= this.speed;
             dy *= this.speed;
-            new_x = this.X + dx;
-            new_y = this.Y + dy;
+            new_x = x + dx;
+            new_y = y + dy;
         }
 
-        if (new_x < this.Radius) {
-            dx = this.Radius - this.X;
+        var dst = this.Dst;
+
+        if (Math.abs(dst.X - x) < Math.abs(dx)) {
+            new_x = dst.X;
+        } else if (new_x < this.Radius) {
+            new_x = this.Radius;
         } else if (new_x > game.map.full.width - this.Radius) {
-            dx = game.map.full.width - this.Radius - this.X;
-        } else if (Math.abs(this.Dst.X - this.X) < Math.abs(dx)) {
-            dx = this.Dst.X - this.X;
+            new_x = game.map.full.width - this.Radius;
         }
 
-
-        if (new_y < this.Radius) {
-            dy = this.Radius - this.Y;
+        if (Math.abs(dst.Y - y) < Math.abs(dy)) {
+            new_y = dst.Y;
+        } else if (new_y < this.Radius) {
+            new_y = this.Radius;
         } else if (new_y > game.map.full.height - this.Radius) {
-            dy = game.map.full.height - this.Radius - this.Y;
-        } else if (Math.abs(this.Dst.Y - this.Y) < Math.abs(dy)) {
-            dy = this.Dst.Y - this.Y;
+            new_y = game.map.full.height - this.Radius;
         }
-
-        new_x = this.X + dx;
-        new_y = this.Y + dy;
-
 
         if (this.willCollide(new_x, new_y)) {
             this.stop();
@@ -1089,8 +1088,8 @@ Character.prototype = {
         }
 
         game.sortedEntities.remove(this);
-        this.x += dx;
-        this.y += dy;
+        this.x = new_x;
+        this.y = new_y;
         game.sortedEntities.add(this);
 
         if (this.isPlayer) {
@@ -1108,7 +1107,7 @@ Character.prototype = {
             this.rider.updateBurden();
         }
 
-        if (this.X == this.Dst.X && this.Y == this.Dst.Y) {
+        if (this.x == dst.X && this.y == dst.Y) {
             if (!this.followPath())
                 this.stop();
         }
