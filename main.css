@@ -498,7 +498,8 @@ button > img {
 }
 .recipe-list.filter-portable .recipe.portable,
 .recipe-list.filter-liftable .recipe.liftable,
-.recipe-list.filter-static .recipe.static {
+.recipe-list.filter-static .recipe.static,
+ .recipe-list.filter-unavailable .recipe.unavailable {
     display: none!important;
 }
 .recipe-list.searching > li {

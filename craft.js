@@ -307,18 +307,19 @@ Craft.prototype = {
     createFilters: function() {
         var filters = document.createElement("div");
         var recipeList = this.list;
-        ["portable", "liftable", "static"].forEach(function(name) {
+        ["portable", "liftable", "static", "unavailable"].forEach(function(name) {
             var label = document.createElement("label");
             var checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.checked = true;
+            checkbox.checked = (name != "unavailable") ;
             checkbox.onchange = function(e) {
                 recipeList.classList.toggle("filter-"+name);
             }
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(T(name)));
             filters.appendChild(label);
-        })
+        });
+        recipeList.classList.toggle("filter-unavailable");
         return filters;
     },
     searchHandler: function(e) {
