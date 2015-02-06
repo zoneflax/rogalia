@@ -300,9 +300,6 @@ Container.prototype = {
     update: function() {
         this.reload();
 
-        // if(this.valid)
-        //     return;
-
         for(var i = 0; i < this.size; i++) {
             var item = this.items[i] || null;
             var blocked = false;

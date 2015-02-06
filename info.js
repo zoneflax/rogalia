@@ -67,7 +67,6 @@ function Info(message, character) {
         }, this.duration);
     }
 
-    //TODO: cache
     this.damageTexture = game.loader.loadImage("damage.png");
     this.frame = 0;
 };

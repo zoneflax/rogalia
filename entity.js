@@ -195,16 +195,18 @@ Entity.prototype = {
                 path += "-full";
         }
 
-        if (this.State) {
-            path += "-" + this.State;
-        }
+        if (this.Type != "blank") {
+            if (this.State) {
+                path += "-" + this.State;
+            }
 
-        if (this.Orientation) {
-            path += "-" + this.Orientation
-        }
+            if (this.Orientation) {
+                path += "-" + this.Orientation
+            }
 
-        if (this.Variant) {
-            path += "-" + this.Variant;
+            if (this.Variant) {
+                path += "-" + this.Variant;
+            }
         }
 
         if (!path) {
