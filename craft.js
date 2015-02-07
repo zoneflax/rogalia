@@ -345,6 +345,8 @@ Craft.prototype = {
             return;
         }
 
+        this.searchInput.value = (selectMatching) ? TS(pattern) : pattern;
+
         var matching = null;
         util.dom.forEach(id + ".recipe.found", function() {
             if (selectMatching && (this.type == pattern || this.dataset.search == pattern)) {
@@ -354,7 +356,6 @@ Craft.prototype = {
             this.parentNode.parentNode.classList.add("found");
         });
 
-        this.searchInput.value = TS(pattern);
 
         if (matching) {
             selectFirst = false;
