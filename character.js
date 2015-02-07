@@ -76,7 +76,7 @@ Character.prototype = {
     set X(x) {
         if (this.x == x)
             return;
-        if (this.Dx == 0 || Math.abs(this.x - x) > CELL_SIZE) {
+        if (this.Dx == 0 || this.Settings.Pathfinding || Math.abs(this.x - x) > CELL_SIZE) {
             game.sortedEntities.remove(this);
             this.x = x;
             game.sortedEntities.add(this);
@@ -85,7 +85,7 @@ Character.prototype = {
     set Y(y) {
         if (this.y == y)
             return;
-        if (this.Dy == 0 || Math.abs(this.y - y) > CELL_SIZE) {
+        if (this.Dy == 0 || this.Settings.Pathfinding || Math.abs(this.y - y) > CELL_SIZE) {
             game.sortedEntities.remove(this);
             this.y = y;
             game.sortedEntities.add(this);
@@ -1092,6 +1092,18 @@ Character.prototype = {
         this.y = new_y;
         game.sortedEntities.add(this);
 
+        if (this.x == dst.X && this.y == dst.Y) {
+            if (!this.followPath())
+                this.stop();
+        }
+
+        if (this.rider) {
+            this.rider.X = this.x;
+            this.rider.Y = this.y+1;
+            this.rider.updateBurden();
+        }
+
+
         if (this.isPlayer) {
             Container.updateVisibility();
             game.controller.craft.updateVisibility();
@@ -1101,16 +1113,6 @@ Character.prototype = {
         this.updateBurden();
         this.updatePlow();
 
-        if (this.rider) {
-            this.rider.X = this.x;
-            this.rider.Y = this.y+1;
-            this.rider.updateBurden();
-        }
-
-        if (this.x == dst.X && this.y == dst.Y) {
-            if (!this.followPath())
-                this.stop();
-        }
     },
     followPath: function() {
         if (this.Path && this.Path.length > 0) {
