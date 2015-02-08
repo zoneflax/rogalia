@@ -241,8 +241,8 @@ function Chat() {
     };
 
     var complexHandlers = {
-        "https://": linkParser,
-        "http://": linkParser,
+        "https://": makeLinkParser("https"),
+        "http://": makeLinkParser("http"),
         "recipe:": recipeParser,
     };
 
@@ -267,12 +267,15 @@ function Chat() {
         return common;
     }
 
-    function linkParser(data) {
-        var link = document.createElement("a");
-        link.target = "_blank";
-        link.href = data;
-        link.textContent = decodeURI(data)
-        return link;
+    function makeLinkParser(proto) {
+        return function(data) {
+            var url = proto + "://" + data;
+            var link = document.createElement("a");
+            link.target = "_blank";
+            link.href = url;
+            link.textContent = decodeURI(url)
+            return link;
+        }
     }
 
     function recipeParser(data) {
