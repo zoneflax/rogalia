@@ -1,7 +1,7 @@
 function Donate() {
     var init = function()  {
         var status = document.createElement("p");
-        status.innerHTML = "Пока ориентируемся на облако за 2к/месяц<hr>Собрано 558,76 / 6000";
+        status.innerHTML = "Пока ориентируемся на облако за 2к/месяц<hr>Собрано 857.27 / 6000";
         var iframe = document.createElement("iframe");
         iframe.frameBorder = 0;
         iframe.allowtransparency = true;
