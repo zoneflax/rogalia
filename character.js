@@ -319,7 +319,6 @@ Character.prototype = {
                     type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
                         return hash + c.charCodeAt(0);
                     }, 0) % 3 + 1);
-                    console.log(type);
                     break;
                 }
             }
