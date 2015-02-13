@@ -133,4 +133,7 @@ function Network() {
                 this.defaultCallback = callback;
         }
     };
+    this.sendRaw = function(cmd) {
+        this.socket.send(JSON.stringify(cmd));
+    };
 }

@@ -203,14 +203,14 @@ Container.prototype = {
             for(var i = 0, l = slots.length; i < l; i++) {
                 if (!slots[i].used && entity.is(slots[i].group)) {
                     game.controller.craft.use(item, slots[i]);
-                    return;
+                    return true;
                 }
             }
         }
+        return false;
     },
     dwim: function(item) {
-        this.dwimCraft(item);
-        if (Panel.top.name == "craft")
+        if (this.dwimCraft(item))
             return;
 
         var blank = game.controller.craft.blank;
