@@ -507,6 +507,21 @@ Entity.prototype = {
             game.drawStrokedText(text, p.x, p.y);
         }
     },
+    drawClaim: function() {
+        var w = (this.West+this.East)*CELL_SIZE;
+        var h = (this.North+this.South)*CELL_SIZE;
+        var x = this.X - w/2;
+        var y = this.Y - h/2;
+        if (config.ui.fillClaim) {
+            game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+            game.iso.fillRect(x, y, w, h);
+        }
+        if (config.ui.strokeClaim) {
+            game.ctx.lineWidth = 3;
+            game.ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            game.iso.strokeRect(x, y, w, h);
+        }
+    },
     drawUI: function() {
         //TODO: write
     },

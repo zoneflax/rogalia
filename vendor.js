@@ -3,7 +3,7 @@ function Vendor() {
 }
 
 Vendor.panel = null;
-Vendor.createPriceInput = function() {
+Vendor.createPriceInput = function(hidden) {
     var platinum = document.createElement("input");
     platinum.className = "platinum";
     platinum.title = T("Platinum");
@@ -20,7 +20,7 @@ Vendor.createPriceInput = function() {
     silver.value = 0;
 
     var price = document.createElement("div");
-    price.className = "lot-price price hidden"
+    price.className = "lot-price price" + (hidden ? " hidden" : "");
     price.appendChild(platinum);
     price.appendChild(document.createTextNode("p"));
     price.appendChild(gold);
@@ -28,7 +28,7 @@ Vendor.createPriceInput = function() {
     price.appendChild(silver);
     price.appendChild(document.createTextNode("s"));
 
-    price.Cost = function() {
+    price.cost = function() {
         return parseInt(platinum.value) * 10000 +
             parseInt(gold.value) * 100 +
             parseInt(silver.value);
@@ -91,8 +91,7 @@ Vendor.buy = function(data) {
 
     var sellCleanUp = function() {};
     if (game.player.IsAdmin || game.player.Id == this.Owner) {
-        var price = Vendor.createPriceInput();
-
+        var price = Vendor.createPriceInput(true);
         sellCleanUp = function() {
             if (lot.item)
                 lot.item.unblock();
@@ -136,7 +135,7 @@ Vendor.buy = function(data) {
                 "buy-add",
                 {
                     Id: parseInt(lot.id),
-                    Cost: price.Cost(),
+                    Cost: price.cost(),
                     Vendor: vendor.Id
                 },
                 open
@@ -270,7 +269,7 @@ Vendor.sell = function(data) {
             util.dom.hide(quantityLabel);
             util.dom.hide(total);
         }
-        var price = Vendor.createPriceInput();
+        var price = Vendor.createPriceInput(true);
         var lot = document.createElement("div");
         lot.className = "slot lot-icon";
         lot.vendor = vendor;
@@ -314,7 +313,7 @@ Vendor.sell = function(data) {
                 "sell-add",
                 {
                     Type: lot.type,
-                    Cost: price.Cost(),
+                    Cost: price.cost(),
                     Quantity: +quantity.value,
                     Vendor: vendor.Id
                 },

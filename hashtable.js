@@ -21,11 +21,11 @@ HashTable.prototype = {
         return this.hash[key];
     },
     set: function(key, value) {
-        this.delete(key);
+        this.remove(key);
         this.hash[key] = value;
         this.table.push(value);
     },
-    delete: function(key) {
+    remove: function(key) {
         var old = this.hash[key];
         if (old) {
             var i = this.table.findIndex(function(item) {

@@ -97,11 +97,11 @@ Stats.prototype = {
         lvl.textContent = T("Level") + " " + player.Lvl;
         this.summary.appendChild(lvl);
 
-        var state = player.Citizenship.State;
-        if (state) {
+        var faction = player.Citizenship.Faction;
+        if (faction) {
             var citizenship = document.createElement("div");
             citizenship.style.marginTop = "10px";
-            citizenship.textContent = "{ " + T(state) + " }";
+            citizenship.textContent = "{ " + T(faction) + " }";
             this.summary.appendChild(citizenship);
 
             var rank = document.createElement("div");

@@ -385,6 +385,10 @@ function mainStage() {
     function drawUI(t) {
         t.drawUI()
     }
+    function drawClaim(t) {
+        t.drawClaim();
+    }
+
     var bugs = 0;
     this.draw = function() {
         game.ctx.globalCompositeOperation = "source-over";
@@ -397,6 +401,8 @@ function mainStage() {
         game.ctx.clear();
         game.ctx.save();
         game.ctx.translate(-game.camera.x, -game.camera.y);
+
+        game.claims.forEach(drawClaim)
 
         game.map.draw();
 

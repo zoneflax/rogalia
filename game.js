@@ -86,6 +86,7 @@ function Game() {
 
     this.entities = new HashTable();
     this.sortedEntities = new BinarySearchTree();
+    this.claims = new HashTable();
     this.characters = {};
     this.containers = {}; //html interface for containers
     this.vendors = {};
@@ -147,7 +148,8 @@ function Game() {
         function draw(x, y, callback) {
             var p = new Point(x, y).toScreen();
             game.ctx.save();
-            game.ctx.lineWidth = 2;
+            if (game.ctx.lineWidth < 2)
+                game.ctx.lineWidth = 2;
             game.ctx.translate(p.x, p.y);
             game.ctx.scale(1, 0.5);
             game.ctx.rotate(Math.PI / 4);
@@ -245,6 +247,8 @@ function Game() {
 
     this.addEntity = function(entity) {
         this.entities.set(entity.Id, entity);
+        if (entity.Group == "claim")
+            this.claims.set(entity.Id, entity);
     }
 
     this.removeEntityById = function(id) {
@@ -255,7 +259,8 @@ function Game() {
 
         game.sortedEntities.remove(game.entities.get(id));
         game.map.removeObject(id);
-        game.entities.delete(id);
+        game.entities.remove(id);
+        game.claims.remove(id);
     }
 
     this.removeCharacterById = function(id) {
@@ -263,7 +268,7 @@ function Game() {
         var c = game.entities.get(id);
         game.sortedEntities.remove(c);
         var name = c.Name;
-        game.entities.delete(id);
+        game.entities.remove(id);
         delete game.characters[name];
     }
 

@@ -21,6 +21,8 @@ var config = {
         minimapObjects: false,
         showDonate: true,
         allowSelfSelection: true,
+        fillClaim: false,
+        strokeClaim: true,
     },
     system: {
         quitConfirm: true,
