@@ -512,14 +512,16 @@ Entity.prototype = {
         var h = (this.North+this.South)*CELL_SIZE;
         var x = this.X - w/2;
         var y = this.Y - h/2;
+        var color = (game.player.Id == this.Creator) ? "255,255,255" : "255,0,0";
         if (config.ui.fillClaim) {
-            game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+            game.ctx.fillStyle = "rgba(" + color + ", 0.3)";
             game.iso.fillRect(x, y, w, h);
         }
         if (config.ui.strokeClaim) {
             game.ctx.lineWidth = 3;
-            game.ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            game.ctx.strokeStyle = "rgba(" + color + ", 0.7)";
             game.iso.strokeRect(x, y, w, h);
+            game.ctx.lineWidth = 1;
         }
     },
     drawUI: function() {
