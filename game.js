@@ -110,38 +110,6 @@ function Game() {
         game.ctx.lineJoin = lineJoin;
     };
 
-    this.createPrice = function(cost) {
-        var s = cost % 100;
-        cost -= s;
-        cost /= 100;
-        var g = cost % 100;
-        cost -= g;
-        cost /= 100;
-        var p = cost;
-
-        var silver = document.createElement("span");
-        silver.className = "silver";
-        silver.textContent = s + "s";
-        silver.title = T("Silver");
-
-        var gold = document.createElement("span");
-        gold.className = "gold";
-        gold.textContent = g + "g";
-        gold.title = T("Gold");
-
-        var platinum = document.createElement("span");
-        platinum.className = "platinum";
-        platinum.textContent = p + "p";
-        platinum.title = T("Platinum");
-
-        var price = document.createElement("span");
-        price.className = "price";
-        price.appendChild(platinum);
-        price.appendChild(gold);
-        price.appendChild(silver);
-        return price;
-    };
-
     this.iso = new function() {
         var k = Math.sqrt(2);
 

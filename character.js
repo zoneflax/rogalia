@@ -458,21 +458,8 @@ Character.prototype = {
                     }
                     game.menu.show(citizenships, null, null, true);
                 },
-                "Get current tax": function() {
-                    game.network.send("get-current-tax");
-                },
-                "Get bank account balance": function() {
-                    game.network.send("get-bank-account-balance");
-                },
-                "Deposit": function() {
-                    var input = Vendor.createPriceInput();
-                    var submit = document.createElement("button");
-                    submit.textContent = T("Deposit");
-                    submit.onclick = function() {
-                        game.network.send("deposit", {"Cost": input.cost()});
-
-                    };
-                    new Panel("Deposit", "deposit", [input, submit]).show();
+                "Bank": function() {
+                    new Bank()
                 },
                 "Quest": function() {
                     if (confirm("I'll take 10 food from your bag and give you status point as a reward. Deal?")) {

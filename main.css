@@ -33,8 +33,19 @@ input, textarea, button {
     font-family: Play, sans-serif;
 }
 button {
-    height: 30px;
+    color: #ffffff;
+    background: #435665;
+    padding: 0px;
+    border: solid #ccc 1px;
+    margin: 0 1px;
+    text-decoration: none;
 }
+
+button:hover {
+  background: #344b59;
+  text-decoration: none;
+}
+
 button > img {
     vertical-align: text-bottom;
     margin: 0 3px;
@@ -288,7 +299,7 @@ button > img {
 }
 
 #system  button {
-    width: 100%;
+    width: 99%;
     display: block;
     margin-bottom: 10px;
 }
@@ -1008,6 +1019,12 @@ big {
 .price > .platinum {
     color: white;
 }
+.price.negative .platinum:before {
+    content: "- ";
+}
+.price.negative {
+    border-bottom: 1px dotted red;
+}
 #vendor {
     width: 400px;
 }
@@ -1159,4 +1176,16 @@ big {
 #wiki iframe {
     width: 900px;
     height: 600px;
+}
+#bank label {
+    display: block;
+}
+#bank label > .price {
+    position: absolute;
+    right: 5px;
+}
+
+#bank .lot-price {
+    display: block;
+    margin: 5px auto;
 }

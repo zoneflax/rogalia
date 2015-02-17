@@ -3,6 +3,48 @@ function Vendor() {
 }
 
 Vendor.panel = null;
+Vendor.createPrice = function(cost) {
+    cost = parseInt(cost) || 0;
+
+    var negative = false;
+    if (cost < 0) {
+        negative = true;
+        cost = -cost;
+    }
+
+    var s = cost % 100;
+    cost -= s;
+    cost /= 100;
+    var g = cost % 100;
+    cost -= g;
+    cost /= 100;
+    var p = cost;
+
+    var silver = document.createElement("span");
+    silver.className = "silver";
+    silver.textContent = s + "s";
+    silver.title = T("Silver");
+
+    var gold = document.createElement("span");
+    gold.className = "gold";
+    gold.textContent = g + "g";
+    gold.title = T("Gold");
+
+    var platinum = document.createElement("span");
+    platinum.className = "platinum";
+    platinum.textContent = p + "p";
+    platinum.title = T("Platinum");
+
+    var price = document.createElement("span");
+    price.className = "price"
+    if (negative)
+        price.classList.add("negative");
+    price.appendChild(platinum);
+    price.appendChild(gold);
+    price.appendChild(silver);
+    return price;
+};
+
 Vendor.createPriceInput = function(hidden) {
     var platinum = document.createElement("input");
     platinum.className = "platinum";
@@ -66,7 +108,7 @@ Vendor.buy = function(data) {
         var price = document.createElement("div");
         price.className = "lot-price";
         //price.appendChild(document.createTextNode(T("Price") + ": "));
-        price.appendChild(game.createPrice(prices[e.Id]));
+        price.appendChild(Vendor.createPrice(prices[e.Id]));
 
         var buy = document.createElement("button");
         buy.className = "lot-buy";
@@ -231,7 +273,7 @@ Vendor.sell = function(data) {
 
             var price = document.createElement("div");
             price.className = "lot-price";
-            price.appendChild(game.createPrice(info.Cost));
+            price.appendChild(Vendor.createPrice(info.Cost));
 
             var lot = document.createElement("li");
             lot.className = "lot";
@@ -348,4 +390,53 @@ Vendor.sell = function(data) {
     }
     Vendor.panel.show();
     return null
+}
+
+function Bank() {
+    var balance = document.createElement("label");
+    var tax = document.createElement("label");
+    var info = document.createElement("div");
+
+    var price = Vendor.createPriceInput();
+
+    var deposit = document.createElement("button");
+    deposit.textContent = T("Deposit");
+    deposit.onclick = function() {
+        game.network.send("deposit", {"Cost": price.cost()}, callback);
+    };
+
+    var withdraw = document.createElement("button");
+    withdraw.textContent = T("Withdraw");
+    withdraw.onclick = function() {
+        game.network.send("withdraw", {"Cost": price.cost()}, callback);
+    };
+
+    var contents = [
+        balance,
+        tax,
+        info,
+        price,
+        deposit,
+        withdraw,
+    ]
+    var panel = new Panel("bank", "Bank", contents);
+    panel.hide();
+
+    game.network.send("get-bank-info", {}, callback);
+
+    function callback(data) {
+        if (data.Warning)
+            return;
+        if (!data.Done)
+            return callback;
+        //TODO: add price.set()
+        balance.innerHTML = T("Balance") + ": ";
+        balance.appendChild(Vendor.createPrice(data.Balance));
+
+        tax.innerHTML = T("Tax") + ": ";
+        tax.appendChild(Vendor.createPrice(data.Tax))
+
+        info.innerHTML = T("Next payment") + ":<br>" + (data.NextPayment || T("never"));
+        panel.show();
+    }
 }
