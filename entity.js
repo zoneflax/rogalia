@@ -30,7 +30,7 @@ Entity.prototype = {
     Variant: "",
     Orientation: "",
     Recipe: null,
-    Props: null,
+    Props: {},
     CanCollide: true,
     Actions: null,
     Durability: null,
@@ -256,12 +256,12 @@ Entity.prototype = {
         }
 
         if (this.Orientation != "" && this.MoveType != Entity.MT_STATIC) {
-            actions[0]["Rotate"] = function() {
+            actions[2]["Rotate"] = function() {
                 game.network.send("rotate", {id: this.Id});
             }
         }
-        // if (this.MoveType != Entity.MT_STATIC && game.player.IsAdmin)
-        //     actions[2]["Fix"] = this.fix;
+        if (this.MoveType != Entity.MT_STATIC && game.player.IsAdmin)
+            actions[2]["Fix"] = this.fix;
         actions[2]["Destroy"] =  this.destroy;
         actions[2]["Info"] = this.showInfo;
         return actions;

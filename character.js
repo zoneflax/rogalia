@@ -748,6 +748,7 @@ Character.prototype = {
                 case "dig":
                     animation = this.Action.Name;
                     break;
+                case "defecate":
                 case "":
                     break;
                 default:
