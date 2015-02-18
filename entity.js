@@ -491,7 +491,7 @@ Entity.prototype = {
             this.sprite.draw(p)
         }
 
-        if (this.almostBroken()) {
+        if (this.Creator && this.almostBroken()) {
             this.drawBox("red");
         }
 
