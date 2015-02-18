@@ -244,26 +244,26 @@ Entity.prototype = {
         }.bind(this));
     },
     getActions: function() {
-        var actions = {};
+        var actions = [{}, {}, {}];
 
         if (this.MoveType == Entity.MT_PORTABLE && !this.inContainer())
-            actions["Pick up"] = this.pickUp;
+            actions[0]["Pick up"] = this.pickUp;
         else if (this.MoveType == Entity.MT_LIFTABLE)
             actions["Lift"] = this.lift;
 
         for(var i = 0, l = this.Actions.length; i < l; i++) {
-            actions[this.Actions[i]] =  this.actionApply(this.Actions[i]);
+            actions[1][this.Actions[i]] =  this.actionApply(this.Actions[i]);
         }
 
         if (this.Orientation != "" && this.MoveType != Entity.MT_STATIC) {
-            actions["Rotate"] = function() {
+            actions[0]["Rotate"] = function() {
                 game.network.send("rotate", {id: this.Id});
             }
         }
-        if (this.MoveType != Entity.MT_STATIC && game.player.IsAdmin)
-            actions["Fix"] = this.fix;
-        actions["Destroy"] =  this.destroy;
-        actions["Info"] = this.showInfo;
+        // if (this.MoveType != Entity.MT_STATIC && game.player.IsAdmin)
+        //     actions[2]["Fix"] = this.fix;
+        actions[2]["Destroy"] =  this.destroy;
+        actions[2]["Info"] = this.showInfo;
         return actions;
     },
     alignedData: function(p) {

@@ -14,8 +14,6 @@ Menu.prototype = {
         if (!object)
             return false;
         var actions = object.getActions();
-        if (defaultAction)
-            actions.Use = object.defaultAction;
 
         if (!actions)
             return false;
@@ -29,7 +27,18 @@ Menu.prototype = {
             this.container.style.left = x + game.offset.x + "px";
             this.container.style.top = y + game.offset.y + "px";
         }
-        this.container.appendChild(this.createMenu(actions, object));
+
+        if (!Array.isArray(actions))
+            actions = [actions];
+
+        if (defaultAction)
+            actions[0]["Use"] = object.defaultAction;
+
+        actions.forEach(function(actions) {
+            if (Object.keys(actions).length > 0)
+                this.container.appendChild(this.createMenu(actions, object));
+        }.bind(this));
+
         this.visible = true;
         return true;
     },
@@ -49,7 +58,7 @@ Menu.prototype = {
     },
     createMenuItem: function(title, action, object) {
         var item_a = document.createElement("a");
-        item_a.textContent = TS(title);
+        item_a.textContent = title;
         item_a.className = "action";
 
         if (action instanceof Function) {
@@ -71,11 +80,11 @@ Menu.prototype = {
     },
     createMenu: function(actions, object) {
         var ul = document.createElement("ul");
-
-        for(var title in actions) {
-            var menuItem = this.createMenuItem(title, actions[title], object);
+        var sorted = Object.keys(actions).sort();
+        sorted.forEach(function(title) {
+            var menuItem = this.createMenuItem(TS(title), actions[title], object);
             ul.appendChild(menuItem);
-        }
+        }.bind(this));
         return ul;
     }
 };
