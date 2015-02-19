@@ -249,7 +249,7 @@ Entity.prototype = {
         if (this.MoveType == Entity.MT_PORTABLE && !this.inContainer())
             actions[0]["Pick up"] = this.pickUp;
         else if (this.MoveType == Entity.MT_LIFTABLE)
-            actions["Lift"] = this.lift;
+            actions[0]["Lift"] = this.lift;
 
         for(var i = 0, l = this.Actions.length; i < l; i++) {
             actions[1][this.Actions[i]] =  this.actionApply(this.Actions[i]);
