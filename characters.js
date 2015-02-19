@@ -9,6 +9,8 @@ Character.equipSlots =  [
     "feet",
 ];
 
+Character.vitamins = ["Protein", "Fat", "Carbohydrate", "Phosphorus", "Calcium", "Magnesium"];
+
 Character.copy = function copy(to, from) {
     for(var prop in from) {
         if(from[prop] instanceof Object && !Array.isArray(from[prop])) {

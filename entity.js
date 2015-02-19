@@ -124,12 +124,11 @@ Entity.prototype = {
         if (this.Group == "food") {
             elements.push(util.hr());
             var k = Math.sqrt(this.Quality);
-            for (var i in this.Props) {
-                var v = this.Props[i];
-                if (i != "Energy")
-                    v *= k;
-                elements.push(Stats.prototype.createValue(i, v, 2));
-            }
+            Character.vitamins.forEach(function(vitamin) {
+                var value = this.Props[vitamin] * k;
+                elements.push(Stats.prototype.createValue(vitamin, value, 2));
+            }.bind(this));
+            elements.push(Stats.prototype.createValue("Energy", this.Props.Energy, 2));
         } else if ("Damage" in this) {
             elements.push(Stats.prototype.createValue("Damage", this.Damage));
         } else if (this.Props.Capacity) {

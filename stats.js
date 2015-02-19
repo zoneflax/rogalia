@@ -134,8 +134,7 @@ Stats.prototype = {
 
         var health = document.createElement("div");
         health.className = "health";
-        var vitamins = ["Protein", "Fat", "Carbohydrate", "Phosphorus", "Calcium", "Magnesium"];
-        vitamins.forEach(function(vitamin) {
+        Character.vitamins.forEach(function(vitamin) {
             health.appendChild(this.createValue(vitamin, player.Health[vitamin], 2));
         }.bind(this));
 
