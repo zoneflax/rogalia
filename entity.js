@@ -27,7 +27,7 @@ Entity.prototype = {
     Owner: 0,
     Sprite: null,
     State: "",
-    Variant: "",
+    Variant: 0,
     Orientation: "",
     Recipe: null,
     Props: {},
