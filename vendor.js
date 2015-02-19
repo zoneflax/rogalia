@@ -134,37 +134,11 @@ Vendor.buy = function(data) {
     var sellCleanUp = function() {};
     if (game.player.IsAdmin || game.player.Id == this.Owner) {
         var price = Vendor.createPriceInput(true);
-        sellCleanUp = function() {
-            if (lot.item)
-                lot.item.unblock();
-            lot.onclick = null;
-            lot.innerHTML = "";
-            name.textContent = "";
-            util.dom.hide(button);
-            util.dom.hide(price);
-        }
 
         var lot = document.createElement("div");
         lot.className = "slot lot-icon";
         lot.vendor = vendor;
 
-
-        lot.use = function(item, slot) {
-            item.block();
-            var e = Entity.get(item.id);
-            lot.id = e.Id;
-            lot.item = item;
-            util.dom.show(button);
-            util.dom.show(price);
-            lot.innerHTML = "";
-            lot.appendChild(e.icon());
-            name.textContent = e.name;
-            //TODO: fixme and make the same for craft
-            setTimeout(function(){
-                lot.onclick = sellCleanUp;
-            }, 100);
-            return true;
-        }
         var name = document.createElement("div")
         name.className = "lot-name";
 
@@ -173,6 +147,7 @@ Vendor.buy = function(data) {
         button.textContent = T("Sell");
         button.onclick = function() {
             sellCleanUp();
+            game.sortedEntities.remove(Entity.get(lot.id));
             game.network.send(
                 "buy-add",
                 {
@@ -194,6 +169,50 @@ Vendor.buy = function(data) {
         sell.appendChild(button);
 
         elements.push(sell);
+
+        function cleanUp() {
+            lot.innerHTML = "";
+            name.textContent = "";
+            util.dom.hide(button);
+            util.dom.hide(price);
+        }
+
+        if (game.player.burden) {
+            var burden = game.player.burden;
+            lot.use =  function(){};
+            lot.id = burden.Id;
+            lot.appendChild(burden.icon());
+            util.dom.show(button);
+            util.dom.show(price);
+            name.textContent = burden.name;
+            sellCleanUp = function() {
+                cleanUp();
+                game.player.burden = null;
+            }
+        } else {
+            sellCleanUp = function() {
+                if (lot.item)
+                    lot.item.unblock();
+                lot.onclick = null;
+                cleanUp();
+            };
+            lot.use = function(item, slot) {
+                item.block();
+                var e = Entity.get(item.id);
+                lot.id = e.Id;
+                lot.item = item;
+                util.dom.show(button);
+                util.dom.show(price);
+                lot.innerHTML = "";
+                lot.appendChild(e.icon());
+                name.textContent = e.name;
+                //TODO: fixme and make the same for craft
+                setTimeout(function(){
+                    lot.onclick = sellCleanUp;
+                }, 200);
+                return true;
+            }
+        }
     }
 
     if (Vendor.panel)

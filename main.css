@@ -160,6 +160,8 @@ button > img {
     background: #666;
 }
 .slot > img, .slot > canvas {
+    max-width: 64px;
+    max-height: 64px;
     vertical-align: middle;
     position: relative;
     z-index: 99;

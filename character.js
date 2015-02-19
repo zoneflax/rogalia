@@ -400,9 +400,6 @@ Character.prototype = {
                 actions["Take sold items"] = function() {
                     game.network.send("take-sold-items", {Vendor: this.Id});
                 };
-                actions["Remove all selling items"] = function() {
-                    game.network.send("undo-sells", {Vendor: this.Id}, Vendor.sell.bind(this));
-                };
             }
             break;
         }
