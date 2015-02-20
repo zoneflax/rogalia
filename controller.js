@@ -392,6 +392,11 @@ Controller.prototype = {
         this.chat.sync(chatData || []);
 
         this.ready = true;
+
+        if (document.location.hash.indexOf("noui") != -1) {
+            config.ui.world = false;
+            util.dom.hide(game.world);
+        }
     },
     createButton: function(object, buttonName) {
         function makeToggle(button, object) {
