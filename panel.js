@@ -17,7 +17,7 @@ function Panel(name, title, elements, listener, hooks) {
         }
     }
 
-    this.element = document.createElement("fieldset");
+    this.element = document.createElement("dialog");
     this.element.id = name;
     this.element.className = "panel";
     this.element.style.left = this.position.x + "px";
@@ -26,17 +26,18 @@ function Panel(name, title, elements, listener, hooks) {
     this.contents = document.createElement("div");
     this.contents.className = "contents";
 
-    var legend = document.createElement("legend");
-    legend.textContent = T(title);
+    var titleBar = document.createElement("header");
+    titleBar.className = "title-bar";
+    titleBar.textContent = T(title);
 
     var close = document.createElement("span");
     close.className = "close";
     close.panel = this;
     close.onclick = this.hide.bind(this);
     close.innerHTML = "&times;";
-    legend.appendChild(close);
+    titleBar.appendChild(close);
 
-    this.element.appendChild(legend);
+    this.element.appendChild(titleBar);
 
     this.toTop();
 
@@ -176,6 +177,8 @@ Panel.prototype = {
         localStorage.setItem(this.lsKey, JSON.stringify(config));
     },
     setWidth: function(w) {
-        this.contents.style.width = w + "px";
+        var pad = 12;
+        this.element.style.width = w + pad + "px";
+        this.element.style.maxWidth = w + pad + "px";
     },
 }

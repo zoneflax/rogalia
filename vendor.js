@@ -90,6 +90,7 @@ Vendor.buy = function(data) {
 
     var lots = document.createElement("ul");
     lots.id = "lot-list";
+    lots.className = "no-drag";
     items.forEach(function(item) {
 
         var e = new Entity(item.Id, item.Type);
@@ -239,6 +240,7 @@ Vendor.sell = function(data) {
     var prices = data.prices || {};
     var lots = document.createElement("ul")
     lots.id = "lot-list";
+    lots.className = "no-drag";
     var cleanUp = function() {};
     for (var type in prices) {
         (function(type) {

@@ -96,7 +96,7 @@ button > img {
     display: none;
     z-index: 999;
 }
-#menu ul {
+#menu ul, #vendor ul {
     margin: 0;
     padding: 0;
 }
@@ -199,17 +199,15 @@ button > img {
     background: #363232;
     background-image: url("assets/bg/window.png");
     position: absolute;
-    border: 1px solid black;
-    border-radius: 4px;
     display: none;
     z-index: 1;
     max-width: 276px;
     text-align: left;
 }
-.panel legend {
-    background: inherit;
-    background-image: url("assets/bg/title.png");
-    border-radius: 4px;
+.panel > .title-bar {
+    background: #435665;
+    /* background: inherit; */
+    /* background-image: url("assets/bg/title.png"); */
     cursor: default;
     border: 1px solid black;
     border-bottom: none;
@@ -218,10 +216,13 @@ button > img {
     padding-left: 5px;
     font-weight: bold;
     position: relative;
+    text-overflow: ellipsis;
 }
 .panel .contents {
     overflow: auto;
     min-width: 150px;
+    border: 1px solid black;
+    padding: 5px; /* update Panel.setWidth(); pad = 2*(padding+border) */
 }
 .panel .close{
     position: absolute;
@@ -260,7 +261,7 @@ button > img {
 .main-stage #wiki-button {
     display: block!important;
 }
-.exit-stage #world > div, .exit-stage fieldset, .exit-stage .map-canvas{
+.exit-stage #world > div, .exit-stage .panel, .exit-stage .map-canvas{
     display: none!important;
 }
 .exit-stage #world {
@@ -1031,16 +1032,19 @@ big {
     width: 400px;
 }
 #lot-list {
-    padding: 0;
     height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
+    border: 1px solid #ccc;
 }
 .lot {
     overflow: auto;
-    border: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     padding: 5px;
     margin-top: -1px;
+}
+.lot:last-child {
+    border: none;
 }
 .lot-icon {
     margin-right: 5px;

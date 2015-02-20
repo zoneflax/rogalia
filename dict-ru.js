@@ -618,7 +618,7 @@ var dict = {
     "Turnip slice": "Кусок репы",
     "Hop plant": "Саженец хмеля",
     "Weed": "Конопля",
-    "Dragon ass skin bag": "Сумка из кожи драконовой задницы",
+    "Dragon ass skin bag": "Сумка из кожи с жопы дракона",
     "Birch tree seed": "Семена березы",
     "Tobacco": "Табак",
     "Cirno picture": "Изображение Сырно",
