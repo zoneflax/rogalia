@@ -157,7 +157,7 @@ button > img {
     background: #ddd;
 }
 .slot.blocked {
-    background: #666;
+    background-color: yellow;
 }
 .slot > img, .slot > canvas {
     max-width: 64px;
