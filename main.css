@@ -220,7 +220,6 @@ button > img {
 }
 .panel .contents {
     overflow: auto;
-    min-width: 150px;
     border: 1px solid black;
     padding: 5px; /* update Panel.setWidth(); pad = 2*(padding+border) */
 }
