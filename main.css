@@ -94,7 +94,7 @@ button > img {
     padding: 1em;
     padding-left: 2em;
     display: none;
-    z-index: 999;
+    z-index: 999999;
 }
 #menu ul, #vendor ul {
     margin: 0;
@@ -238,7 +238,7 @@ button > img {
 }
 #cursor {
     position: absolute;
-    z-index: 9999;
+    z-index: 9999999;
     pointer-events: none;
 }
 #cursor img {
@@ -797,7 +797,7 @@ a.extern {
 .ballon {
     position: absolute;
     background: #333;
-    z-index: 9999;
+    z-index: 1;
     word-wrap: break-word;
     max-width: 10em;
     display: inline-block;
@@ -1195,4 +1195,15 @@ big {
 #bank .lot-price {
     display: block;
     margin: 5px auto;
+}
+#action-progress {
+  /* background: none repeat scroll 0 0 orange; */
+  bottom: 76px;
+  /* height: 16px; */
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  width: 300px;
+  z-index: 99999999;
 }

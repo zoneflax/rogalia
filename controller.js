@@ -31,6 +31,7 @@ function Controller(game) {
         x: 0,
         y: 0,
         cursor: null,
+        actionProgress: document.getElementById("action-progress"),
         actionButton: null,
         get mouseIsValid() {
             return this.x > 0 && this.y > 0 && this.x < game.screen.width && this.y < game.screen.height;

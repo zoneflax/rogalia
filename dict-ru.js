@@ -1,4 +1,8 @@
 var dict = {
+    "Bung": "Пробка",
+    "Flower essence": "Цветочная эссенция",
+    "Anti plague potion": "Противочумное зелье",
+    "Vial": "Флакон",
     "Requirements": "Требования",
     "Close": "Закрыть",
     "Help": "Справка",

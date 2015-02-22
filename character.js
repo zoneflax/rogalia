@@ -491,11 +491,15 @@ Character.prototype = {
     },
     drawAction: function() {
         if(this.Action.Duration) {
-            game.ctx.strokeStyle = "orange";
-            game.ctx.beginPath();
-            var p = this.screen();
-            game.ctx.arc(p.x, p.y, CELL_SIZE, 0, this.action.progress);
-            game.ctx.stroke();
+            if (this.isPlayer) {
+                game.controller.iface.actionProgress.value = this.action.progress;
+            } else {
+                game.ctx.strokeStyle = "orange";
+                game.ctx.beginPath();
+                var p = this.screen();
+                game.ctx.arc(p.x, p.y, CELL_SIZE, 0, this.action.progress);
+                game.ctx.stroke();
+            }
         }
     },
     see: function(character) {
@@ -818,10 +822,14 @@ Character.prototype = {
                 this.action.progress = 0;
                 this.action.last = this.Action.Started;
                 this.toggleActionSound();
+                if (this.isPlayer)
+                    util.dom.show(game.controller.iface.actionProgress);
             }
             if(this.Action.Duration) {
                 this.action.progress += (Math.PI * 2 / this.Action.Duration * 1000 * k);
             } else {
+                if (this.isPlayer)
+                    util.dom.hide(game.controller.iface.actionProgress);
                 this.action.progress = 0;
             }
         }
