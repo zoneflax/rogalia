@@ -317,6 +317,15 @@ var util = new function() {
 	    }
         });
     };
+
+    this.skewer = function() {
+        var port = document.location.port;
+        if (port != 8888)
+            return;
+        var script = document.createElement("script");
+        script.src = "http://localhost:" + port + "/skewer";
+        document.body.appendChild(script);
+    };
 };
 
 if (!Math.hypot) {

@@ -599,11 +599,11 @@ function Map() {
         x = (x / CELL_SIZE) << 0;
         y = (y / CELL_SIZE) << 0;
         if (!this.data[y]) {
-            console.error(x, y);
+            game.error(x, y);
             return null;
         }
         if (!this.data[y][x]) {
-            console.error(x, y);
+            game.sendErrorf(x, y);
             return null;
         }
         return this.data[y][x];

@@ -29,13 +29,13 @@ function Info(message, character) {
         game.controller.highlight("inventory");
         var item = Entity.get(this.data);
         if (!item) {
-            game.sendError("(Info.js) Cannot find item %d", this.data);
+            game.sendErrorf("(Info.js) Cannot find item %d", this.data);
             return
         }
         // it's possible when we replace item e.g. in onCraft
         var container = game.containers[item.Container];
         if (!container) {
-            game.sendError("(Info.js) Cannot find container %d for item %d", item.Container, item.Id);
+            game.sendErrorf("(Info.js) Cannot find container %d for item %d", item.Container, item.Id);
             return;
         }
         container.reload();

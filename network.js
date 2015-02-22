@@ -1,10 +1,8 @@
 function Network() {
-    if (document.location.href.match(/localhost/))
+    this.url = "rogalik.tatrix.org";
+    if (document.location.href.match(/localhost/)) {
         this.url = "localhost";
-    else if (document.location.href.match(/192.168/))
-        this.url = "rogalik";
-    else
-        this.url = "rogalik.tatrix.org";
+    }
 
     this.data = null;
     this.socket = null;

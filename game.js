@@ -19,10 +19,10 @@ function Game() {
     this.ctx = canvas.getContext("2d");
     this.ctx.clear = function() {
         game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
-    }
+    };
     this.setFontSize = function(size) {
         this.ctx.font = (size || FONT_SIZE) + "px Play, sans-serif";
-    }
+    };
     this.setFontSize();
 
     this.ping = 0;
@@ -132,23 +132,23 @@ function Game() {
         this.fillRect = function(x, y, w, h) {
             draw(x, y, function() {
                 game.ctx.fillRect(0, 0, w * k, h * k);
-            })
+            });
         };
         this.fillCircle = function(x, y, r) {
             draw(x, y, function() {
                 game.ctx.beginPath();
                 game.ctx.arc(0, 0, r * k, 0, Math.PI * 2);
                 game.ctx.fill();
-            })
+            });
         };
         this.strokeCircle = function(x, y, r) {
             draw(x, y, function() {
                 game.ctx.beginPath();
                 game.ctx.arc(0, 0, r * k, 0, Math.PI * 2);
                 game.ctx.stroke();
-            })
+            });
         };
-    }
+    };
 
     this.addEventListeners = function() {
         window.addEventListener("beforeunload", function(e) {
@@ -172,7 +172,7 @@ function Game() {
             game.focus = false
         });
 
-    }
+    };
 
     this.update = function(currentTime) {
         this.stage.update(currentTime);
@@ -204,20 +204,20 @@ function Game() {
     this.addCharacter = function(character) {
         this.characters[character.Name] = character;
         this.addEntity(character);
-    }
+    };
 
     this.filter = function(type) {
         var Class = window[type];
         return this.entities.filter(function(e) {
             return e instanceof Class;
-        })
-    }
+        });
+    };
 
     this.addEntity = function(entity) {
         this.entities.set(entity.Id, entity);
         if (entity.Group == "claim")
             this.claims.set(entity.Id, entity);
-    }
+    };
 
     this.removeEntityById = function(id) {
         if (game.containers[id]) {
@@ -229,7 +229,7 @@ function Game() {
         game.map.removeObject(id);
         game.entities.remove(id);
         game.claims.remove(id);
-    }
+    };
 
     this.removeCharacterById = function(id) {
         game.map.removeObject(id);
@@ -238,7 +238,7 @@ function Game() {
         var name = c.Name;
         game.entities.remove(id);
         delete game.characters[name];
-    }
+    };
 
     this.findItemsNear = function(x, y, dist) {
         dist = dist || CELL_SIZE*2;
@@ -247,22 +247,25 @@ function Game() {
                 !e.inContainer() &&
                 util.distanceLessThan(e.X - x, e.Y - y, dist);
         });
-    }
+    };
 
     this.exit = function(message) {
         this.setStage("exit", message);
     };
 
     this.sendError = function(msg) {
-        game.network.send("error", {msg: msg})
-    }
+        game.network.send("error", {msg: msg});
+    };
+
+    this.sendErrorf = function() {
+        this.sendError(sprintf.apply(window, arguments));
+    };
 
     function openLink(link) {
         return function() {
             window.open(link, "_blank");
             return false;
-        }
-
+        };
     }
 
     this.button = {
@@ -333,15 +336,15 @@ function Game() {
             var p = new Panel("authors",  "authors", links);
             authors.onclick = function() {
                 p.show();
-            }
+            };
             return authors;
         },
-    }
+    };
 
     this.error = function() {
         console.error.apply(console, arguments);
         console.trace();
-        game.sendError("Game error:|" + [].join.call(arguments, "|"))
+        game.sendError("Game error:|" + [].join.call(arguments, "|"));
         game.exit();
         throw "Fatal error";
     };
@@ -360,7 +363,7 @@ function Game() {
         ].join("|"));
         game.exit(T("Client error. Refresh page or try again later."));
         return false;
-    }
+    };
 
     function tick(currentTime) {
         game.controller.fpsStatsBegin();
@@ -374,4 +377,6 @@ function Game() {
     };
 
     tick();
+
+    util.skewer();
 };
