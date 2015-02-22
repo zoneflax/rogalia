@@ -201,7 +201,6 @@ button > img {
     position: absolute;
     display: none;
     z-index: 1;
-    max-width: 276px;
     text-align: left;
 }
 .panel > .title-bar {
@@ -567,6 +566,9 @@ button > img {
 
 #admin-bar {
     max-width: 544px;
+}
+#terra-bar > .contents {
+    width: 270px;
 }
 #terra-bar img, #map img {
     max-height: none;
@@ -1118,7 +1120,7 @@ big {
     line-height: 87px;
 }
 
-#news {
+#news > .contents {
     max-width: 400px;
     width: 400px;
     max-height: 500px;
