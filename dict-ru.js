@@ -1,4 +1,5 @@
 var dict = {
+    "Durability": "Прочность",
     "Value": "Значение",
     "Bung": "Пробка",
     "Flower essence": "Цветочная эссенция",

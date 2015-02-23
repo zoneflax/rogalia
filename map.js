@@ -599,11 +599,11 @@ function Map() {
         x = (x / CELL_SIZE) << 0;
         y = (y / CELL_SIZE) << 0;
         if (!this.data[y]) {
-            game.error(x, y);
+            game.sendErrorf("Map cell %d %d not found (y)", x, y);
             return null;
         }
         if (!this.data[y][x]) {
-            game.sendErrorf("Map cell %d %d not found", x, y);
+            game.sendErrorf("Map cell %d %d not found (x)", x, y);
             return null;
         }
         return this.data[y][x];
