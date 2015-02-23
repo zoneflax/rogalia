@@ -123,9 +123,11 @@ function Chat() {
                 });
                 break;
             case "add":
-                if (Entity.templates[arg])
+                if (Entity.templates[arg]) {
                     game.controller.creatingCursor(new Entity(0, arg));
-                break;
+                    e.target.blur();
+                    break;
+                }
             case "list":
                 for (var i in Entity.templates) {
                     var t = Entity.templates[i];

@@ -36,10 +36,16 @@ button::-moz-focus-inner {
     border:0;
     padding:0;
 }
+button[disabled] {
+    background: #666;
+    color: #ccc;
+}
 
-button:hover {
-  background: #344b59;
-  text-decoration: none;
+button:not([disabled]):hover {
+  background: #3f4c6b;
+}
+button:active {
+  background: #346!important;
 }
 
 button > img {
@@ -914,7 +920,6 @@ a.extern {
 }
 #skills .skill.capped {
     color: orange;
-    cursor: help;
 }
 #skills .description {
     min-height: 150px;

@@ -742,7 +742,8 @@ Entity.prototype = {
             return
         }
 
-        this.sprite.ready = false;
+        if (this.sprite)
+            this.sprite.ready = false;
 
         var w = this.Width;
         this.Width = this.Height;
