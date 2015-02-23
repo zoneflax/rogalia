@@ -706,6 +706,11 @@ a:hover {
     position: relative;
     overflow: hidden;
 }
+#map .wrapper.zoom {
+    width: 512px;
+    height: 512px;
+    overflow: auto;
+}
 #map .point {
     position: absolute;
     width: 3px;

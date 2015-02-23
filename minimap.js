@@ -1,22 +1,41 @@
 function Minimap() {
-    var SCALE = 0.25;
+    var defaultScale = 0.25;
+    var SCALE = defaultScale;
     this.mapImage = game.loader.loadImage("map.png");
+    var width = this.mapImage.width;
     game.loader.ready(function() {
-        this.mapImage.width = this.mapImage.width * SCALE;
-        // this.mapImage.height = this.mapImage.height * SCALE;
+        this.mapImage.width = width * SCALE;
     }.bind(this));
     this.points = {};
-    this.characters = {}
+    this.characters = {};
 
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper no-drag";
-
     wrapper.appendChild(this.mapImage);
+
+    var lvl = 0;
+    var zoom = document.createElement("button");
+    zoom.textContent = T("Zoom");
+    zoom.onclick = function() {
+        switch (lvl++) {
+        case 0:
+            SCALE *= 2; break;
+        case 1:
+            wrapper.classList.add("zoom");
+            SCALE = 1; break;
+        case 2:
+            SCALE = defaultScale;
+            wrapper.classList.remove("zoom");
+            lvl = 0;
+            break;
+        }
+        this.mapImage.width = width * SCALE;
+    }.bind(this);
 
     this.panel = new Panel(
         "map",
         "Map",
-        [wrapper],
+        [wrapper, zoom],
         {
             click: function(e) {
                 if (e.target != this.mapImage || !game.player.IsAdmin)
