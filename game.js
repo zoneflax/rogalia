@@ -21,7 +21,7 @@ function Game() {
         game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
     };
     this.setFontSize = function(size) {
-        this.ctx.font = (size || FONT_SIZE) + " Philosopher";
+        this.ctx.font = (size || FONT_SIZE) + "px Philosopher";
     };
     this.setFontSize();
 
