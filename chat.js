@@ -77,7 +77,7 @@ function Chat() {
         this.current = this.ring.length;
     }
 
-    this.newMessageElement.addEventListener("keydown", function(e) {
+    this.keydown = function(e) {
         var message = e.target.value;
         switch (e.keyCode) {
         case 38: //up
@@ -149,7 +149,7 @@ function Chat() {
         game.chat.send(message);
         e.target.value = "";
         return true;
-    });
+    };
 
     this.channelGroupsElement = document.createElement("div");
     this.channelGroups = {};

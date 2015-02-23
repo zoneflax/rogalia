@@ -88,11 +88,11 @@ function Game() {
     this.sortedEntities = new BinarySearchTree();
     this.claims = new HashTable();
     this.characters = {};
-    this.containers = {}; //html interface for containers
+    this.containers = {};
     this.vendors = {};
 
     this.panels = {};
-    this.epsilon = 0; // коэфицент для смены кадров
+    this.epsilon = 0;
     this.camera = new Camera();
 
     this.drawStrokedText = function(text, x, y, strokeStyle) {
@@ -121,7 +121,7 @@ function Game() {
             game.ctx.translate(p.x, p.y);
             game.ctx.scale(1, 0.5);
             game.ctx.rotate(Math.PI / 4);
-            callback()
+            callback();
             game.ctx.restore();
         }
         this.strokeRect = function(x, y, w, h) {

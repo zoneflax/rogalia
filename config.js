@@ -22,6 +22,7 @@ var config = {
         showDonate: true,
         allowSelfSelection: true,
         fillClaim: false,
+        showMeterValues: false,
         strokeClaim: true,
     },
     system: {

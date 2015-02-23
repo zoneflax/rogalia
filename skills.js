@@ -71,9 +71,10 @@ Skills.prototype = {
     showDescription: function(item) {
         var skill = item.skill;
         var name = item.name;
-        var text = "";
+        var text = T("Value") + ": " + Stats.formatParam(skill.Value) + "\n";
+
         if (this.descriptions[name])
-            text = this.descriptions[name] + "\n\n";
+            text += this.descriptions[name] + "\n\n";
 
         var next = this.nextLvlOf(skill);
         if (!next) {

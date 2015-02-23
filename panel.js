@@ -17,7 +17,7 @@ function Panel(name, title, elements, listener, hooks) {
         }
     }
 
-    this.element = document.createElement("dialog");
+    this.element = document.createElement("div");
     this.element.id = name;
     this.element.className = "panel";
     this.element.style.left = this.position.x + "px";
@@ -39,9 +39,7 @@ function Panel(name, title, elements, listener, hooks) {
 
     this.element.appendChild(titleBar);
 
-    this.toTop();
-
-    hooks = hooks || {}
+    hooks = hooks || {};
     this.hooks = {
         show: hooks.show,
         hide: hooks.hide,
@@ -108,6 +106,7 @@ Panel.checkCollision = function() {
 
 Panel.zIndex = 1;
 Panel.top = null;
+Panel.stack = [];
 
 Panel.prototype = {
     get x() {
@@ -124,6 +123,9 @@ Panel.prototype = {
     },
     toTop: function() {
         this.element.style.zIndex = ++Panel.zIndex;
+        if (Panel.top && Panel.top != this) {
+            Panel.stack.push(Panel.top);
+        }
         Panel.top = this;
     },
     hide: function() {
@@ -133,6 +135,9 @@ Panel.prototype = {
         if (this.button)
             this.button.classList.remove("opened");
         this.visible = false;
+        var next = Panel.stack.pop();
+        if (next)
+            Panel.top = next;
     },
     close: function() {
         this.hide();

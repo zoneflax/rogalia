@@ -266,8 +266,9 @@ Controller.prototype = {
             },
             27: { //esc
                 callback: function() {
-                    if (Panel.top)
+                    if (Panel.top) {
                         Panel.top.hide();
+                    }
                     game.player.target = null;
                 }
             },
@@ -755,14 +756,18 @@ Controller.prototype = {
         this.modifier.shift = e.shiftKey;
         this.modifier.alt = e.altKey;
         var c = String.fromCharCode(e.keyCode);
-        //esc
-        if(e.keyCode != 27 && e.target.id == "new-message")
-            return false;
+
+        var esc = e.keyCode == 27;
+        if (!esc) {
+            if(e.target.id == "new-message") {
+                return this.chat.keydown(e);
+            }
+            if (e.target.nodeName == "INPUT")
+                return true;
+        }
+
+
         this.keys[c] = true;
-
-
-        if (e.target.nodeName == "INPUT")
-            return true;
 
         var hotkey = this.hotkeys[e.keyCode] || this.hotkeys[c];
         if (hotkey) {

@@ -84,29 +84,36 @@ Info.prototype = {
             this.y -= 10 * k;
         }
     },
-    draw: function(x, y) {
+    draw: function() {
+        var target = null;
+        if (this.data && this.data.To) {
+            target = game.characters[this.data.To];
+            //on teleport/death can be empty
+            if (!target)
+                return;
+        } else {
+            target = game.player;
+        }
+        var p = target.screen();
+        p.y -= target.sprite.nameOffset + 2*FONT_SIZE;
+
         switch(this.type) {
         case "heal":
-            this.drawValue(x, y, "#0c0", "+" + this.value + "hp");
+            this.drawValue(p, "#0c0", "+" + this.value + "hp");
             break;
         case "exp-gain":
-            this.drawValue(x, y, "#ff0", "+" + this.value + "xp");
+            this.drawValue(p, "#ff0", "+" + this.value + "xp");
             break;
         case "damage-deal": {
-            //TODO: fixme
-            var character = game.characters[this.data.To]; //on teleport/death can be empty
-            if (character) {
-                var p = character.screen();
-                this.drawValue(p.x, p.y - (CELL_SIZE + FONT_SIZE), "#0ff", null, character);
-            }
+            this.drawValue(p, "#0ff", null, target);
             break;
         }
         case "damage-gain":
-            this.drawValue(x, y, "#f00", null, game.player);
+            this.drawValue(p, "#f00", null, target);
             break;
         }
     },
-    drawValue: function(x, y, color, text, target) {
+    drawValue: function(p, color, text, target) {
         //TODO: omfg
         if (target && this.damageTexture && this.frame * 64 < this.damageTexture.width) {
             game.ctx.drawImage(
@@ -115,16 +122,16 @@ Info.prototype = {
                 0,
                 64,
                 63,
-                Math.round(x - 32),
-                Math.round(y - ((target.Type == "human") ? 64 : 32)),
+                Math.round(p.x - 32),
+                Math.round(p.y - ((target.Type == "human") ? 64 : 32)),
                 64,
                 63
             );
         }
         text = text || this.value.toFixed(2);
-        x = x + this.x - game.ctx.measureText(text).width / 2;
+        p.x = p.x + this.x - game.ctx.measureText(text).width / 2;
 
         game.ctx.fillStyle = color;
-        game.drawStrokedText(text, x, y + this.y);
+        game.drawStrokedText(text, p.x, p.y + this.y);
     },
 }

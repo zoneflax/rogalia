@@ -325,9 +325,16 @@ function connectingStage() {
         return;
     }
 
+    //Ubuntu
+    //Anonymous Pro
+    //Philosopher
+    //Play
+    //Bad+Script
+    //Marck+Script
+    //Ruslan+Display
     WebFont.load({
         google: {
-            families: ["Play::latin,cyrillic"]
+            families: ["Philosopher::latin,cyrillic"]
         },
         active: function() {
             console.info("Fonts loaded");

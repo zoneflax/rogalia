@@ -23,7 +23,7 @@ function Character(id, name) {
         y: 0,
         time: null,
         radius: 0,
-    }
+    };
 
     this.target = null;
 
@@ -49,10 +49,12 @@ function Character(id, name) {
     this.ballon = null;
     this.shownEffects = {};
     this.isPlayer = (this.Name == game.login);
+
+    this.Action = {};
     this.action = {
         progress: 0,
         last: 0,
-    }
+    };
 
     this.speed = 1;
     this.sprites = {};
@@ -591,11 +593,9 @@ Character.prototype = {
             this.drawName();
         }
 
-
-        var p = this.getDrawPoint();
         this.info.forEach(function(info) {
-            info.draw(p.x, p.y - FONT_SIZE);
-        }.bind(this));
+            info.draw();
+        });
 
         if(game.debug.player.position) {
             game.ctx.fillStyle = "#fff";

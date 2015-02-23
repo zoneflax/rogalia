@@ -5,40 +5,35 @@
     -moz-user-select: none!important;
     user-select: none!important;
 }
-input, textarea, .messages, .message, .message .body, .message .from{
-    -webkit-user-select: text!important;
-    -moz-user-select: text!important;
-    user-select: text!important;
-    font-family: Play, sans-serif;
-}
 body {
-    font-family:  Play, sans-serif;
+    font:  14px/18px Philosopher;
     padding: 0;
     margin: 0;
     background: #666;
-    font-size: 14px;
     text-align: center;
     color: white;
     overflow: hidden;
     background: url("assets/bg/pattern.png") repeat;
 }
-a {
-    color: white;
+input, textarea, button, .messages, .message, .message .body, .message .from{
+    -webkit-user-select: text!important;
+    -moz-user-select: text!important;
+    user-select: text!important;
+    font:  14px/18px Philosopher;
 }
-a:hover {
-    color: lightgreen;
-}
-input, textarea, button {
-    font-size: 14px;
-    font-family: Play, sans-serif;
-}
+
 button {
     color: #ffffff;
     background: #435665;
-    padding: 0px;
+    padding: 0 3px;
     border: solid #ccc 1px;
     margin: 0 1px;
     text-decoration: none;
+}
+/* Remove button padding in FF */
+button::-moz-focus-inner {
+    border:0;
+    padding:0;
 }
 
 button:hover {
@@ -49,6 +44,12 @@ button:hover {
 button > img {
     vertical-align: text-bottom;
     margin: 0 3px;
+}
+a {
+    color: white;
+}
+a:hover {
+    color: lightgreen;
 }
 
 #account {
@@ -205,8 +206,6 @@ button > img {
 }
 .panel > .title-bar {
     background: #435665;
-    /* background: inherit; */
-    /* background-image: url("assets/bg/title.png"); */
     cursor: default;
     border: 1px solid black;
     border-bottom: none;
@@ -491,7 +490,7 @@ button > img {
     overflow-y: scroll;
     width: 150px;
     border-right: 1px solid #000;
-    padding: 0 1em 0 1em;
+    padding: 0 5px 0 25px;
     margin: 20px 0 0;
 }
 .craft-controls {
@@ -702,8 +701,43 @@ a.extern {
 .param {
     display: block;
 }
-.param span {
+.param > .value {
     float: right;
+}
+.param > .meter-wrapper {
+    display: inline-block;
+    width: 50%;
+    position: relative;
+}
+.param meter {
+    width: 100%;
+}
+.param .meter-title {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    color: #222;
+    text-shadow: 0px 0px 2px #ddd;
+    font-size: 12px;
+}
+.param.strength, .param.protein {
+    color: #f99;
+}
+.param.vitality, .param.fat {
+    color: #ff9;
+}
+.param.dexterity, .param.carbohydrate {
+    color: #9f9;
+}
+.param.intellect, .param.phosphorus {
+    color: #9ff;
+}
+.param.perception, .param.calcium {
+    color: #f9f;
+}
+.param.wisdom, .param.magnesium {
+    color: #fff;
 }
 
 #stats {
@@ -854,8 +888,7 @@ a.extern {
     padding: 0.5em;
 }
 #skills {
-    max-width: 400px;
-    min-width: 400px;
+    width: 300px;
     white-space: pre-wrap;
 }
 #skills .skill {
@@ -865,7 +898,7 @@ a.extern {
     min-height: 150px;
 }
 #skills .skill.selected, #skills .skill:hover {
-    background: #999;
+    background: #666;
 }
 
 .new {
