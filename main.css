@@ -25,9 +25,10 @@ input, textarea, button, .messages, .message, .message .body, .message .from{
 button {
     color: #ffffff;
     background: #435665;
+    background: linear-gradient(to bottom,  #435665 0%,#3f4c6b 100%);
     padding: 0 3px;
     border: solid #ccc 1px;
-    margin: 0 1px;
+    margin: 1px;
     text-decoration: none;
 }
 /* Remove button padding in FF */
@@ -207,6 +208,7 @@ a:hover {
 }
 .panel > .title-bar {
     background: #435665;
+    background: linear-gradient(to bottom,  #435665 0%,#3f4c6b 100%);
     cursor: default;
     border: 1px solid black;
     border-bottom: none;
@@ -215,7 +217,12 @@ a:hover {
     padding-left: 5px;
     font-weight: bold;
     position: relative;
+}
+.panel > .title-bar .text {
+    width: 90%;
+    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .panel .contents {
     overflow: auto;
@@ -223,13 +230,23 @@ a:hover {
     padding: 5px; /* update Panel.setWidth(); pad = 2*(padding+border) */
 }
 .panel .close{
+    border: 1px solid black;
+    display: block;
+    height: 18px;
     position: absolute;
-    right: 5px;
+    right: -1px;
     text-shadow: 0 0 1px;
+    top: -1px;
+    width: 18px;
+    text-align: center;
 }
 .panel .close:hover {
     cursor: pointer;
     color: red;
+}
+
+.panel.container button {
+    min-width: 130px;
 }
 
 .panel > img, .panel > canvas {
@@ -484,6 +501,7 @@ a:hover {
     overflow: hidden;
 }
 .recipe-list, .recipe-details {
+    margin-top: 20px;
     height: 500px;
     float: left;
 }
@@ -543,7 +561,7 @@ a:hover {
     color: lightgreen;
 }
 .recipe-details {
-    width: 300px;
+    width: 333px;
     position: relative;
     left: 10px;
 }
@@ -552,16 +570,15 @@ a:hover {
 }
 .recipe-create, .recipe-auto, .recipe-craft-all {
     width: 30%;
-    padding: 3px;
     position: absolute;
     bottom: 0;
     left: 0;
 }
 .recipe-auto {
-    margin-left: 33%;
+    margin-left: 36%;
 }
 .recipe-create {
-    margin-left: 66%;
+    margin-left: 69%;
 }
 
 #admin-bar {
@@ -738,7 +755,7 @@ a.extern {
     color: #f9f;
 }
 .param.wisdom, .param.magnesium {
-    color: #fff;
+    color: #99f;
 }
 
 #stats {
@@ -894,6 +911,10 @@ a.extern {
 }
 #skills .skill {
     cursor: pointer;
+}
+#skills .skill.capped {
+    color: orange;
+    cursor: help;
 }
 #skills .description {
     min-height: 150px;

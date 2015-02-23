@@ -179,6 +179,7 @@ Container.prototype = {
         }.bind(this);
 
         this.panel.hooks.show = this.update.bind(this);
+        this.panel.element.classList.add("container");
 
         var w = (this.id) ? this.slotsWidth : 1;
         this.panel.setWidth(w * Container.SLOT_SIZE + 2 * this.slotsWidth);

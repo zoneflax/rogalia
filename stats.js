@@ -186,7 +186,8 @@ Stats.prototype = {
         this.statistics.appendChild(this.createValue("Kills", player.Statistics.Kills));
         this.statistics.appendChild(this.createValue("Players killed", player.Statistics.PlayersKilled));
         this.statistics.appendChild(this.createValue("Death", player.Statistics.Death));
-        this.statistics.appendChild(this.createValue("Status points", player.Citizenship.StatusPoints));
+        var sp = {Current: player.Citizenship.StatusPoints, Max: Math.pow(10, player.Citizenship.Rank)}
+        this.statistics.appendChild(this.createParam("Status points", sp));
         this.statistics.appendChild(util.hr());
     },
     createSection: function(name) {

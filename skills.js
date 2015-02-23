@@ -39,12 +39,17 @@ Skills.prototype = {
 
         this.skills.innerHTML = "";
 
+        var max = 100;
         Object.keys(game.player.Skills).forEach(function(name) {
             var skill = game.player.Skills[name];
-            var item = Stats.prototype.createParam(name, {Current: skill.Value.Current, Max: 100});
+            var item = Stats.prototype.createParam(name, {Current: skill.Value.Current, Max: max});
             item.name = name;
             item.skill = skill;
             item.classList.add("skill");
+            if (skill.Value.Current == skill.Value.Max && skill.Value.Max != max) {
+                item.classList.add("capped");
+                item.title = T("Skill is capped");
+            }
             item.onclick = this.select.bind(this, item);
             this.skills.appendChild(item);
 

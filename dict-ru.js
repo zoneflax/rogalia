@@ -1,4 +1,6 @@
 var dict = {
+    "Skill is capped": "Навык ограничен",
+    "Cap": "Предел",
     "Durability": "Прочность",
     "Value": "Значение",
     "Bung": "Пробка",

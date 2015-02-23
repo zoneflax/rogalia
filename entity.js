@@ -126,7 +126,9 @@ Entity.prototype = {
             var k = Math.sqrt(this.Quality);
             Character.vitamins.forEach(function(vitamin) {
                 var value = this.Props[vitamin] * k;
-                elements.push(Stats.prototype.createValue(vitamin, value, 2));
+                var elem = Stats.prototype.createValue(vitamin, value, 2)
+                elem.classList.add(vitamin.toLowerCase());
+                elements.push(elem);
             }.bind(this));
             elements.push(Stats.prototype.createValue("Energy", this.Props.Energy, 2));
         } else if ("Damage" in this) {
