@@ -36,7 +36,7 @@ Vendor.createPrice = function(cost) {
     platinum.title = T("Platinum");
 
     var price = document.createElement("span");
-    price.className = "price"
+    price.className = "price";
     if (negative)
         price.classList.add("negative");
     price.appendChild(platinum);
@@ -74,7 +74,7 @@ Vendor.createPriceInput = function(hidden) {
         return parseInt(platinum.value) * 10000 +
             parseInt(gold.value) * 100 +
             parseInt(silver.value);
-    }
+    };
     return price;
 }
 Vendor.buy = function(data) {
@@ -92,11 +92,13 @@ Vendor.buy = function(data) {
     lots.id = "lot-list";
     lots.className = "no-drag";
     items.forEach(function(item) {
-
         var e = new Entity(item.Id, item.Type);
         e.sync(item);
         e.initSprite();
         game.sortedEntities.remove(e);
+        game.addEntity(e);
+        if (e.Container != vendor.Id)
+            return;
 
         var icon = document.createElement("div");
         icon.className = "lot-icon slot";
@@ -111,21 +113,31 @@ Vendor.buy = function(data) {
         //price.appendChild(document.createTextNode(T("Price") + ": "));
         price.appendChild(Vendor.createPrice(prices[e.Id]));
 
+        var info = document.createElement("button");
+        info.className = "lot-info";
+        info.textContent = "?";
+        info.onclick = function() {
+            e.showInfo();
+            if (e.Props.Slots)
+                Container.open(item.Id).panel.show();
+        };
+
         var buy = document.createElement("button");
         buy.className = "lot-buy";
         buy.textContent = T("Buy");
         buy.onclick = function() {
             if (confirm(T("Buy") + " "+ item.Name + "?")) {
-                game.network.send("buy", {Id: item.Id, Vendor: vendor.Id}, open)
+                game.network.send("buy", {Id: item.Id, Vendor: vendor.Id}, open);
             }
         };
 
         var lot = document.createElement("li");
         lot.className = "lot";
         lot.appendChild(icon);
-        lot.appendChild(name)
-        lot.appendChild(price)
+        lot.appendChild(name);
+        lot.appendChild(price);
         lot.appendChild(buy);
+        lot.appendChild(info);
 
         lots.appendChild(lot);
     });

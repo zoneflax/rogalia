@@ -1124,7 +1124,7 @@ big {
     border: none;
     display: inline-block;
 }
-.lot-buy, .lot-sell, .lot-cancel {
+.lot-info, .lot-buy, .lot-sell, .lot-cancel {
     float: right;
 }
 .lot-quantity {

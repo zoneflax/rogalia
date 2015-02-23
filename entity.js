@@ -360,8 +360,10 @@ Entity.prototype = {
     },
     //used by container
     open: function(data) {
-        if (data && !data.Done)
-            return this.open.bind(this);
+        if (data && !data.Done) {
+            this.open.bind(this);
+            return;
+        }
 
         if (!game.player.isNear(this)) {
             game.network.send("Open", {Id: this.Id}, this.open.bind(this))
