@@ -603,7 +603,7 @@ function Map() {
             return null;
         }
         if (!this.data[y][x]) {
-            game.sendErrorf(x, y);
+            game.sendErrorf("Map cell %d %d not found", x, y);
             return null;
         }
         return this.data[y][x];

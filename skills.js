@@ -41,7 +41,7 @@ Skills.prototype = {
 
         Object.keys(game.player.Skills).forEach(function(name) {
             var skill = game.player.Skills[name];
-            var item = Stats.prototype.createParam(name, skill.Value);
+            var item = Stats.prototype.createParam(name, {Current: skill.Value.Current, Max: 100});
             item.name = name;
             item.skill = skill;
             item.classList.add("skill");
