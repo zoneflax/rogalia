@@ -2,8 +2,9 @@ function Minimap() {
     var defaultScale = 0.25;
     var SCALE = defaultScale;
     this.mapImage = game.loader.loadImage("map.png");
-    var width = this.mapImage.width;
+    var width = 1;
     game.loader.ready(function() {
+        width = this.mapImage.width;
         this.mapImage.width = width * SCALE;
     }.bind(this));
     this.points = {};
