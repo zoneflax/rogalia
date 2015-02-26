@@ -350,6 +350,7 @@ var dict = {
     "Meteorite boots": "Метеоритные ботинки",
     "Wheat beer": "Пшеничное пиво",
     "Drink": "Пить",
+    "Drink all": "Выпить все",
     "Cured meat": "Вяленое мясо",
     "Apple tree bark": "Кора яблони",
     "Christmas tree": "Новогодняя ёлка",
@@ -819,6 +820,7 @@ var dict = {
     "Your target is dead": "Ваша цель мертва",
     "You've finished this quest today": "Вы уже выполнили этот квест сегодня",
     "Zero quantity is now allowed": "Нулевая величина запрещена",
+    "Drop ingredients here": "Перетащите ингредиенты сюда",
 
     "horse": "Лошадь",
     "rabbit": "Кролик",

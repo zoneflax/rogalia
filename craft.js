@@ -82,7 +82,7 @@ Craft.prototype = {
         // if it's an old item which no has no recipe
         if (!recipe)
             return;
-        this.titleElement.textContent = util.symbolToString(type);
+        this.titleElement.textContent = TS(type);
 
         this.ingredientsList.innerHTML = "";
         var canBuild = true;
@@ -91,7 +91,7 @@ Craft.prototype = {
             var required = recipe.Ingredients[group];
             var name = TS(group.replace("meta-", ""));
             var ingredient = Stats.prototype.createParam(name, {Current: has, Max: required});
-            canBuild = canBuild && (has == required)
+            canBuild = canBuild && (has == required);
             this.ingredientsList.appendChild(ingredient);
         }
         this.buildButton.disabled = !canBuild;
@@ -106,7 +106,7 @@ Craft.prototype = {
         //TODO: we ignore stats updates; fix this
         return;
         //TODO: this is ugly; refactor
-        var list = this.createList()
+        var list = this.createList();
         var st = this.list.scrollTop;
         util.dom.replace(this.list, list);
         this.list = list;
@@ -126,7 +126,7 @@ Craft.prototype = {
         this.blank.entity = blank;
 
         var slotHelp = document.createElement("div");
-        slotHelp.textContent = "Drop ingredients here:";
+        slotHelp.textContent = T("Drop ingredients here") + ":";
 
         this.slot = document.createElement("div");
         this.slot.classList.add("slot");
