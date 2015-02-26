@@ -15,13 +15,12 @@ function Chat() {
             }.bind(this));
         }
     };
-    this.initNotifications();
 
     this.messagesElement = document.createElement("ul");
     this.messagesElement.className = "messages no-drag";
 
     this.newMessageElement = document.createElement("input");
-    this.newMessageElement.id = "new-message"
+    this.newMessageElement.id = "new-message";
 
     this.send = function(message) {
         game.network.send("chat-message", {message: message});

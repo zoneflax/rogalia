@@ -340,7 +340,7 @@ var dict = {
     "Birch tree stub": "Пень березы",
     "Remove": "Убрать",
     "Sit": "Сесть",
-    "Standup": "Встать",
+    "Stand up": "Встать",
     "Banana palm tree stub": "Пень банановой пальмы",
     "Steel saw": "Стальная пила",
     "Dungeon entrance": "Вход в подземелье",

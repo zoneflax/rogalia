@@ -392,6 +392,7 @@ Controller.prototype = {
         this.initHotbar();
 
         this.chat.sync(chatData || []);
+        this.chat.initNotifications();
 
         this.ready = true;
 
@@ -408,7 +409,7 @@ Controller.prototype = {
                     object.hide();
                 } else {
                     object.show();
-                    game.help.runHook({type: button.id})
+                    game.help.runHook({type: button.id});
                 }
             };
         };

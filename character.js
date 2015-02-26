@@ -1161,8 +1161,9 @@ Character.prototype = {
         camera.y = p.y - screen.height / 2;
     },
     willCollide: function(new_x, new_y) {
+        return false; //TODO: fix StandUp problems
         return game.entities.some(function(e) {
-            return (e instanceof Entity && e.collides(new_x, new_y, this.Radius))
+            return (e instanceof Entity && e.collides(new_x, new_y, this.Radius));
         }.bind(this));
     },
     stop: function() {

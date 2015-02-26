@@ -94,7 +94,7 @@ function loadingStage(data) {
                 game.controller.minimap.sync(data.CharsOnline);
             }, 33);
         });
-    }
+    };
 
     this.draw = function() {
         game.ctx.clear();
@@ -104,7 +104,7 @@ function loadingStage(data) {
             CELL_SIZE,
             CELL_SIZE
         );
-    }
+    };
 }
 Stage.add(loadingStage);
 
