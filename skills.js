@@ -5,7 +5,7 @@ function Skills() {
 
     this.description = document.createElement("fieldset");
     this.description.classList.add("description");
-    this.description.textContent = T("Select skill to see it's description")
+    this.description.textContent = T("Select skill to see it's description");
 
     this.learnButton = document.createElement("button");
     this.learnButton.textContent = T("Learn");
@@ -112,7 +112,7 @@ Skills.prototype = {
         if (!this.current)
             game.error("No selected skill");
         var name = this.current.name;
-        var oldRecipes = Object.keys(Entity.recipes)
+        var oldRecipes = Object.keys(Entity.recipes);
         game.network.send("learn-skill", {name: name }, function(data) {
             //TODO: checkme
             if (data.Warning)
