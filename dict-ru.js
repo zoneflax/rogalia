@@ -819,7 +819,7 @@ var dict = {
     "You need a vessel of water": "Вам нужен сосуд для воды",
     "Your target is dead": "Ваша цель мертва",
     "You've finished this quest today": "Вы уже выполнили этот квест сегодня",
-    "Zero quantity is now allowed": "Нулевая величина запрещена",
+    "Zero quantity is not allowed": "Нулевая величина запрещена",
     "Drop ingredients here": "Перетащите ингредиенты сюда",
 
     "horse": "Лошадь",
