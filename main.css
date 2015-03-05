@@ -111,7 +111,10 @@ a:hover {
 #menu li {
     list-style-type: square;
 }
-#menu a:hover {
+#menu .action {
+    display: block;
+}
+#menu .action:hover {
     color: lightgreen;
     cursor: pointer;
 }
