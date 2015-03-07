@@ -473,11 +473,11 @@ Character.prototype = {
                                 actions[i] = function() {
                                     game.chat.addMessage({From: name, Body: this, IsNpc: true});
                                     game.controller.highlight("chat");
-                                }.bind(game.talks.vendor[i])
+                                }.bind(game.talks.vendor[i]);
                             }
                             return actions;
                         }
-                    }
+                    };
                     game.menu.show(talks, null, null, true);
                 }
             };
@@ -488,7 +488,7 @@ Character.prototype = {
     defaultAction: function(targetOnly) {
         if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.state != "")
             game.controller.iface.actionButton.click();
-        else
+        else if (config.allowSelfSelection)
             game.player.target = this;
     },
     drawAction: function() {
@@ -1204,7 +1204,7 @@ Character.prototype = {
     },
     liftStop: function() {
         if (this.burden)
-            game.controller.creatingCursor(this.burden.Type, "lift-stop")
+            game.controller.creatingCursor(this.burden.Type, "lift-stop");
     },
     bag: function() {
         return  Entity.get(this.Equip[0]);

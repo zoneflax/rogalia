@@ -62,11 +62,6 @@ function Network() {
 	    console.log(error);
             onDisconnect();
         }
-        this.callback = function(data) {
-            if (data.Warning) {
-                game.exit(data.Warning);
-            }
-        }
         this.socket.onmessage = onmessage.bind(this);
     }
 
@@ -117,7 +112,7 @@ function Network() {
     var lastSend = 0;
     this.send = function(command, args, callback, setAsDefault) {
         var now = Date.now();
-        if (now - lastSend < 20)
+        if (now - lastSend < 25)
             return;
         lastSend = now;
         args = args || {}

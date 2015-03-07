@@ -31,7 +31,7 @@ function exitStage(message) {
     var help = document.createElement("p");
     help.id = "crash-help";
 
-    var reset = document.createElement("button")
+    var reset = document.createElement("button");
     reset.textContent = T("Reset settings");
     reset.addEventListener('click', game.controller.reset);
     document.body.appendChild(reset);
@@ -116,35 +116,33 @@ function loginStage() {
     var error = false;
     var captcha = null;
 
-    function onWarning(data) {
-        if (data.Warning) {
-            error = true;
-            if (registering) {
-                alert(data.Warning);
-            } else {
-                localStorage.removeItem("password");
-                if (!autoLogin)
-                    alert(data.Warning);
-                else
-                    wrapper.classList.remove("hidden");
-                autoLogin = false;
-            }
+    function onWarning(warning) {
+        if (registering) {
+            alert(warning);
+        } else {
+            localStorage.removeItem("password");
+            if (!autoLogin)
+                alert(warning);
+            else
+                wrapper.classList.remove("hidden");
+            autoLogin = false;
         }
     }
 
     this.sync = function(data) {
-        if (!error) {
+        if ("Warning" in data) {
+            onWarning(data.Warning);
+        } else {
             this.sync = function(){};
             game.setStage("loading", data);
         }
-    }
+    };
 
     function saveLogin() {
         localStorage.setItem("login", game.login);
     }
 
     function auth(cmd, password) {
-        error = false;
         saveLogin();
         game.network.send(
             cmd,
@@ -153,8 +151,7 @@ function loginStage() {
                 Password: password,
                 Captcha: captcha,
                 Version: game.version,
-            },
-            onWarning
+            }
         );
     };
 
@@ -240,7 +237,7 @@ function loginStage() {
 
     var vk = game.button.vk();
     vk.classList.add("button-link");
-    var forum = game.button.forum()
+    var forum = game.button.forum();
     forum.classList.add("button-link");
     var blog = game.button.blog();
     blog.classList.add("button-link");
@@ -252,7 +249,7 @@ function loginStage() {
     if (config.language.Russian)
         ru.selected = true;
     var lang = document.createElement("select");
-    lang.id = "lang-selector"
+    lang.id = "lang-selector";
     lang.appendChild(en);
     lang.appendChild(ru);
     lang.onchange = function() {
@@ -350,7 +347,7 @@ function mainStage() {
     this.sync = function (data) {
         if (data.Warning) {
             game.controller.showWarning(data.Warning);
-            return
+            return;
         }
         Entity.sync(data.Entities || [], data.RemoveEntities || null);
         Character.sync(data.Chars || [], data.RemoveChars || null);
@@ -369,7 +366,7 @@ function mainStage() {
         if (data.Chars && game.player.Id in data.Chars) {
             game.controller.stats.sync();
         }
-    }
+    };
 
     var startTime = 0;
     this.update = function(currentTime) {
@@ -380,7 +377,7 @@ function mainStage() {
 
         game.entities.forEach(function(e) {
             e.update(game.epsilon);
-        })
+        });
         game.help.update();
         game.controller.update();
     };
@@ -390,7 +387,7 @@ function mainStage() {
         t.draw();
     }
     function drawUI(t) {
-        t.drawUI()
+        t.drawUI();
     }
     function drawClaim(t) {
         t.drawClaim();
@@ -409,22 +406,20 @@ function mainStage() {
         game.ctx.save();
         game.ctx.translate(-game.camera.x, -game.camera.y);
 
-        game.claims.forEach(drawClaim)
+        game.claims.forEach(drawClaim);
 
         game.map.draw();
 
-        game.sortedEntities.traverse(drawObject)
+        game.sortedEntities.traverse(drawObject);
         if (config.map.darkness)
             game.map.drawDarkness();
 
-        game.sortedEntities.traverse(drawUI)
+        game.sortedEntities.traverse(drawUI);
 
         game.controller.draw();
         game.ctx.restore();
     };
-    this.end = function() {
-
-    }
+    this.end = function() {};
 }
 
 Stage.add(mainStage);

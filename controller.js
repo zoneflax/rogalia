@@ -275,8 +275,8 @@ Controller.prototype = {
             32: { //space
                 allowedModifiers: ["shift"],
                 button: "action",
-                callback: function() {
-                    game.player.defaultAction()
+                callback: function(e) {
+                    game.player.defaultAction();
                 }
             },
             37: { // left
@@ -307,7 +307,7 @@ Controller.prototype = {
             if (!hotkey.button)
                 continue;
             this.hotbar[key] = document.getElementById(hotkey.button + "-button");
-            this.hotbar[key].addEventListener('click', hotkey.callback.bind(this))
+            this.hotbar[key].addEventListener('click', hotkey.callback.bind(this));
         }
     },
     fpsStatsBegin: function() {
@@ -471,14 +471,14 @@ Controller.prototype = {
             var p = game.controller.world.point.clone();
             p.x /= CELL_SIZE;
             p.y /= CELL_SIZE;
-            p.floor()
+            p.floor();
             game.network.send("map-change-cell", {
                 Id: parseInt(this.world.cursor.id),
                 X: p.x,
                 Y: p.y,
                 Scale: this.world.cursor.scale,
             });
-        }
+        };
     },
     creatingCursor: function(arg, command, callback) {
         command = command || "entity-add";
@@ -511,7 +511,7 @@ Controller.prototype = {
                 return false;
             var entity = this.world.cursor;
             if (!entity)
-                return;
+                return false;
             var p = entity.point;
             var data = entity.alignedData(p);
             if (data) {
@@ -531,7 +531,7 @@ Controller.prototype = {
                 if (game.controller.actionQueue.length == 0 && !game.player.Action.Duration) {
                     game.network.send(command, args, game.controller.processActionQueue);
                 } else {
-                    game.controller.actionQueue.push({command: command, args: args})
+                    game.controller.actionQueue.push({command: command, args: args});
                 }
             } else {
                 game.controller.actionQueue = [];
@@ -540,7 +540,7 @@ Controller.prototype = {
 
             this.clearCursors();
             return true;
-        }
+        };
     },
     processActionQueue: function process(data) {
         if (!data.Done)
@@ -772,6 +772,9 @@ Controller.prototype = {
 
         var hotkey = this.hotkeys[e.keyCode] || this.hotkeys[c];
         if (hotkey) {
+            e.preventDefault();
+            e.stopPropagation();
+
             for (var mod in this.modifier) {
                 if (!this.modifier[mod])
                     continue;

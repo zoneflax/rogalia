@@ -142,7 +142,7 @@ var dict = {
     "Select skill to see it's description": "Выберите навык для просмотра его описания",
     "Learn": "Учить",
     "Logout": "Выйти",
-    "Reset interface": "Сбросить интерфейс",
+    "Reset settings": "Сбросить настройки",
     "Blog": "Блог",
     "Bugtracker": "Багтрекер",
     "Group": "Группа",
