@@ -596,13 +596,15 @@ Craft.prototype = {
 
         if (recipe.Tool) {
             var tool = document.createElement("li");
-            tool.textContent = TS(recipe.Tool);
+            tool.textContent = T("Tool") + ": " + TS(recipe.Tool);
+            tool.title = T("Must be equipped");
             deps.appendChild(tool);
         }
 
         if (recipe.Equipment) {
             var equipment = document.createElement("li");
-            equipment.textContent = TS(recipe.Equipment);
+            equipment.textContent = T("Equipment") + ": " + TS(recipe.Equipment);
+            equipment.title = T("You must be near equipment");
             deps.appendChild(equipment);
         }
 
@@ -615,7 +617,7 @@ Craft.prototype = {
         requirements.appendChild(deps);
 
         if (this.requirements)
-            util.dom.replace(this.requirements, requirements)
+            util.dom.replace(this.requirements, requirements);
         else
             this.recipeDetails.appendChild(requirements);
 

@@ -574,7 +574,7 @@ a:hover {
     position: relative;
     left: 10px;
 }
-.recipe-details .unavailable {
+.recipe-details li[title] {
     cursor: help;
 }
 .recipe-create, .recipe-auto, .recipe-craft-all {

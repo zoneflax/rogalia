@@ -1,4 +1,8 @@
 var dict = {
+    "Tool": "Инструмент",
+    "Equipment": "Оборудование",
+    "You must be near equipment": "Вы должны быть рядом с оборудованием",
+    "Must be equipped": "Должен быть экипирован",
     "Skill is capped": "Навык ограничен",
     "Cap": "Предел",
     "Durability": "Прочность",
