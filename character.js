@@ -332,7 +332,7 @@ Character.prototype = {
         sprite.loading = true;
         this.initSprite();
 
-        console.time(this.Name + "-" + sprite.name + "-sprite" );
+        // console.time(this.Name + "-" + sprite.name + "-sprite" );
         var animation = sprite.name;
         var type = "";
         var dir = Character.spriteDir + this.Type + "/";
@@ -379,7 +379,7 @@ Character.prototype = {
             sprite.loading = false;
             // document.body.appendChild(canvas);
             Stats.update();
-            console.timeEnd(this.Name + "-" + sprite.name + "-sprite" );
+            // console.timeEnd(this.Name + "-" + sprite.name + "-sprite" );
         }.bind(this));
     },
     getActions: function() {
@@ -389,10 +389,10 @@ Character.prototype = {
             var name = this.Name;
             actions = {
                 "Buy": function() {
-                    game.network.send("buy-list", {Vendor: this.Id}, Vendor.buy.bind(this))
+                    game.network.send("buy-list", {Vendor: this.Id}, Vendor.buy.bind(this));
                 },
                 "Sell": function() {
-                    game.network.send("sell-list", {Vendor: this.Id}, Vendor.sell.bind(this))
+                    game.network.send("sell-list", {Vendor: this.Id}, Vendor.sell.bind(this));
                 },
             };
             if (this.Owner == game.player.Id) {
