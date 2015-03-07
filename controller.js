@@ -720,7 +720,7 @@ Controller.prototype = {
                 hovered.drawHovered();
             }
         }
-        var entity = this.iface.cursor.entity
+        var entity = this.iface.cursor.entity;
         if (entity)
             this.drawAlign(entity, this.world.point);
         Character.drawActions();
@@ -738,7 +738,7 @@ Controller.prototype = {
                 items.forEach(function(item) {
                     var name = item.Name;
                     while (name in actions) {
-                        name = name + " ";
+                        name = name + " "; //TODO: (fixme)dirty hack for objects of the same type
                     }
                     actions[name] = {
                         item: item,

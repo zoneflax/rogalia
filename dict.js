@@ -1,9 +1,9 @@
 dict.init = function() {
     window.TT = function(text, args) {
-        text = T(text)
+        text = T(text);
         text.match(/{[^}]+}/g).forEach(function(v) {
             text = text.replace(v, T(args[v.slice(1, -1)]));
-        })
+        });
         return text;
     };
 
@@ -12,7 +12,7 @@ dict.init = function() {
     };
 
     if (!game.config.language.Russian) {
-        dict.update = function(){}
+        dict.update = function(){};
         window.T = function(text) {
             return text;
         };
@@ -27,7 +27,7 @@ dict.init = function() {
         var list = {};
         function update(elem) {
             if (elem.nodeType == 3) {
-                var text = elem.textContent
+                var text = elem.textContent;
                 elem.textContent = T(text);
                 list[text] = elem.textContent;
             } else if (elem.childNodes.length) {
@@ -36,7 +36,7 @@ dict.init = function() {
         }
         update(elem || document.body);
         // console.log(JSON.stringify(list));
-    }
+    };
 
     dict.update();
 }
@@ -55,7 +55,7 @@ dict.getTranslations = function() {
             dict[action] = "";
         }
     }
-    for (var type in Entity.recipes) {
+    for (type in Entity.recipes) {
         var recipe = Entity.recipes[type];
         for (var kind in recipe.Ingredients) {
             kind = util.symbolToString(kind);
@@ -67,4 +67,4 @@ dict.getTranslations = function() {
     textarea.value = JSON.stringify(dict);
     var panel = new Panel("Translations", "translations", [textarea]);
     panel.show();
-}
+};

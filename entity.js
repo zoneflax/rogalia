@@ -227,7 +227,7 @@ Entity.prototype = {
             this.Sprite.Speed
         );
 
-        //TODO: removeme
+        //TODO removeme
         if (this.Group == "shovel") {
             this._icon = loader.loadImage(this.Type + "-icon.png");
         }
@@ -259,7 +259,7 @@ Entity.prototype = {
         if (this.Orientation != "" && this.MoveType != Entity.MT_STATIC) {
             actions[2]["Rotate"] = function() {
                 game.network.send("rotate", {id: this.Id});
-            }
+            };
         }
         if (this.MoveType != Entity.MT_STATIC && game.player.IsAdmin)
             actions[2]["Fix"] = this.fix;
@@ -301,7 +301,7 @@ Entity.prototype = {
         game.network.send("entity-fix", {id: this.Id});
     },
     pickUp: function() {
-        game.network.send("entity-pick-up", {id: this.Id})
+        game.network.send("entity-pick-up", {id: this.Id});
     },
     lift: function() {
         game.network.send("lift-start", {id: this.Id}, function() {
@@ -366,7 +366,7 @@ Entity.prototype = {
         }
 
         if (!game.player.isNear(this)) {
-            game.network.send("Open", {Id: this.Id}, this.open.bind(this))
+            game.network.send("Open", {Id: this.Id}, this.open.bind(this));
             return;
         }
         var container = Container.open(this.Id);
@@ -377,12 +377,12 @@ Entity.prototype = {
     },
 
     split: function() {
-        var args = {Id: this.Id}
+        var args = {Id: this.Id};
         if (this.Group == "currency") {
             var amount = prompt("How many?", 1);
             if (!amount)
                 return;
-            args.Amount = +amount
+            args.Amount = +amount;
             game.network.send("split", args);
         } else {
             game.network.send("Split", args);

@@ -101,12 +101,12 @@ function Network() {
             return;
         }
 
+        game.stage.sync(data);
+
         if (data.Ack || data.Done || data.Warning) {
             var callback = (this.callback) ? this.callback(data) : this.defaultCallback;
             this.callback = (callback instanceof Function) ? callback : null;
         }
-
-        game.stage.sync(data);
     }
 
     this.shutdown = function() {

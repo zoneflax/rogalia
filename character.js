@@ -104,7 +104,7 @@ Character.prototype = {
     sync: function(data, init) {
         Character.copy(this, data);
 
-        this.burden = (this.Burden) ? Entity.get(this.Burden) : null
+        this.burden = (this.Burden) ? Entity.get(this.Burden) : null;
 
         while(this.Messages && this.Messages.length > 0) {
             var message = this.Messages.shift();
@@ -1173,8 +1173,8 @@ Character.prototype = {
     isNear: function(entity) {
         if (entity.belongsTo(game.player))
             return true;
-        if (entity.width) {
-            var padding = this.Radius;
+        if (entity.Width) {
+            var padding = this.Radius*2;
             return util.rectIntersects(
                 entity.leftTopX() - padding,
                 entity.leftTopY() - padding,
@@ -1189,7 +1189,7 @@ Character.prototype = {
         var len_x = entity.X - this.X;
         var len_y = entity.Y - this.Y;
         var r = Math.max(Math.max(entity.Radius, Math.min(entity.Width, entity.Height) / 2), this.Radius);
-        return util.distanceLessThan(len_x, len_y, r * 2);
+        return util.distanceLessThan(len_x, len_y, r*2 + 1);
     },
     drawHovered: function() {
         if (this.Invisible)

@@ -52,25 +52,6 @@ Container.updateVisibility = function() {
         game.containers[id].updateVisibility();
 }
 
-Container.getTopExcept = function(except) {
-    var bag = game.player.bag();
-    if (bag && bag.Id != except) {
-        var container = game.containers[bag.Id];
-        if (container.panel.visible)
-            return container;
-    }
-    for (var id in game.containers) {
-        if (id == except)
-            continue;
-
-        var container = game.containers[id];
-        if (container.panel.visible)
-            return container;
-    }
-    return null;
-}
-
-
 Container.prototype = {
     get visible() {
         return this.panel.visible;
@@ -153,10 +134,10 @@ Container.prototype = {
         var moveAll = document.createElement("button");
         moveAll.textContent = T("Move all");
         moveAll.onclick = function() {
-            var top = Container.getTopExcept(id);
+            var top = this.getTopExcept(id);
             if (top)
                 game.network.send("move-all", {From: id, To: top.id});
-        }
+        }.bind(this);
 
         var sort = document.createElement("button");
         sort.textContent = T("Sort");
@@ -223,7 +204,7 @@ Container.prototype = {
             return;
 
         var entity = Entity.get(item.id);
-        var top = Container.getTopExcept(entity.Container);
+        var top = this.getTopExcept(entity.Container);
         if (top) {
             Container.moveItem(entity.Id, game.containers[entity.Container], top);
             return
@@ -410,5 +391,22 @@ Container.prototype = {
             this.fuel.appendChild(max);
             this.fuel.appendChild(slot);
         }
+    },
+    getTopExcept: function(except) {
+        var bag = game.player.bag();
+        if (bag && bag.Id != except) {
+            var container = game.containers[bag.Id];
+            if (container.panel.visible)
+                return container;
+        }
+        for (var id in game.containers) {
+            if (id == except || id == this.id)
+                continue;
+
+            var container = game.containers[id];
+            if (container.panel.visible)
+                return container;
+        }
+        return null;
     },
 };

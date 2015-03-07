@@ -75,14 +75,15 @@ Menu.prototype = {
         }.bind(this);
 
         var item = document.createElement("li");
-        item.appendChild(item_a)
+        item.appendChild(item_a);
         return item;
     },
     createMenu: function(actions, object) {
         var ul = document.createElement("ul");
         var sorted = Object.keys(actions).sort();
         sorted.forEach(function(title) {
-            var menuItem = this.createMenuItem(TS(title), actions[title], object);
+            //TODO: fixe controller.drawItemsMenu hack and remove trim
+            var menuItem = this.createMenuItem(TS(title.trim()), actions[title], object);
             ul.appendChild(menuItem);
         }.bind(this));
         return ul;
