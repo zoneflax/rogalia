@@ -33,6 +33,7 @@ var dict = {
     "Wooden bed": "Деревянная кровать",
     "Wooden chair": "Деревянный стул",
     "Wooden table": "Деревянный стол",
+    "Dining table": "Обеденный стол",
     "Wooden plate": "Деревянная тарелка",
     "Wooden shovel": "Деревянная лопата",
     "Wooden toilet": "Деревянный туалет",
