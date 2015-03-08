@@ -1,4 +1,6 @@
 var dict = {
+    "Overeat": "Переедание",
+    "Sitting": "Сидим",
     "Tool": "Инструмент",
     "Equipment": "Оборудование",
     "You must be near equipment": "Вы должны быть рядом с оборудованием",
@@ -245,7 +247,7 @@ var dict = {
     "Unlocks {lvl} lvl of the {skill} skill": "Открывает {lvl} уровень навыка {skill}",
     "New maximum value": "Новое максимальное значение",
     "Cost": "Стоимость",
-    "You have {amount} LP": "У вас есть {amount} очков обучения",
+    "You have {amount} LP": "У вас есть {amount} очка(ов) обучения",
     "You need {diff} additional LP to learn this skill": "Вам нужно дополнительно {diff} очка(ов), чтобы выучить этот навык",
     "Drying frame": "Сушильная рама",
     "Respawn": "Респаун",
