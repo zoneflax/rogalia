@@ -488,7 +488,7 @@ Character.prototype = {
     defaultAction: function(targetOnly) {
         if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.state != "")
             game.controller.iface.actionButton.click();
-        else if (config.allowSelfSelection)
+        else if (this != game.player || config.allowSelfSelection)
             game.player.target = this;
     },
     drawAction: function() {
