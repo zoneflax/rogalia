@@ -80,9 +80,11 @@ Menu.prototype = {
     },
     createMenu: function(actions, object) {
         var ul = document.createElement("ul");
-        var sorted = Object.keys(actions).sort();
+        var sorted = Object.keys(actions).sort(function(a, b) {
+            return TS(a) > TS(b);
+        });
         sorted.forEach(function(title) {
-            //TODO: fixe controller.drawItemsMenu hack and remove trim
+            //TODO: fixme controller.drawItemsMenu hack and remove trim
             var menuItem = this.createMenuItem(TS(title.trim()), actions[title], object);
             ul.appendChild(menuItem);
         }.bind(this));
