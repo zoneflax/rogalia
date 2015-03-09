@@ -1221,7 +1221,6 @@ big {
     list-style-type: square;
 }
 #news time {
-    margin-top: 5px;
     float: right;
 }
 #news p {
