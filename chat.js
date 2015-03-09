@@ -114,7 +114,7 @@ function Chat() {
             case "friend-list":
                 game.network.send("friend-list", {}, function(data) {
                     if (!data.Friends)
-                        game.chat.addMessage("No friends")
+                        game.chat.addMessage("No friends");
                     else
                         data.Friends.forEach(function(name) {
                             game.chat.addMessage(name);

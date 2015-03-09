@@ -1,4 +1,7 @@
 var dict = {
+    "Stake claim": "Клейм",
+    "Starving": "Голод",
+    "Thirsty": "Жажда",
     "Overeat": "Переедание",
     "Sitting": "Сидим",
     "Tool": "Инструмент",

@@ -65,7 +65,7 @@ Menu.prototype = {
             var callback = action.bind(object);
         } else {
             item_a.item = action.item;
-            item_a.addEventListener("mousemove", this.mouseover)
+            item_a.addEventListener("mousemove", this.mouseover);
             callback = action.callback.bind(action.item);
         }
 

@@ -511,10 +511,16 @@ Entity.prototype = {
         }
     },
     drawClaim: function() {
-        var w = (this.West+this.East)*CELL_SIZE;
-        var h = (this.North+this.South)*CELL_SIZE;
-        var x = this.X - w/2;
-        var y = this.Y - h/2;
+        var no = this.North*CELL_SIZE;
+        var ea = this.East*CELL_SIZE;
+        var so = this.South*CELL_SIZE;
+        var we = this.West*CELL_SIZE;
+
+        var w = ea+we;
+        var h = no+so;
+        var x = this.X - ea;
+        var y = this.Y - no;
+
         var color = (game.player.Id == this.Creator) ? "255,255,255" : "255,0,0";
         if (config.ui.fillClaim) {
             game.ctx.fillStyle = "rgba(" + color + ", 0.3)";

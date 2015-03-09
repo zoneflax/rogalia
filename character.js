@@ -416,7 +416,7 @@ Character.prototype = {
                     if (confirm("I'll take your atoms. Okay?"))
                         game.network.send("ask-for-present", {Id: this.Id});
                 }
-            }
+            };
             break;
         default:
             if (this.Riding) {
@@ -427,7 +427,7 @@ Character.prototype = {
                     "Dismount": function() {
                         game.network.send("dismount");
                     },
-                }
+                };
             }
         }
         switch (this.Name) {
@@ -435,7 +435,7 @@ Character.prototype = {
         case "Umi":
             actions["Buy sex"] = function() {
                 game.network.send("buy-sex", {Id: this.Id});
-            }
+            };
             break;
         case "Charles":
             var id = this.Id;
@@ -444,25 +444,28 @@ Character.prototype = {
                     var set = function(name) {
                         return function() {
                             game.network.send("set-citizenship", {Id: id, Name: name});
-                        }
-                    }
+                        };
+                    };
                     var citizenships = {
                         getActions: function() {
                             return {
                                 "I choose Empire": set("Empire"),
                                 "I choose Confederation": set("Confederation"),
                                 "I want to be free": set(""),
-                            }
+                            };
                         }
-                    }
+                    };
                     game.menu.show(citizenships, null, null, true);
                 },
+                "Get claim": function() {
+                    game.network.send("get-claim", {Id: id});
+                },
                 "Bank": function() {
-                    new Bank()
+                    new Bank();
                 },
                 "Quest": function() {
                     if (confirm("I'll take 10 food from your bag and give you status point as a reward. Deal?")) {
-                        game.network.send("quest", {Id: id})
+                        game.network.send("quest", {Id: id});
                     }
                 },
                 "Talk": function() {
@@ -656,7 +659,7 @@ Character.prototype = {
         }
 
         if (this.Fame == 10000) {
-            name = "Lord " + name
+            name = "Lord " + name;
         }
         if (this.Citizenship.Faction) {
             name += " {" + this.Citizenship.Faction[0] + "}";
