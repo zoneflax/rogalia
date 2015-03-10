@@ -418,6 +418,13 @@ Character.prototype = {
                 }
             };
             break;
+        case "rabbit":
+        case "chicken":
+            actions = {
+                "Catch": function() {
+                    game.network.send("catch-animal", {Id: this.Id});
+                }
+            };
         default:
             if (this.Riding) {
                 actions = {
@@ -596,7 +603,7 @@ Character.prototype = {
             return;
 
         if (game.debug.player.box) {
-            this.drawBox()
+            this.drawBox();
         }
 
         //else drawn in controller

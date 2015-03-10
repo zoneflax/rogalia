@@ -1,4 +1,6 @@
 var dict = {
+    "Catch": "Поймать",
+    "Release": "Отпустить",
     "Balance": "Баланс",
     "Tax": "Налог",
     "Next payment": "Следующий платеж",
