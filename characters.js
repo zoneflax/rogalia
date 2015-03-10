@@ -43,9 +43,9 @@ Character.sync = function(data, remove) {
 };
 
 Character.drawActions = function() {
-    for(var name in game.characters) {
-        game.characters[name].drawAction();
-    }
+    game.characters.forEach(function(c) {
+        c.drawAction();
+    })
 };
 
 Character.spriteDir = "characters/";

@@ -730,6 +730,7 @@ Controller.prototype = {
     },
     drawItemsMenu: function() {
         var items = game.findItemsNear(this.world.x, this.world.y);
+        items.push.apply(items, game.findCharsNear(this.world.x, this.world.y));
         if (items.length == 0)
             return;
         game.menu.show({

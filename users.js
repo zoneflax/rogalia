@@ -33,7 +33,7 @@ function Users() {
                 summon.onclick = function() {
                     game.network.send('summon', {name: name});
                     return false;
-                }
+                };
                 user.appendChild(summon);
             }
 
@@ -44,10 +44,10 @@ function Users() {
 
     this.sync = function(data) {
         if (!data)
-            return
+            return;
         this.characters = data;
         this.update();
-    }
+    };
 
     this.update = function() {
         if (!this.panel.visible)
@@ -56,7 +56,7 @@ function Users() {
         var count = 0;
         for(var name in this.characters) {
             count++;
-            this.addCharacter(name)
+            this.addCharacter(name);
         }
 
         for(var name in this.playersList) {
@@ -66,7 +66,7 @@ function Users() {
             }
         }
         total.textContent = T("Total") + ": " + count;
-    }
+    };
 
     this.panel.hooks.show = this.update.bind(this);
 }

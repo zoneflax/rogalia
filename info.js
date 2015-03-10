@@ -87,7 +87,7 @@ Info.prototype = {
     draw: function() {
         var target = null;
         if (this.data && this.data.To) {
-            target = game.characters[this.data.To];
+            target = game.characters.get(this.data.To);
             //on teleport/death can be empty
             if (!target)
                 return;

@@ -512,13 +512,13 @@ Entity.prototype = {
     },
     drawClaim: function() {
         var no = this.North*CELL_SIZE;
-        var ea = this.East*CELL_SIZE;
-        var so = this.South*CELL_SIZE;
         var we = this.West*CELL_SIZE;
+        var so = this.South*CELL_SIZE;
+        var ea = this.East*CELL_SIZE;
 
-        var w = ea+we;
+        var w = we+ea;
         var h = no+so;
-        var x = this.X - ea;
+        var x = this.X - we;
         var y = this.Y - no;
 
         var color = (game.player.Id == this.Creator) ? "255,255,255" : "255,0,0";

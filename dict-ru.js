@@ -1,8 +1,13 @@
 var dict = {
+    "Select": "Выбрать",
     "Extend north": "Расширить на север",
     "Extend east": "Расширить на восток",
     "Extend south": "Расширить на юг",
     "Extend west": "Расширить на запад",
+    "Shrink north": "Уменьшить на север",
+    "Shrink east": "Уменьшить на восток",
+    "Shrink south": "Уменьшить на юг",
+    "Shrink west": "Уменьшить на запад",
     "Stake claim": "Клейм",
     "Starving": "Голод",
     "Thirsty": "Жажда",

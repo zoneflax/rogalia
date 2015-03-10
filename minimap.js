@@ -56,7 +56,7 @@ function Minimap() {
             return
         this.characters = data;
         this.update();
-    }
+    };
 
     var x, y;
     this.update = function() {
@@ -88,7 +88,7 @@ function Minimap() {
             this.points[name].style.left = SCALE * x + "px";
             this.points[name].style.top = SCALE * y + "px";
         }
-    }
+    };
 
     this.panel.hooks.show = this.update.bind(this);
 }

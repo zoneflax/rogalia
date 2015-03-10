@@ -383,7 +383,7 @@ Character.prototype = {
         }.bind(this));
     },
     getActions: function() {
-        var actions = null;
+        var actions = {}
         switch (this.Type) {
         case "vendor": {
             var name = this.Name;
@@ -486,7 +486,15 @@ Character.prototype = {
             };
             break;
         }
-        return actions;
+
+        return [
+            {
+                Select:  function() {
+                    game.player.target = this;
+                }.bind(this)
+            },
+            actions
+        ];
     },
     defaultAction: function(targetOnly) {
         if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.state != "")

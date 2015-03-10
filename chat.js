@@ -415,14 +415,14 @@ function Chat() {
 
 
     this.addBallon = function(message) {
-        var character = game.characters[message.From];
+        var character = game.characters.get(message.From);
         if(!character)
             return;
         if (!game.player.see(character))
             return;
 
         if (character.ballon) {
-            character.ballon.remove()
+            character.ballon.remove();
         }
 
         var ballon = document.createElement("div");
@@ -435,7 +435,7 @@ function Chat() {
 
         ballon.className = "ballon";
         var maxLen = 30;
-        var text = message.Body.substr(0, maxLen).replace(/\${[^}]+}?/g, "[..]")
+        var text = message.Body.substr(0, maxLen).replace(/\${[^}]+}?/g, "[..]");
         if (text.length > maxLen)
             text += '...';
         ballon.textContent = text;

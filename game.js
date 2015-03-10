@@ -87,7 +87,7 @@ function Game() {
     this.entities = new HashTable();
     this.sortedEntities = new BinarySearchTree();
     this.claims = new HashTable();
-    this.characters = {};
+    this.characters = new HashTable();
     this.containers = {};
     this.vendors = {};
 
@@ -202,7 +202,7 @@ function Game() {
     };
 
     this.addCharacter = function(character) {
-        this.characters[character.Name] = character;
+        this.characters.set(character.Name,  character);
         this.addEntity(character);
     };
 
@@ -237,7 +237,7 @@ function Game() {
         game.sortedEntities.remove(c);
         var name = c.Name;
         game.entities.remove(id);
-        delete game.characters[name];
+        game.characters.remove(name);
     };
 
     this.findItemsNear = function(x, y, dist) {
@@ -246,6 +246,13 @@ function Game() {
             return "inContainer" in e &&
                 !e.inContainer() &&
                 util.distanceLessThan(e.X - x, e.Y - y, dist);
+        });
+    };
+
+    this.findCharsNear = function(x, y, dist) {
+        dist = dist || CELL_SIZE*2;
+        return this.characters.filter(function(e) {
+            return util.distanceLessThan(e.X - x, e.Y - y, dist);
         });
     };
 
