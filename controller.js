@@ -342,7 +342,6 @@ Controller.prototype = {
         this.wiki = new Wiki();
         this.fpsStats = this.system.fps;
         this.inventory = Container.open(game.player.Equip[0]) //0 - SLOT_BAG
-        this.donate = new Donate();
 
         game.chat = this.chat;
         game.help = this.system.help;
@@ -363,8 +362,6 @@ Controller.prototype = {
 
         this.createButton(this.wiki.panel, "wiki");
         this.createButton(this.system.panel, "system");
-        this.createButton(this.donate.panel, "donate");
-        this.donate.afterButtonBind();
 
         this.inventory.panel.button.onclick = this.toggleBag;
 

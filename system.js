@@ -25,6 +25,12 @@ function System() {
     help.textContent = T("Help");
     help.onclick = this.help.panel.toggle.bind(this.help.panel);
 
+    var donate = document.createElement("button");
+    donate.textContent = T("Donate");
+    donate.onclick = function() {
+        new Donate();
+    };
+
     var settings = document.createElement("button");
     settings.textContent = T("Settings");
     settings.onclick = this.settings.panel.toggle.bind(this.settings.panel);
@@ -47,8 +53,9 @@ function System() {
             game.button.blog(),
             game.button.vk(),
             game.button.authors(),
+            donate,
             util.hr(),
             game.button.logout(),
         ]
-    )
+    );
 }

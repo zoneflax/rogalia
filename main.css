@@ -1180,14 +1180,6 @@ big {
     width: 200px;
 }
 
-#donate-button {
-    background-image: url("assets/gold.png"), url("assets/bg/button.png");
-    background-position: 50% 14px, 0 0;
-    color: yellow;
-    margin-left: 100px;
-    line-height: 87px;
-}
-
 #news > .contents {
     max-width: 400px;
     width: 400px;

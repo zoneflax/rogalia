@@ -19,7 +19,6 @@ var config = {
         npc: false,
         simpleFonts: true,
         minimapObjects: false,
-        showDonate: true,
         allowSelfSelection: true,
         fillClaim: false,
         showMeterValues: true,
