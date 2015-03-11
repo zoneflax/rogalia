@@ -433,7 +433,7 @@ a:hover {
     color: #ff0;
 }
 .button.opened {
-    border: 1px solid #ee0;
+    text-decoration: underline;
 }
 .button-panel i, .button i {
     display: block;
