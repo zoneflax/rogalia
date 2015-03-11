@@ -52,6 +52,7 @@ function System() {
             game.button.forum(),
             game.button.blog(),
             game.button.vk(),
+            game.button.twitter(),
             game.button.authors(),
             donate,
             util.hr(),

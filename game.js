@@ -291,6 +291,15 @@ function Game() {
             vk.onclick = openLink("//vk.com/rogalik_mmo");
             return vk;
         },
+        twitter: function() {
+            var twitter = document.createElement("button");
+            var twitterLogo = document.createElement("img");
+            twitterLogo.src = "//twitter.com/favicon.ico";
+            twitter.appendChild(twitterLogo);
+            twitter.appendChild(document.createTextNode(T("Twitter")));
+            twitter.onclick = openLink("//twitter.com/Tatrics");
+            return twitter;
+        },
         wiki: function() {
             var wiki = document.createElement("button");
             wiki.textContent = T("Wiki / FAQ");
