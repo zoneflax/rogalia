@@ -268,8 +268,8 @@ Character.prototype = {
 	    this.sprite.width = 64
 	    this.sprite.height = 96
             this.sprite.frames = {
-                "idle": 1,
-                "run": [0, 3],
+                "idle": 2,
+                "run": [0, 6],
             }
             break;
 	case "red-hair":
