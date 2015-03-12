@@ -679,8 +679,9 @@ Character.prototype = {
         if (this.Citizenship.Faction) {
             name += " {" + this.Citizenship.Faction[0] + "}";
         }
-
-
+        if (game.controller.modifier.shift) {
+            name += " | " + T("Lvl") + ": " + this.Lvl;
+        }
 
         var p = this.screen();
         var y = p.y - this.sprite.nameOffset;
