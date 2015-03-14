@@ -191,7 +191,7 @@ function loginStage() {
     loginButton.textContent = T("Sign in");
     form.appendChild(loginButton);
 
-    var hr = document.createElement("hr")
+    var hr = document.createElement("hr");
     form.appendChild(hr);
 
     var registerButton = document.createElement("button");

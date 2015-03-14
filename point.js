@@ -20,7 +20,7 @@ function Point(x, y) {
         this.y = y;
         break;
     default:
-        game.error("Illegal arguments in point constructor")
+        game.error("Illegal arguments in point constructor");
     }
 }
 
