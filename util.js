@@ -299,6 +299,8 @@ var util = new function() {
 	    while(checking && checking != element) {
 	        if (checking.classList.contains("no-drag"))
 	            return;
+                if (checking.tagName == "INPUT")
+                    return;
 	        checking = checking.parentNode;
 	    };
 

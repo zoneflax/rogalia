@@ -681,6 +681,7 @@ Character.prototype = {
         }
         if (game.controller.modifier.shift) {
             name += " | " + T("Lvl") + ": " + this.Lvl;
+            name += " | " + ["♀", "♂"][this.Sex];
         }
 
         var p = this.screen();
