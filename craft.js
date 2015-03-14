@@ -229,7 +229,7 @@ Craft.prototype = {
     },
     createList: function() {
         var list = document.createElement("ul");
-        list.className = "recipe-list";
+        list.className = "recipe-list no-drag";
         var groups = {};
         for(var type in Entity.recipes) {
             var recipe = Entity.recipes[type];
