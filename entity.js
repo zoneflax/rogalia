@@ -491,7 +491,7 @@ Entity.prototype = {
                     game.iso.fillCircle(this.X, this.Y, this.Radius);
                 }
             }
-            this.sprite.draw(p)
+            this.sprite.draw(p);
         }
 
         if (this.Creator && this.almostBroken()) {
@@ -500,12 +500,13 @@ Entity.prototype = {
 
         if (game.debug.entity.box) {
             this.drawBox();
+            this.drawCenter();
         }
 
 
         if(game.debug.entity.position) {
             var text = "(" + (this.X) + " " + (this.Y) + ")";
-            text += " id:" + this.Id
+            text += " id:" + this.Id;
             game.ctx.fillStyle = "#fff";
             game.drawStrokedText(text, p.x, p.y);
         }
@@ -537,15 +538,18 @@ Entity.prototype = {
         //TODO: write
     },
     drawBox: function(color) {
-        game.ctx.strokeStyle = color || "cyan";
-
+        game.ctx.save();
+        game.ctx.globalAlpha = 0.3;
+        game.ctx.fillStyle = color || "#ccc";
         var p = this.screen();
         if (this.round) {
-            game.iso.strokeRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
+            game.iso.fillRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
         } else {
-            game.iso.strokeCircle(this.X, this.Y, this.Radius)
+            game.iso.fillCircle(this.X, this.Y, this.Radius);
         }
-
+        game.ctx.restore();
+    },
+    drawCenter: function() {
         game.ctx.fillStyle = "magenta";
         game.ctx.fillRect(p.x, p.y, 3, 3);
     },
@@ -608,7 +612,7 @@ Entity.prototype = {
                 return false;
         }
 
-        noignore = noignore || game.controller.modifier.ctrl
+        noignore = noignore || game.controller.modifier.ctrl;
 
         if (config.cursor.autoHighlightDoors && this.Group == "gate")
             return true;
