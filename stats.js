@@ -53,7 +53,7 @@ Stats.formatParam = function(param, digits) {
 
 Stats.prototype = {
     createParam: function(label, param, digits, useColors) {
-        var max = +param.Max;
+        var max = param.Max || 0;
         var text = Stats.formatParam(param, digits);
         var meter = document.createElement("meter");
         if (useColors) {
