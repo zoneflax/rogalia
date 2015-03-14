@@ -676,7 +676,7 @@ Character.prototype = {
         if (this.Fame == 10000) {
             name = "Lord " + name;
         }
-        if (this.Citizenship.Faction) {
+        if ("Citizenship" in this && this.Citizenship.Faction) {
             name += " {" + this.Citizenship.Faction[0] + "}";
         }
         if (game.controller.modifier.shift) {
