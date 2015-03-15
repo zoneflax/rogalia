@@ -18,11 +18,11 @@ function Map() {
 
     this.tiles = [];
 
-    var objects = {}
+    var objects = {};
     this.updateObject = function(object) {
         if (!config.ui.minimapObjects)
             return;
-        var dot = objects[object.Id]
+        var dot = objects[object.Id];
         if (!dot) {
             dot = document.createElement("div");
             objects[object.Id] = dot;
@@ -214,7 +214,7 @@ function Map() {
         this.buffer = buffer;
 
         console.timeEnd("Prerender");
-    }
+    };
 
 
     this.drawGrid = function() {
@@ -460,12 +460,11 @@ function Map() {
         });
         ctx.fill();
         game.ctx.drawImage(canvas, game.camera.x, game.camera.y);
-    }
+    };
 
     var diag = Math.hypot(game.screen.width, game.screen.height);
-    var CHUNK_SIZE = diag / 8;
+    var CHUNK_SIZE = 8*CELL_SIZE;
     this.draw = function() {
-        var cam = game.camera;
         for (var cy = 0; cy < diag; cy += CHUNK_SIZE) {
             for(var cx = 0; cx < diag; cx += CHUNK_SIZE) {
                 var key = cx+"."+cy;
@@ -487,14 +486,17 @@ function Map() {
                             this.drawTile(ctx, tile.x, tile.y, p);
                         }.bind(this));
                     }.bind(this));
-                    chunk = {canvas: canvas, p: new Point(cx, cy).toScreen()};
+
+                    var p = new Point(cx, cy).toScreen();
+                    p.x -= CHUNK_SIZE;
+                    chunk = {canvas: canvas, p: p};
                     this.chunks[key] = chunk;
                 }
-                game.ctx.drawImage(chunk.canvas, chunk.p.x - CHUNK_SIZE, chunk.p.y);
+                game.ctx.drawImage(chunk.canvas, chunk.p.x, chunk.p.y);
             }
         }
 
-        if(game.debug.map.position) {
+        if(game.debug.map.position && false) {
             var text = "(" + (x + game.camera.x) + " " + (y + game.camera.y) + ")";
             game.ctx.fillStyle = "#fff";
 
