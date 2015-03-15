@@ -416,6 +416,11 @@ function mainStage() {
 
         game.sortedEntities.traverse(drawUI);
 
+        //TODO!!!: remove
+        // var scr = game.screen;
+        // game.ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
+        // game.ctx.fillRect(game.camera.x, game.camera.y, scr.width, scr.height);
+
         game.controller.draw();
         game.ctx.restore();
     };

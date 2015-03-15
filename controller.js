@@ -659,7 +659,7 @@ Controller.prototype = {
         var cursor = this.world.cursor;
         if (!cursor)
             return;
-        cursor.rotate(delta)
+        cursor.rotate(delta);
     },
     wheel: function(e) {
         this.rotate(e.deltaY);

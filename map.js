@@ -1,4 +1,7 @@
 function Map() {
+    var CHUNK_SIZE = 8*CELL_SIZE;
+    var ISO_CHUNK_SIZE = CHUNK_SIZE + CELL_SIZE;
+
     this.data = [];
     this.layers = null;
     this.chunks = {};
@@ -62,7 +65,7 @@ function Map() {
             util.dom.remove(dot);
             delete objects[id];
         }
-    }
+    };
 
     this.updateObjects = function() {
         if (!config.ui.minimapObjects)
@@ -73,7 +76,7 @@ function Map() {
             dot.style.left = (dot.object.X - this.location.x) / CELL_SIZE + "px";
             dot.style.top = (dot.object.Y - this.location.y) / CELL_SIZE + "px";
         }
-    }
+    };
 
     this.parse = function(img) {
         this.minimap.width = img.width;
@@ -109,7 +112,6 @@ function Map() {
         var img = new Image;
         img.onload = sync.bind(this, img);
         img.src = "data:image/png;base64," + data;
-        this.chunks = {};
     };
 
     function sync(img) {
@@ -137,10 +139,9 @@ function Map() {
             }
         }
 
-        this.layers = this.bioms.map(function() {
-            return [];
-        })
-
+        var loc = game.player.Location;
+        this.location.set(loc.X, loc.Y);
+        this.layers = this.makeLayers();
         for(var y = 0; y < this.cells_y; y++) {
             for(var x = 0; x < this.cells_x; x++) {
                 var id = this.data[y][x].id;
@@ -164,58 +165,17 @@ function Map() {
                     this.data[y][x].corners[c] = offset;
                 }
                 this.layers[id].push(this.data[y][x]);
+                var lx = ((loc.X + x*CELL_SIZE) / CHUNK_SIZE << 0) * CHUNK_SIZE;
+                var ly = ((loc.Y + y*CELL_SIZE) / CHUNK_SIZE << 0) * CHUNK_SIZE;
+                var key = lx + "." + ly;
+                if (ly == 0)
+                    console.log("REMOVE", key);
+                delete this.chunks[key];
             }
         }
         this.ready = true;
+        console.log("IN");
     };
-
-
-    this.prerender = function() {
-        console.time("Prerender");
-
-        var buffer = 1 - this.buffer;
-        var canvas = this.buffers[buffer];
-        var ctx = canvas.getContext("2d");
-
-        canvas.width = this.width * 2;
-        canvas.height = this.height;
-
-        ctx.translate(this.width, 0);
-        var pad = null;
-        if (game.player.X > game.screen.height &&
-            game.player.Y > game.screen.width &&
-            this.full.width - game.player.X > game.screen.height &&
-            this.full.height - game.player.Y > game.screen.width
-           ) {
-            pad = new Point(
-                (this.width - game.screen.height),
-                (this.height/2 - game.screen.height)
-            );
-        }
-        this.layers.forEach(function(layer) {
-            layer.forEach(function(tile) {
-                var x = tile.x;
-                var y = tile.y;
-                var p = new Point(x * CELL_SIZE, y * CELL_SIZE).toScreen();
-                if (pad && (Math.abs(p.x) > pad.x || p.y < pad.y || p.y > this.height - pad.y))
-                    return;
-                p.x -= CELL_SIZE;
-                this.drawTile(ctx, x, y, p);
-            }.bind(this));
-        }.bind(this));
-
-        this.location.set(
-            game.player.Location.X,
-            game.player.Location.Y
-        );
-
-        this.ready = true;
-        this.blit = true;
-        this.buffer = buffer;
-
-        console.timeEnd("Prerender");
-    };
-
 
     this.drawGrid = function() {
 	game.ctx.strokeStyle = gridColor;
@@ -237,13 +197,12 @@ function Map() {
 	    game.ctx.lineTo(ep.x, ep.y);
 	    game.ctx.stroke();
 	}
-    }
+    };
 
     this.each = function(draw) {
         var pl = game.player;
         var m = this.location;
         var scr = game.screen;
-        var cam = game.camera;
 
         var sw = Math.max(0, ((pl.X - m.x) / CELL_SIZE << 0) - scr.cells_x);
         var ew = Math.min(this.cells_x, sw + scr.cells_x * 2);
@@ -316,185 +275,51 @@ function Map() {
         }.bind(this));
     };
 
-    this.drawRay = function() {
-        if (!game.config.map.ray)
-            return;
-        var canvas = document.createElement("canvas");
-        canvas.width = game.screen.width;
-        canvas.height = game.screen.height;
-        var ctx = canvas.getContext("2d");
-
-        // ctx.fillStyle = "rgba(0, 0, 0, 0.9)";
-        ctx.fillStyle = "#000";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.translate(-game.camera.x, -game.camera.y);
-
-
-        var segments = [];
-        game.sortedEntities.filter(function(e) {
-            return e instanceof Entity && e.moveType == Entity.MT_STATIC && e.width > 0;
-        }).forEach(function(e) {
-            var w = e.width / 2;
-            var h = e.height / 2;
-            segments.push({
-                a: {x: e.x - w, y: e.y - h},
-                b: {x: e.x + w, y: e.y - h},
-            });
-            segments.push({
-                a: {x: e.x + w, y: e.y - h},
-                b: {x: e.x + w, y: e.y + h},
-            });
-            segments.push({
-                a: {x: e.x + w, y: e.y + h},
-                b: {x: e.x - w, y: e.y + h},
-            });
-            segments.push({
-                a: {x: e.x - w, y: e.y + h},
-                b: {x: e.x - w, y: e.y - h},
-            });
-        });
-
-        //Add screen bounds
-        var w = game.screen.width;
-        var h = game.screen.height;
-        var c = new Point(game.camera);
-        [
-            [0, 0, w, 0],
-            [w, 0, w, h],
-            [w, h, 0, h],
-            [0, h, 0, 0],
-        ].forEach(function(offset) {
-            var ca = c.clone().add(new Point(offset[0], offset[1])).toWorld();
-            var cb = c.clone().add(new Point(offset[2], offset[3])).toWorld();
-            segments.push({a: ca, b: cb});
-        })
-
-        //draw segments
-        // ctx.strokeStyle = "#3838dd";
-        // segments.forEach(function(seg) {
-        //     var a = new Point(seg.a.x,seg.a.y).toScreen();
-        //     var b = new Point(seg.b.x,seg.b.y).toScreen();
-	//     ctx.beginPath();
-	//     ctx.moveTo(a.x, a.y);
-	//     ctx.lineTo(b.x, b.y);
-	//     ctx.stroke();
-        // })
-
-	// Get all unique points
-	var points = (function(segments){
-	    var a = [];
-	    segments.forEach(function(seg){
-		a.push(seg.a,seg.b);
-	    });
-	    return a;
-	})(segments);
-	var uniquePoints = (function(points){
-	    var set = {};
-	    return points.filter(function(p){
-		var key = p.x+","+p.y;
-		if(key in set){
-		    return false;
-		}else{
-		    set[key]=true;
-		    return true;
-		}
-	    });
-	})(points);
-
-	// Get all angles
-	var uniqueAngles = [];
-	for(var j=0;j<uniquePoints.length;j++){
-	    var uniquePoint = uniquePoints[j];
-	    var angle = Math.atan2(uniquePoint.y-game.player.y,uniquePoint.x-game.player.x);
-	    uniquePoint.angle = angle;
-	    uniqueAngles.push(angle-0.00001,angle,angle+0.00001);
-	}
-
-	// RAYS IN ALL DIRECTIONS
-	var intersects = [];
-	for(var j=0;j<uniqueAngles.length;j++){
-	    var angle = uniqueAngles[j];
-
-	    // Calculate dx & dy from angle
-	    var dx = Math.cos(angle);
-	    var dy = Math.sin(angle);
-
-	    var ray = {
-		a: game.player,
-		b:{x:game.player.x+dx,y:game.player.y+dy}
-	    };
-
-	    // Find CLOSEST intersection
-	    var closestIntersect = null;
-	    for(var i=0;i<segments.length;i++){
-		var intersect = util.getIntersection(ray,segments[i]);
-		if(!intersect) continue;
-		if(!closestIntersect || intersect.param<closestIntersect.param){
-		    closestIntersect=intersect;
-		}
-	    }
-	    // Intersect angle
-	    if(!closestIntersect)
-                continue;
-	    closestIntersect.angle = angle;
-
-	    // Add to list of intersects
-	    intersects.push(closestIntersect);
-	}
-
-        // Sort intersects by angle
-	intersects = intersects.sort(function(a,b){
-	    return a.angle-b.angle;
-	});
-
-        var pp = new Point(game.player.x, game.player.y).toScreen();
-        ctx.fillStyle = "#000";
-        ctx.globalCompositeOperation = "destination-out";
-        ctx.beginPath();
-
-        var first = new Point(intersects.pop()).toScreen();
-        ctx.moveTo(first.x, first.y);
-        intersects.forEach(function(intersect) {
-            var pi = new Point(intersect).toScreen();
-            ctx.lineTo(pi.x, pi.y);
-        });
-        ctx.fill();
-        game.ctx.drawImage(canvas, game.camera.x, game.camera.y);
-    };
-
-    var diag = Math.hypot(game.screen.width, game.screen.height);
-    var CHUNK_SIZE = 8*CELL_SIZE;
+    // game.ctx.scale(0.4, 0.4);
+    // game.ctx.translate(500, 500);
     this.draw = function() {
-        for (var cy = 0; cy < diag; cy += CHUNK_SIZE) {
-            for(var cx = 0; cx < diag; cx += CHUNK_SIZE) {
-                var key = cx+"."+cy;
-                var chunk = this.chunks[key];
-                if (!chunk) {
-                    var canvas = document.createElement("canvas");
-                    canvas.width = 2*CHUNK_SIZE;
-                    canvas.height = CHUNK_SIZE;
-                    var ctx = canvas.getContext("2d");
-                    ctx.translate(CHUNK_SIZE, 0);
-                    this.layers.forEach(function(layer) {
-                        layer.forEach(function(tile) {
-                            var x = tile.x*CELL_SIZE;
-                            var y = tile.y*CELL_SIZE;
-                            if (x < cx || x > cx+CHUNK_SIZE || y < cy || y > cy+CHUNK_SIZE)
-                                return;
-                            var p = new Point(x, y).toScreen();
-                            p.x -= CELL_SIZE;
-                            this.drawTile(ctx, tile.x, tile.y, p);
-                        }.bind(this));
-                    }.bind(this));
+        var scr = game.screen;
+        var cam = game.camera;
+        var sx = ((cam.x / CHUNK_SIZE) << 0) * CHUNK_SIZE;
+        var sy = ((cam.y / CHUNK_SIZE) << 0) * CHUNK_SIZE;
+        var ex = sx+scr.width;
+        var ey = sy+scr.height;
+        sx = Math.max(0, sx);
+        sy = Math.max(0, sy);
 
-                    var p = new Point(cx, cy).toScreen();
-                    p.x -= CHUNK_SIZE;
-                    chunk = {canvas: canvas, p: p};
-                    this.chunks[key] = chunk;
+        // var dy = Math.abs(cam.y % CHUNK_SIZE);
+        // if (dy > 2*CHUNK_SIZE/3)
+        //     ey += CHUNK_SIZE;
+        // else if (dy > CHUNK_SIZE/3)
+        //     sy -= CHUNK_SIZE;
+
+        var i = 0;
+        var layers = this.makeLayers();
+        for (var cy = sy; cy <= ey; cy += CHUNK_SIZE/2) {
+            for (var cx = sx; cx <= ex; cx += 2*CHUNK_SIZE) {
+                var p = new Point((i % 2) ? cx : cx-CHUNK_SIZE, cy).toWorld();
+                var key = p.x+"."+p.y;
+                var chunks = this.chunks[key];
+                if (!chunks) {
+                    console.log("MAKING", key);
+                    // if (p.y == 0)
+                    //     console.log("MAKE", key);
+
+                    chunks = this.makeChunks(p);
+                    this.chunks[key] = chunks;
                 }
-                game.ctx.drawImage(chunk.canvas, chunk.p.x, chunk.p.y);
+                chunks.forEach(function(chunk) {
+                    layers[chunk.layer].push(chunk);
+                });
             }
+            i++;
         }
+
+        layers.forEach(function(chunks) {
+            chunks.forEach(function(chunk) {
+                game.ctx.drawImage(chunk.canvas, chunk.p.x, chunk.p.y);
+            });
+        });
 
         if(game.debug.map.position && false) {
             var text = "(" + (x + game.camera.x) + " " + (y + game.camera.y) + ")";
@@ -506,6 +331,45 @@ function Map() {
         game.debug.map.grid && this.drawGrid();
 
         this.updateObjects();
+    };
+
+    this.makeLayers = function() {
+        return this.bioms.map(function() {
+            return [];
+        });
+    };
+
+    this.makeChunks = function(c) {
+        var chunks = [];
+        var p = c.clone().toScreen();
+        p.x -= CHUNK_SIZE;
+        this.layers.forEach(function(layer, lvl) {
+            var canvas = null;
+            var ctx = null;
+            layer.forEach(function(tile) {
+                var x = tile.x*CELL_SIZE - (c.x - this.location.x);
+                var y = tile.y*CELL_SIZE - (c.y - this.location.y);
+                if (x < 0 || x > CHUNK_SIZE || y < 0 || y > CHUNK_SIZE)
+                    return;
+                if (!canvas) {
+                    canvas = document.createElement("canvas");
+                    canvas.width = 2*ISO_CHUNK_SIZE;
+                    canvas.height = ISO_CHUNK_SIZE;
+                    ctx = canvas.getContext("2d");
+                    ctx.translate(CHUNK_SIZE, 0);
+                }
+                var p = new Point(x, y).toScreen();
+                p.x -= CELL_SIZE;
+                this.drawTile(ctx, tile.x, tile.y, p);
+            }.bind(this));
+
+            if (canvas) {
+                chunks.push({canvas: canvas, p: p, layer: lvl});
+            }
+
+        }.bind(this));
+
+        return chunks;
     };
 
     this.drawDarkness = function() {

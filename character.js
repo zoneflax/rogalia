@@ -1171,14 +1171,14 @@ Character.prototype = {
             return a.distanceTo(self) - b.distanceTo(self);
         });
         if (list.length > 0)
-            list[0].pickUp()
+            list[0].pickUp();
     },
     updateCamera: function() {
         var camera = game.camera;
         var screen = game.screen;
         var p = new Point(this.X, this.Y).toScreen();
-        camera.x = p.x - screen.width / 2;
-        camera.y = p.y - screen.height / 2;
+        camera.x = (p.x - screen.width / 2) << 0;
+        camera.y = (p.y - screen.height / 2) << 0;
     },
     willCollide: function(new_x, new_y) {
         return false; //TODO: fix StandUp problems
