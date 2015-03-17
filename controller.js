@@ -422,7 +422,7 @@ Controller.prototype = {
             scale: 1,
             id: tile.id,
             setPoint: function(){}, //TODO: fixme
-            alignedData: function() {return null},
+            alignedData: function() {return null;},
             rotate: function(delta) {
                 if (delta < 0)
                     this.scale++;

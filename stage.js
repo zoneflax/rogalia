@@ -406,20 +406,16 @@ function mainStage() {
         game.ctx.save();
         game.ctx.translate(-game.camera.x, -game.camera.y);
 
-        game.claims.forEach(drawClaim);
 
         game.map.draw();
+
+        game.claims.forEach(drawClaim);
 
         game.sortedEntities.traverse(drawObject);
         if (config.map.darkness)
             game.map.drawDarkness();
 
         game.sortedEntities.traverse(drawUI);
-
-        //TODO!!!: remove
-        // var scr = game.screen;
-        // game.ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
-        // game.ctx.fillRect(game.camera.x, game.camera.y, scr.width, scr.height);
 
         game.controller.draw();
         game.ctx.restore();

@@ -75,7 +75,7 @@ a:hover {
     position: relative;
     overflow: hidden;
 }
-#canvas, .map-canvas {
+#canvas {
     position: absolute;
     top: 0;
     left: 0;
@@ -90,9 +90,6 @@ a:hover {
 }
 #canvas {
     z-index: 1;
-}
-.map-canvas {
-    pointer-events: none;
 }
 #menu {
     text-align: left;
@@ -285,7 +282,7 @@ a:hover {
 .main-stage #wiki-button {
     display: block!important;
 }
-.exit-stage #world > div, .exit-stage .panel, .exit-stage .map-canvas{
+.exit-stage #world > div, .exit-stage .panel, .exit-stage {
     display: none!important;
 }
 .exit-stage #world {

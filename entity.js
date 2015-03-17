@@ -672,7 +672,7 @@ Entity.prototype = {
         game.network.send("entity-drop", {id: this.Id});
     },
     use: function(e) {
-        game.network.send("entity-use", {Id: e.Id, Equipment: this.Id})
+        game.network.send("entity-use", {Id: e.Id, Equipment: this.Id});
         return true;
     },
     canUse: function(e) {
