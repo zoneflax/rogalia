@@ -69,7 +69,8 @@ Character.initSprites = function() {
 };
 
 Character.npcActions = {
-    "Set citizenship": function(id) {
+    "Set citizenship": function() {
+        var id = this.Id;
         var set = function(name) {
             return function() {
                 game.network.send("set-citizenship", {Id: id, Name: name});
@@ -86,18 +87,18 @@ Character.npcActions = {
         };
         game.menu.show(citizenships);
     },
-    "Get claim": function(id) {
-        game.network.send("get-claim", {Id: id});
+    "Get claim": function() {
+        game.network.send("get-claim", {Id: this.Id});
     },
-    "Bank": function(id) {
+    "Bank": function() {
         new Bank();
     },
-    "Quest": function(id) {
+    "Quest": function() {
         if (confirm("I'll take 10 food from your bag and give you status point as a reward. Deal?")) {
-            game.network.send("quest", {Id: id});
+            game.network.send("quest", {Id: this.Id});
         }
     },
-    "Talk": function(id) {
+    "Talk": function() {
         var talks = {
             getActions: function() {
                 var actions = {};
@@ -112,5 +113,11 @@ Character.npcActions = {
         };
         var mouse = game.controller.mouse;
         game.menu.show(talks);
+    },
+    "Buy": function() {
+        game.network.send("buy-list", {Vendor: this.Id}, Vendor.buy.bind(this));
+    },
+    "Sell": function() {
+        game.network.send("sell-list", {Vendor: this.Id}, Vendor.sell.bind(this));
     },
 };

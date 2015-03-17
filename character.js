@@ -347,10 +347,10 @@ Character.prototype = {
                 if (type == "naked")
                     return null;
                 var path = dir +
-                    animation + "/" +  // idle
-                    part + "/" +       // body
-                    type + ".png";     // naked
-                    return loader.loadImage(path);
+                        animation + "/" +  // idle
+                        part + "/" +       // body
+                        type + ".png";     // naked
+                return loader.loadImage(path);
             });
         }
 
@@ -385,26 +385,7 @@ Character.prototype = {
     getActions: function() {
         var actions = {}
         switch (this.Type) {
-        case "vendor": {
-            var name = this.Name;
-            actions = {
-                "Buy": function() {
-                    game.network.send("buy-list", {Vendor: this.Id}, Vendor.buy.bind(this));
-                },
-                "Sell": function() {
-                    game.network.send("sell-list", {Vendor: this.Id}, Vendor.sell.bind(this));
-                },
-            };
-            if (this.Owner == game.player.Id) {
-                actions["Take revenue"] = function() {
-                    game.network.send("take-revenue", {Vendor: this.Id});
-                };
-                actions["Take sold items"] = function() {
-                    game.network.send("take-sold-items", {Vendor: this.Id});
-                };
-            }
-            break;
-        }
+
         case "moroz":
         case "snegurochka":
             actions = {
@@ -458,7 +439,8 @@ Character.prototype = {
     defaultAction: function(targetOnly) {
         switch (this.Type) {
         case "charles":
-            this.talk();
+        case "vendor":
+            this.interact();
             break;
         default:
             if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.state != "")
@@ -625,7 +607,7 @@ Character.prototype = {
         var name = this.Name;
         if (this.IsNpc) {
             switch (name) {
-            default:
+                default:
                 name = name.replace(/-\d+$/, "");
             }
             name = T(name);
@@ -1246,24 +1228,26 @@ Character.prototype = {
         }.bind(this));
         return clothes;
     },
-    talk: function() {
-        var id = this.Id;
-        game.network.send("follow", {Name: this.Name}, function open(data) {
+    interact: function() {
+        var self = this;
+        game.network.send("follow", {Name: this.Name}, function interact(data) {
             if (!data.Done)
-                return open;
-            var contents = game.talks.charles.map(function(element) {
+                return interact;
+
+            var contents = game.talks[self.Type].map(function(element) {
+                var buttons = document.createElement("div");
+                var actions = document.createElement("ol");
+
                 if (typeof element == "string") {
                     var p = document.createElement("p");
                     p.textContent = element;
                     return p;
                 }
-                var buttons = document.createElement("div");
-                var actions = document.createElement("ol");
                 Object.keys(element).forEach(function(title) {
                     var button = document.createElement("button");
                     button.textContent = T(title);
                     button.onclick = function() {
-                        Character.npcActions[title](id);
+                        Character.npcActions[title].call(self);
                     };
                     buttons.appendChild(button);
 
@@ -1274,14 +1258,28 @@ Character.prototype = {
 
                     actions.appendChild(li);
                 });
+                //TODO: make it less uglier
+                if (self.Type == "vendor" && self.Owner == game.player.Id) {
+                    buttons.appendChild(game.makeSendButton(
+                        "Take revenue",
+                        "take-revenue",
+                        {Vendor: this.Id}
+                    ));
+                    buttons.appendChild(game.makeSendButton(
+                        "Take sold items",
+                        "take-sold-items",
+                        {Vendor: this.Id}
+                    ));
+                }
                 var wrap = document.createElement("div");
                 wrap.appendChild(actions);
                 wrap.appendChild(buttons);
                 return wrap;
             });
-            var panel = new Panel("talk", "Talk", contents);
+
+            var panel = new Panel("talk", self.Name, contents);
             panel.show();
             return null;
         });
-    }
+    },
 };

@@ -357,6 +357,15 @@ function Game() {
         },
     };
 
+    this.makeSendButton = function(title, cmd, args, callback) {
+        var button = document.createElement("button");
+        button.textContent = T(title);
+        button.onclick = function() {
+            game.network.send(cmd, args, callback);
+        };
+        return button;
+    };
+
     this.error = function() {
         console.error.apply(console, arguments);
         console.trace();

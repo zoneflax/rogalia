@@ -124,7 +124,7 @@ function Network() {
         this.sendStart = Date.now();
         this.socket.send(JSON.stringify(args));
 
-        if(callback) {
+        if (callback) {
             this.callback = callback;
             if (setAsDefault)
                 this.defaultCallback = callback;
