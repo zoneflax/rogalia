@@ -99,14 +99,17 @@ Character.npcActions = {
         }
     },
     "Talk": function() {
+        var name = this.Name;
         var talks = {
             getActions: function() {
                 var actions = {};
-                for (var i in game.talks.vendor) {
+                for (var i in game.talks.stories) {
                     actions[i] = function() {
-                        game.chat.addMessage({From: name, Body: this, IsNpc: true});
-                        game.controller.highlight("chat");
-                    }.bind(game.talks.vendor[i]);
+                        var p = document.createElement("p");
+                        p.textContent = this;
+                        var panel = new Panel("story", name, [p]);
+                        panel.show();
+                    }.bind(game.talks.stories[i]);
                 }
                 return actions;
             }

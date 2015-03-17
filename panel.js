@@ -1,20 +1,23 @@
+//TODO: make panels linked via back button
 function Panel(name, title, elements, listener, hooks) {
-    if (name in game.panels)
+    if (name in game.panels) {
         game.panels[name].close();
+    }
 
     game.panels[name] = this;
+
     this.name = name;
     this.visible = false;
 
     this.lsKey = "panels." + this.name;
-    var config = JSON.parse(localStorage.getItem(this.lsKey)) || {}
+    var config = JSON.parse(localStorage.getItem(this.lsKey)) || {};
     if("position" in config) {
         this.position = config.position;
     } else {
         this.position = {
             x: game.offset.x + game.screen.width / 2,
             y: game.offset.y + game.screen.height / 2,
-        }
+        };
     }
 
     this.element = document.createElement("div");
@@ -49,9 +52,6 @@ function Panel(name, title, elements, listener, hooks) {
         show: hooks.show,
         hide: hooks.hide,
     };
-
-    this.insert = function(list) {
-    }
 
     if (elements && elements.length) {
         this.replace(elements);
@@ -154,6 +154,12 @@ Panel.prototype = {
         for(var i = 0, l = elements.length; i < l; i++) {
             this.contents.appendChild(elements[i]);
         }
+    },
+    makeBackButton: function() {
+        var back = document.createElement("button");
+        back.textContent = T("Back");
+        back.onclick = function() {};
+        return back;
     },
     show: function() {
         this.toTop();

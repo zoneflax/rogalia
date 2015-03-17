@@ -18,7 +18,6 @@ Menu.prototype = {
         if (!actions)
             return false;
 
-        console.log(x, y);
         x = x || game.controller.iface.x;
         y = y || game.controller.iface.y;
 

@@ -1264,7 +1264,7 @@ big {
   z-index: 99999999;
 }
 
-#talk {
+#talk, #story {
     max-width: 500px;
 }
 .talk-link:hover {
