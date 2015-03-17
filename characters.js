@@ -65,5 +65,52 @@ Character.initSprites = function() {
     ["sword"].forEach(function(weapon) {
         var sprite = new Sprite(Character.spriteDir + "/man/weapon/" + weapon + ".png");
         Character.weaponSprites[weapon] = sprite;
-    })
+    });
+};
+
+Character.npcActions = {
+    "Set citizenship": function(id) {
+        var set = function(name) {
+            return function() {
+                game.network.send("set-citizenship", {Id: id, Name: name});
+            };
+        };
+        var citizenships = {
+            getActions: function() {
+                return {
+                    "I choose Empire": set("Empire"),
+                    "I choose Confederation": set("Confederation"),
+                    "I want to be free": set(""),
+                };
+            }
+        };
+        game.menu.show(citizenships);
+    },
+    "Get claim": function(id) {
+        game.network.send("get-claim", {Id: id});
+    },
+    "Bank": function(id) {
+        new Bank();
+    },
+    "Quest": function(id) {
+        if (confirm("I'll take 10 food from your bag and give you status point as a reward. Deal?")) {
+            game.network.send("quest", {Id: id});
+        }
+    },
+    "Talk": function(id) {
+        var talks = {
+            getActions: function() {
+                var actions = {};
+                for (var i in game.talks.vendor) {
+                    actions[i] = function() {
+                        game.chat.addMessage({From: name, Body: this, IsNpc: true});
+                        game.controller.highlight("chat");
+                    }.bind(game.talks.vendor[i]);
+                }
+                return actions;
+            }
+        };
+        var mouse = game.controller.mouse;
+        game.menu.show(talks);
+    },
 };

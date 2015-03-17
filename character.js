@@ -444,54 +444,6 @@ Character.prototype = {
                 game.network.send("buy-sex", {Id: this.Id});
             };
             break;
-        case "Charles":
-            var id = this.Id;
-            actions = {
-                "Set citizenship": function() {
-                    var set = function(name) {
-                        return function() {
-                            game.network.send("set-citizenship", {Id: id, Name: name});
-                        };
-                    };
-                    var citizenships = {
-                        getActions: function() {
-                            return {
-                                "I choose Empire": set("Empire"),
-                                "I choose Confederation": set("Confederation"),
-                                "I want to be free": set(""),
-                            };
-                        }
-                    };
-                    game.menu.show(citizenships, null, null, true);
-                },
-                "Get claim": function() {
-                    game.network.send("get-claim", {Id: id});
-                },
-                "Bank": function() {
-                    new Bank();
-                },
-                "Quest": function() {
-                    if (confirm("I'll take 10 food from your bag and give you status point as a reward. Deal?")) {
-                        game.network.send("quest", {Id: id});
-                    }
-                },
-                "Talk": function() {
-                    var talks = {
-                        getActions: function() {
-                            var actions = {};
-                            for (var i in game.talks.vendor) {
-                                actions[i] = function() {
-                                    game.chat.addMessage({From: name, Body: this, IsNpc: true});
-                                    game.controller.highlight("chat");
-                                }.bind(game.talks.vendor[i]);
-                            }
-                            return actions;
-                        }
-                    };
-                    game.menu.show(talks, null, null, true);
-                }
-            };
-            break;
         }
 
         return [
@@ -504,10 +456,16 @@ Character.prototype = {
         ];
     },
     defaultAction: function(targetOnly) {
-        if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.state != "")
-            game.controller.iface.actionButton.click();
-        else if (this != game.player || config.allowSelfSelection)
-            game.player.target = this;
+        switch (this.Type) {
+        case "charles":
+            this.talk();
+            break;
+        default:
+            if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.state != "")
+                game.controller.iface.actionButton.click();
+            else if (this != game.player || config.allowSelfSelection)
+                game.player.target = this;
+        }
     },
     drawAction: function() {
         if(this.Action.Duration) {
@@ -1288,4 +1246,42 @@ Character.prototype = {
         }.bind(this));
         return clothes;
     },
+    talk: function() {
+        var id = this.Id;
+        game.network.send("follow", {Name: this.Name}, function open(data) {
+            if (!data.Done)
+                return open;
+            var contents = game.talks.charles.map(function(element) {
+                if (typeof element == "string") {
+                    var p = document.createElement("p");
+                    p.textContent = element;
+                    return p;
+                }
+                var buttons = document.createElement("div");
+                var actions = document.createElement("ol");
+                Object.keys(element).forEach(function(title) {
+                    var button = document.createElement("button");
+                    button.textContent = T(title);
+                    button.onclick = function() {
+                        Character.npcActions[title](id);
+                    };
+                    buttons.appendChild(button);
+
+                    var li = document.createElement("li");
+                    li.className = "talk-link";
+                    li.textContent = element[title];
+                    li.onclick = button.onclick;
+
+                    actions.appendChild(li);
+                });
+                var wrap = document.createElement("div");
+                wrap.appendChild(actions);
+                wrap.appendChild(buttons);
+                return wrap;
+            });
+            var panel = new Panel("talk", "Talk", contents);
+            panel.show();
+            return null;
+        });
+    }
 };

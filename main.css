@@ -482,7 +482,7 @@ a:hover {
     display: none;
     color: white;
     pointer-events:none;
-
+    z-index: 999999;
     text-shadow:
     -1px -1px 0 #333,
     1px -1px 0 #333,
@@ -1215,7 +1215,7 @@ big {
 #news time {
     float: right;
 }
-#news p {
+#talk p, #news p {
     margin: 5px 0 0;
 }
 
@@ -1265,4 +1265,12 @@ big {
   right: 0;
   width: 300px;
   z-index: 99999999;
+}
+
+#talk {
+    max-width: 500px;
+}
+.talk-link:hover {
+    cursor: pointer;
+    color: lightgreen;
 }
