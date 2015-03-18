@@ -383,7 +383,7 @@ Character.prototype = {
         }.bind(this));
     },
     getActions: function() {
-        var actions = {}
+        var actions = {};
         switch (this.Type) {
 
         case "moroz":
@@ -429,6 +429,7 @@ Character.prototype = {
 
         return [
             {
+                Interact: this.interact,
                 Select:  function() {
                     game.player.target = this;
                 }.bind(this)
@@ -1233,7 +1234,7 @@ Character.prototype = {
         game.network.send("follow", {Name: this.Name}, function interact(data) {
             if (!data.Done)
                 return interact;
-
+            var panel = null;
             var contents = game.talks[self.Type].map(function(element) {
                 var buttons = document.createElement("div");
                 var actions = document.createElement("ol");
@@ -1247,6 +1248,7 @@ Character.prototype = {
                     var button = document.createElement("button");
                     button.textContent = T(title);
                     button.onclick = function() {
+                        panel.close();
                         Character.npcActions[title].call(self);
                     };
                     buttons.appendChild(button);
@@ -1277,7 +1279,7 @@ Character.prototype = {
                 return wrap;
             });
 
-            var panel = new Panel("talk", self.Name, contents);
+            panel = new Panel("talk", self.Name, contents);
             panel.show();
             return null;
         });

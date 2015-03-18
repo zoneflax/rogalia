@@ -282,7 +282,7 @@ a:hover {
 .main-stage #wiki-button {
     display: block!important;
 }
-.exit-stage #world > div, .exit-stage .panel, .exit-stage {
+.exit-stage #world > div, .exit-stage .panel {
     display: none!important;
 }
 .exit-stage #world {

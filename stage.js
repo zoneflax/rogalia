@@ -15,7 +15,6 @@ Stage.add = function(stage) {
 
 function exitStage(message) {
     message = message || T("Refresh page...");
-    game.ctx.clear();
     game.ctx.fillStyle = "#fff";
     game.ctx.fillText(
         T(message),
