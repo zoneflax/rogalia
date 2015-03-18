@@ -154,7 +154,7 @@ function Chat() {
 
     this.channelGroupsElement = document.createElement("div");
     this.channelGroups = {};
-    ["system", "players"].map(function(name) {
+    ["system", "players", "npc"].map(function(name) {
         var label = document.createElement("label");
         var channelGroup = document.createElement("input");
         channelGroup.type = "checkbox";
@@ -162,7 +162,7 @@ function Chat() {
         channelGroup.addEventListener("change", function(e) {
             self.messagesElement.classList[
                 (this.checked) ? "remove" : "add"
-            ]("channel-group-" + name)
+            ]("channel-group-" + name);
         });
         label.appendChild(channelGroup);
         label.appendChild(document.createTextNode(T(name)));
@@ -313,7 +313,7 @@ function Chat() {
         if (typeof message == 'string') {
             message = {
                 From: null,
-                Channel: { Id: 7 },
+                Channel: 7,
                 Body: message
             };
         }
@@ -322,18 +322,14 @@ function Chat() {
         var contents = [];
 
         this.addBallon(message);
-        if (message.Channel) {
-            switch(message.Channel.Id) {
-            case 9: //local
-                return;
-            case 8:
-                message.From = this.names.server;
-                game.controller.showAnouncement(message.Body);
-                break;
-            }
+        switch(message.Channel) {
+        case 8:
+            message.From = this.names.server;
+            game.controller.showAnouncement(message.Body);
+            break;
         }
 
-        if (message.From && message.Channel && message.Channel.Id != 6) {
+        if (message.From && message.Channel != 6) {
             var fromElement = document.createElement("span");
             fromElement.className = "from";
             var color = null;
@@ -342,12 +338,12 @@ function Chat() {
                 color = "#03c";
                 break;
             case this.names.server:
-                if (!message.Channel.Id)
-                    message.Channel.Id = 7;
+                if (!message.Channel)
+                    message.Channel = 7;
                 color = "brown";
                 break;
             default:
-                if (message.IsNpc) {
+                if (message.Channel == 9) {
                     color = "#939";
                     sendNotification = false;
                 }
@@ -371,7 +367,7 @@ function Chat() {
         }
 
         if (message.Channel)
-            messageElement.classList.add("channel-" + message.Channel.Id);
+            messageElement.classList.add("channel-" + message.Channel);
 
 
         if (!sendNotification)
@@ -382,12 +378,12 @@ function Chat() {
         var config = {
             icon : "assets/rogalik-64.png",
             tag: "chat-msg"
-        }
+        };
         if (message.From != this.names.server || message.Body.search(/.* logged in/) == -1) {
             var subject = message.From;
             config.body = message.Body;
         } else {
-            subject = message.Body
+            subject = message.Body;
         }
 
         if (!this.useNotifications)
@@ -405,7 +401,7 @@ function Chat() {
         for(var i = 0, l = data.length; i < l; i++) {
             this.addMessage(data[i]);
             if (data[i].From != game.player.Name) {
-                if (data[i].Channel.Id != 9)
+                if (data[i].Channel != 9)
                     needAlert = true;
             }
         }

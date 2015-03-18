@@ -390,7 +390,7 @@ Character.prototype = {
         case "snegurochka":
             actions = {
                 "Tell me the rules": function() {
-                    game.chat.addMessage({From: name, Body: game.talks.rules.presents, IsNpc: true});
+                    game.chat.addMessage({From: name, Body: game.talks.rules.presents, Channel: 9});
                     game.controller.highlight("chat");
                 },
                 "Gimme a present!": function() {

@@ -979,9 +979,8 @@ ol li a:hover {
     color: orange;
 }
 
-.channel-group-system .channel-7 {
-    display: none;
-}
+.channel-group-system .channel-7,
+.channel-group-npc .channel-9,
 .channel-group-players .channel-0 {
     display: none;
 }
