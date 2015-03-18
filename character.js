@@ -427,15 +427,19 @@ Character.prototype = {
             break;
         }
 
-        return [
-            {
-                Interact: this.interact,
+        var common = {
                 Select:  function() {
                     game.player.target = this;
                 }.bind(this)
-            },
-            actions
-        ];
+        };
+        switch (this.Type) {
+        case "shot":
+        case "charles":
+        case "vendor":
+            common.Interact =  this.interact;
+        }
+
+        return [common, actions];
     },
     defaultAction: function(targetOnly) {
         switch (this.Type) {
