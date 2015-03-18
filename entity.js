@@ -540,12 +540,13 @@ Entity.prototype = {
     drawBox: function(color) {
         game.ctx.save();
         game.ctx.globalAlpha = 0.3;
+        game.ctx.strokeStyle = "#fff";
         game.ctx.fillStyle = color || "#ccc";
         var p = this.screen();
         if (this.round) {
-            game.iso.fillRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
+            game.iso.fillStrokedRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
         } else {
-            game.iso.fillCircle(this.X, this.Y, this.Radius);
+            game.iso.fillStrokedCircle(this.X, this.Y, this.Radius);
         }
         game.ctx.restore();
     },

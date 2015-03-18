@@ -148,6 +148,14 @@ function Game() {
                 game.ctx.stroke();
             });
         };
+        this.fillStrokedCircle = function(x, y, r) {
+            this.fillCircle(x, y, r);
+            this.strokeCircle(x, y, r);
+        };
+        this.fillStrokedRect = function(x, y, w, h) {
+            this.fillRect(x, y, w, h);
+            this.strokeRect(x, y, w, h);
+        };
     };
 
     this.addEventListeners = function() {
