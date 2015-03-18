@@ -116,6 +116,8 @@ Character.npcActions = {
                             alert("Пока не готово, извиняй.");
                         },
                     };
+                case "Umi":
+                case "Margo":
                 case "Shot":
                     return {
                         "Tour": function() {
@@ -154,5 +156,8 @@ Character.npcActions = {
     },
     "Drink water": function() {
         alert("Извини, воду пока не завезли.");
-    }
+    },
+    "Buy sex": function() {
+        game.network.send("buy-sex", {Id: this.Id});
+    },
 };

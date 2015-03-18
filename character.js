@@ -418,37 +418,22 @@ Character.prototype = {
                 };
             }
         }
-        switch (this.Name) {
-        case "Margo":
-        case "Umi":
-            actions["Buy sex"] = function() {
-                game.network.send("buy-sex", {Id: this.Id});
-            };
-            break;
-        }
 
         var common = {
                 Select:  function() {
                     game.player.target = this;
                 }.bind(this)
         };
-        switch (this.Type) {
-        case "shot":
-        case "charles":
-        case "vendor":
+        if (this.isInteractive()) {
             common.Interact =  this.interact;
         }
 
         return [common, actions];
     },
     defaultAction: function(targetOnly) {
-        switch (this.Type) {
-        case "shot":
-        case "charles":
-        case "vendor":
+        if (this.isInteractive()) {
             this.interact();
-            break;
-        default:
+        } else {
             if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.state != "")
                 game.controller.iface.actionButton.click();
             else if (this != game.player || config.allowSelfSelection)
@@ -1302,8 +1287,29 @@ Character.prototype = {
     },
     getTalks: function() {
         var type = this.Type;
-        if (this.Name == "Shot")
+        switch (this.Name) {
+        case "Shot":
             type = "shot";
+            break;
+        case "Margo":
+        case "Umi":
+            type = "margo";
+            break;
+        }
         return game.talks[type];
     },
+    isInteractive: function() {
+        switch (this.Name) {
+        case "Shot":
+        case "Margo":
+        case "Umi":
+            return true;
+        }
+        switch (this.Type) {
+        case "charles":
+        case "vendor":
+            return true;
+        }
+        return false;
+    }
 };
