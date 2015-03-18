@@ -32,7 +32,7 @@ Character.sync = function(data, remove) {
             game.addCharacter(to);
             if (from.Name == game.login)
                 game.player = to;
-            to.init(from)
+            to.init(from);
         } else {
             to.sync(from);
         }
@@ -45,7 +45,7 @@ Character.sync = function(data, remove) {
 Character.drawActions = function() {
     game.characters.forEach(function(c) {
         c.drawAction();
-    })
+    });
 };
 
 Character.spriteDir = "characters/";
@@ -55,7 +55,7 @@ Character.parts = ["feet", "legs", "body", "head"];
 
 
 Character.nakedSprites = {};
-Character.weaponSprites = {}
+Character.weaponSprites = {};
 Character.initSprites = function() {
     Character.animations.forEach(function(animation) {
         var path = Character.spriteDir + "/man/" + animation + "/naked.png";
@@ -94,9 +94,39 @@ Character.npcActions = {
         new Bank();
     },
     "Quest": function() {
-        if (confirm("I'll take 10 food from your bag and give you status point as a reward. Deal?")) {
-            game.network.send("quest", {Id: this.Id});
-        }
+        var id = this.Id;
+        var name = this.Name;
+        var talks = {
+            getActions: function() {
+                switch (name) {
+                case "Charles":
+                    return {
+                        "Faction tribute": function() {
+                            var descr = document.createElement("p");
+                            descr.textContent = "I'll take 10 food from your bag and give you status point as a reward. Deal?";
+                            var accept = document.createElement("button");
+                            accept.textContent  = "Accept";
+                            accept.onclick = function() {
+                                game.network.send("quest", {Id: id});
+                            };
+                            var panel = new Panel("quest", "Quest", [descr, accept]);
+                            panel.show();
+                        },
+                        "Tour": function() {
+                            alert("Пока не готово, извиняй.");
+                        },
+                    };
+                case "Shot":
+                    return {
+                        "Tour": function() {
+                            alert("Пока не готово, извиняй.");
+                        }
+                    };
+                }
+                return {};
+            }
+        };
+        game.menu.show(talks);
     },
     "Talk": function() {
         var name = this.Name;
@@ -114,7 +144,6 @@ Character.npcActions = {
                 return actions;
             }
         };
-        var mouse = game.controller.mouse;
         game.menu.show(talks);
     },
     "Buy": function() {
@@ -123,4 +152,7 @@ Character.npcActions = {
     "Sell": function() {
         game.network.send("sell-list", {Vendor: this.Id}, Vendor.sell.bind(this));
     },
+    "Drink water": function() {
+        alert("Извини, воду пока не завезли.");
+    }
 };

@@ -250,7 +250,13 @@ Controller.prototype = {
             X: {
                 button: "pick-up",
                 callback: function() {
-                    game.player.pickUp();
+                        game.player.pickUp();
+                },
+            },
+            "A": {
+                "button": "lift",
+                callback: function() {
+                    game.player.liftStart();
                 },
             },
             F: {

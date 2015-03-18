@@ -1,4 +1,7 @@
 var dict = {
+    "Faction tribute": "Дань фракции",
+    "Tour": "Экскурсия",
+    "Drink water": "Выпить воды",
     "Interact": "Взаимодействовать",
     "Back": "Назад",
     "Buy sex": "Купить секс",

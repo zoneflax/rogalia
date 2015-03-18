@@ -439,6 +439,7 @@ Character.prototype = {
     },
     defaultAction: function(targetOnly) {
         switch (this.Type) {
+        case "shot":
         case "charles":
         case "vendor":
             this.interact();
@@ -1114,6 +1115,21 @@ Character.prototype = {
         if (list.length > 0)
             list[0].pickUp();
     },
+    liftStart: function() {
+        var self = this;
+        var list = game.findItemsNear(this.X, this.Y).filter(function(e) {
+            return e.MoveType == Entity.MT_LIFTABLE;
+        }).sort(function(a, b) {
+            return a.distanceTo(self) - b.distanceTo(self);
+        });
+        if (list.length > 0)
+            list[0].lift();
+    },
+    liftStop: function() {
+        if (this.burden)
+            game.controller.creatingCursor(this.burden.Type, "lift-stop");
+    },
+
     updateCamera: function() {
         var camera = game.camera;
         var screen = game.screen;
@@ -1162,10 +1178,6 @@ Character.prototype = {
     intersects: Entity.prototype.intersects,
     canIntersect: function() {
         return this.sprite.outline != null && (config.ui.allowSelfSelection || this != game.player);
-    },
-    liftStop: function() {
-        if (this.burden)
-            game.controller.creatingCursor(this.burden.Type, "lift-stop");
     },
     bag: function() {
         return  Entity.get(this.Equip[0]);
@@ -1235,7 +1247,7 @@ Character.prototype = {
             if (!data.Done)
                 return interact;
             var panel = null;
-            var contents = game.talks[self.Type].map(function(element) {
+            var contents = self.getTalks().map(function(element) {
                 var buttons = document.createElement("div");
                 var actions = document.createElement("ol");
 
@@ -1265,12 +1277,12 @@ Character.prototype = {
                     buttons.appendChild(game.makeSendButton(
                         "Take revenue",
                         "take-revenue",
-                        {Vendor: this.Id}
+                        {Vendor: self.Id}
                     ));
                     buttons.appendChild(game.makeSendButton(
                         "Take sold items",
                         "take-sold-items",
-                        {Vendor: this.Id}
+                        {Vendor: self.Id}
                     ));
                 }
                 var wrap = document.createElement("div");
@@ -1283,5 +1295,11 @@ Character.prototype = {
             panel.show();
             return null;
         });
+    },
+    getTalks: function() {
+        var type = this.Type;
+        if (this.Name == "Shot")
+            type = "shot";
+        return game.talks[type];
     },
 };
