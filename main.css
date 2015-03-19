@@ -852,11 +852,9 @@ a.extern {
     right: 0;
     background-image: url("assets/bg/feet.png"), url("assets/bg/slot.png");
 }
-
 .attributes {
     clear: both;
 }
-
 .ballon {
     position: absolute;
     background: #333;

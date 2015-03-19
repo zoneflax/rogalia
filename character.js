@@ -127,20 +127,20 @@ Character.prototype = {
         this.sprite.angle = Math.PI/4;
 	switch (this.Type) {
 	case "kitty":
-	    this.sprite.width = 64
-	    this.sprite.height = 64
+	    this.sprite.width = 64;
+	    this.sprite.height = 64;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
-            }
+            };
             break;
 	case "chicken":
-	    this.sprite.width = 30
-	    this.sprite.height = 29
+	    this.sprite.width = 30;
+	    this.sprite.height = 29;
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 3],
-            }
+            };
             break;
         case "dog":
 	case "cat":
@@ -155,7 +155,7 @@ Character.prototype = {
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 3],
-            }
+            };
             break;
 	case "horse":
 	    this.sprite.width = 80;
@@ -165,27 +165,27 @@ Character.prototype = {
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 4],
-            }
+            };
             break;
 	case "rabbit":
-	    this.sprite.width = 23
-	    this.sprite.height = 37
+	    this.sprite.width = 23;
+	    this.sprite.height = 37;
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 2],
-            }
+            };
             break;
 	case "jesus":
-	    this.sprite.width = 64
-	    this.sprite.height = 96
+	    this.sprite.width = 64;
+	    this.sprite.height = 96;
             this.sprite.frames = {
                 "idle": 4,
                 "run": 8,
-            }
+            };
             break;
         case "charles":
 	    this.sprite.width = 40;
-	    this.sprite.height = 70
+	    this.sprite.height = 70;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 1,
@@ -193,8 +193,8 @@ Character.prototype = {
             };
             break;
 	case "desu":
-	    this.sprite.width = 68
-	    this.sprite.height = 96
+	    this.sprite.width = 68;
+	    this.sprite.height = 96;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 4,
@@ -202,13 +202,13 @@ Character.prototype = {
             };
             break;
         case "abu":
-	    this.sprite.width = 128
-	    this.sprite.height = 128
+	    this.sprite.width = 128;
+	    this.sprite.height = 128;
             this.sprite.angle = Math.PI/2;
             this.sprite.frames = {
                 "idle": 1,
                 "run": 3,
-            }
+            };
             break;
         case "mocherator":
 	    this.sprite.width = 40;
@@ -217,7 +217,7 @@ Character.prototype = {
             this.sprite.frames = {
                 "idle": 1,
                 "run": 3,
-            }
+            };
             break;
         case "omsk-overlord":
 	    this.sprite.width = 128;
@@ -342,7 +342,7 @@ Character.prototype = {
         if (typeof clothes == "string") {
             var parts = [loader.loadImage(dir + animation + "/" + clothes + ".png")];
         } else {
-            var parts =  Object.keys(clothes).map(function(part) {
+            parts =  Object.keys(clothes).map(function(part) {
                 var type = clothes[part];
                 if (type == "naked")
                     return null;
@@ -893,7 +893,7 @@ Character.prototype = {
                     cursor.sprite.width = icon.width;
                     cursor.sprite.height = icon.height;
                     game.controller.creatingCursor(cursor, action, callback);
-                }
+                };
                 break;
             }
         }
@@ -1228,6 +1228,10 @@ Character.prototype = {
         Character.parts.forEach(function(name, i) {
             clothes[name] = this.Clothes[i] || "naked";
         }.bind(this));
+
+        //TODO: for test; remove
+        clothes["hair"] = "hair";
+
         return clothes;
     },
     interact: function() {

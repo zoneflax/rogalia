@@ -51,7 +51,7 @@ Character.drawActions = function() {
 Character.spriteDir = "characters/";
 
 Character.animations = ["idle", "run", "dig", "craft", "attack", "sit"];
-Character.parts = ["feet", "legs", "body", "head"];
+Character.parts = ["feet", "legs", "body", "hair", "head"];
 
 
 Character.nakedSprites = {};
