@@ -295,7 +295,7 @@ Controller.prototype = {
                 callback: function() {
                     this.fight.hotkey(key);
                 }
-            }
+            };
         }.bind(this));
     },
     initHotbar: function() {
@@ -341,7 +341,7 @@ Controller.prototype = {
         this.system = new System();
         this.wiki = new Wiki();
         this.fpsStats = this.system.fps;
-        this.inventory = Container.open(game.player.Equip[0]) //0 - SLOT_BAG
+        this.inventory = Container.open(game.player.Equip[0]); //0 - SLOT_BAG
 
         game.chat = this.chat;
         game.help = this.system.help;

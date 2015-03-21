@@ -21,63 +21,6 @@ function Map() {
 
     this.tiles = [];
 
-    var objects = {};
-    this.updateObject = function(object) {
-        if (!config.ui.minimapObjects)
-            return;
-        var dot = objects[object.Id];
-        if (!dot) {
-            dot = document.createElement("div");
-            objects[object.Id] = dot;
-
-            dot.className = "object";
-            var w = object.Width || object.Radius;
-            var h = object.Height || object.Radius;
-            dot.style.width = w / CELL_SIZE;
-            dot.style.width = h / CELL_SIZE;
-            this.minimapContainer.appendChild(dot);
-            if (object instanceof Character) {
-                if (object == game.player)
-                    dot.classList.add("me");
-                else
-                    dot.classList.add((object.Karma >= 0) ? "passive" : "aggressive");
-            } else {
-                switch (object.Creator) {
-                case game.player.Id:
-                    dot.classList.add("mine");
-                    break;
-                case 0:
-                    break;
-                default:
-                    dot.classList.add("not-mine");
-                }
-            }
-            dot.object = object;
-        }
-    };
-
-    this.removeObject = function(id) {
-        if (!config.ui.minimapObjects)
-            return;
-
-        var dot = objects[id];
-        if (dot) {
-            util.dom.remove(dot);
-            delete objects[id];
-        }
-    };
-
-    this.updateObjects = function() {
-        if (!config.ui.minimapObjects)
-            return;
-
-        for (var i in objects) {
-            var dot = objects[i];
-            dot.style.left = (dot.object.X - this.location.x) / CELL_SIZE + "px";
-            dot.style.top = (dot.object.Y - this.location.y) / CELL_SIZE + "px";
-        }
-    };
-
     this.parse = function(img) {
         this.minimap.width = img.width;
         this.minimap.height = img.height;
@@ -142,6 +85,9 @@ function Map() {
         var loc = game.player.Location;
         this.location.set(loc.X, loc.Y);
         this.layers = this.makeLayers();
+
+        //TODO: reuse valid chunks
+        this.chunks = {};
         for(var y = 0; y < this.cells_y; y++) {
             for(var x = 0; x < this.cells_x; x++) {
                 var id = this.data[y][x].id;
@@ -165,16 +111,9 @@ function Map() {
                     this.data[y][x].corners[c] = offset;
                 }
                 this.layers[id].push(this.data[y][x]);
-                var lx = ((loc.X + x*CELL_SIZE) / CHUNK_SIZE << 0) * CHUNK_SIZE;
-                var ly = ((loc.Y + y*CELL_SIZE) / CHUNK_SIZE << 0) * CHUNK_SIZE;
-                var key = lx + "." + ly;
-                if (ly == 0)
-                    console.log("REMOVE", key);
-                delete this.chunks[key];
             }
         }
         this.ready = true;
-        console.log("IN");
     };
 
     this.drawGrid = function() {
@@ -239,7 +178,7 @@ function Map() {
         if (tile.width > 2*CELL_SIZE) {
             var lx = game.player.Location.X / CELL_SIZE;
             var ly = game.player.Location.Y / CELL_SIZE;
-            variant = Math.floor(tile.width/(4*CELL_SIZE)*(1+Math.sin((lx+x)*(ly+y))))
+            variant = Math.floor(tile.width/(4*CELL_SIZE)*(1+Math.sin((lx+x)*(ly+y))));
         }
         cell.corners.forEach(function(offset, i) {
             //don't draw the same tile again
@@ -275,49 +214,38 @@ function Map() {
         }.bind(this));
     };
 
-    // game.ctx.scale(0.4, 0.4);
-    // game.ctx.translate(500, 500);
+    // var k = 0.2;
+    // game.ctx.scale(k, k);
+    // game.ctx.translate(k*10000, k*10000);
+
     this.draw = function() {
         var scr = game.screen;
         var cam = game.camera;
-        var sx = ((cam.x / CHUNK_SIZE) << 0) * CHUNK_SIZE;
-        var sy = ((cam.y / CHUNK_SIZE) << 0) * CHUNK_SIZE;
-        var ex = sx+scr.width;
-        var ey = sy+scr.height;
-        sx = Math.max(0, sx);
-        sy = Math.max(0, sy);
-
-        // var dy = Math.abs(cam.y % CHUNK_SIZE);
-        // if (dy > 2*CHUNK_SIZE/3)
-        //     ey += CHUNK_SIZE;
-        // else if (dy > CHUNK_SIZE/3)
-        //     sy -= CHUNK_SIZE;
-
+        var sx = Math.floor(cam.x / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE;
+        var sy = Math.floor(cam.y / (CHUNK_SIZE/2)) * (CHUNK_SIZE/2) - CHUNK_SIZE/2;
+        var ex = Math.ceil((cam.x+scr.width) / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE;
+        var ey = Math.ceil((cam.y+scr.height) / (CHUNK_SIZE/2)) * (CHUNK_SIZE/2) - CHUNK_SIZE/2;
         var i = 0;
         var layers = this.makeLayers();
         for (var cy = sy; cy <= ey; cy += CHUNK_SIZE/2) {
             for (var cx = sx; cx <= ex; cx += 2*CHUNK_SIZE) {
-                var p = new Point((i % 2) ? cx : cx-CHUNK_SIZE, cy).toWorld();
+                var p = new Point((i % 2) ? cx-CHUNK_SIZE : cx , cy).toWorld();
                 var key = p.x+"."+p.y;
-                var chunks = this.chunks[key];
-                if (!chunks) {
-                    console.log("MAKING", key);
-                    // if (p.y == 0)
-                    //     console.log("MAKE", key);
-
-                    chunks = this.makeChunks(p);
-                    this.chunks[key] = chunks;
+                var chunk = this.chunks[key];
+                if (!chunk) {
+                    chunk = this.makeChunk(p);
+                    this.chunks[key] = chunk;
                 }
-                chunks.forEach(function(chunk) {
-                    layers[chunk.layer].push(chunk);
+                chunk.layers.forEach(function(tile) {
+                    layers[tile.layer].push(tile);
                 });
             }
             i++;
         }
 
-        layers.forEach(function(chunks) {
-            chunks.forEach(function(chunk) {
-                game.ctx.drawImage(chunk.canvas, chunk.p.x, chunk.p.y);
+        layers.forEach(function(layer) {
+            layer.forEach(function(tile) {
+                game.ctx.drawImage(tile.canvas, tile.p.x, tile.p.y);
             });
         });
 
@@ -339,8 +267,8 @@ function Map() {
         });
     };
 
-    this.makeChunks = function(c) {
-        var chunks = [];
+    this.makeChunk = function(c) {
+        var chunk = {layers:[]};
         var p = c.clone().toScreen();
         p.x -= CHUNK_SIZE;
         this.layers.forEach(function(layer, lvl) {
@@ -362,14 +290,11 @@ function Map() {
                 p.x -= CELL_SIZE;
                 this.drawTile(ctx, tile.x, tile.y, p);
             }.bind(this));
-
             if (canvas) {
-                chunks.push({canvas: canvas, p: p, layer: lvl});
+                chunk.layers.push({canvas: canvas, p: p, layer: lvl});
             }
-
         }.bind(this));
-
-        return chunks;
+        return chunk;
     };
 
     this.drawDarkness = function() {
@@ -404,7 +329,7 @@ function Map() {
         });
         game.ctx.globalAlpha = 1;
         // console.timeEnd("darkness");
-    }
+    };
 
     this._sort = function(bioms) {
         bioms.forEach(function(biom, i) {
@@ -427,7 +352,7 @@ function Map() {
         ];
         bioms.forEach(function(biom) {
             list.push(biom);
-        })
+        });
         return list;
     };
 
@@ -443,7 +368,7 @@ function Map() {
         });
 
         this.darkness = loader.loadImage("map/darkness.png");
-        this.simpleDarkness = loader.loadImage("map/simple-darkness.png")
+        this.simpleDarkness = loader.loadImage("map/simple-darkness.png");
     };
 
     this.getCell = function(x, y) {
@@ -464,5 +389,63 @@ function Map() {
 
     this.biomAt = function(x, y) {
         return this.bioms[this.getCell(x, y).id];
-    }
+    };
+
+        var objects = {};
+    this.updateObject = function(object) {
+        if (!config.ui.minimapObjects)
+            return;
+        var dot = objects[object.Id];
+        if (!dot) {
+            dot = document.createElement("div");
+            objects[object.Id] = dot;
+
+            dot.className = "object";
+            var w = object.Width || object.Radius;
+            var h = object.Height || object.Radius;
+            dot.style.width = w / CELL_SIZE;
+            dot.style.width = h / CELL_SIZE;
+            this.minimapContainer.appendChild(dot);
+            if (object instanceof Character) {
+                if (object == game.player)
+                    dot.classList.add("me");
+                else
+                    dot.classList.add((object.Karma >= 0) ? "passive" : "aggressive");
+            } else {
+                switch (object.Creator) {
+                case game.player.Id:
+                    dot.classList.add("mine");
+                    break;
+                case 0:
+                    break;
+                default:
+                    dot.classList.add("not-mine");
+                }
+            }
+            dot.object = object;
+        }
+    };
+
+    this.removeObject = function(id) {
+        if (!config.ui.minimapObjects)
+            return;
+
+        var dot = objects[id];
+        if (dot) {
+            util.dom.remove(dot);
+            delete objects[id];
+        }
+    };
+
+    this.updateObjects = function() {
+        if (!config.ui.minimapObjects)
+            return;
+
+        for (var i in objects) {
+            var dot = objects[i];
+            dot.style.left = (dot.object.X - this.location.x) / CELL_SIZE + "px";
+            dot.style.top = (dot.object.Y - this.location.y) / CELL_SIZE + "px";
+        }
+    };
+
 }
