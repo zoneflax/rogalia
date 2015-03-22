@@ -30,6 +30,10 @@ function Settings() {
         "settings.ui.world": function() {
             util.dom.toggle(game.world);
         },
+        "settings.graphics.low": function() {
+            game.reload();
+        },
+
         "settings.gameplay.pathfinding": function() {
             game.player.Settings.Pathfinding = !game.player.Settings.Pathfinding;
             game.network.send("set-settings", {Settings: game.player.Settings});

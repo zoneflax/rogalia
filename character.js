@@ -238,13 +238,13 @@ Character.prototype = {
             };
             break;
 	case "ufo":
-	    this.sprite.width = 64
-	    this.sprite.height = 64
+	    this.sprite.width = 64;
+	    this.sprite.height = 64;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 0,
-            }
+            };
             break;
         case "wyvern":
 	    this.sprite.width = 256;
@@ -252,7 +252,7 @@ Character.prototype = {
             this.sprite.frames = {
                 "idle": 4,
                 "run": 4,
-            }
+            };
             this.speed = 20000;
             break;
         case "daemon":
@@ -261,24 +261,24 @@ Character.prototype = {
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
-            }
+            };
             this.speed = 20000;
             break;
 	case "naked-ass":
-	    this.sprite.width = 64
-	    this.sprite.height = 96
+	    this.sprite.width = 64;
+	    this.sprite.height = 96;
             this.sprite.frames = {
                 "idle": 2,
                 "run": [0, 6],
-            }
+            };
             break;
 	case "red-hair":
-	    this.sprite.width = 64
-	    this.sprite.height = 96
+	    this.sprite.width = 64;
+	    this.sprite.height = 96;
             this.sprite.frames = {
                 "idle": 1,
                 "run": 3,
-            }
+            };
             break;
         case "cirno":
         case "snegurochka":
@@ -288,14 +288,14 @@ Character.prototype = {
             this.sprite.frames = {
                 "idle": 1,
                 "run": 1,
-            }
+            };
             break;
 	default:
             this.sprite.nameOffset = 72;
             this.sprite.offset = 2*this.Radius;
-	    this.sprite.width = 96
-	    this.sprite.height = 96
-	    this.sprite.speed = 7000
+	    this.sprite.width = 96;
+	    this.sprite.height = 96;
+	    this.sprite.speed = 7000;
 	}
         if (!this.sprite.nameOffset)
             this.sprite.nameOffset = this.sprite.height;

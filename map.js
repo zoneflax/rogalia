@@ -88,27 +88,32 @@ function Map() {
 
         //TODO: reuse valid chunks
         this.chunks = {};
+
         for(var y = 0; y < this.cells_y; y++) {
             for(var x = 0; x < this.cells_x; x++) {
+                if (config.graphics.low) {
+                    var id = 0;
+                } else {
                 var id = this.data[y][x].id;
-                for (var c = 0; c < 4; c++) {
-                    var offset = 0;
-                    var cx = 1 - (c & 0x1);
-                    var cy = 1 - ((c >> 1) & 0x1);
-                    for (var i = 0; i < 4; i++) {
-                        var dx = x + cx - (i & 0x1);
-                        var dy = y + cy - ((i >> 1) & 0x1);
-                        var other =
-                            this.data[dy] &&
-                            this.data[dy][dx] &&
-                            this.data[dy][dx].id;
-                        if (other >= id) {
-                            offset |= 1 << i;
+                    for (var c = 0; c < 4; c++) {
+                        var offset = 0;
+                        var cx = 1 - (c & 0x1);
+                        var cy = 1 - ((c >> 1) & 0x1);
+                        for (var i = 0; i < 4; i++) {
+                            var dx = x + cx - (i & 0x1);
+                            var dy = y + cy - ((i >> 1) & 0x1);
+                            var other =
+                                    this.data[dy] &&
+                                    this.data[dy][dx] &&
+                                    this.data[dy][dx].id;
+                            if (other >= id) {
+                                offset |= 1 << i;
+                            }
+                            if (other !== id)
+                                this.data[y][x].transition = true;
                         }
-                        if (other !== id)
-                            this.data[y][x].transition = true;
+                        this.data[y][x].corners[c] = offset;
                     }
-                    this.data[y][x].corners[c] = offset;
                 }
                 this.layers[id].push(this.data[y][x]);
             }
@@ -167,6 +172,30 @@ function Map() {
     this.drawTile = function(ctx, x, y, p) {
         var cell = this.data[y][x];
         var tile = this.tiles[cell.id];
+        var variant = 0;
+        if (tile.width > 2*CELL_SIZE) {
+            var lx = game.player.Location.X / CELL_SIZE;
+            var ly = game.player.Location.Y / CELL_SIZE;
+            variant = Math.floor(tile.width/(4*CELL_SIZE)*(1+Math.sin((lx+x)*(ly+y))));
+        }
+        if (config.graphics.low) {
+            var offset = 15;
+            ctx.drawImage(
+                tile,
+
+                variant * 2*CELL_SIZE,
+                offset * CELL_SIZE,
+                CELL_SIZE * 2,
+                CELL_SIZE,
+
+                p.x,
+                p.y,
+                CELL_SIZE * 2,
+                CELL_SIZE
+            );
+            return;
+        }
+
         var d = [
             [0, CELL_SIZE/2],
             [-CELL_SIZE, 0],
@@ -174,12 +203,6 @@ function Map() {
             [0, -CELL_SIZE/2],
         ];
 
-        var variant = 0;
-        if (tile.width > 2*CELL_SIZE) {
-            var lx = game.player.Location.X / CELL_SIZE;
-            var ly = game.player.Location.Y / CELL_SIZE;
-            variant = Math.floor(tile.width/(4*CELL_SIZE)*(1+Math.sin((lx+x)*(ly+y))));
-        }
         cell.corners.forEach(function(offset, i) {
             //don't draw the same tile again
             if (x != 0 && y != 0 && !cell.transition) {
@@ -262,6 +285,8 @@ function Map() {
     };
 
     this.makeLayers = function() {
+        if (config.graphics.low)
+            return [[]];
         return this.bioms.map(function() {
             return [];
         });
