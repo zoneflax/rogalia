@@ -10,7 +10,6 @@ function Settings() {
         sections
     );
 
-
     this.triggers = {
         "settings.character.bald": function() {
             game.player.initSprite();
@@ -44,8 +43,7 @@ function Settings() {
 Settings.load = function() {
     Settings.prototype.makeSettingsSubTree(game.config);
     Settings.prototype.makeSettingsSubTree(game.debug);
-}
-
+};
 
 Settings.prototype = {
     triggers: null,
@@ -84,7 +82,7 @@ Settings.prototype = {
                     }
                 }
 
-                input.checked = value
+                input.checked = value;
                 label.appendChild(input);
                 label.appendChild(document.createTextNode(prop));
                 fieldset.appendChild(label);
@@ -99,4 +97,4 @@ Settings.prototype = {
         });
         return subtree;
     },
-}
+};

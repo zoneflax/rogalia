@@ -678,10 +678,10 @@ a:hover {
     top: 4px;
 }
 .message .body .lmb {
-    background: url("assets/lmb.png");
+    background: url("assets/bg/lmb.png");
 }
 .message .body .rmb {
-    background: url("assets/rmb.png");
+    background: url("assets/bg/rmb.png");
 }
 .message .body .recipe-link {
     cursor: pointer;
