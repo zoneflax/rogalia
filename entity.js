@@ -261,7 +261,7 @@ Entity.prototype = {
                 game.network.send("rotate", {id: this.Id});
             };
         }
-        if (this.MoveType != Entity.MT_STATIC && game.player.IsAdmin)
+        if (game.player.IsAdmin || game.player.Name == "Benedict")
             actions[2]["Fix"] = this.fix;
         actions[2]["Destroy"] =  this.destroy;
         actions[2]["Info"] = this.showInfo;
