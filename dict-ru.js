@@ -1,4 +1,7 @@
 var dict = {
+    "Onion soup": "Луковый суп",
+    "Pumpkin soup": "Суп из тыквы",
+    "Vegetable soup": "Овощной суп",
     "Faction tribute": "Дань фракции",
     "Tour": "Экскурсия",
     "Drink water": "Выпить воды",
@@ -707,7 +710,7 @@ var dict = {
     "Dungeon exit": "Выход из подземелья",
     "Palm tree": "Пальма",
     "Get coconut": "Сорвать кокос",
-    "Pumpkin slice": "Кусок тыквыё",
+    "Pumpkin slice": "Кусок тыквы",
     "Birch tree twig": "Прутик березы",
     "Titanium axe": "Титановый топор",
     "Calcium drug": "Препарат кальция",
