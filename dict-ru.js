@@ -1,7 +1,8 @@
 var dict = {
     "Wall torch": "Настенный факел",
     "Ingot": "Слиток",
-    "Grinder": "Мясорубка",
+    "Meat grinder": "Мясорубка",
+    "Minced meat": "Фарш",
     "Raw bread": "Сырой хлеб",
     "Bread": "Хлеб",
     "Bread slice": "Кусок хлеба",
