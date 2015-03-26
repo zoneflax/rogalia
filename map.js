@@ -413,7 +413,8 @@ function Map() {
     };
 
     this.biomAt = function(x, y) {
-        return this.bioms[this.getCell(x, y).id];
+        var cell = this.getCell(x, y);
+        return (cell) ? this.bioms[cell.id] : null;
     };
 
         var objects = {};

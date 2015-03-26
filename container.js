@@ -73,6 +73,10 @@ Container.prototype = {
         var x = game.controller.world.x;
         var y = game.controller.world.y;
         var biom = game.map.biomAt(x, y);
+        if (!biom) {
+            game.sendError("Biom (%d %d) not found", x, y)
+            return;
+        }
 
         var cmd = "entity-drop";
         var e = Entity.get(id);
