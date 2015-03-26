@@ -1,6 +1,7 @@
 function Menu(x, y) {
     this.container = document.getElementById("menu");
     this.visible = false;
+    this.length = 0;
     this.offset = {
         x: x,
         y: y,
@@ -8,6 +9,12 @@ function Menu(x, y) {
 };
 
 Menu.prototype = {
+    activate: function(index) {
+        //TODO: use internal array;
+        var item = document.getElementById("menu-item-" + index);
+        if (item)
+            item.click();
+    },
     show: function(object, x, y, reuse, defaultAction) {
         if (game.player.acting)
             return false;
@@ -34,6 +41,7 @@ Menu.prototype = {
         if (defaultAction)
             actions[0]["Use"] = object.defaultAction;
 
+        this.length = 0;
         actions.forEach(function(actions) {
             if (Object.keys(actions).length > 0)
                 this.container.appendChild(this.createMenu(actions, object));
@@ -56,11 +64,13 @@ Menu.prototype = {
         this.visible = false;
         game.controller.world.menuHovered = null;
     },
-    createMenuItem: function(title, action, object) {
-        var item_a = document.createElement("a");
-        item_a.textContent = title;
-        item_a.className = "action";
+    createMenuItem: function(title, action, object, index) {
+        if (title == "Destroy")
+            index = 0;
 
+        var item_a = document.createElement("a");
+        item_a.textContent = index + ". " + TS(title);
+        item_a.className = "action";
         if (action instanceof Function) {
             var callback = action.bind(object);
         } else {
@@ -73,21 +83,25 @@ Menu.prototype = {
             this.hide();
             callback();
         }.bind(this);
+        item_a.id = "menu-item-" + index;
 
         var item = document.createElement("li");
         item.appendChild(item_a);
         return item;
     },
     createMenu: function(actions, object) {
-        var ul = document.createElement("ul");
+        var menu = document.createElement("ul");
         var sorted = Object.keys(actions).sort(function(a, b) {
-            return TS(a) > TS(b);
+            if (a == "Destroy")
+                return +1;
+            else
+                return TS(a) > TS(b);
         });
         sorted.forEach(function(title) {
             //TODO: fixme controller.drawItemsMenu hack and remove trim
-            var menuItem = this.createMenuItem(TS(title.trim()), actions[title], object);
-            ul.appendChild(menuItem);
+            var menuItem = this.createMenuItem(title.trim(), actions[title], object, ++this.length);
+            menu.appendChild(menuItem);
         }.bind(this));
-        return ul;
+        return menu;
     }
 };

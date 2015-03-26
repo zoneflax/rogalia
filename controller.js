@@ -296,10 +296,13 @@ Controller.prototype = {
                 }
             }
         };
-        [1, 2, 3, 4, 5].forEach(function(key) {
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function(key) {
             this.hotkeys[key] = {
                 callback: function() {
-                    this.fight.hotkey(key);
+                    if (game.menu.visible)
+                        game.menu.activate(key);
+                    else if (key > 0 && key <= 5)
+                        this.fight.hotkey(key);
                 }
             };
         }.bind(this));
