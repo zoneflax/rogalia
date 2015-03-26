@@ -1,4 +1,5 @@
 var dict = {
+    "Mushroom essence": "Грибная настойка",
     "Wall torch": "Настенный факел",
     "Ingot": "Слиток",
     "Meat grinder": "Мясорубка",
