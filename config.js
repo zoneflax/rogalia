@@ -11,7 +11,7 @@ var config = {
         Russian: false,
     },
     gameplay: {
-        pathfinding: function() { return game.player.Settings.Pathfinding },
+        pathfinding: function() { return game.player.Settings.Pathfinding; },
     },
     ui: {
         hp: false,
