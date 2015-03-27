@@ -71,7 +71,9 @@ function loadingStage(data) {
         game.setTime(data.Time);
         loader.ready(function() {
             Entity.sync(data.Entities);
-            Character.sync(data.Chars);
+            Character.sync(data.Players);
+            Character.sync(data.Mobs);
+            Character.sync(data.NPCs);
             game.map.sync(data.Location);
 
             var wait = setInterval(function() {
@@ -89,8 +91,8 @@ function loadingStage(data) {
 
                 game.controller.interfaceInit(data.Chat);
 
-                game.controller.system.users.sync(data.CharsOnline);
-                game.controller.minimap.sync(data.CharsOnline);
+                game.controller.system.users.sync(data.PlayersOnline);
+                game.controller.minimap.sync(data.PlayersOnline);
             }, 33);
         });
     };
@@ -349,20 +351,20 @@ function mainStage() {
             return;
         }
         Entity.sync(data.Entities || [], data.RemoveEntities || null);
-        Character.sync(data.Chars || [], data.RemoveChars || null);
+        Character.sync(data.Players || [], data.RemovePlayers || null);
 
         data.Location && game.map.sync(data.Location);
 
-        if (data.CharsOnline) {
-            game.controller.system.users.sync(data.CharsOnline);
-            game.controller.minimap.sync(data.CharsOnline);
+        if (data.PlayersOnline) {
+            game.controller.system.users.sync(data.PlayersOnline);
+            game.controller.minimap.sync(data.PlayersOnline);
         }
 
         game.controller.chat.sync(data.Chat || []);
         game.controller.skills.update();
         game.controller.fight.update();
         game.controller.craft.update();
-        if (data.Chars && game.player.Id in data.Chars) {
+        if (data.Players && game.player.Id in data.Players) {
             game.controller.stats.sync();
         }
     };

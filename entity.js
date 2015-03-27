@@ -19,7 +19,7 @@ Entity.prototype = {
     Type: "",
     Group: "",
     Lvl: 1,
-    Container: -1,
+    Container: 0,
     Quality: 1,
     Disposition: 0,
     MoveType: Entity.MT_PORTABLE,
@@ -49,19 +49,19 @@ Entity.prototype = {
     set X(x) {
         if (this.x == x)
             return;
-        if (this.Id && this.Container < 0)
+        if (this.Id && !this.inContainer())
             game.sortedEntities.remove(this);
         this.x = x;
-        if (this.Id && this.Container < 0)
+        if (this.Id && !this.inContainer())
             game.sortedEntities.add(this, this.sortOrder());
     },
     set Y(y) {
         if (this.y == y)
             return;
-        if (this.Id && this.Container < 0)
+        if (this.Id && !this.inContainer())
             game.sortedEntities.remove(this);
         this.y = y;
-        if (this.Id && this.Container < 0)
+        if (this.Id && !this.inContainer())
             game.sortedEntities.add(this);
     },
     get name() {
@@ -328,9 +328,8 @@ Entity.prototype = {
         };
     },
     inContainer: function() {
-        return this.Container >= 0;
+        return this.Container > 0;
     },
-
 
     update: function() {
     },
@@ -453,13 +452,12 @@ Entity.prototype = {
     draw: function() {
         if (this.inContainer())
             return;
-        if (game.player.inBuilding && this.Disposition == "roof")
+       if (game.player.inBuilding && this.Disposition == "roof")
             return;
-        // if (!game.player.see(this))
-        //     return;
 
         if (!this.sprite || !this.sprite.ready) {
             this.drawBox();
+
             return;
         }
 
@@ -680,7 +678,7 @@ Entity.prototype = {
         return this._canUse;
     },
     belongsTo: function(character) {
-        if (this.Container == 0)
+        if (this.Owner == character.Id)
             return true;
         var id = this.Container;
         var bag = character.bag();
