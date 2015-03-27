@@ -185,6 +185,10 @@ Container.prototype = {
     dwimCraft: function(item) {
         if (game.controller.craft.panel.visible) {
             var entity = Entity.get(item.id);
+            if (!entity) {
+                console.log("dwim:", item.id, " not found");
+                return;
+            }
             var slots = game.controller.craft.slots;
             for(var i = 0, l = slots.length; i < l; i++) {
                 if (!slots[i].used && entity.is(slots[i].group)) {
