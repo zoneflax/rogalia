@@ -1,4 +1,6 @@
 var dict = {
+    "Coal powder": "Угольный порошок",
+    "Activated carbon": "Активированный уголь",
     "Raw s pill": "Сырая С пилюля",
     "S pill": "С пилюля",
     "Raw v pill": "Сырая Ж пилюля",
