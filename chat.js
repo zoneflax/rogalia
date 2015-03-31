@@ -334,6 +334,9 @@ function Chat() {
             fromElement.className = "from";
             var color = null;
             switch(message.From) {
+            case "Benedict":
+                color = "#922";
+                break;
             case "TatriX":
                 color = "#03c";
                 break;
