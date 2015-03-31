@@ -8,7 +8,7 @@ var config = {
         ray: false,
     },
     language: {
-        Russian: false,
+        Russian: true,
     },
     gameplay: {
         pathfinding: function() { return game.player.Settings.Pathfinding; },
@@ -38,7 +38,7 @@ var config = {
         playSounds: true,
         playMusic: true
     },
-}
+};
 var debug = {
     ui: {
         world: true,

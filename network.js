@@ -36,7 +36,7 @@ function Network() {
             onDisconnect();
         };
         this.socket.onmessage = onmessage.bind(this);
-    }
+    };
 
     this.disconnect = function() {
         if (this.socket) {
@@ -44,7 +44,7 @@ function Network() {
             this.socket.close();
             this.socket = null;
         }
-    }
+    };
 
     function onmessage(message) {
         var decompressed = util.decompress(message.data);
