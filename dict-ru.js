@@ -1,4 +1,7 @@
 var dict = {
+    "Bavarian sausage": "Баварская сосиска",
+    "English breakfast": "Английский завтрак",
+    "Intestines": "Кишки",
     "Coal powder": "Угольный порошок",
     "Activated carbon": "Активированный уголь",
     "Raw s pill": "Сырая С пилюля",
