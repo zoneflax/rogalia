@@ -71,7 +71,7 @@ Entity.prototype = {
                 util.toFixed(this.Props.Capacity.Current) +
                 '/' +
                 util.toFixed(this.Props.Capacity.Max) +
-                ']'
+                ']';
         }
         if (this.Props.Text) {
             var title = Entity.books[this.Props.Text];
@@ -96,7 +96,7 @@ Entity.prototype = {
             break;
         case "liquid-container-liftable":
         case "tanning-tub":
-            var cap = this.Props.Capacity
+            var cap = this.Props.Capacity;
             suffix = sprintf("[%d/%d]", cap.Current,  cap.Max);
             break;
         default:
@@ -289,7 +289,7 @@ Entity.prototype = {
     defaultAction: function() {
         game.network.send("entity-use", { id: this.Id }, function done(data) {
             if (data.Done)
-                this.defaultActionSuccess();
+                return this.defaultActionSuccess();
             else
                 return done.bind(this);
         }.bind(this));
@@ -328,7 +328,7 @@ Entity.prototype = {
         };
     },
     inContainer: function() {
-        return this.Container > 0;
+        return this.Container != 0 || this.Owner != 0;
     },
 
     update: function() {
