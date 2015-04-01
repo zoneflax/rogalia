@@ -1,9 +1,6 @@
 function Network() {
-    this.url = "rogalik.tatrix.org";
-    if (document.location.href.match(/localhost/)) {
-        this.url = "localhost";
-    }
-
+    var override = document.location.search.match(/server=([^&]+)/);
+    this.url = (override) ? override[1] : document.location.hostname;
     this.data = null;
     this.socket = null;
 
@@ -22,7 +19,7 @@ function Network() {
         this.socket.binaryType = "arraybuffer";
         this.socket.onopen = function() {
             game.setStage("login");
-        }
+        };
 
         function onDisconnect() {
             window.onerror = null;
@@ -32,38 +29,14 @@ function Network() {
         }
 
         // if (e.wasClean)
-        this.socket.onclose = onDisconnect
+        this.socket.onclose = onDisconnect;
 
         this.socket.onerror = function(error) {
-            //firefox hack
-            // var test = new XMLHttpRequest();
-            if (window.location.protocol == "https:") {
-                var link = document.createElement("a")
-                link.textContent = "Allow certificate";
-                link.target = "_blank";
-                link.href = url.replace("wss", "https");
-                link.onclick = function() {
-                    dom.util.remove(wss);
-                }
-                var help = document.createElement("p");
-                help.textContent = T("Please allow certificate, close that page and reload game");
-
-                var alternative = document.createElement("a")
-                alternative.textContent = T("Play without encryption");
-                alternative.href = document.location.href.replace("https://", "http://");
-
-                var wss = document.createElement("p")
-                wss.id = "wss";
-                wss.appendChild(help);
-                wss.appendChild(link);
-                wss.appendChild(alternative);
-                game.world.appendChild(wss);
-            }
 	    console.log(error);
             onDisconnect();
-        }
+        };
         this.socket.onmessage = onmessage.bind(this);
-    }
+    };
 
     this.disconnect = function() {
         if (this.socket) {
@@ -71,7 +44,7 @@ function Network() {
             this.socket.close();
             this.socket = null;
         }
-    }
+    };
 
     function onmessage(message) {
         var decompressed = util.decompress(message.data);
