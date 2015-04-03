@@ -203,11 +203,17 @@ Entity.prototype = {
             }
 
             if (this.Orientation) {
-                path += "-" + this.Orientation
+                path += "-" + this.Orientation;
             }
 
             if (this.Variant) {
                 path += "-" + this.Variant;
+            }
+        } else {
+            switch (this.Orientation) {
+            case "h":
+            case "v":
+                path += "-" + this.Orientation;
             }
         }
 
