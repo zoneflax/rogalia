@@ -1,4 +1,5 @@
 var dict = {
+    "Bulletin board": "Доска объявлений",
     "Bavarian sausage": "Баварская сосиска",
     "English breakfast": "Английский завтрак",
     "Intestines": "Кишки",
