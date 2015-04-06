@@ -76,10 +76,19 @@ Entity.getPreview = function(group) {
 Entity.find  = function(pattern) {
     var regex = new RegExp(pattern);
     return game.entities.filter(function(e) {
-        return regex.test(e.Type)
-    })
-}
+        return regex.test(e.Type);
+    });
+};
+
+Entity.makeDescription = function(type) {
+    var descr = document.createElement("div");
+    descr.className = "item-descr";
+    var info = Items[type];
+    if (info)
+        descr.textContent = info.desc.ru;
+    return descr;
+};
 
 Entity.books = {
     $intro: "Именем Императора и Его Синода",
-}
+};

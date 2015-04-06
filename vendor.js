@@ -91,7 +91,23 @@ Vendor.buy = function(data) {
     var lots = document.createElement("ul");
     lots.id = "lot-list";
     lots.className = "no-drag";
-    items.forEach(function(item) {
+    function byType(a, b) {
+        if (a.Type != b.Type)
+            return (a.Type > b.Type) ? +1 : -1;
+        else
+            return byQuality(a, b);
+    }
+    function byQuality(a, b) {
+        if (a.Quality != b.Quality)
+            return b.Quality - a.Quality;
+        else
+            return byPrice(a, b);
+    }
+    function byPrice(a, b) {
+        return prices[b.Id] - prices[a.Id];
+    }
+
+    items.sort(byType).forEach(function(item) {
         var e = new Entity(item.Id, item.Type);
         e.sync(item);
         e.initSprite();

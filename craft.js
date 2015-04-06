@@ -165,8 +165,8 @@ Craft.prototype = {
                 }
             }
             if (list.length > 0)
-                game.network.send("build-add", {Blank: blank.Id, List: list})
-        }
+                game.network.send("build-add", {Blank: blank.Id, List: list});
+        };
 
         var buildButton = document.createElement("button");
         buildButton.textContent = T("Build");
@@ -446,7 +446,7 @@ Craft.prototype = {
                 slots.push(slot);
                 slot.check = function(cursor) {
                     return cursor.entity.is(this.group);
-                }
+                };
             }
         }
 
@@ -455,11 +455,10 @@ Craft.prototype = {
         }.bind(this);
         this.recipeDetails.appendChild(title);
         hr();
-        var preview = Entity.templates[this.current.type].icon();
-        this.recipeDetails.appendChild(preview);
+        this.recipeDetails.appendChild(this.makePreview(this.current.type));
         hr();
         this.renderRequirements(recipe);
-        hr()
+        hr();
         this.recipeDetails.appendChild(ingredients);
         hr();
         for(var i = 0, l = slots.length; i < l; i++) {
@@ -508,8 +507,7 @@ Craft.prototype = {
         }.bind(this);
         this.recipeDetails.appendChild(title);
         hr();
-        var preview = Entity.templates[this.blank.type].icon();
-        this.recipeDetails.appendChild(preview);
+        this.recipeDetails.appendChild(this.makePreview(this.blank.type));
         hr();
         this.requirements = null; //force renderRequirements append new requirements
         this.renderRequirements(recipe);
@@ -527,7 +525,7 @@ Craft.prototype = {
             var container = game.containers[i];
             container.visible && container.items.forEach(function(item) {
                 item && container.dwimCraft(item);
-            })
+            });
         }
     },
     craftAll: function() {
@@ -622,5 +620,14 @@ Craft.prototype = {
             this.recipeDetails.appendChild(requirements);
 
         this.requirements = requirements;
-    }
-}
+    },
+    makePreview: function(type) {
+        var previewWrapper = document.createElement("div");
+        previewWrapper.className = "preview-wrapper";
+        var preview = Entity.templates[type].icon();
+        preview.id = "item-preview";
+        previewWrapper.appendChild(preview);
+        previewWrapper.appendChild(Entity.makeDescription(type));
+        return previewWrapper;
+    },
+};

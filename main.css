@@ -1174,6 +1174,21 @@ big {
     width: 200px;
 }
 
+#item-info .item-descr {
+    padding-top: 3px;
+    margin-top: 5px;
+    border-top: 1px solid #ccc;
+}
+
+#item-preview {
+    float: left;
+    margin-right: 5px;
+    max-width: 150px;
+}
+.preview-wrapper {
+    overflow: auto;
+}
+
 #news > .contents {
     max-width: 400px;
     width: 400px;
