@@ -199,11 +199,10 @@ Controller.prototype = {
         }
 
         if (this.world.hovered) {
-            //item removed
-            var e = Entity.get(this.world.hovered.Id)
-            if (!e)
+            var e = Entity.get(this.world.hovered.Id);
+            if (!e) //item removed
                 this.world.hovered = null;
-            else if (e instanceof Entity && e.inContainer())
+            else if (e instanceof Entity && !e.inWorld())
                 this.world.hovered = null;
         }
         this.minimap.update();
@@ -211,7 +210,7 @@ Controller.prototype = {
     toggleBag: function() {
         var bag = game.player.bag();
         if (!bag)
-            return
+            return;
         var container = Container.open(bag.Id);
         if (!container)
             return;

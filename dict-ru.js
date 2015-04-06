@@ -798,7 +798,6 @@ var dict = {
     "Cannot destroy your bag": "Нельзя уничтожить вашу сумку",
     "Cannot dig there": "Нельзя копать здесь",
     "Cannot disassemble non-crafted item": "Нельзя разобрать нерукотворный предмет",
-    "Cannot drop it there": "Нельзя это бросить сюда",
     "Cannot drop there": "Нельзя бросить сюда",
     "Cannot edit": "Нельзя редактировать",
     "Cannot fill with that": "Нельзя наполнить этим",

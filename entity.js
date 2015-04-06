@@ -49,19 +49,19 @@ Entity.prototype = {
     set X(x) {
         if (this.x == x)
             return;
-        if (this.Id && !this.inContainer())
+        if (this.Id && this.inWorld())
             game.sortedEntities.remove(this);
         this.x = x;
-        if (this.Id && !this.inContainer())
+        if (this.Id && this.inWorld())
             game.sortedEntities.add(this, this.sortOrder());
     },
     set Y(y) {
         if (this.y == y)
             return;
-        if (this.Id && !this.inContainer())
+        if (this.Id && this.inWorld())
             game.sortedEntities.remove(this);
         this.y = y;
-        if (this.Id && !this.inContainer())
+        if (this.Id && this.inWorld())
             game.sortedEntities.add(this);
     },
     get name() {
@@ -247,7 +247,7 @@ Entity.prototype = {
     getActions: function() {
         var actions = [{}, {}, {}];
 
-        if (this.MoveType == Entity.MT_PORTABLE && !this.inContainer())
+        if (this.MoveType == Entity.MT_PORTABLE && this.inWorld())
             actions[0]["Pick up"] = this.pickUp;
         else if (this.MoveType == Entity.MT_LIFTABLE)
             actions[0]["Lift"] = this.lift;
@@ -327,13 +327,14 @@ Entity.prototype = {
             });
         };
     },
-    inContainer: function() {
-        return this.Container != 0 || this.Owner != 0;
+    inWorld: function() {
+        return this.Location == Entity.LOCATION_ON_GROUND || this.Location == Entity.LOCATION_BURDEN;
     },
-
+    inContainer: function() {
+        return this.Container > 0;
+    },
     update: function() {
     },
-
     //used by sign
     read: function() {
         var text = document.createElement("textarea");
@@ -450,7 +451,7 @@ Entity.prototype = {
         return this.Durability.Max > 0 && this.Durability.Current <= 0.1*this.Durability.Max;
     },
     draw: function() {
-        if (this.inContainer())
+        if (!this.inWorld())
             return;
        if (game.player.inBuilding && this.Disposition == "roof")
             return;
@@ -594,7 +595,7 @@ Entity.prototype = {
         case "respawn":
             return true;
         }
-        if (this.inContainer())
+        if (!this.inWorld())
             return false;
         if (this.Id == game.player.Burden)
             return false;
@@ -647,7 +648,7 @@ Entity.prototype = {
         return pixel > 64;
     },
     collides: function(x, y, radius) {
-        if(this.inContainer() || !this.CanCollide || this.Owner)
+        if(!this.inWorld() || !this.CanCollide || this.Owner)
             return false;
         if (this.Width && this.Height) {
             //TODO: fixme

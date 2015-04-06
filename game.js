@@ -251,8 +251,8 @@ function Game() {
     this.findItemsNear = function(x, y, dist) {
         dist = dist || CELL_SIZE*2;
         return this.entities.filter(function(e) {
-            return "inContainer" in e &&
-                !e.inContainer() &&
+            return "inWorld" in e &&
+                e.inWorld() &&
                 util.distanceLessThan(e.X - x, e.Y - y, dist);
         });
     };
