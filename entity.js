@@ -557,6 +557,7 @@ Entity.prototype = {
         game.ctx.restore();
     },
     drawCenter: function() {
+        var p = this.screen();
         game.ctx.fillStyle = "magenta";
         game.ctx.fillRect(p.x, p.y, 3, 3);
     },
