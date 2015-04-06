@@ -1183,6 +1183,7 @@ big {
 #item-preview {
     float: left;
     margin-right: 5px;
+    max-width: 150px;
 }
 .preview-wrapper {
     overflow: auto;
