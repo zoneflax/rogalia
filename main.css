@@ -1173,6 +1173,13 @@ big {
 #item-info {
     width: 200px;
 }
+.item-descr {
+    padding-top: 3px;
+    margin-top: 5px;
+}
+#item-info .item-descr {
+    border-top: 1px solid #ccc;
+}
 
 #news > .contents {
     max-width: 400px;

@@ -117,7 +117,6 @@ Entity.prototype = {
     },
     showInfo: function() {
         var elements = [];
-
         elements.push(Stats.prototype.createValue("Quality", this.Quality));
         elements.push(Stats.prototype.createParam("Durability", this.Durability));
 
@@ -126,7 +125,7 @@ Entity.prototype = {
             var k = Math.sqrt(this.Quality);
             Character.vitamins.forEach(function(vitamin) {
                 var value = this.Props[vitamin] * k;
-                var elem = Stats.prototype.createValue(vitamin, value, 2)
+                var elem = Stats.prototype.createValue(vitamin, value, 2);
                 elem.classList.add(vitamin.toLowerCase());
                 elements.push(elem);
             }.bind(this));
@@ -137,8 +136,13 @@ Entity.prototype = {
             elements.push(Stats.prototype.createParam("Capacity", this.Props.Capacity));
         }
 
+        elements.push(this.makeDescription());
+
         var panel = new Panel("item-info", TS(this.Name), elements);
         panel.show();
+    },
+    makeDescription: function() {
+        return Entity.makeDescription(this.Type);
     },
     leftTopX: function() {
         return (this.X - this.Width / 2) << 0;

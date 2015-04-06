@@ -33,9 +33,9 @@ Sprite.prototype = {
             if (this.width == 0)
                 this.width = this.image.width;
             if (this.height == 0)
-                this.height = this.image.height
+                this.height = this.image.height;
 
-            this.makeOutline()
+            this.makeOutline();
             this.ready = true;
             this.loading = false;
 
@@ -69,6 +69,7 @@ Sprite.prototype = {
     draw: function(p) {
         if (!this.image.width)
             return;
+        // try {
         game.ctx.drawImage(
             this.image,
             this.frame * this.width,
@@ -80,19 +81,21 @@ Sprite.prototype = {
             this.width,
             this.height
         );
-            // console.log(
-            //     this.image,
-            //     this.image.width,
-            //     this.image.height,
-            //     this.frame * this.width,
-            //     this.position * this.height,
-            //     this.width,
-            //     this.height,
-            //     p.x,
-            //     p.y,
-            //     this.width,
-            //     this.height
-            // );
+        // } catch(e) {
+        //     console.log(
+        //         this.image,
+        //         this.image.width,
+        //         this.image.height,
+        //         this.frame * this.width,
+        //         this.position * this.height,
+        //         this.width,
+        //         this.height,
+        //         p.x,
+        //         p.y,
+        //         this.width,
+        //         this.height
+        //     );
+        // }
     },
     drawOutline: function(p) {
         if (!this.outline)
@@ -145,7 +148,7 @@ Sprite.prototype = {
                 0, 0, this.width, this.height
             );
         } catch(e) {
-            game.sendError("Cannot load " + this.name + " icon")
+            game.sendError("Cannot load " + this.name + " icon");
         }
     }
-}
+};

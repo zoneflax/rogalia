@@ -165,8 +165,8 @@ Craft.prototype = {
                 }
             }
             if (list.length > 0)
-                game.network.send("build-add", {Blank: blank.Id, List: list})
-        }
+                game.network.send("build-add", {Blank: blank.Id, List: list});
+        };
 
         var buildButton = document.createElement("button");
         buildButton.textContent = T("Build");
@@ -446,7 +446,7 @@ Craft.prototype = {
                 slots.push(slot);
                 slot.check = function(cursor) {
                     return cursor.entity.is(this.group);
-                }
+                };
             }
         }
 
@@ -457,9 +457,10 @@ Craft.prototype = {
         hr();
         var preview = Entity.templates[this.current.type].icon();
         this.recipeDetails.appendChild(preview);
+        this.recipeDetails.appendChild(Entity.makeDescription(this.type));
         hr();
         this.renderRequirements(recipe);
-        hr()
+        hr();
         this.recipeDetails.appendChild(ingredients);
         hr();
         for(var i = 0, l = slots.length; i < l; i++) {
