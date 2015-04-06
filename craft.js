@@ -455,9 +455,14 @@ Craft.prototype = {
         }.bind(this);
         this.recipeDetails.appendChild(title);
         hr();
+        var previewWrapper = document.createElement("div");
+        previewWrapper.className = "preview-wrapper";
         var preview = Entity.templates[this.current.type].icon();
-        this.recipeDetails.appendChild(preview);
-        this.recipeDetails.appendChild(Entity.makeDescription(this.type));
+        preview.id = "item-preview";
+        previewWrapper.appendChild(preview);
+        previewWrapper.appendChild(Entity.makeDescription(this.type));
+
+        this.recipeDetails.appendChild(previewWrapper);
         hr();
         this.renderRequirements(recipe);
         hr();

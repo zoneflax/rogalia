@@ -69,8 +69,8 @@ Entity.getPreview = function(group) {
 Entity.find  = function(pattern) {
     var regex = new RegExp(pattern);
     return game.entities.filter(function(e) {
-        return regex.test(e.Type)
-    })
+        return regex.test(e.Type);
+    });
 };
 
 Entity.makeDescription = function(type) {
