@@ -1,4 +1,5 @@
 var dict = {
+    "Apple tree log": "Яблоневое бревно",
     "Bulletin board": "Доска объявлений",
     "Bavarian sausage": "Баварская сосиска",
     "English breakfast": "Английский завтрак",
