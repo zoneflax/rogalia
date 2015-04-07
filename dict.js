@@ -1,15 +1,4 @@
 dict.init = function() {
-    window.TT = function(text, args) {
-        text = T(text);
-        text.match(/{[^}]+}/g).forEach(function(v) {
-            text = text.replace(v, T(args[v.slice(1, -1)]));
-        });
-        return text;
-    };
-
-    window.TS = function(text) {
-        return T(util.symbolToString(text));
-    };
 
     if (!game.config.language.Russian) {
         dict.update = function(){};
@@ -19,8 +8,25 @@ dict.init = function() {
 
         return;
     }
-    window.T = function(text) {
+    window.T = function(text, symbol) {
+        if (game.config.language.Russian) {
+            var info = Items[text];
+            if (info && info.name.ru)
+                return info.name.ru;
+        }
+        if (symbol)
+            text = util.symbolToString(text);
         return dict[text] || text;
+    };
+    window.TT = function(text, args) {
+        text = T(text);
+        text.match(/{[^}]+}/g).forEach(function(v) {
+            text = text.replace(v, T(args[v.slice(1, -1)]));
+        });
+        return text;
+    };
+    window.TS = function(text) {
+        return T(text, true);
     };
 
     dict.update = function(elem) {

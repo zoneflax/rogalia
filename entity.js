@@ -71,7 +71,7 @@ Entity.prototype = {
                 util.toFixed(this.Props.Capacity.Current) +
                 '/' +
                 util.toFixed(this.Props.Capacity.Max) +
-                ']'
+                ']';
         }
         if (this.Props.Text) {
             var title = Entity.books[this.Props.Text];
@@ -96,7 +96,7 @@ Entity.prototype = {
             break;
         case "liquid-container-liftable":
         case "tanning-tub":
-            var cap = this.Props.Capacity
+            var cap = this.Props.Capacity;
             suffix = sprintf("[%d/%d]", cap.Current,  cap.Max);
             break;
         default:
