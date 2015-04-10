@@ -343,6 +343,20 @@ Entity.prototype = {
     inContainer: function() {
         return this.Container > 0;
     },
+    findRootContainer: function() {
+        var cnt = this.findContainer();
+        for (var i = 0; i < 100; i++) {
+            if (cnt != null && cnt.inContainer())
+                cnt = cnt.findContainer();
+            else
+                return cnt;
+        }
+        game.sendError("Recursive container: %d", this.Id);
+        return null;
+    },
+    findContainer: function() {
+        return Entity.get(this.Container);
+    },
     update: function() {
     },
     //used by sign
@@ -375,7 +389,7 @@ Entity.prototype = {
             return;
         }
 
-        if (!game.player.isNear(this)) {
+        if (!game.player.canUse(this)) {
             game.network.send("Open", {Id: this.Id}, this.open.bind(this));
             return;
         }

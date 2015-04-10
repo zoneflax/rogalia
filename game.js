@@ -160,9 +160,8 @@ function Game() {
 
     this.addEventListeners = function() {
         window.addEventListener("beforeunload", function(e) {
-            for(var panel in game.panels) {
-                game.panels[panel].savePosition();
-            }
+            Panel.save();
+            Container.save();
             if (game.help)
                 game.help.save();
             if (config.system.quitConfirm && game.stage.name != "exit") {
@@ -177,7 +176,7 @@ function Game() {
         });
 
         window.addEventListener('blur', function() {
-            game.focus = false
+            game.focus = false;
         });
 
     };

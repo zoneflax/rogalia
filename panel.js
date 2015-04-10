@@ -107,7 +107,13 @@ Panel.checkCollision = function() {
         }
     }
     return null;
-}
+};
+
+Panel.save = function() {
+    for(var panel in game.panels) {
+        game.panels[panel].savePosition();
+    }
+};
 
 Panel.zIndex = 1;
 Panel.top = null;
@@ -189,7 +195,7 @@ Panel.prototype = {
         var config = {
             position: this.position,
             visible: this.visible,
-        }
+        };
         localStorage.setItem(this.lsKey, JSON.stringify(config));
     },
     setWidth: function(w) {

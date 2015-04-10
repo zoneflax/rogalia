@@ -399,6 +399,8 @@ Controller.prototype = {
         this.chat.sync(chatData || []);
         this.chat.initNotifications();
 
+        Container.load();
+
         this.ready = true;
 
         if (document.location.hash.indexOf("noui") != -1) {

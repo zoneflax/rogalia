@@ -43,14 +43,23 @@ Container.moveItem = function(id, from, to, slot) {
     var callback = function() {
         from.update();
         to && to.update();
-    }
+    };
     game.network.send("entity-move", args, callback);
-}
+};
 
 Container.updateVisibility = function() {
     for(var id in game.containers)
         game.containers[id].updateVisibility();
-}
+};
+
+Container.save = function() {
+    localStorage.setItem("containers", JSON.stringify(Object.keys(game.containers)));
+};
+
+Container.load = function() {
+    var saved = JSON.parse(localStorage.getItem("containers"));
+    saved && saved.forEach(Container.open);
+};
 
 Container.prototype = {
     get visible() {
@@ -129,7 +138,7 @@ Container.prototype = {
         }
 
         this.fuel = document.createElement("div");
-        this.fuel.title = T("Fuel")
+        this.fuel.title = T("Fuel");
         this.fuel.className = "fuel-wrapper";
         this.updateFuel();
 
@@ -156,7 +165,7 @@ Container.prototype = {
             {
                 mousedown: this.clickListener.bind(this)
             }
-        )
+        );
         this.panel.hooks.hide = function() {
             this.slots.map(function(slot) {
                 slot.classList.remove("new");
@@ -165,6 +174,7 @@ Container.prototype = {
 
         this.panel.hooks.show = this.update.bind(this);
         this.panel.element.classList.add("container");
+        this.panel.container = this;
 
         var w = (this.id) ? this.slotsWidth : 1;
         this.panel.setWidth(w * Container.SLOT_SIZE + 2 * this.slotsWidth);
@@ -279,10 +289,10 @@ Container.prototype = {
 
         return this.contents.every(function(id, i) {
             return contents[i] == id;
-        })
+        });
     },
     updateVisibility: function() {
-        if (this.id && this.panel.visible && !game.player.isNear(this.container)) {
+        if (this.id && this.panel.visible && !game.player.canUse(this.container)) {
             this.panel.hide();
         }
     },
@@ -401,20 +411,11 @@ Container.prototype = {
         }
     },
     getTopExcept: function(except) {
-        var bag = game.player.bag();
-        if (bag && bag.Id != except) {
-            var container = game.containers[bag.Id];
-            if (container.panel.visible)
-                return container;
-        }
-        for (var id in game.containers) {
-            if (id == except || id == this.id)
-                continue;
-
-            var container = game.containers[id];
-            if (container.panel.visible)
-                return container;
-        }
+        for (var i = Panel.stack.length-1; i >= 0; i--) {
+            var panel = Panel.stack[i];
+            if (panel.visible && panel.container && panel.container.id != except)
+                return panel.container;
+        };
         return null;
     },
 };

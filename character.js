@@ -1315,5 +1315,16 @@ Character.prototype = {
             return true;
         }
         return false;
-    }
+    },
+    canUse: function(e) {
+        switch (e.Location) {
+        case Entity.LOCATION_IN_CONTAINER:
+            var cnt = e.findRootContainer();
+            return cnt && this.canUse(cnt);
+        case Entity.LOCATION_EQUIPPED:
+            return this.Id == e.Owner;
+        default:
+            return this.isNear(e);
+        }
+    },
 };
