@@ -6,9 +6,8 @@ dict.init = function() {
         });
         return text;
     };
-
     window.TS = function(text) {
-        return T(util.symbolToString(text));
+        return T(text, true);
     };
 
     if (!game.config.language.Russian) {
@@ -19,7 +18,14 @@ dict.init = function() {
 
         return;
     }
-    window.T = function(text) {
+    window.T = function(text, symbol) {
+        if (game.config.language.Russian) {
+            var info = Items[text];
+            if (info && info.name.ru)
+                return info.name.ru;
+        }
+        if (symbol)
+            text = util.symbolToString(text);
         return dict[text] || text;
     };
 

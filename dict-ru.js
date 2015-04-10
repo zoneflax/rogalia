@@ -1,3 +1,4 @@
+//TODO: deprecated; use items.js instead; refactor me;
 var dict = {
     "Apple tree log": "Яблоневое бревно",
     "Bulletin board": "Доска объявлений",
