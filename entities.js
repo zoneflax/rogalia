@@ -59,6 +59,9 @@ Entity.collides = function(entity) {
 Entity.get = function(id) {
     return game.entities.get(parseInt(id));
 };
+Entity.exists = function(id) {
+    return !!Entity.get(id);
+};
 
 Entity.getPreview = function(group) {
     var image = new Image();

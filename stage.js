@@ -352,6 +352,8 @@ function mainStage() {
         }
         Entity.sync(data.Entities || [], data.RemoveEntities || null);
         Character.sync(data.Players || [], data.RemovePlayers || null);
+        Character.sync(data.Mobs || [], data.RemoveMobs || null);
+        Character.sync(data.NPCS || [], data.RemoveNPCs || null);
 
         data.Location && game.map.sync(data.Location);
 

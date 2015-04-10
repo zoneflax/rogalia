@@ -118,6 +118,8 @@ Character.prototype = {
         }
     },
     init: function(data) {
+        //TODO: refactor
+        this.IsNpc = data.Type != "man";
         this.sync(data, true);
         this.loadSprite();
     },

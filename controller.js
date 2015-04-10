@@ -193,9 +193,9 @@ Controller.prototype = {
     update: function() {
         if (!game.config.cursor.dontHide) {
             if (this.world.cursor || this.iface.cursor.entity)
-                game.canvas.classList.add("cursor-hidden");
+                document.body.classList.add("cursor-hidden");
             else
-                game.canvas.classList.remove("cursor-hidden");
+                document.body.classList.remove("cursor-hidden");
         }
 
         if (this.world.hovered) {

@@ -11,7 +11,7 @@ function Network() {
         var proto = "ws://";
         var port = 49000;
         if (window.location.protocol == "https:") {
-            proto = "wss://"
+            proto = "wss://";
             port = 49443;
         }
         var url = proto + this.url + ":" + port;

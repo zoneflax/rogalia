@@ -1,5 +1,5 @@
 function Container(id) {
-    this.id = id;
+    this.id = +id;
     this.button = null;
     this.fuel = null;
 
@@ -58,7 +58,7 @@ Container.save = function() {
 
 Container.load = function() {
     var saved = JSON.parse(localStorage.getItem("containers"));
-    saved && saved.forEach(Container.open);
+    saved && saved.filter(Entity.exists).forEach(Container.open);
 };
 
 Container.prototype = {

@@ -269,8 +269,8 @@ a:hover {
     max-height: 64px;
 }
 
-#canvas.cursor-hidden {
-    cursor: none;
+.cursor-hidden, .cursor-hidden * {
+    cursor: none!important;
 }
 
 #world > div > * {
