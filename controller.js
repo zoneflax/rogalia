@@ -329,6 +329,8 @@ Controller.prototype = {
     interfaceInit: function(chatData) {
         game.map.minimapContainer.style.display = "block";
         game.timeElement.style.display = "block";
+        var maximize = document.getElementById("maximize");
+        maximize.onclick = util.toggleFullscreen;
 
         window.addEventListener('mousedown', this.bind(this.mousedown));
         window.addEventListener('mouseup', this.bind(this.mouseup));

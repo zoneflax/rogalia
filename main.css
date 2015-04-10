@@ -5,7 +5,7 @@
     -moz-user-select: none!important;
     user-select: none!important;
 }
-body {
+html, body {
     font:  14px/18px Philosopher;
     padding: 0;
     margin: 0;
@@ -14,6 +14,10 @@ body {
     color: white;
     overflow: hidden;
     background: url("assets/bg/pattern.png") repeat;
+}
+:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
 }
 input, textarea, button, .messages, .message, .message .body, .message .from{
     -webkit-user-select: text!important;
@@ -987,15 +991,20 @@ ol li a:hover {
     color: #999;
 }
 
-#time {
+#time, #maximize {
     position: absolute;
-    right: 1em;
-    top: 1em;
-    display: none;
+    right: 3px;
+    top: 3px;
     background: #222;
     border-radius: 2px;
     padding: 2px;
+    cursor: pointer;
 }
+#time {
+    right: 23px;
+    display: none;
+}
+
 .badge {
     width: 64px;
     line-height: 16px;
