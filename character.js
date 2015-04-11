@@ -606,9 +606,13 @@ Character.prototype = {
             name = T(name);
         }
 
+        if (this.Name == "Benedict")
+            name = "Benedict the Fallen Priest";
+
         if (this.Fame == 10000) {
             name = "Lord " + name;
         }
+
         if ("Citizenship" in this && this.Citizenship.Faction) {
             name += " {" + this.Citizenship.Faction[0] + "}";
         }
