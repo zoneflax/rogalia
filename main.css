@@ -1001,8 +1001,15 @@ ol li a:hover {
     cursor: pointer;
 }
 #time {
-    right: 23px;
+    right: 28px;
     display: none;
+}
+#maximize {
+    background-image: url("assets/bg/maximize.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
 }
 
 .badge {
