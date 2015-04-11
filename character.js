@@ -607,6 +607,9 @@ Character.prototype = {
         if (this.Fame == 10000) {
             name = "Lord " + name;
         }
+        if (this.Name == "Benedict")
+            name += " the Drot";
+
         if ("Citizenship" in this && this.Citizenship.Faction) {
             name += " {" + this.Citizenship.Faction[0] + "}";
         }
