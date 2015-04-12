@@ -57,7 +57,7 @@ function loadingStage(data) {
     Character.skillLvls = data.SkillLvls;
     Character.initSprites();
     game.map.init(data.Bioms, data.Map);
-    //for $add
+    //for [*add item]
     Entity.init(data.EntitiesTemplates);
     Entity.recipes = data.Recipes;
     Entity.metaGroups = data.MetaGroups;
