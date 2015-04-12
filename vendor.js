@@ -113,8 +113,6 @@ Vendor.buy = function(data) {
         e.initSprite();
         game.sortedEntities.remove(e);
         game.addEntity(e);
-        if (e.Container != vendor.Id)
-            return;
 
         var icon = document.createElement("div");
         icon.className = "lot-icon slot";
@@ -168,7 +166,7 @@ Vendor.buy = function(data) {
         lot.className = "slot lot-icon";
         lot.vendor = vendor;
 
-        var name = document.createElement("div")
+        var name = document.createElement("div");
         name.className = "lot-name";
 
         var button = document.createElement("button");
@@ -186,7 +184,7 @@ Vendor.buy = function(data) {
                 },
                 open
             );
-        }
+        };
 
         var sell = document.createElement("fieldset");
         var legend = document.createElement("legend");
@@ -240,7 +238,7 @@ Vendor.buy = function(data) {
                     lot.onclick = sellCleanUp;
                 }, 200);
                 return true;
-            }
+            };
         }
     }
 
@@ -266,7 +264,7 @@ Vendor.sell = function(data) {
         return open;
     }
     var prices = data.prices || {};
-    var lots = document.createElement("ul")
+    var lots = document.createElement("ul");
     lots.id = "lot-list";
     lots.className = "no-drag";
     var cleanUp = function() {};
@@ -281,7 +279,7 @@ Vendor.sell = function(data) {
             button.onclick = function() {
                 cleanUp();
                 game.network.send("sell", {Vendor: vendor.Id, Id: icon.item.entity.Id}, open);
-            }
+            };
 
             var icon = document.createElement("div");
             icon.className = "lot-icon slot";
