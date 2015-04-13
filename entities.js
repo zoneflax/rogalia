@@ -85,3 +85,16 @@ Entity.makeDescription = function(type) {
 Entity.books = {
     $intro: "Именем Императора и Его Синода",
 };
+
+//returns tuples [type string, recipe struct]
+Entity.getSortedRecipeTuples = function() {
+    return Object.keys(Entity.recipes).map(function(type) {
+        return [type, Entity.recipes[type]];
+    }).sort(function(a, b){
+        var diff = a[1].Lvl - b[1].Lvl;
+        if (diff != 0)
+            return diff
+
+        return (T(a[0]) < T(b[0])) ? -1 : +1;
+    });
+};

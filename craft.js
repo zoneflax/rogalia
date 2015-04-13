@@ -231,13 +231,14 @@ Craft.prototype = {
         var list = document.createElement("ul");
         list.className = "recipe-list no-drag";
         var groups = {};
-        for(var type in Entity.recipes) {
-            var recipe = Entity.recipes[type];
+        Entity.getSortedRecipeTuples().forEach(function(tuple) {
+            var type = tuple[0];
+            var recipe = tuple[1];
             var group = recipe.Skill;
             if (!groups[group])
                 groups[group] = {};
             groups[group][type] = recipe;
-        }
+        });
 
         for (var group in groups) {
             var recipes = groups[group];
@@ -314,7 +315,7 @@ Craft.prototype = {
             checkbox.checked = (name != "unavailable") ;
             checkbox.onchange = function(e) {
                 recipeList.classList.toggle("filter-"+name);
-            }
+            };
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(T(name)));
             filters.appendChild(label);
@@ -577,7 +578,6 @@ Craft.prototype = {
 
 
         if (recipe.Skill) {
-
             var skill = document.createElement("li");
             skill.textContent = sprintf("%s: %s", T("Skill"), T(recipe.Skill)) +
                 ((recipe.Lvl > 0) ? (" " + recipe.Lvl) : "");
