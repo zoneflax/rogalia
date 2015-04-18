@@ -1,9 +1,5 @@
-#hotbar, #fight-panel, #minimap-container {
+#hotbar, #fight-panel, #minimap-container, #maximize, #time {
     position: fixed;
-}
-#minimap-container {
-    left: 952px;
-    right: auto;
 }
 .login-form-wrapper {
     width: 1024px;
