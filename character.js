@@ -258,8 +258,8 @@ Character.prototype = {
             this.speed = 20000;
             break;
         case "daemon":
-	    this.sprite.width = 256;
-	    this.sprite.height = 256;
+	    this.sprite.width = 214;
+	    this.sprite.height = 136;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
