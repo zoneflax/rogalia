@@ -59,6 +59,13 @@ Container.save = function() {
 Container.load = function() {
     var saved = JSON.parse(localStorage.getItem("containers"));
     saved && saved.filter(Entity.exists).forEach(Container.open);
+
+    var bag = game.player.bag();
+    if (bag) {
+        var cnt = game.containers[bag.Id];
+        if (cnt && cnt.panel.visible)
+            cnt.panel.toTop();
+    }
 };
 
 Container.prototype = {

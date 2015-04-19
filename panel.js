@@ -134,9 +134,13 @@ Panel.prototype = {
     },
     toTop: function() {
         this.element.style.zIndex = ++Panel.zIndex;
-        if (Panel.top && Panel.top != this) {
-            Panel.stack.push(Panel.top);
+
+        var index = Panel.stack.indexOf(this);
+        if (index != -1) {
+            Panel.stack.splice(index, 1);
         }
+        Panel.stack.push(this);
+
         Panel.top = this;
     },
     hide: function() {

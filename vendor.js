@@ -85,6 +85,7 @@ Vendor.buy = function(data) {
         return open;
     }
 
+
     var items = data.items || [];
     var prices = data.prices || {};
 
@@ -113,6 +114,10 @@ Vendor.buy = function(data) {
         e.initSprite();
         game.sortedEntities.remove(e);
         game.addEntity(e);
+        if (e.inContainer()) {
+            return;
+        }
+
 
         var icon = document.createElement("div");
         icon.className = "lot-icon slot";
