@@ -328,7 +328,7 @@ Vendor.sell = function(data) {
             lot.appendChild(name);
             lot.appendChild(quantity);
             lot.appendChild(price);
-            if (game.player.IsAdmin || game.player.Id == this.Owner) {
+            if (game.player.IsAdmin || game.player.Id == vendor.Owner) {
                 var cancel = document.createElement("button");
                 cancel.className = "lot-cancel";
                 cancel.textContent = T("×");
