@@ -991,7 +991,7 @@ ol li a:hover {
     color: #999;
 }
 
-#time, #maximize {
+#time, #maximize, #build-warning {
     position: absolute;
     right: 3px;
     top: 3px;
@@ -1010,6 +1010,18 @@ ol li a:hover {
     background-repeat: no-repeat;
     width: 18px;
     height: 18px;
+}
+#build-warning {
+    right: 100px;
+    color: yellow;
+}
+
+#build-warning-panel {
+    width: 500px;
+}
+#bugreport-text {
+    width: 99%;
+    height: 100px;
 }
 
 .badge {

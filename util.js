@@ -301,6 +301,8 @@ var util = new function() {
 	            return;
                 if (checking.tagName == "INPUT")
                     return;
+                if (checking.tagName == "TEXTAREA")
+                    return;
 	        checking = checking.parentNode;
 	    };
 

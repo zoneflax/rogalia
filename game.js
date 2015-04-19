@@ -31,6 +31,34 @@ function Game() {
 
     this.version = JSON.parse(localStorage.getItem("Version"));
 
+    util.ajax("build-warning.html", function(warn) {
+        if (!warn) {
+            util.dom.hide(document.getElementById("build-warning"));
+            return;
+        }
+
+        var panel = new Panel("build-warning-panel", "");
+        panel.contents.innerHTML = warn;
+
+        var title = document.getElementById("build-warning-title");
+        var buildWarning = document.getElementById("build-warning");
+        util.dom.replace(buildWarning, title);
+        title.id = "build-warning";
+        panel.setTitle(title.textContent);
+
+        document.getElementById("bugreport-send").onclick = function() {
+            var text = document.getElementById("bugreport-text");
+            game.network.send("bugreport", {Text: text.value}, function(data) {
+                if (data.Ack)
+                    text.value = "";
+            });
+        };
+
+        title.onclick = function() {
+            panel.show();
+        };
+    });
+
     this.initTime = function(time, tick) {
         this.setTime(time);
         setInterval(function() {
@@ -42,6 +70,8 @@ function Game() {
     };
 
     this.setTime = function(time) {
+        if (!time)
+            return;
         game.time = time;
         var hours = Math.floor(time / 60);
         var minutes = time % 60;

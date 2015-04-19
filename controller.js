@@ -775,6 +775,8 @@ Controller.prototype = {
             }
             if (e.target.nodeName == "INPUT")
                 return true;
+            if (e.target.nodeName == "TEXTAREA")
+                return true;
         }
 
 

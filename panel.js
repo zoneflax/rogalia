@@ -29,14 +29,14 @@ function Panel(name, title, elements, listener, hooks) {
     this.contents = document.createElement("div");
     this.contents.className = "contents";
 
-    var text = document.createElement("div");
-    text.className = "text";
-    text.title = T(title);
-    text.textContent = text.title;
+    this._title = document.createElement("div");
+    this._title.className = "text";
+    this.setTitle(title);
+
 
     var titleBar = document.createElement("header");
     titleBar.className = "title-bar";
-    titleBar.appendChild(text);
+    titleBar.appendChild(this._title);
 
     var close = document.createElement("span");
     close.className = "close";
@@ -154,6 +154,10 @@ Panel.prototype = {
         this.hide();
         if (this.element && this.element.parentNode)
             util.dom.remove(this.element);
+    },
+    setTitle: function(text) {
+        this._title.title = T(text);
+        this._title.textContent = text;
     },
     replace: function(elements) {
         this.contents.innerHTML = "";
