@@ -42,7 +42,8 @@ function Info(message, character) {
         var slot = container.slots[container.contents.indexOf(item.Id)];
         if (!slot)
             console.trace(container, item)
-        slot.classList.add("new");
+        else
+            slot.classList.add("new");
         break;
     case "build-open":
         var blank = Entity.get(this.data);
