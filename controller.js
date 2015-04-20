@@ -532,6 +532,8 @@ Controller.prototype = {
                 x: p.x,
                 y: p.y,
             };
+            if (arg.Id)
+                args.Id = arg.Id;
             if (entity.Orientation)
                 args.Orientation = entity.Orientation;
 

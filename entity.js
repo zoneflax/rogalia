@@ -792,6 +792,6 @@ Entity.prototype = {
         game.controller.lastCreatingRotation++;
     },
     cast: function() {
-        game.controller.creatingCursor(this.Spell);
+        game.controller.creatingCursor(new Entity(this.Id, this.Spell), "cast");
     }
 };
