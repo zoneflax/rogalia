@@ -90,7 +90,7 @@ Container.prototype = {
         var y = game.controller.world.y;
         var biom = game.map.biomAt(x, y);
         if (!biom) {
-            game.sendError("Biom (%d %d) not found", x, y)
+            game.sendError("Biom (%d %d) not found", x, y);
             return;
         }
 
@@ -99,13 +99,13 @@ Container.prototype = {
         if (!e)
             return;
 
-        var align = false
+        var align = false;
         if ((biom.Name == "plowed-soil" || biom.Name == "soil") && e.is("seed")) {
             cmd = "plant";
             align = true;
         } else if ((biom.Name == "plowed-soil" || biom.Name == "shallow-water") && e.is("soil")) {
             cmd = "swamp";
-            align = true
+            align = true;
         }
 
         if (align) {
@@ -222,7 +222,7 @@ Container.prototype = {
 
         var blank = game.controller.craft.blank;
         if (blank.panel && blank.panel.visible) {
-            blank.use(item)
+            blank.use(item);
             return;
         }
         if (Panel.top.name == "blank-panel")
@@ -232,7 +232,7 @@ Container.prototype = {
         var top = this.getTopExcept(entity.Container);
         if (top) {
             Container.moveItem(entity.Id, game.containers[entity.Container], top);
-            return
+            return;
         }
 
         entity.drop();
@@ -417,10 +417,13 @@ Container.prototype = {
             this.fuel.appendChild(slot);
         }
     },
+    hasSpace: function() {
+        return !!this.slots.find(function(id) { return id == 0; });
+    },
     getTopExcept: function(except) {
         for (var i = Panel.stack.length-1; i >= 0; i--) {
             var panel = Panel.stack[i];
-            if (panel.visible && panel.container && panel.container.id != except)
+            if (panel.visible && panel.container && panel.container.id != except && panel.container.hasSpace())
                 return panel.container;
         };
         return null;
