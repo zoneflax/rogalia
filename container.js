@@ -418,7 +418,7 @@ Container.prototype = {
         }
     },
     hasSpace: function() {
-        return !!this.slots.find(function(id) { return id == 0; });
+        return this.contents.find(function(id) { return id == 0; }) !== undefined;
     },
     getTopExcept: function(except) {
         for (var i = Panel.stack.length-1; i >= 0; i--) {

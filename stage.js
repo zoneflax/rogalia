@@ -397,6 +397,9 @@ function mainStage() {
     }
 
     var bugs = 0;
+    // game.ctx.scale(0.3, 0.3);
+    // game.ctx.translate(1000, 1000);
+
     this.draw = function() {
         game.ctx.globalCompositeOperation = "source-over";
         if ("MushroomTrip" in game.player.Effects) {
@@ -421,6 +424,9 @@ function mainStage() {
         game.sortedEntities.traverse(drawUI);
 
         game.controller.draw();
+        // game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        // game.ctx.fillRect(game.camera.x, game.camera.y, game.screen.width, game.screen.height);
+
         game.ctx.restore();
     };
     this.end = function() {};
