@@ -14,7 +14,7 @@ Entity.templates = {};
 Entity.init = function(data) {
     data.forEach(function(props) {
         var e = new Entity();
-        e.sync(props)
+        e.sync(props);
         Entity.templates[e.Type] = e;
     });
 }
@@ -38,8 +38,6 @@ Entity.sync = function(data, remove) {
 
         if(game.containers[entity.Id]) {
             containers.push(game.containers[entity.Id]);
-        } else if (entity.Container == 0 && game.containers[0]) {
-            game.containers[0].update();
         }
         i++;
     }
@@ -47,7 +45,7 @@ Entity.sync = function(data, remove) {
 
     containers.forEach(function(container) {
         container.update();
-    })
+    });
 },
 
 Entity.collides = function(entity) {

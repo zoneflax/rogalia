@@ -332,7 +332,6 @@ Container.prototype = {
                 }
                 //TODO: fixme: show "?" instead of empty image
                 item = e.icon();
-
                 item.blocked = blocked;
 
                 item.block = function(index) {
@@ -345,7 +344,7 @@ Container.prototype = {
                     if (!this.items[index])
                         return;
                     this.items[index].blocked = false;
-                }.bind(this, i)
+                }.bind(this, i);
 
                 item.classList.add("item");
                 item.id = e.Id;
@@ -361,15 +360,15 @@ Container.prototype = {
                 var progress = false;
                 var sup = document.createElement("sup");
                 if (this.container && this.container.HideAdded) {
-                    var added = new Date(this.container.HideAdded)
+                    var added = new Date(this.container.HideAdded);
                     var duration = this.container.HideDuration / 1e6;
                     var diff = Date.now() - added;
                     if (diff < duration) {
                         sup.textContent = util.toFixed(100*diff / duration) + "%";
-                        progress = true
+                        progress = true;
                     }
                 }
-                var sub = null
+                var sub = null;
                 if (!progress) {
                     if (e.Group == "atom") {
                         sub = document.createElement("sub");
