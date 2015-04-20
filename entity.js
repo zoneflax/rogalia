@@ -458,6 +458,8 @@ Entity.prototype = {
         case "tanning-tub":
             this._canUse = true;
             break;
+        case "spell-scroll":
+            this.Actions.push("cast");
         }
 
         if (this.Creator && this.MoveType != Entity.MT_STATIC)
@@ -788,5 +790,8 @@ Entity.prototype = {
 
         this.initSprite();
         game.controller.lastCreatingRotation++;
+    },
+    cast: function() {
+        game.controller.creatingCursor(this.Spell);
     }
 };
