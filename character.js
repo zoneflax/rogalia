@@ -371,6 +371,8 @@ Character.prototype = {
             ctx.drawImage(naked.image, 0, 0);
             parts.forEach(function(image, i) {
                 if (image) {
+                    if (i == 3) //hair
+                        image = new ImageFilter(image).tint({tintColor: "#f0f", tintOpacity: 0.5});
                     ctx.drawImage(image, 0, 0);
                 }
             });
@@ -1236,7 +1238,7 @@ Character.prototype = {
         }.bind(this));
 
         //TODO: for test; remove
-        clothes["hair"] = "hair";
+        clothes["hair"] = "iroquois"; //"hair";
 
         return clothes;
     },
