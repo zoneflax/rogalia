@@ -343,6 +343,14 @@ Character.prototype = {
         var clothes = this.getClothes();
         this._clothes = JSON.stringify(clothes);
 
+        var hair = clothes["hair"];
+        if (hair) {
+            var hairStyle = hair.split("#");
+            clothes["hair"] = hairStyle[0];
+            var hairColor = hairStyle[1];
+            var hairOpacity = hairStyle[2];
+        }
+
         if (typeof clothes == "string") {
             var parts = [loader.loadImage(dir + animation + "/" + clothes + ".png")];
         } else {
@@ -373,8 +381,8 @@ Character.prototype = {
             ctx.drawImage(naked.image, 0, 0);
             parts.forEach(function(image, i) {
                 if (image) {
-                    if (i == 3) //hair
-                        image = new ImageFilter(image).tint({tintColor: "#f0f", tintOpacity: 0.5});
+                    if (i == 3 && hairColor && hairOpacity) //hair
+                        image = new ImageFilter(image).tint({tintColor: hairColor, tintOpacity: hairOpacity});
                     ctx.drawImage(image, 0, 0);
                 }
             });
@@ -1240,7 +1248,7 @@ Character.prototype = {
         }.bind(this));
 
         //TODO: for test; remove
-        clothes["hair"] = "iroquois"; //"hair";
+        // clothes["hair"] = "iroquois"; //"hair";
 
         return clothes;
     },

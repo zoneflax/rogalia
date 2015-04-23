@@ -98,8 +98,8 @@ function Controller(game) {
 
                 var hovered = controller.world.hovered;
                 if (hovered) {
-                    var t = Entity.get(item.id)
-                    if (hovered.canUse && hovered.canUse(t)) {
+                    var t = Entity.get(item.id);
+                    if (hovered instanceof Entity && hovered.canUse && hovered.canUse(t)) {
                         return hovered.use(t);
                     }
                 } else {
