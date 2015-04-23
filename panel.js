@@ -30,7 +30,7 @@ function Panel(name, title, elements, listener, hooks) {
     this.contents.className = "contents";
 
     this._title = document.createElement("div");
-    this._title.className = "text";
+    this._title.className = "title-text";
     this.setTitle(title);
 
 

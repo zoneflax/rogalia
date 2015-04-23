@@ -297,22 +297,30 @@ var util = new function() {
 
     };
 
+    var dragIgnoreTags = ["INPUT", "TEXTAREA", "BUTTON"];
+    this.dragIgnore = function(element) {
+        if (element.classList.contains("no-drag"))
+	    return true;
+        else if (dragIgnoreTags.indexOf(element.tagName) != -1)
+            return true;
+        else
+            return false;
+    };
+
     this.draggable = function(element) {
         var drag = null;
         element.addEventListener('mousedown', function(e) {
-	    if(getComputedStyle(e.target).cursor == "pointer")
-	        return;
-
-	    var checking = e.target;
-	    while(checking && checking != element) {
-	        if (checking.classList.contains("no-drag"))
-	            return;
-                if (checking.tagName == "INPUT")
-                    return;
-                if (checking.tagName == "TEXTAREA")
-                    return;
-	        checking = checking.parentNode;
-	    };
+            if (!e.target.classList.contains("contents") && !e.target.classList.contains("title-text"))
+                return;
+	    // if(getComputedStyle(e.target).cursor == "pointer")
+	    //     return;
+	    // var checking = e.target;
+	    // while(checking && checking != element) {
+            //     console.log(checking, checking.nodeType);
+            //     if (util.dragIgnore(checking))
+            //         return;
+	    //     checking = checking.parentNode;
+	    // };
 
 	    drag = {
 	        dx: e.pageX - element.offsetLeft,
