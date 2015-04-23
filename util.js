@@ -84,18 +84,18 @@ var util = new function() {
         },
         forEach: function(selector, callback) {
             [].forEach.call(document.querySelectorAll(selector), function(elem) {
-                callback.call(elem)
+                callback.call(elem);
             });
         },
         addClass: function(selector, name) {
             this.forEach(selector, function() {
                 this.classList.add(name);
-            })
+            });
         },
         removeClass: function(selector, name) {
             this.forEach(selector, function() {
                 this.classList.remove(name);
-            })
+            });
         },
     };
 
@@ -118,6 +118,14 @@ var util = new function() {
                 return " ";
             return c;
         }).join(""));
+    };
+    this.stringToSymbol = function(symbol) {
+        return [].map.call(this.lcfirst(symbol), function(c, i) {
+            var l = c.toLowerCase();
+            if (c != l)
+                return "-" + l;
+            return l;
+        }).join("");
     };
 
     //point to rect

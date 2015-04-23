@@ -286,6 +286,8 @@ Character.prototype = {
         case "snegurochka":
         case "moroz":
         case "vendor":
+        case "boris":
+        case "bruno":
             this.sprite.nameOffset = 96;
             this.sprite.frames = {
                 "idle": 1,
@@ -305,8 +307,8 @@ Character.prototype = {
     loadSprite: function() {
         var sprite = this.sprite;
         if (this.IsNpc) {
-            this.initSprite();
             var type = this.Type;
+            this.initSprite();
             switch (this.Name) {
             case "Margo":
                 type = "margo";
@@ -1247,50 +1249,52 @@ Character.prototype = {
         game.network.send("follow", {Name: this.Name}, function interact(data) {
             if (!data.Done)
                 return interact;
+
             var panel = null;
-            var contents = self.getTalks().map(function(element) {
-                var buttons = document.createElement("div");
-                var actions = document.createElement("ol");
-
-                if (typeof element == "string") {
-                    var p = document.createElement("p");
-                    p.textContent = element;
-                    return p;
-                }
-                Object.keys(element).forEach(function(title) {
-                    var button = document.createElement("button");
-                    button.textContent = T(title);
-                    button.onclick = function() {
-                        panel.close();
-                        Character.npcActions[title].call(self);
-                    };
-                    buttons.appendChild(button);
-
-                    var li = document.createElement("li");
-                    li.className = "talk-link";
-                    li.textContent = element[title];
-                    li.onclick = button.onclick;
-
-                    actions.appendChild(li);
-                });
-                //TODO: make it less uglier
-                if (self.Type == "vendor" && self.Owner == game.player.Id) {
-                    buttons.appendChild(game.makeSendButton(
-                        "Take revenue",
-                        "take-revenue",
-                        {Vendor: self.Id}
-                    ));
-                    buttons.appendChild(game.makeSendButton(
-                        "Take sold items",
-                        "take-sold-items",
-                        {Vendor: self.Id}
-                    ));
-                }
-                var wrap = document.createElement("div");
-                wrap.appendChild(actions);
-                wrap.appendChild(buttons);
-                return wrap;
+            var contents = [];
+            var info = self.getTalks(); // TODO: omfg rename me
+            info.talks.forEach(function(text) {
+                var p = document.createElement("p");
+                p.textContent = text;
+                contents.push(p);
             });
+
+            var buttons = document.createElement("div");
+            var actions = document.createElement("ol");
+            Object.keys(info.actions).forEach(function(title) {
+                var button = document.createElement("button");
+                button.textContent = T(title);
+                button.onclick = function() {
+                    panel.close();
+                    Character.npcActions[title].call(self);
+                };
+                buttons.appendChild(button);
+
+                var li = document.createElement("li");
+                li.className = "talk-link";
+                li.textContent = info.actions[title];
+                li.onclick = button.onclick;
+
+                actions.appendChild(li);
+            });
+            //TODO: make it less uglier
+            if (self.Type == "vendor" && self.Owner == game.player.Id) {
+                buttons.appendChild(game.makeSendButton(
+                    "Take revenue",
+                    "take-revenue",
+                    {Vendor: self.Id}
+                ));
+                buttons.appendChild(game.makeSendButton(
+                    "Take sold items",
+                    "take-sold-items",
+                    {Vendor: self.Id}
+                ));
+            }
+
+            var wrapper = document.createElement("div");
+            wrapper.appendChild(actions);
+            wrapper.appendChild(buttons);
+            contents.push(wrapper);
 
             panel = new Panel("talk", self.Name, contents);
             panel.show();
@@ -1299,22 +1303,29 @@ Character.prototype = {
     },
     getTalks: function() {
         var type = this.Type;
+        // TODO: remove fix after server update
         switch (this.Name) {
         case "Shot":
-            type = "shot";
+        case "Bruno":
+        case "Boris":
+            type = type.toLowerCase();
             break;
         case "Margo":
         case "Umi":
             type = "margo";
             break;
         }
-        return game.talks[type];
+        var sex = ["male", "female"][game.player.Sex];
+        var faction = game.player.Citizenship.Faction.toLowerCase();
+        return game.talks.get(type, faction, sex);
     },
     isInteractive: function() {
         switch (this.Name) {
         case "Shot":
         case "Margo":
         case "Umi":
+        case "Bruno":
+        case "Boris":
             return true;
         }
         switch (this.Type) {

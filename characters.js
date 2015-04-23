@@ -119,6 +119,7 @@ Character.npcActions = {
                 case "Umi":
                 case "Margo":
                 case "Shot":
+                default:
                     return {
                         "Tour": function() {
                             alert("Пока не готово, извиняй.");
@@ -160,4 +161,7 @@ Character.npcActions = {
     "Buy sex": function() {
         game.network.send("buy-sex", {Id: this.Id});
     },
+    "Buy indulgence": function() {
+        alert("Пока не реализовано :-(");
+    }
 };
