@@ -473,6 +473,11 @@ Entity.prototype = {
             return false;
         return this.Sprite.Unselectable && this.Disposition != "floor";
     },
+    shouldBeAutoHidden: function() {
+        return game.player.inBuilding &&
+            this.autoHideable() &&
+            (this.Y + this.X > game.player.Y + game.player.X);
+    },
     almostBroken: function() {
         return this.Durability.Max > 0 && this.Durability.Current <= 0.1*this.Durability.Max;
     },
@@ -494,13 +499,13 @@ Entity.prototype = {
         if (this.Id && this.Id == game.player.Burden) {
             p.y -= game.player.sprite.height/2;
         }
-        if ((this.MoveType == Entity.MT_STATIC ||
-            this.CanCollide) &&
+        if (this.Disposition == "roof" && game.controller.hideStatic()) {
+            return;
+        }
+        if ((this.MoveType == Entity.MT_STATIC || this.CanCollide) &&
             game.controller.hideStatic()) {
             this.drawBox();
-        } else if (game.player.inBuilding &&
-                   (this.Y + this.X > game.player.Y + game.player.X) &&
-                   this.autoHideable())
+        } else if (this.shouldBeAutoHidden())
         {
             var color = "";
             if (this.Group == "gate") {
