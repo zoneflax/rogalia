@@ -1317,6 +1317,7 @@ big {
 
 #adsence-explanation {
     cursor: pointer;
+    text-decoration: underline;
 }
 #ad-jimmy {
     display: block;
