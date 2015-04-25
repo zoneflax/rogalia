@@ -80,6 +80,8 @@ function loadingStage(data) {
                 if (!game.map.ready)
                     return;
                 var ready = game.entities.every(function(e) {
+                    if (!e.sprite.ready)
+                        console.log(e.Name);
                     return e.sprite.ready;
                 });
 

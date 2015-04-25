@@ -1314,3 +1314,27 @@ big {
     cursor: pointer;
     color: lightgreen;
 }
+
+#adsence-explanation {
+    cursor: pointer;
+}
+#ad-jimmy {
+    display: block;
+    margin: auto;
+}
+
+#adsence {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+}
+@media (min-width: 1174px) {
+    #adsence {
+	width: 150px;
+    }
+}
+@media (min-width: 1350px) {
+    #adsence {
+	width: 300px;
+    }
+}

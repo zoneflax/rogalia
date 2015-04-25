@@ -110,12 +110,14 @@ Character.prototype = {
             var message = this.Messages.shift();
             this.info.push(new Info(message, this));
         }
-        if (!init && JSON.stringify(this.getClothes()) != this._clothes) {
-            for (var i in this.sprites) {
-                this.sprites[i].ready = false;
-            }
-            this.loadSprite();
+        if (!init && JSON.stringify(this.getClothes()) != this._clothes)
+            this.reloadSprite();
+    },
+    reloadSprite: function() {
+        for (var i in this.sprites) {
+            this.sprites[i].ready = false;
         }
+        this.loadSprite();
     },
     init: function(data) {
         //TODO: refactor
@@ -306,37 +308,18 @@ Character.prototype = {
     },
     loadSprite: function() {
         var sprite = this.sprite;
-        if (this.IsNpc) {
-            var type = this.Type;
-            this.initSprite();
-            switch (this.Name) {
-            case "Margo":
-                type = "margo";
-                break;
-            case "Umi":
-                type = "umi";
-                break;
-            case "Shot":
-                type = "shot";
-                break;
-            default:
-                switch (this.Type) {
-                case "vendor":
-                    type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
-                        return hash + c.charCodeAt(0);
-                    }, 0) % 3 + 1);
-                    break;
-                }
-            }
-            sprite.load(Character.spriteDir + type + ".png");
-            return;
-        }
         if (sprite.loading)
             return;
-        sprite.loading = true;
+
         this.initSprite();
 
-        // console.time(this.Name + "-" + sprite.name + "-sprite" );
+        if (this.IsNpc) {
+            this.loadNpcSprite();
+            return;
+        }
+
+        sprite.loading = true;
+
         var animation = sprite.name;
         var type = "";
         var dir = Character.spriteDir + this.Type + "/";
@@ -372,6 +355,7 @@ Character.prototype = {
                 parts.push(weapon.image);
         }
 
+        var self = this;
         loader.ready(function() {
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
@@ -381,8 +365,16 @@ Character.prototype = {
             ctx.drawImage(naked.image, 0, 0);
             parts.forEach(function(image, i) {
                 if (image) {
-                    if (i == 3 && hairColor && hairOpacity) //hair
-                        image = new ImageFilter(image).tint({tintColor: hairColor, tintOpacity: hairOpacity});
+                    var partName = Character.parts[i];
+                    switch (partName) {
+                    case "hair":
+                        if (hairColor && hairOpacity)
+                            image = new ImageFilter(image).tint({tintColor: hairColor, tintOpacity: hairOpacity});
+                        break;
+                    case "head":
+                        if (!self.Settings.ShowHelmet)
+                            return;
+                    }
                     ctx.drawImage(image, 0, 0);
                 }
             });
@@ -391,10 +383,31 @@ Character.prototype = {
             sprite.makeOutline();
             sprite.ready = true;
             sprite.loading = false;
-            // document.body.appendChild(canvas);
             Stats.update();
-            // console.timeEnd(this.Name + "-" + sprite.name + "-sprite" );
-        }.bind(this));
+        });
+    },
+    loadNpcSprite: function() {
+        var type = this.Type;
+        switch (this.Name) {
+        case "Margo":
+            type = "margo";
+            break;
+        case "Umi":
+            type = "umi";
+            break;
+        case "Shot":
+            type = "shot";
+            break;
+        default:
+            switch (this.Type) {
+            case "vendor":
+                type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
+                    return hash + c.charCodeAt(0);
+                }, 0) % 3 + 1);
+                break;
+            }
+        }
+        this.sprite.load(Character.spriteDir + type + ".png");
     },
     getActions: function() {
         var actions = {};
@@ -1238,7 +1251,7 @@ Character.prototype = {
     },
     getClothes: function() {
         var clothes = {};
-        var body = this.Clothes[Character.parts.indexOf("body")];
+        var body = this.Clothes[Character.partIndex("body")];
         switch (body) {
         case "cloak":
             return body;
@@ -1246,9 +1259,6 @@ Character.prototype = {
         Character.parts.forEach(function(name, i) {
             clothes[name] = this.Clothes[i] || "naked";
         }.bind(this));
-
-        //TODO: for test; remove
-        // clothes["hair"] = "iroquois"; //"hair";
 
         return clothes;
     },

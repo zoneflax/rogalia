@@ -107,7 +107,7 @@ function Controller(game) {
                 }
 
                 return true;
-            }
+            };
         },
         updateHovered: function(x, y) {
             util.dom.hide(this.cursor);

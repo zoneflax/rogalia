@@ -1,6 +1,6 @@
 function Donate() {
     var status = document.createElement("p");
-    status.innerHTML = "Собрано 2 817,27";
+    status.innerHTML = "Собрано 1 577,27";
     var iframe = document.createElement("iframe");
     iframe.frameBorder = 0;
     iframe.allowtransparency = true;

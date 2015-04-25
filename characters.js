@@ -53,6 +53,10 @@ Character.spriteDir = "characters/";
 Character.animations = ["idle", "run", "dig", "craft", "attack", "sit"];
 Character.parts = ["feet", "legs", "body", "hair", "head"];
 
+Character.partIndex = function(name) {
+    return Character.parts.indexOf(name);
+};
+
 
 Character.nakedSprites = {};
 Character.weaponSprites = {};

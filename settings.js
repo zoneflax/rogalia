@@ -10,6 +10,10 @@ function Settings() {
         sections
     );
 
+    function setPlayerSettings() {
+            game.network.send("set-settings", {Settings: game.player.Settings});
+    };
+
     this.triggers = {
         "settings.character.bald": function() {
             game.player.initSprite();
@@ -35,7 +39,12 @@ function Settings() {
 
         "settings.gameplay.pathfinding": function() {
             game.player.Settings.Pathfinding = !game.player.Settings.Pathfinding;
-            game.network.send("set-settings", {Settings: game.player.Settings});
+            setPlayerSettings();
+        },
+        "settings.gameplay.showHelmet": function() {
+            game.player.Settings.ShowHelmet = !game.player.Settings.ShowHelmet;
+            setPlayerSettings();
+            game.player.reloadSprite();
         },
     };
 }
