@@ -22,7 +22,7 @@ function Ads() {
                 p.show();
             };
         } catch(e) {
-            game.sendError(e);
+            game.sendErrorf("Ads error: %s", e);
         }
     }
     updateAds();
