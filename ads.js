@@ -1,5 +1,4 @@
 function Ads() {
-    return;
     function updateAds() {
         var adsence = document.getElementById("adsence");
         adsence.innerHTML = '<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5659182463296220" data-ad-slot="2188089399" data-ad-format="auto"></ins><div id="adsence-explanation">Откуда тут взялась реклама?</div>';
