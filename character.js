@@ -1227,7 +1227,7 @@ Character.prototype = {
                 parts.push({type: type, name: name});
         }.bind(this));
 
-        if (this.Style.Hair) {
+        if (this.Style && this.Style.Hair) {
             var hairStyle = this.Style.Hair.split("#");
             var hair = {
                 type: "hair",
