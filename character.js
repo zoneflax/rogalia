@@ -65,7 +65,7 @@ function Character(id, name) {
     }.bind(this));
     this.sprite = this.sprites.idle;
 
-    this._clothes = "";
+    this._parts = "";
 }
 
 Character.prototype = {
@@ -110,7 +110,7 @@ Character.prototype = {
             var message = this.Messages.shift();
             this.info.push(new Info(message, this));
         }
-        if (!init && JSON.stringify(this.getClothes()) != this._clothes)
+        if (!init && JSON.stringify(this.getParts()) != this._parts)
             this.reloadSprite();
     },
     reloadSprite: function() {
@@ -321,39 +321,13 @@ Character.prototype = {
         sprite.loading = true;
 
         var animation = sprite.name;
-        var type = "";
         var dir = Character.spriteDir + this.Type + "/";
-        var clothes = this.getClothes();
-        this._clothes = JSON.stringify(clothes);
-
-        var hair = clothes["hair"];
-        if (hair) {
-            var hairStyle = hair.split("#");
-            clothes["hair"] = hairStyle[0];
-            var hairColor = hairStyle[1];
-            var hairOpacity = hairStyle[2];
-        }
-
-        if (typeof clothes == "string") {
-            var parts = [loader.loadImage(dir + animation + "/" + clothes + ".png")];
-        } else {
-            parts =  Object.keys(clothes).map(function(part) {
-                var type = clothes[part];
-                if (type == "naked")
-                    return null;
-                var path = dir +
-                        animation + "/" +  // idle
-                        part + "/" +       // body
-                        type + ".png";     // naked
-                return loader.loadImage(path);
-            });
-        }
-
-        if (animation == "attack") {
-            var weapon = Character.weaponSprites.sword;
-            if (weapon)
-                parts.push(weapon.image);
-        }
+        var parts = this.getParts();
+        this._parts = JSON.stringify(parts);
+        parts.forEach(function(part) {
+            var path = dir + animation + "/" + part.type + "/" + part.name + ".png";
+            part.image = loader.loadImage(path);
+        });
 
         var self = this;
         loader.ready(function() {
@@ -363,17 +337,11 @@ Character.prototype = {
             canvas.width = naked.image.width;
             canvas.height = naked.image.height;
             ctx.drawImage(naked.image, 0, 0);
-            parts.forEach(function(image, i) {
-                if (image) {
-                    var partName = Character.parts[i];
-                    switch (partName) {
-                    case "hair":
-                        if (hairColor && hairOpacity)
-                            image = new ImageFilter(image).tint({tintColor: hairColor, tintOpacity: hairOpacity});
-                        break;
-                    case "head":
-                        if (!self.Settings.ShowHelmet)
-                            return;
+            parts.forEach(function(part, i) {
+                var image = part.image;
+                if (image && image.width > 0) {
+                    if (part.color && part.opacity) {
+                        image = ImageFilter.tint(image, part.color, part.opacity);
                     }
                     ctx.drawImage(image, 0, 0);
                 }
@@ -1249,18 +1217,32 @@ Character.prototype = {
             this._icon = this.sprite.icon();
         return this._icon;
     },
-    getClothes: function() {
-        var clothes = {};
-        var body = this.Clothes[Character.partIndex("body")];
-        switch (body) {
-        case "cloak":
-            return body;
-        }
-        Character.parts.forEach(function(name, i) {
-            clothes[name] = this.Clothes[i] || "naked";
+    getParts: function() {
+        var parts = [];
+        Character.clothes.forEach(function(type, i) {
+            if (type == "head" && this.Style.HideHelmet)
+                return;
+            var name = this.Clothes[i];
+            if (name && name != "naked")
+                parts.push({type: type, name: name});
         }.bind(this));
 
-        return clothes;
+        if (this.Style.Hair) {
+            var hairStyle = this.Style.Hair.split("#");
+            var hair = {
+                type: "hair",
+                name: hairStyle[0],
+                color: hairStyle[1],
+                opacity: hairStyle[2],
+            };
+            parts.splice(Character.clothesIndex("legs"), 0, hair);
+        }
+        if (this.sprite.name == "attack") {
+            var weapon = Character.weaponSprites.sword;
+            if (weapon)
+                parts.push({image: weapon.image});
+        }
+        return parts;
     },
     interact: function() {
         var self = this;

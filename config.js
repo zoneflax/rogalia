@@ -12,7 +12,7 @@ var config = {
     },
     gameplay: {
         pathfinding: function() { return game.player.Settings.Pathfinding; },
-        showHelmet: function() { return game.player.Settings.ShowHelmet; },
+        hideHelmet: function() { return game.player.Style.HideHelmet; },
     },
     ui: {
         hp: false,

@@ -14,6 +14,10 @@ function Settings() {
             game.network.send("set-settings", {Settings: game.player.Settings});
     };
 
+    function setPlayerStyle() {
+            game.network.send("set-style", {Style: game.player.Style});
+    };
+
     this.triggers = {
         "settings.character.bald": function() {
             game.player.initSprite();
@@ -41,9 +45,9 @@ function Settings() {
             game.player.Settings.Pathfinding = !game.player.Settings.Pathfinding;
             setPlayerSettings();
         },
-        "settings.gameplay.showHelmet": function() {
-            game.player.Settings.ShowHelmet = !game.player.Settings.ShowHelmet;
-            setPlayerSettings();
+        "settings.gameplay.hideHelmet": function() {
+            game.player.Style.HideHelmet = !game.player.Style.HideHelmet;
+            setPlayerStyle();
             game.player.reloadSprite();
         },
     };
