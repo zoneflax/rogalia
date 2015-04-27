@@ -1220,7 +1220,7 @@ Character.prototype = {
     getParts: function() {
         var parts = [];
         Character.clothes.forEach(function(type, i) {
-            if (type == "head" && this.Style.HideHelmet)
+            if (type == "head" && this.Style && this.Style.HideHelmet)
                 return;
             var name = this.Clothes[i];
             if (name && name != "naked")
