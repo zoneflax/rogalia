@@ -328,6 +328,12 @@ Character.prototype = {
             var path = dir + animation + "/" + part.type + "/" + part.name + ".png";
             part.image = loader.loadImage(path);
         });
+        if (sprite.name == "attack") {
+            var weapon = Character.weaponSprites.sword;
+            if (weapon)
+                parts.push({image: weapon.image});
+        }
+
 
         var self = this;
         loader.ready(function() {
@@ -1236,11 +1242,6 @@ Character.prototype = {
                 opacity: hairStyle[2],
             };
             parts.splice(Character.clothesIndex("legs"), 0, hair);
-        }
-        if (this.sprite.name == "attack") {
-            var weapon = Character.weaponSprites.sword;
-            if (weapon)
-                parts.push({image: weapon.image});
         }
         return parts;
     },
