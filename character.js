@@ -1318,7 +1318,6 @@ Character.prototype = {
         }
         var sex = ["male", "female"][game.player.Sex];
         var faction = game.player.Citizenship.Faction.toLowerCase();
-        console.log(type);
         return game.talks.get(type, faction, sex);
     },
     isInteractive: function() {
