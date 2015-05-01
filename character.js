@@ -792,7 +792,8 @@ Character.prototype = {
         if (this.Mount) {
             if (!this.mount) {
                 this.mount = Entity.get(this.Mount);
-                this.mount.rider = this;
+                if (this.mount)
+                    this.mount.rider = this;
             }
             this.Y = this.mount.Y+1;
         } else {
