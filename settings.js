@@ -40,6 +40,9 @@ function Settings() {
         "settings.graphics.low": function() {
             game.reload();
         },
+        "settings.graphics.fullscreen": function() {
+            game.screen.update();
+        },
 
         "settings.gameplay.pathfinding": function() {
             game.player.Settings.Pathfinding = !game.player.Settings.Pathfinding;

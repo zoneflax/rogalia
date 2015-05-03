@@ -7,11 +7,11 @@ Stage.prototype = {
     update: function(){},
     draw: function(){},
     sync: function(data) {},
-}
+};
+
 Stage.add = function(stage) {
     stage.prototype = Object.create(Stage.prototype);
-}
-
+};
 
 function exitStage(message) {
     message = message || T("Refresh page...");
@@ -46,6 +46,8 @@ Stage.add(exitStage);
 
 function loadingStage(data) {
     game.addEventListeners();
+    game.screen.update();
+
     var forceUpdate = ("Version" in data);
     ["Version", "Recipes", "EntitiesTemplates"].forEach(function(key) {
         if (forceUpdate) {

@@ -1,20 +1,31 @@
 function Game() {
     window.game = this;
 
+    this.world = document.getElementById("world");
+    this.canvas = document.getElementById("canvas");
     this.screen = {
         width: 1024,
         height: 768,
+        cells_x: 0,
+        cells_y: 0,
+        update: function() {
+            if (config.graphics.fullscreen) {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+            } else {
+                this.width = 1024;
+                this.height = 768;
+            }
+            this.cells_x = this.width / CELL_SIZE;
+            this.cells_y = this.height / CELL_SIZE;
+            game.canvas.width = this.width;
+            game.canvas.height = this.height;
+            game.world.style.width = this.width + "px";
+            game.world.style.height = this.height + "px";
+            game.setFontSize();
+        },
     };
-    this.screen.cells_x = this.screen.width / CELL_SIZE;
-    this.screen.cells_y = this.screen.height / CELL_SIZE;
 
-    this.world = document.getElementById("world");
-    this.world.style.width = this.screen.width + "px";
-    this.world.style.height = this.screen.height + "px";
-
-    this.canvas = document.getElementById("canvas");
-    this.canvas.width = this.screen.width;
-    this.canvas.height = this.screen.height;
 
     this.ctx = canvas.getContext("2d");
     this.ctx.clear = function() {
@@ -189,6 +200,7 @@ function Game() {
     };
 
     this.addEventListeners = function() {
+        window.addEventListener("resize", game.screen.update.bind(game.screen));
         window.addEventListener("beforeunload", function(e) {
             Panel.save();
             Container.save();

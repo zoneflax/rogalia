@@ -27,6 +27,7 @@ var config = {
     },
     graphics: {
         "low": false,
+        "fullscreen": false,
     },
     system: {
         quitConfirm: true,
