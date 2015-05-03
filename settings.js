@@ -37,6 +37,9 @@ function Settings() {
         "settings.ui.world": function() {
             util.dom.toggle(game.world);
         },
+        "settings.ui.rotateMinimap": function() {
+            game.map.rotateMinimap();
+        },
         "settings.graphics.low": function() {
             game.reload();
         },

@@ -21,12 +21,18 @@ function Map() {
 
     this.tiles = [];
 
+    this.rotateMinimap = function() {
+        this.minimap.style.transform = (config.ui.rotateMinimap) ?"rotate(45deg)" : "";
+    };
+    this.rotateMinimap();
+
     this.parse = function(img) {
         this.minimap.width = img.width;
         this.minimap.height = img.height;
 
         var ctx = this.minimap.getContext("2d");
         ctx.drawImage(img, 0, 0);
+
         var pixels = ctx.getImageData(0, 0, img.width, img.height).data;
         var data = [];
         var i = 0;

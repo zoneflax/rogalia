@@ -100,7 +100,7 @@ function loadingStage(data) {
             }, 33);
 
             if (!game.player.Settings.Premium) {
-                new Ads();
+                game.ads.show();
             }
         });
     };

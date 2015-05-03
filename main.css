@@ -78,6 +78,7 @@ a:hover {
     
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 #canvas {
     position: absolute;
@@ -1013,7 +1014,6 @@ ol li a:hover {
 }
 #build-warning {
     right: 100px;
-    color: yellow;
 }
 
 #build-warning-panel {
@@ -1070,8 +1070,8 @@ big {
     right: 0;
     display: none;
     overflow: hidden;
-    background-color: #ccc;
-    background-image: url("assets/bg/minimap.png");
+    /* background-color: #ccc; */
+    /* background-image: url("assets/bg/minimap.png"); */
     padding: 4px;
 }
 #minimap-container .object {

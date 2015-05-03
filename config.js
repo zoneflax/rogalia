@@ -24,6 +24,7 @@ var config = {
         fillClaim: false,
         showMeterValues: true,
         strokeClaim: true,
+        rotateMinimap: false,
     },
     graphics: {
         "low": false,

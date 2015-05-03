@@ -102,6 +102,7 @@ function Game() {
 
     this.talks = new Talks();
     this.sound = new Sound();
+    this.ads = new Ads();
 
     this.offset = {
         world: this.world,
