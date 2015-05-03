@@ -159,7 +159,7 @@ Character.npcActions = {
         game.network.send("sell-list", {Vendor: this.Id}, Vendor.sell.bind(this));
     },
     "Drink water": function() {
-        alert("Извини, воду пока не завезли.");
+        game.network.send("buy-water", {Id: this.Id});
     },
     "Buy sex": function() {
         game.network.send("buy-sex", {Id: this.Id});

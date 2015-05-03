@@ -26,7 +26,6 @@ function Game() {
         },
     };
 
-
     this.ctx = canvas.getContext("2d");
     this.ctx.clear = function() {
         game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
@@ -424,6 +423,7 @@ function Game() {
         throw "Fatal error";
     };
 
+    this.screen.update();
     this.stage = new Stage();
     this.setStage("connecting");
 

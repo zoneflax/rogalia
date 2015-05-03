@@ -46,7 +46,6 @@ Stage.add(exitStage);
 
 function loadingStage(data) {
     game.addEventListeners();
-    game.screen.update();
 
     var forceUpdate = ("Version" in data);
     ["Version", "Recipes", "EntitiesTemplates"].forEach(function(key) {
