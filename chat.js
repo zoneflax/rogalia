@@ -219,13 +219,13 @@ function Chat() {
 
         switch(match) {
         case "${lmb}":
-            simple.className = "lmb"
+            simple.className = "lmb";
             break;
         case "${rmb}":
             simple.className = "rmb";
             break;
         case "${hr}":
-            simple.type = "hr"
+            simple.type = "hr";
             break;
         default:
              element = parseComplexMatch(match);
@@ -245,6 +245,7 @@ function Chat() {
         "https://": makeLinkParser("https"),
         "http://": makeLinkParser("http"),
         "recipe:": recipeParser,
+        "b:": makeTagParser("b"),
     };
 
     function parseComplexMatch(match) {
@@ -259,12 +260,12 @@ function Chat() {
             var n = prefix.length;
             if (match.substr(startIndex, n) == prefix) {
                 var data = match.substr(startIndex+n, len-n);
-                return complexHandlers[prefix](data)
+                return complexHandlers[prefix](data);
             }
         }
         var text = match.substr(startIndex, len);
         var common = document.createElement("code");
-        common.textContent = T(text)
+        common.textContent = T(text);
         return common;
     }
 
@@ -274,9 +275,17 @@ function Chat() {
             var link = document.createElement("a");
             link.target = "_blank";
             link.href = url;
-            link.textContent = decodeURI(url)
+            link.textContent = decodeURI(url);
             return link;
-        }
+        };
+    }
+
+    function makeTagParser(tag) {
+        return function(data) {
+            var elem = document.createElement(tag);
+            elem.textContent = data;
+            return elem;
+        };
     }
 
     function recipeParser(data) {
@@ -286,7 +295,7 @@ function Chat() {
         link.onclick = function() {
             game.controller.craft.panel.show();
             game.controller.craft.search(data, true);
-        }
+        };
         return link;
     }
 
@@ -455,7 +464,7 @@ function Chat() {
 
             ballon.style.top = game.offset.y - game.camera.y +
                 (p.y - 1.2 * character.sprite.nameOffset - ballon.offsetHeight) + "px";
-        }
+        };
         ballon.update();
 
         setTimeout(function() {

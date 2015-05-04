@@ -78,7 +78,6 @@ a:hover {
     
     position: relative;
     overflow: hidden;
-    z-index: 1;
     margin: auto;
 }
 #canvas {
@@ -876,7 +875,6 @@ a.extern {
     position: absolute;
     left: 10px;
     top: 10px;
-    z-index: 1;
     display: inline-block;
     background: #333;
     color: #fff;
