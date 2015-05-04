@@ -173,7 +173,7 @@ function loginStage() {
         login(password);
     }
 
-    var form = document.createElement("form");
+    form = document.createElement("form");
     form.className = "login-form";
 
     var loginLabel = document.createElement("label");
@@ -261,7 +261,7 @@ function loginStage() {
     lang.onchange = function() {
         localStorage.setItem("settings.language.Russian", (this.value == "ru"));
         game.reload();
-    }
+    };
 
     form.appendChild(util.hr());
     form.appendChild(vk);

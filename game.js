@@ -232,13 +232,13 @@ function Game() {
     };
 
     this.setStage = function(name, params) {
+        this.screen.update();
         document.body.classList.remove(this.stage.name + "-stage");
         this.stage.end();
         game.ctx.clear();
         this.stage = new window[name + "Stage"](params);
         this.stage.name = name;
         document.body.classList.add(name + "-stage");
-        this.screen.update();
     };
 
     this.reload = function() {

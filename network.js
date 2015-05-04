@@ -80,7 +80,7 @@ function Network() {
     this.shutdown = function() {
         this.socket.onclose = null;
         this.socket.close();
-    }
+    };
 
     var lastSend = 0;
     this.send = function(command, args, callback, setAsDefault) {
@@ -88,8 +88,8 @@ function Network() {
         if (now - lastSend < 25)
             return;
         lastSend = now;
-        args = args || {}
-        args.command = command
+        args = args || {};
+        args.command = command;
 
         if (game.stage.name == "main")
             args.fps = game.controller.system.fps.currentFps();

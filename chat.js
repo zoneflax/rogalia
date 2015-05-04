@@ -246,6 +246,8 @@ function Chat() {
         "http://": makeLinkParser("http"),
         "recipe:": recipeParser,
         "b:": makeTagParser("b"),
+        "i:": makeTagParser("i"),
+        "u:": makeTagParser("u"),
     };
 
     function parseComplexMatch(match) {
