@@ -46,7 +46,6 @@ Stage.add(exitStage);
 
 function loadingStage(data) {
     game.addEventListeners();
-    game.screen.update();
 
     var forceUpdate = ("Version" in data);
     ["Version", "Recipes", "EntitiesTemplates"].forEach(function(key) {
@@ -82,8 +81,6 @@ function loadingStage(data) {
                 if (!game.map.ready)
                     return;
                 var ready = game.entities.every(function(e) {
-                    if (!e.sprite.ready)
-                        console.log(e.Name);
                     return e.sprite.ready;
                 });
 
@@ -107,7 +104,7 @@ function loadingStage(data) {
 
     this.draw = function() {
         game.ctx.clear();
-        game.ctx.fillStyle = "#fff";
+        game.ctx.fillStyle = "#333";
         game.ctx.fillText(
             game.loader.status,
             CELL_SIZE,
@@ -294,12 +291,10 @@ function loginStage() {
         return false;
     };
 
-    var wrapper = document.createElement("div");
-    wrapper.classList.add("login-form-wrapper");
     if (autoLogin)
-        wrapper.classList.add("hidden")
-    wrapper.appendChild(form);
-    document.body.appendChild(wrapper);
+        util.dom.hide(form);
+
+    game.world.appendChild(form);
 
     if (game.login)
         passwordInput.focus();
@@ -308,10 +303,7 @@ function loginStage() {
 
 
     this.end = function() {
-        if (wrapper) {
-            wrapper.parentNode.removeChild(wrapper);
-            wrapper = null;
-        }
+        util.dom.remove(form);
     };
 }
 Stage.add(loginStage);

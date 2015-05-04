@@ -79,6 +79,7 @@ a:hover {
     position: relative;
     overflow: hidden;
     z-index: 1;
+    margin: auto;
 }
 #canvas {
     position: absolute;
@@ -295,13 +296,11 @@ a:hover {
     background-position: 50% bottom;
 }
 .loading-stage #world {
-    background-image: url("assets/bg/loading.png");
+    background-image: url("assets/bg/loading-3.png");
     background-size: 100%;
 }
 .login-stage #world {
-    background-image: url("assets/bg/logo.png");
-    background-size: 384px;
-    background-position: 50% 20px;
+    background-image: url("assets/bg/loading-3.png");
 }
 .login-stage .button-link {
     float: left;
@@ -873,21 +872,17 @@ a.extern {
     border-radius: 5px;
 }
 
-.login-form-wrapper {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 200px;
-}
-
 .login-form {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    z-index: 1;
     display: inline-block;
     background: #333;
     color: #fff;
     border-radius: 5px;
     text-align: left;
     padding: 1.5em;
-    position: relative;
 }
 
 .login-form label {

@@ -3,6 +3,15 @@ function Game() {
 
     this.world = document.getElementById("world");
     this.canvas = document.getElementById("canvas");
+    this.ctx = canvas.getContext("2d");
+    this.ctx.clear = function() {
+        game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
+    };
+    this.setFontSize = function(size) {
+        this.ctx.font = (size || FONT_SIZE) + "px Philosopher";
+    };
+    this.setFontSize();
+
     this.screen = {
         width: 1024,
         height: 768,
@@ -25,15 +34,6 @@ function Game() {
             game.setFontSize();
         },
     };
-
-    this.ctx = canvas.getContext("2d");
-    this.ctx.clear = function() {
-        game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
-    };
-    this.setFontSize = function(size) {
-        this.ctx.font = (size || FONT_SIZE) + "px Philosopher";
-    };
-    this.setFontSize();
 
     this.ping = 0;
     this.time = 0;
@@ -238,6 +238,7 @@ function Game() {
         this.stage = new window[name + "Stage"](params);
         this.stage.name = name;
         document.body.classList.add(name + "-stage");
+        this.screen.update();
     };
 
     this.reload = function() {
@@ -422,6 +423,9 @@ function Game() {
         game.exit();
         throw "Fatal error";
     };
+
+    var maximize = document.getElementById("maximize");
+    maximize.onclick = util.toggleFullscreen;
 
     this.stage = new Stage();
     this.setStage("connecting");
