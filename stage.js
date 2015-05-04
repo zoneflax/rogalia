@@ -116,11 +116,11 @@ Stage.add(loadingStage);
 
 function loginStage() {
     var signing = false;
-    var wrapper = null;
     var registering = false;
     var autoLogin = false;
     var error = false;
     var captcha = null;
+    var form = null;
 
     function onWarning(warning) {
         if (registering) {
@@ -130,7 +130,7 @@ function loginStage() {
             if (!autoLogin)
                 alert(warning);
             else
-                wrapper.classList.remove("hidden");
+                util.dom.show(form);
             autoLogin = false;
         }
     }
