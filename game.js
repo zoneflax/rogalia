@@ -423,7 +423,6 @@ function Game() {
         throw "Fatal error";
     };
 
-    this.screen.update();
     this.stage = new Stage();
     this.setStage("connecting");
 
