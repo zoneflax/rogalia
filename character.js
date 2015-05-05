@@ -10,6 +10,7 @@ function Character(id, name) {
     //used to show animation of varius type, like damage deal or exp gain
     this.info = [];
     this.Messages = null;
+    this.PrivateMessages = null;
 
     //Character in pvp cannot move and do other actions
     this.pvp = false;
@@ -106,12 +107,17 @@ Character.prototype = {
 
         this.burden = (this.Burden) ? Entity.get(this.Burden) : null;
 
-        while(this.Messages && this.Messages.length > 0) {
-            var message = this.Messages.shift();
-            this.info.push(new Info(message, this));
-        }
+        this.syncMessages(this.Messages);
+        this.syncMessages(this.PrivateMessages);
+
         if (!init && JSON.stringify(this.getParts()) != this._parts)
             this.reloadSprite();
+    },
+    syncMessages: function(messages) {
+        while(messages && messages.length > 0) {
+            var message = messages.shift();
+            this.info.push(new Info(message, this));
+        }
     },
     reloadSprite: function() {
         for (var i in this.sprites) {
@@ -1381,7 +1387,7 @@ Character.prototype = {
                 "animations/" + anim.name + "-" + type + ".png",
                 anim.width,
                 anim.height,
-                60
+                80
             );
         }
 

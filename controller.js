@@ -180,11 +180,11 @@ Controller.prototype = {
             var x = e.pageX - game.offset.x + game.camera.x;
             var y = e.pageY - game.offset.y + game.camera.y;
             f.call(self, e, x, y);
-        }
-
+        };
     },
     highlight: function(name) {
-        this[name].panel.button.classList.add("alert");
+        if (this[name])
+            this[name].panel.button.classList.add("alert");
     },
     unhighlight: function(name) {
         if (this[name])
