@@ -525,7 +525,32 @@ Character.prototype = {
 
         if (this.sprite.ready) {
             var p = this.getDrawPoint();
+            var up = this.animation && this.animation.up;
+            var down = this.animation && this.animation.down;
+            if (down) {
+                var downPoint = new Point(p);
+                downPoint.y += (this.sprite.height - 2/3*down.height); //TODO: fix magic numbers
+                down.draw(downPoint);
+                down.animate();
+                if (down.frame == 0) { //finished
+                    this.animation.down = null;
+                }
+            }
+
+            // drawing character model
             this.sprite.draw(p);
+
+            if (up) {
+                var upPoint = new Point(p);
+                upPoint.y += (this.sprite.height - up.height);
+                up.draw(upPoint);
+                up.animate();
+                if (up.frame == 0) { //finished
+                    this.animation.up = null;
+                }
+            }
+
+
             if (this != game.controller.world.hovered && this == game.player.target)
                 this.drawHovered();
         }
@@ -1348,4 +1373,20 @@ Character.prototype = {
             return this.isNear(e);
         }
     },
+    drawAnimation: function(anims) {
+        var animation = {};
+        for (var type in anims) {
+            var anim = anims[type];
+            animation[type] = new Sprite(
+                "animations/" + anim.name + "-" + type + ".png",
+                anim.width,
+                anim.height,
+                60
+            );
+        }
+
+        loader.ready(function() {
+            this.animation = animation;
+        }.bind(this));
+    }
 };

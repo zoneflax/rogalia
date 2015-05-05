@@ -25,10 +25,10 @@ function Sound() {
         return audio;
     }.bind(this));
 
-    var sounds = ["beep.ogg", "chop.webm"];
+    var sounds = ["beep.ogg", "chop.webm", "lvl-up.ogg", "eat.ogg", "xp.ogg"];
     sounds.forEach(function(name) {
         var audio =  new Audio(soundDir + name);
-        name = name.split(".").slice(0, -1).join(".")
+        name = name.split(".").slice(0, -1).join(".");
         this.sounds[name] = audio;
     }.bind(this));
 }
@@ -77,7 +77,7 @@ Sound.prototype = {
             return;
         }
         sound.onloadeddata = function() {
-            sound.currentTime = 0
+            sound.currentTime = 0;
             sound.play();
         };
         sound.load();

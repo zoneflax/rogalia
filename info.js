@@ -14,14 +14,31 @@ function Info(message, character) {
 
 
     switch(this.type) {
+    case "lvl-up":
+        this.character.drawAnimation({
+            up: {
+                name: "lvl-up",
+                width: 100,
+                height: 220,
+            },
+            down: {
+                name: "lvl-up",
+                width: 100,
+                height: 60,
+            }
+        });
+        game.sound.playSound("lvl-up");
+        this.text = T("Lvl up") + ": " + character.Lvl + "!";
+        break;
     case "damage-gain":
         this.value = -this.data;
         break;
     case "damage-deal":
         this.value = this.data.Dmg;
         break;
-    case "heal":
     case "exp-gain":
+        game.sound.playSound("xp");
+    case "heal":
         this.value = this.data;
         break;
     case "item-gain":
@@ -41,7 +58,7 @@ function Info(message, character) {
         container.reload();
         var slot = container.slots[container.contents.indexOf(item.Id)];
         if (!slot)
-            console.trace(container, item)
+            console.trace(container, item);
         else
             slot.classList.add("new");
         break;
