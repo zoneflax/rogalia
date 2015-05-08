@@ -1322,6 +1322,38 @@ big {
     top: 0px;
     right: 0px;
 }
+.claim-actions {
+    width: 300px;
+    height: 200px;
+    position: relative;
+}
+.claim-action-north, .claim-action-south, .claim-action-west, .claim-action-east {
+    position: absolute;
+    margin: auto;
+    width: 85px;
+    height: 85px;
+}
+.claim-action-north, .claim-action-south {
+    right: 3px;
+    left: 3px;
+}
+.claim-action-north {
+    top: 3px;
+}
+.claim-action-south {
+    bottom: 3px;
+}
+.claim-action-west, .claim-action-east {
+    top: 3px;
+    bottom: 3px;
+}
+.claim-action-west {
+    left: 3px;
+}
+.claim-action-east {
+    right: 3px;
+}
+
 @media (min-width: 1174px) {
     #adsence {
 	width: 150px;

@@ -29,7 +29,8 @@ function Info(message, character) {
             }
         });
         game.sound.playSound("lvl-up");
-        this.text = T("Lvl up") + ": " + character.Lvl + "!";
+        if (character.isPlayer)
+            this.text = T("Lvl up") + ": " + character.Lvl + "!";
         break;
     case "miss":
         this.text = this.data + " " + T("missed on you");

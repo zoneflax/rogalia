@@ -8,6 +8,7 @@ function Panel(name, title, elements, listener, hooks) {
 
     this.name = name;
     this.visible = false;
+    this.temporary = false; //do not save on quit
 
     this.lsKey = "panels." + this.name;
     var config = JSON.parse(localStorage.getItem(this.lsKey)) || {};
@@ -198,6 +199,8 @@ Panel.prototype = {
             this.show();
     },
     savePosition: function() {
+        if (this.temporary)
+            return;
         this.position.x = this.x;
         this.position.y = this.y;
         var config = {

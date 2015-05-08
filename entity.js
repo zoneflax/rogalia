@@ -458,8 +458,12 @@ Entity.prototype = {
         case "tanning-tub":
             this._canUse = true;
             break;
+        case "claim":
+            this.defaultActionSuccess = this.showClaimPanel.bind(this);
+            break;
         case "spell-scroll":
             this.Actions.push("cast");
+            break;
         }
 
         if (this.Creator && this.MoveType != Entity.MT_STATIC)
@@ -798,5 +802,32 @@ Entity.prototype = {
     },
     cast: function() {
         game.controller.creatingCursor(new Entity(this.Id, this.Spell), "cast");
+    },
+    showClaimPanel: function() {
+        if (this.Creator != game.player.Id)
+            return;
+
+        var id = this.Id;
+        function makeButtons(action) {
+            var div = document.createElement("div");
+            div.className = "claim-actions";
+            ["north", "west", "south", "east"].forEach(function(dir) {
+                var button = document.createElement("button");
+                button.className = "claim-action-" + dir;
+                button.textContent = T(action + " " + dir);
+                button.onclick = function() {
+                    var cmd = action + util.ucfirst(dir);
+                    game.network.send(cmd, {Id: id});
+                };
+                div.appendChild(button);
+            });
+            return div;
+        }
+
+        var enlarge = document.createElement("div");
+        var shrink = document.createElement("div");
+        var panel = new Panel("claim", "Claim", [makeButtons("Extend"), util.hr(), makeButtons("Shrink")]);
+        panel.temporary = true;
+        panel.show();
     }
 };
