@@ -34,7 +34,6 @@ function Info(message, character) {
         break;
     case "miss":
         this.text = this.data + " " + T("missed on you");
-        this.value = "miss";
         break;
     case "damage":
         if (this.data instanceof Object) {
@@ -94,6 +93,7 @@ function Info(message, character) {
         game.controller.craft.open(blank);
         return;
     }
+    this.value = util.toFixed(this.value, 2);
 
     if (!this.text)
         return;
@@ -154,7 +154,7 @@ Info.prototype = {
         if (this.data.To) //TODO: fix creepy condition
             this.drawDamage(p);
 
-        text = text || this.value.toFixed(2);
+        text = text || this.value;
         p.x = p.x + this.x - game.ctx.measureText(text).width / 2;
 
         game.ctx.fillStyle = color;
