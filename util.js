@@ -310,17 +310,17 @@ var util = new function() {
     this.draggable = function(element) {
         var drag = null;
         element.addEventListener('mousedown', function(e) {
-            if (!e.target.classList.contains("contents") && !e.target.classList.contains("title-text"))
-                return;
-	    // if(getComputedStyle(e.target).cursor == "pointer")
-	    //     return;
-	    // var checking = e.target;
-	    // while(checking && checking != element) {
-            //     console.log(checking, checking.nodeType);
-            //     if (util.dragIgnore(checking))
-            //         return;
-	    //     checking = checking.parentNode;
-	    // };
+            // if (!e.target.classList.contains("contents") && !e.target.classList.contains("title-text"))
+            //     return;
+	    if(getComputedStyle(e.target).cursor == "pointer")
+	        return;
+	    var checking = e.target;
+	    while(checking && checking != element) {
+                console.log(checking, checking.nodeType);
+                if (util.dragIgnore(checking))
+                    return;
+	        checking = checking.parentNode;
+	    };
 
 	    drag = {
 	        dx: e.pageX - element.offsetLeft,

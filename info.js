@@ -49,7 +49,21 @@ function Info(message, character) {
         break;
     case "exp-gain":
         game.sound.playSound("xp");
+        break;
     case "heal":
+        this.character.drawAnimation({
+            up: {
+                name: "heal",
+                width: 96,
+                height: 128,
+            },
+            down: {
+                name: "heal",
+                width: 96,
+                height: 128,
+            }
+        });
+        game.sound.playSound("heal");
         this.value = this.data;
         break;
     case "item-gain":

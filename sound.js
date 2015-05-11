@@ -25,7 +25,7 @@ function Sound() {
         return audio;
     }.bind(this));
 
-    var sounds = ["beep.ogg", "chop.webm", "lvl-up.ogg", "eat.ogg", "xp.ogg"];
+    var sounds = ["beep.ogg", "chop.webm", "lvl-up.ogg", "eat.ogg", "xp.ogg", "heal.ogg"];
     sounds.forEach(function(name) {
         var audio =  new Audio(soundDir + name);
         name = name.split(".").slice(0, -1).join(".");
