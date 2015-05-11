@@ -7,6 +7,8 @@ function Sprite(path, width, height, speed) {
     this.width = width || 0;
     this.height = height || 0;
 
+    this.dy = 0; //used for animations
+
     this.speed = speed || 100;
     this.frame = 0;
 
@@ -77,7 +79,7 @@ Sprite.prototype = {
             this.width,
             this.height,
             p.x,
-            p.y,
+            p.y + this.dy,
             this.width,
             this.height
         );

@@ -531,11 +531,13 @@ Character.prototype = {
 
         if (this.sprite.ready) {
             var p = this.getDrawPoint();
+            var s = this.screen();
             var up = this.animation && this.animation.up;
             var down = this.animation && this.animation.down;
             if (down) {
-                var downPoint = new Point(p);
-                downPoint.y += (this.sprite.height - 2/3*down.height); //TODO: fix magic numbers
+                var downPoint = new Point();
+                downPoint.x = s.x - down.width/2;
+                downPoint.y = p.y + this.sprite.height + this.sprite.offset - down.height;
                 down.draw(downPoint);
                 down.animate();
                 if (down.frame == 0) { //finished
@@ -547,8 +549,9 @@ Character.prototype = {
             this.sprite.draw(p);
 
             if (up) {
-                var upPoint = new Point(p);
-                upPoint.y += (this.sprite.height - up.height);
+                var upPoint = new Point();
+                upPoint.x = s.x - up.width/2;
+                upPoint.y = p.y + this.sprite.height + this.sprite.offset - up.height;
                 up.draw(upPoint);
                 up.animate();
                 if (up.frame == 0) { //finished
@@ -1383,12 +1386,15 @@ Character.prototype = {
         var animation = {};
         for (var type in anims) {
             var anim = anims[type];
-            animation[type] = new Sprite(
+            var sprt = new Sprite(
                 "animations/" + anim.name + "-" + type + ".png",
                 anim.width,
                 anim.height,
                 80
             );
+            if (anim.dy)
+                sprt.dy = anim.dy;
+            animation[type] = sprt;
         }
 
         loader.ready(function() {

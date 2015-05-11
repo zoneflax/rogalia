@@ -56,11 +56,13 @@ function Info(message, character) {
                 name: "heal",
                 width: 96,
                 height: 128,
+                dy: -8
             },
             down: {
                 name: "heal",
                 width: 96,
                 height: 128,
+                dy: -8
             }
         });
         game.sound.playSound("heal");
