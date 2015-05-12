@@ -320,6 +320,10 @@ function Chat() {
     }.bind(this);
 
 
+    this.append = function(text) {
+        this.newMessageElement.value += text;
+    };
+
     this.addMessage = function(message) {
         if (typeof message == 'string') {
             message = {

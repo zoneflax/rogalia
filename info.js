@@ -47,6 +47,7 @@ function Info(message, character) {
         }
         break;
     case "exp-gain":
+        this.value = this.data;
         game.sound.playSound("xp");
         break;
     case "heal":

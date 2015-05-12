@@ -271,8 +271,10 @@ Entity.prototype = {
                 game.network.send("rotate", {id: this.Id});
             };
         }
-        if (game.player.IsAdmin || game.player.Name == "Benedict")
+        if (game.player.IsAdmin) {
             actions[2]["Fix"] = this.fix;
+            actions[2]["$cmd"] = this.applyAdminCmd;
+        }
         actions[2]["Destroy"] =  this.destroy;
         actions[2]["Info"] = this.showInfo;
         return actions;
@@ -829,5 +831,12 @@ Entity.prototype = {
         var panel = new Panel("claim", "Claim", [makeButtons("Extend"), util.hr(), makeButtons("Shrink")]);
         panel.temporary = true;
         panel.show();
+    },
+    applyAdminCmd: function() {
+        var cmd = prompt("cmd?", "set-quality");
+        if (!cmd)
+            return;
+        game.chat.append("*" + cmd + " " + this.Id);
+        game.chat.panel.show();
     }
 };
