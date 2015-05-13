@@ -75,7 +75,7 @@ a:hover {
     background: #222;
     background-repeat: no-repeat;
     background-position: center;
-    
+
     position: relative;
     overflow: hidden;
     margin: auto;
@@ -834,7 +834,7 @@ a.extern {
 }
 
 /* left column */
-.equip-bag { 
+.equip-bag {
     background-image: url("assets/bg/bag.png"), url("assets/bg/slot.png");
 }
 .equip-neck {
@@ -1378,4 +1378,37 @@ big {
     #adsence {
 	width: 300px;
     }
+}
+
+.tooltip {
+    position: relative;
+}
+
+.tooltip > span {
+    min-width: 150px;
+    padding: 3px 5px;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 10;
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 2px 2px 2px #666;
+}
+
+.tooltip:hover > span {
+    opacity: 1;
+    text-decoration: none;
+    visibility: visible;
+    overflow: visible;
+    display: inline-block;
+    margin-top: -70px;
+    margin-left: -70px;
+}
+
+.tooltip > span {
+	color: #fff;
+	background: #363232;
+	background: -webkit-linear-gradient(top, #363232, #222);
+	background: linear-gradient(top, #363232, #222);
+	border: 1px solid #0ff;
 }
