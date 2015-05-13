@@ -19,9 +19,9 @@ function Fight() {
     function tenkai() {
         var div = document.createElement("div");
         var dirs = {
-            "NW": 5, "N": 4, "NE": 3,
-            "W": 6, "X": null, "E": 2,
-            "SW": 7, "S": 0, "SE": 1,
+            "⇖": 5, "⇑": 4, "⇗": 3,
+            "⇐": 6, "X": null, "⇒": 2,
+            "⇙": 7, "⇓": 0, "⇘": 1,
         };
         for (var name in dirs) {
             var button = document.createElement("button");
