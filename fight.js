@@ -16,9 +16,49 @@ function Fight() {
         target: document.getElementById("fight-target"),
     };
 
+    function tenkai() {
+        var div = document.createElement("div");
+        var dirs = {
+            "NW": 5, "N": 4, "NE": 3,
+            "W": 6, "X": null, "E": 2,
+            "SW": 7, "S": 0, "SE": 1,
+        };
+        for (var name in dirs) {
+            var button = document.createElement("button");
+            button.textContent = name;
+            var dir = dirs[name];
+            if (dir === null)
+                dir = (game.player.sprite.position+4)%8;
+            button.onclick = function(dir) {
+                game.network.send("waza", {Name: "Tenkai", Dir: dir, Id: game.player.target.Id});
+                panel.hide();
+            }.bind(this, dir);
+            div.appendChild(button);
+        }
+        var panel =  new Panel("tenkai", "Tenkai", [div]);
+        panel.show();
+    }
+
     function apply(action) {
+        switch (action) {
+        case "tenkai":
+        case "irimi":
+        case "kaiten":
+        case "tsuki":
+        case "shomen":
+            if (!(game.player.target instanceof Character)) {
+                game.controller.showWarning("You have no target");
+                return;
+            }
+            if (action == "tenkai")
+                tenkai();
+            else
+                game.network.send("waza", {Name: util.ucfirst(action), Id: game.player.target.Id});
+            return;
+        }
+
         if (locked) {
-            game.controller.showWarning("Action is blocked")
+            game.controller.showWarning("Action is blocked");
             return;
         }
 

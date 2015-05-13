@@ -316,7 +316,6 @@ var util = new function() {
 	        return;
 	    var checking = e.target;
 	    while(checking && checking != element) {
-                console.log(checking, checking.nodeType);
                 if (util.dragIgnore(checking))
                     return;
 	        checking = checking.parentNode;

@@ -13,8 +13,8 @@ function Game() {
     this.setFontSize();
 
     this.screen = {
-        width: 1024,
-        height: 768,
+        width: 0,
+        height: 0,
         cells_x: 0,
         cells_y: 0,
         update: function() {

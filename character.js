@@ -112,6 +112,9 @@ Character.prototype = {
 
         if (!init && JSON.stringify(this.getParts()) != this._parts)
             this.reloadSprite();
+
+        if (data.Dir !== undefined)
+            this.sprite.position = data.Dir;
     },
     syncMessages: function(messages) {
         while(messages && messages.length > 0) {
@@ -468,6 +471,8 @@ Character.prototype = {
         return util.distanceLessThan(len_x, len_y, Math.hypot(game.screen.width, game.screen.height));
     },
     setDst: function(x, y) {
+        if (this.Disabled || this.Waza.Active)
+            return;
         var leftBorder, rightBorder, topBorder, bottomBorder;
         leftBorder = this.Radius;
 	topBorder = this.Radius;

@@ -367,9 +367,23 @@ a:hover {
 }
 #fight-close-panel-button {
     position: absolute;
-    left: 400px;
+    right: -90px;
 }
 
+#tenkai {
+    width: 175px;
+}
+#tenkai button {
+    width: 50px;
+    height: 50px
+}
+
+#irimi-button {
+    border-left: 1px solid red;
+}
+#tsuki-button {
+    border-left: 1px solid red;
+}
 #effects {
     top: 70px;
     left: 70px;
