@@ -115,7 +115,10 @@ function Fight() {
             setTarget(Object.keys(targets)[id]);
             return;
         }
-        apply(Object.keys(actions)[id]);
+        if (game.player.target && !game.player.target.IsNpc)
+            apply(Object.keys(actions)[id+5]);
+        else
+            apply(Object.keys(actions)[id]);
     }
 
     this.update = function() {
