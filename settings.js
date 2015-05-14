@@ -40,6 +40,13 @@ function Settings() {
         "settings.ui.rotateMinimap": function() {
             game.map.rotateMinimap();
         },
+        "settings.ui.chatAttached": function(attach) {
+            if (attach)
+                game.chat.attach();
+            else
+                game.chat.detach();
+
+        },
         "settings.graphics.low": function() {
             game.reload();
         },
@@ -109,7 +116,7 @@ Settings.prototype = {
                 label.addEventListener("change", function() {
                     group[prop] = !group[prop];
                     localStorage.setItem(key, group[prop]);
-                    self.triggers[key] && self.triggers[key]();
+                    self.triggers[key] && self.triggers[key](group[prop]);
                 });
             });
             subtree.appendChild(fieldset);

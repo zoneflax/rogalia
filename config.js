@@ -25,6 +25,7 @@ var config = {
         showMeterValues: true,
         strokeClaim: true,
         rotateMinimap: false,
+        chatAttached: true,
     },
     graphics: {
         "low": false,

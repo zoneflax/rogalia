@@ -170,21 +170,79 @@ function Chat() {
         this.channelGroups[name] = true;
     }.bind(this));
 
+    var semi = {
+        focus: false,
+        always: false,
+    };
+
+    var semihide = function() {
+        if (!semi.focus && !semi.always)
+            this.panel.contents.classList.add("semi-hidden");
+    }.bind(this);
+    var semishow = function() {
+        this.panel.contents.classList.remove("semi-hidden");
+    }.bind(this);
+
+
+    var alwaysVisibleLabel = document.createElement("label");
+    var alwaysVisibleChkbx = document.createElement("input");
+    alwaysVisibleChkbx.type = "checkbox";
+    alwaysVisibleChkbx.onclick = function() {
+        semi.always = !semi.always;
+        this.messagesElement.classList.toggle("always-visible");
+    }.bind(this);
+    alwaysVisibleLabel.appendChild(alwaysVisibleChkbx);
+    alwaysVisibleLabel.appendChild(document.createTextNode(T("always visible")));
+
+    this.settingsElement = document.createElement("div");
+    this.settingsElement.className = "chat-settings";
+    this.settingsElement.appendChild(alwaysVisibleLabel);
+
     this.removeAlert = function() {
         game.controller.unhighlight("chat");
     },
+
+    this.attach = function() {
+        var contents = this.panel.contents;
+        contents.id = "attached-chat";
+        util.dom.remove(contents);
+        game.world.appendChild(contents);
+        util.dom.hide(this.panel.button);
+        contents.classList.add("semi-hidden");
+    };
+
+    this.detach = function() {
+        var contents = this.panel.contents;
+        contents.id = "";
+        util.dom.remove(contents);
+        this.panel.element.appendChild(contents);
+        util.dom.show(this.panel.button);
+    };
+
     this.panel = new Panel(
         "chat",
         "Chat",
-        [this.messagesElement, this.newMessageElement, this.channelGroupsElement]
+        [this.messagesElement, this.newMessageElement, this.channelGroupsElement, this.settingsElement]
     );
 
     this.panel.hooks.show = function() {
         this.initNotifications();
-        this.newMessageElement.blur(); //fixes excape on empty input
+        this.newMessageElement.blur(); //fixes escape on empty input
         this.newMessageElement.focus();
         this.removeAlert();
     }.bind(this);
+
+    this.newMessageElement.onfocus = function() {
+        semi.focus = true;
+        semishow();
+    };
+    this.newMessageElement.onblur = function() {
+        semi.focus = false;
+        semihide();
+    };
+    this.panel.contents.onmouseenter = semishow;
+    this.panel.contents.onmouseleave = semihide;
+
 
     this.names = {
         server: "[server]",

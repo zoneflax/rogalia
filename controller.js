@@ -398,6 +398,8 @@ Controller.prototype = {
 
         this.chat.sync(chatData || []);
         this.chat.initNotifications();
+        if (config.ui.chatAttached)
+            this.chat.attach();
 
         Container.load();
 
