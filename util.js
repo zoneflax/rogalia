@@ -297,7 +297,7 @@ var util = new function() {
 
     };
 
-    var dragIgnoreTags = ["INPUT", "TEXTAREA", "BUTTON"];
+    var dragIgnoreTags = ["INPUT", "TEXTAREA", "BUTTON", "CODE"];
     this.dragIgnore = function(element) {
         if (element.classList.contains("no-drag"))
 	    return true;
