@@ -25,6 +25,9 @@ input, textarea, code, .messages, .message, .message .body, .message .from{
     user-select: text!important;
     font:  14px/18px Philosopher, cursive;
 }
+label {
+    display: inline-block;
+}
 
 button {
     color: #ffffff;
