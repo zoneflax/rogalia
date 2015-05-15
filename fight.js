@@ -16,32 +16,33 @@ function Fight() {
         target: document.getElementById("fight-target"),
     };
 
-    function tenkai() {
-        var div = document.createElement("div");
-        var dirs = {
-            "⇖": 5, "⇑": 4, "⇗": 3,
-            "⇐": 6, "X": null, "⇒": 2,
-            "⇙": 7, "⇓": 0, "⇘": 1,
-        };
-        for (var name in dirs) {
-            var button = document.createElement("button");
-            button.textContent = name;
-            var dir = dirs[name];
-            if (dir === null)
-                dir = (game.player.sprite.position+4)%8;
-            button.onclick = function(dir) {
-                game.network.send("waza", {Name: "Tenkai", Dir: dir, Id: game.player.target.Id});
-                panel.hide();
-            }.bind(this, dir);
-            div.appendChild(button);
-        }
-        var panel =  new Panel("tenkai", "Tenkai", [div]);
-        panel.show();
-    }
+    //TODO: use for claim?
+    // function tenkai() {
+    //     var div = document.createElement("div");
+    //     var dirs = {
+    //         "⇖": 5, "⇑": 4, "⇗": 3,
+    //         "⇐": 6, "X": null, "⇒": 2,
+    //         "⇙": 7, "⇓": 0, "⇘": 1,
+    //     };
+    //     for (var name in dirs) {
+    //         var button = document.createElement("button");
+    //         button.textContent = name;
+    //         var dir = dirs[name];
+    //         if (dir === null)
+    //             dir = (game.player.sprite.position+4)%8;
+    //         button.onclick = function(dir) {
+    //             game.network.send("waza", {Name: "Tenkai", Dir: dir, Id: game.player.target.Id});
+    //             panel.hide();
+    //         }.bind(this, dir);
+    //         div.appendChild(button);
+    //     }
+    //     var panel =  new Panel("tenkai", "Tenkai", [div]);
+    //     panel.show();
+    // }
 
     function apply(action) {
         switch (action) {
-        case "tenkai":
+        case "tenkan":
         case "irimi":
         case "kaiten":
         case "tsuki":
@@ -50,10 +51,14 @@ function Fight() {
                 game.controller.showWarning("You have no target");
                 return;
             }
-            if (action == "tenkai")
-                tenkai();
-            else
-                game.network.send("waza", {Name: util.ucfirst(action), Id: game.player.target.Id});
+            var args = {Name: util.ucfirst(action), Id: game.player.target.Id};
+            switch (action) {
+            case "irimi":
+            case "kaiten":
+                args.X = game.controller.world.x;
+                args.Y = game.controller.world.y;
+            }
+            game.network.send("waza", args);
             return;
         }
 

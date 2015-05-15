@@ -25,6 +25,6 @@ function Ads() {
     }
     this.show = function() {
         refresh();
-        this.interval = setInterval(refresh, 180000);
+        // this.interval = setInterval(refresh, 180000);
     };
 }

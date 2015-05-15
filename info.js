@@ -33,7 +33,10 @@ function Info(message, character) {
             this.text = T("Lvl up") + ": " + character.Lvl + "!";
         break;
     case "miss":
-        this.text = this.data + " " + T("missed on you");
+        if (character == game.player)
+            this.text = T("You missed");
+        else
+            this.text = T("Evade");
         break;
     case "damage":
         if (this.data instanceof Object) {
