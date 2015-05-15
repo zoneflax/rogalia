@@ -41,6 +41,11 @@ function Fight() {
     // }
 
     function apply(action) {
+        if (locked) {
+            game.controller.showWarning("Action is blocked");
+            return;
+        }
+
         switch (action) {
         case "tenkan":
         case "irimi":
@@ -58,14 +63,12 @@ function Fight() {
                 args.X = game.controller.world.x;
                 args.Y = game.controller.world.y;
             }
+            panels.action.classList.add("locked");
+            locked = true;
             game.network.send("waza", args);
             return;
         }
 
-        if (locked) {
-            game.controller.showWarning("Action is blocked");
-            return;
-        }
 
         var cmd = {
             Action: action,
@@ -127,7 +130,7 @@ function Fight() {
     }
 
     this.update = function() {
-        if (!game.player.Fight.Action) {
+        if (game.player.idle() && !game.player.Fight.Action) {
             panels.action.classList.remove("locked");
             locked = false;
         }

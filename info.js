@@ -100,6 +100,8 @@ function Info(message, character) {
         var blank = Entity.get(this.data);
         game.controller.craft.open(blank);
         return;
+    case "combo":
+        this.text = this.data;
     }
     this.value = util.toFixed(this.value, 2);
 
@@ -153,6 +155,11 @@ Info.prototype = {
         case "damage":
             this.drawValue("#f00", null);
             break;
+        case "combo":
+            game.ctx.save();
+            game.setFontSize(30);
+            this.drawValue("#fff", this.text);
+            game.ctx.restore();
         }
     },
     drawValue: function(color, text) {

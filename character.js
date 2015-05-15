@@ -706,6 +706,9 @@ Character.prototype = {
             game.drawStrokedText(name, x, y - dy / 2);
         }
     },
+    idle: function() {
+        return this.Dx == 0 && this.Dy == 0 && this.Action.Name == "";
+    },
     animate: function() {
         var animation = "idle";
         if(this.Dx || this.Dy) {
