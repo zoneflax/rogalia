@@ -302,6 +302,7 @@ function Help() {
         this.save();
         this.messages.innerHTML = "";
     }.bind(this);
+    disableHelp.onclick();
 
     var toggleTopics = document.createElement("button");
     toggleTopics.className = "hidden";
