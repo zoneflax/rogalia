@@ -348,6 +348,9 @@ a:hover {
 #hotbar, #fight-panel {
     bottom: 0;
     top: auto;
+    right: 0;
+    left: inherit;
+
 }
 #hotbar .button, #fight-panel .button {
     background-image: url("assets/bg/hotkey.png");
@@ -364,6 +367,7 @@ a:hover {
     width: 407px;
 }
 #fight-target {
+    display: none!important;
     position: absolute;
     bottom: 150px;
     left: 0;
@@ -641,12 +645,12 @@ a:hover {
 #attached-chat {
     position: absolute;
     bottom: 0px;
-    right: 0;
+    left: 0;
     z-index: 10;
     text-align: left;
 }
 #attached-chat > .messages {
-    height: 6em;
+    height: 8em;
 }
 #attached-chat.semi-hidden{
     opacity: 0.5;

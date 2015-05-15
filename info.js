@@ -56,22 +56,24 @@ function Info(message, character) {
             this.text = "You've got " + this.value + " xp and LP";
         break;
     case "heal":
-        this.character.drawAnimation({
-            up: {
-                name: "heal",
-                width: 96,
-                height: 128,
-                dy: -8
-            },
-            down: {
-                name: "heal",
-                width: 96,
-                height: 128,
-                dy: -8
-            }
-        });
-        game.sound.playSound("heal");
         this.value = this.data;
+        if (this.value > this.character.Hp.Max/10) {
+            this.character.drawAnimation({
+                up: {
+                    name: "heal",
+                    width: 96,
+                    height: 128,
+                    dy: -8
+                },
+                down: {
+                    name: "heal",
+                    width: 96,
+                    height: 128,
+                    dy: -8
+                }
+            });
+        }
+        game.sound.playSound("heal");
         break;
     case "item-gain":
     case "craft-success":

@@ -369,7 +369,7 @@ function Chat() {
         });
 
         var height = this.messagesElement.scrollTop + this.messagesElement.clientHeight;
-        var scroll = (height == this.messagesElement.scrollHeight);
+        var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 10;
         this.messagesElement.appendChild(messageElement);
         if (scroll)
             this.messagesElement.scrollTop = this.messagesElement.scrollHeight;
