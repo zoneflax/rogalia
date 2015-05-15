@@ -172,7 +172,7 @@ function Chat() {
 
     var semi = {
         focus: false,
-        always: false,
+        always: true,
     };
 
     var semihide = function() {
@@ -187,6 +187,7 @@ function Chat() {
     var alwaysVisibleLabel = document.createElement("label");
     var alwaysVisibleChkbx = document.createElement("input");
     alwaysVisibleChkbx.type = "checkbox";
+    alwaysVisibleChkbx.checked = true;
     alwaysVisibleChkbx.onclick = function() {
         semi.always = !semi.always;
         this.messagesElement.classList.toggle("always-visible");
@@ -208,7 +209,7 @@ function Chat() {
         util.dom.remove(contents);
         game.world.appendChild(contents);
         util.dom.hide(this.panel.button);
-        contents.classList.add("semi-hidden");
+        semihide();
     };
 
     this.detach = function() {
