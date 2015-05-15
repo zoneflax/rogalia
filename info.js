@@ -49,6 +49,8 @@ function Info(message, character) {
     case "exp-gain":
         this.value = this.data;
         game.sound.playSound("xp");
+        if (this.target == game.player)
+            this.text = "You've got " + this.value + " xp and LP";
         break;
     case "heal":
         this.character.drawAnimation({
