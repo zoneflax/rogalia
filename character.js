@@ -66,7 +66,7 @@ function Character(id, name) {
     }.bind(this));
     this.sprite = this.sprites.idle;
 
-    this._parts = "";
+    this._parts = "[]"; //defauls for npcs
 }
 
 Character.prototype = {
@@ -158,7 +158,6 @@ Character.prototype = {
         case "dog":
 	case "cat":
 	case "pony":
-	case "cow":
 	case "sheep":
 	case "wolf":
 	case "butterfly":
@@ -305,6 +304,11 @@ Character.prototype = {
                 "run": 1,
             };
             break;
+        case "cow":
+	    this.sprite.width = 150;
+	    this.sprite.height = 150;
+            this.sprite.offset = 55;
+            break;
 	default:
             this.sprite.nameOffset = 72;
             this.sprite.offset = 2*this.Radius;
@@ -343,8 +347,6 @@ Character.prototype = {
                 parts.push({image: weapon.image});
         }
 
-
-        var self = this;
         loader.ready(function() {
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
@@ -383,6 +385,9 @@ Character.prototype = {
             break;
         default:
             switch (this.Type) {
+            case "cow":
+                this._loadNpcSprites();
+                break;
             case "vendor":
                 type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
                     return hash + c.charCodeAt(0);
@@ -391,6 +396,9 @@ Character.prototype = {
             }
         }
         this.sprite.load(Character.spriteDir + type + ".png");
+    },
+    _loadNpcSprites: function() {
+        this.sprite.load(Character.spriteDir + this.Type + "/" + this.sprite.name + ".png");
     },
     getActions: function() {
         var actions = {};
@@ -710,10 +718,11 @@ Character.prototype = {
         return this.Dx == 0 && this.Dy == 0 && this.Action.Name == "";
     },
     animate: function() {
+        var simpleSprite = this.IsNpc && this.Type != "cow";
         var animation = "idle";
         if(this.Dx || this.Dy) {
             animation = "run";
-            if (!this.IsNpc)
+            if (!simpleSprite)
                 this.sprite = this.sprites["run"];
 
             var sector = (this.mount) ? this.mount.sprite.angle : this.sprite.angle;
@@ -724,7 +733,7 @@ Character.prototype = {
             index %= sectors;
             var multiple = sector / this.sprite.angle;
             this.sprite.position = Math.floor(index) * multiple;
-        } else if (!this.IsNpc) {
+        } else if (!simpleSprite) {
             var sitting = this.Effects.Sitting;
             if (sitting) {
                 animation = "sit";
@@ -761,7 +770,7 @@ Character.prototype = {
 
         if (!this.sprite.ready) {
             this.loadSprite();
-            return
+            return;
         }
 
         var now = Date.now();
@@ -775,8 +784,7 @@ Character.prototype = {
             this.sprite.lastUpdate = now;
         }
 
-
-        if (this.IsNpc) {
+        if (simpleSprite) {
             var start = 0, end = 0;
             var current = this.sprite.frames[animation];
             if (Array.isArray(current)) {
