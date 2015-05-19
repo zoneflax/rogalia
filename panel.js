@@ -134,8 +134,11 @@ Panel.prototype = {
         return parseInt(getComputedStyle(this.element).height);
     },
     toTop: function() {
-        this.element.style.zIndex = ++Panel.zIndex;
+        if (Panel.top && Panel.top != this)
+            Panel.top.element.classList.remove("top");
 
+        this.element.style.zIndex = ++Panel.zIndex;
+        this.element.classList.add("top");
         var index = Panel.stack.indexOf(this);
         if (index != -1) {
             Panel.stack.splice(index, 1);

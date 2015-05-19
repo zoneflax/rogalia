@@ -220,6 +220,10 @@ a:hover {
     z-index: 1;
     text-align: left;
 }
+.panel.top > .title-bar {
+    background: #3d75a1;
+    background: linear-gradient(to bottom,  #3d75a1 0%,#3f46bb 100%);
+}
 .panel > .title-bar {
     background: #435665;
     background: linear-gradient(to bottom,  #435665 0%,#3f4c6b 100%);
