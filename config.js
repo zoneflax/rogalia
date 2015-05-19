@@ -1,5 +1,12 @@
 var CELL_SIZE = 32;
 var FONT_SIZE = 14;
+var DEFAULT_CLIENT_WIDTH = 1024;
+var DEFAULT_CLIENT_HEIGHT = 768;
+
+if (document.location.hash.indexOf("wide") != -1) {
+    DEFAULT_CLIENT_WIDTH = 1280;
+    DEFAULT_CLIENT_HEIGHT = 720;
+}
 
 var config = {
     map: {

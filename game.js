@@ -22,9 +22,12 @@ function Game() {
                 this.width = window.innerWidth;
                 this.height = window.innerHeight;
             } else {
-                this.width = 1024;
-                this.height = 768;
+                this.width = (window.innerWidth > DEFAULT_CLIENT_WIDTH) ?
+                    DEFAULT_CLIENT_WIDTH : window.innerWidth;
+                this.height = (window.innerHeight > DEFAULT_CLIENT_HEIGHT) ?
+                    DEFAULT_CLIENT_HEIGHT : window.innerHeight;
             }
+
             this.cells_x = this.width / CELL_SIZE;
             this.cells_y = this.height / CELL_SIZE;
             game.canvas.width = this.width;
