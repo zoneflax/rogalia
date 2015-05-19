@@ -770,6 +770,13 @@ Controller.prototype = {
         this.modifier.alt = e.altKey;
         var c = String.fromCharCode(e.keyCode);
 
+        if (e.ctrlKey) {
+            switch (e.keyCode) {
+            case 67:
+                return true; // ctrl+c
+            }
+        }
+
         var esc = e.keyCode == 27;
         if (!esc) {
             if(e.target.id == "new-message") {
