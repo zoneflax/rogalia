@@ -572,9 +572,25 @@ Character.prototype = {
                 }
             }
 
+            this.drawEffects();
+
 
             if (this != game.controller.world.hovered && this == game.player.target)
                 this.drawHovered();
+        }
+    },
+    drawEffects: function() {
+        var p = this.getDrawPoint();
+        var sp = this.screen();
+
+        for (var name in this.Effects) {
+            name = name.toLowerCase();
+            var sprite = Character.effectSprites[name];
+            if (!sprite)
+                continue;
+            p.x = sp.x - sprite.width/2;
+            sprite.draw(p);
+            sprite.animate();
         }
     },
     drawUI: function() {

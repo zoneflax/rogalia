@@ -59,6 +59,8 @@ Character.clothesIndex = function(name) {
 
 Character.nakedSprites = {};
 Character.weaponSprites = {};
+Character.effectSprites = {};
+
 Character.initSprites = function() {
     Character.animations.forEach(function(animation) {
         var path = Character.spriteDir + "/man/" + animation + "/naked.png";
@@ -69,7 +71,16 @@ Character.initSprites = function() {
         var sprite = new Sprite(Character.spriteDir + "/man/weapon/" + weapon + ".png");
         Character.weaponSprites[weapon] = sprite;
     });
+    // shared by all characters; stupid by fast?
+    [["stun", 64, 42]].forEach(function(effect) {
+        var name = effect[0];
+        var width = effect[1];
+        var height = effect[2];
+        var sprite = new Sprite(Character.spriteDir + "/effects/" + name + ".png", width, height);
+        Character.effectSprites[name] = sprite;
+    });
 };
+
 
 Character.npcActions = {
     "Set citizenship": function() {
