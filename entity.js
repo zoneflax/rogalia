@@ -159,8 +159,15 @@ Entity.prototype = {
     getDrawDy: function() {
         if (this.Sprite.Dy)
             return this.Sprite.Dy;
-
-        var r = (this.round) ? this.sprite.width/4 : this.Radius;
+        var r = this.Radius;
+        if (this.round) {
+            var k = 4;
+            // fucking hate it
+            if (!this.Sprite.Unselectable) {
+                k = Math.abs(1 - this.sprite.width / this.sprite.height) > 2 ? 4 : 2;
+            }
+            r = this.sprite.width/k;
+        }
         return this.sprite.height - r;
     },
     getDrawPoint: function() {
