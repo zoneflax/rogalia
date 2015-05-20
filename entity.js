@@ -165,7 +165,8 @@ Entity.prototype = {
             // fucking hate it
             switch (this.Group) {
             case "plant":
-                k = 2;
+                if (this.Width > 32)
+                    k = 2;
                 break;
             }
             r = this.sprite.width/k;
