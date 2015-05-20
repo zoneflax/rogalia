@@ -305,9 +305,9 @@ Character.prototype = {
             };
             break;
         case "cow":
-	    this.sprite.width = 150;
-	    this.sprite.height = 150;
-            this.sprite.offset = 55;
+	    this.sprite.width = 100;
+	    this.sprite.height = 100;
+            this.sprite.offset = 45;
             break;
 	default:
             this.sprite.nameOffset = 72;
@@ -590,7 +590,7 @@ Character.prototype = {
                 continue;
             p.x = sp.x - sprite.width/2;
             sprite.draw(p);
-            sprite.animate();
+            sprite.animate(); //TODO: should be animated per character basis;
         }
     },
     drawUI: function() {
