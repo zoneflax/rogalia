@@ -163,8 +163,10 @@ Entity.prototype = {
         if (this.round) {
             var k = 4;
             // fucking hate it
-            if (!this.Sprite.Unselectable) {
-                k = Math.abs(1 - this.sprite.width / this.sprite.height) > 2 ? 4 : 2;
+            switch (this.Group) {
+            case "plant":
+                k = 2;
+                break;
             }
             r = this.sprite.width/k;
         }
