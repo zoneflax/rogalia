@@ -104,6 +104,11 @@ Character.npcActions = {
     "Get claim": function() {
         game.network.send("get-claim", {Id: this.Id});
     },
+    "Get village claim": function() {
+        var name = prompt("Name?", "");
+        if (name)
+            game.network.send("get-village-claim", {Id: this.Id, Name: name});
+    },
     "Bank": function() {
         new Bank();
     },

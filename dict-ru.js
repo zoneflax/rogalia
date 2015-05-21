@@ -56,6 +56,7 @@ var dict = {
     "Withdraw" : "Снять",
     "Bank": "Банк",
     "Get claim": "Получить клейм",
+    "Get village claim": "Получить деревенский клейм",
     "Quest": "Квест",
     "Set citizenship": "Установить гражданство",
     "Talk": "Говорить",
