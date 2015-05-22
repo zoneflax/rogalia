@@ -123,6 +123,7 @@ function loginStage() {
     var error = false;
     var captcha = null;
     var form = null;
+    var invite = null;
 
     function onWarning(warning) {
         if (registering) {
@@ -159,12 +160,14 @@ function loginStage() {
                 Password: password,
                 Captcha: captcha,
                 Version: game.version,
+                Invite: invite,
             }
         );
     };
 
     var login = auth.bind(this, "login");
     var register = auth.bind(this, "register");
+
 
     game.login = localStorage.getItem("login");
     if (game.login == "-")
@@ -188,11 +191,9 @@ function loginStage() {
     var passwordLabel = document.createElement("label");
     passwordLabel.textContent = T("Password");
     var passwordInput = document.createElement("input");
-    passwordInput.autocomplete = "off";
     passwordInput.type = "password";
     passwordLabel.appendChild(passwordInput);
     form.appendChild(passwordLabel);
-
 
     var loginButton = document.createElement("button");
     loginButton.className = "btn";
@@ -212,6 +213,7 @@ function loginStage() {
     registerButton.onclick = function() {
         if (registering)
             return true;
+        invite = prompt("Enter code; To get code write at rogalik@tatrix.org");
         registering = true;
         loginButton.style.display = "none";
         hr.style.display = "none";
