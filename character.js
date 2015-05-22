@@ -544,8 +544,6 @@ Character.prototype = {
 
         if (!this.sprite.ready)
             return;
-        if (this.Corpse)
-            this.drawCorpsePointer();
         var p = this.getDrawPoint();
         var s = this.screen();
         var up = this.animation && this.animation.up;
@@ -581,8 +579,9 @@ Character.prototype = {
             this.drawHovered();
     },
     drawCorpsePointer: function() {
+        if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
+            return
         var p = new Point(this.Corpse);
-
         var X = this.X - p.x;
         var Y = this.Y - p.y;
         var L = Math.hypot(X, Y);
@@ -641,6 +640,7 @@ Character.prototype = {
             game.drawStrokedText(text, x, this.Y);
         }
 
+        this.drawCorpsePointer();
     },
     drawDst: function() {
         if (debug.player.path && this.Path) {
