@@ -98,9 +98,9 @@ function loadingStage(data) {
                 game.controller.minimap.sync(data.PlayersOnline);
             }, 33);
 
-            if (!game.player.Settings.Premium) {
-                game.ads.show();
-            }
+            // if (!game.player.Settings.Premium) {
+            //     game.ads.show();
+            // }
         });
     };
 
