@@ -57,6 +57,8 @@ Character.clothesIndex = function(name) {
     return Character.clothes.indexOf(name);
 };
 
+Character.skull = null;
+
 Character.nakedSprites = {};
 Character.weaponSprites = {};
 Character.effectSprites = {};
@@ -79,6 +81,7 @@ Character.initSprites = function() {
         var sprite = new Sprite(Character.spriteDir + "/effects/" + name + ".png", width, height);
         Character.effectSprites[name] = sprite;
     });
+    Character.skull = new Sprite("skull.png");
 };
 
 

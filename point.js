@@ -24,11 +24,11 @@ function Point(x, y) {
     }
 }
 
-['fromEvent', 'fromPoint'].map(function(method) {
+['fromEvent', 'fromPoint'].forEach(function(method) {
     Point[method] = function(arg) {
         return new Point()[method](arg);
     };
-})
+});
 
 Point.prototype = {
     x: 0,

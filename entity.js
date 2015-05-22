@@ -724,6 +724,9 @@ Entity.prototype = {
     drop: function() {
         game.network.send("entity-drop", {id: this.Id});
     },
+    dwim: function() {
+        game.network.send("dwim", {id: this.Id});
+    },
     use: function(e) {
         game.network.send("entity-use", {Id: e.Id, Equipment: this.Id});
         return true;

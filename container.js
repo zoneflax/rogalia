@@ -235,7 +235,7 @@ Container.prototype = {
             return;
         }
 
-        entity.drop();
+        entity.dwim();
     },
     clickListener: function(e) {
         game.controller.unhighlight("inventory");

@@ -542,42 +542,66 @@ Character.prototype = {
             return;
         this.drawDst();
 
-        if (this.sprite.ready) {
-            var p = this.getDrawPoint();
-            var s = this.screen();
-            var up = this.animation && this.animation.up;
-            var down = this.animation && this.animation.down;
-            if (down) {
-                var downPoint = new Point();
-                downPoint.x = s.x - down.width/2;
-                downPoint.y = p.y + this.sprite.height + this.sprite.offset - down.height;
-                down.draw(downPoint);
-                down.animate();
-                if (down.frame == 0) { //finished
-                    this.animation.down = null;
-                }
+        if (!this.sprite.ready)
+            return;
+        if (this.Corpse)
+            this.drawCorpsePointer();
+        var p = this.getDrawPoint();
+        var s = this.screen();
+        var up = this.animation && this.animation.up;
+        var down = this.animation && this.animation.down;
+        if (down) {
+            var downPoint = new Point();
+            downPoint.x = s.x - down.width/2;
+            downPoint.y = p.y + this.sprite.height + this.sprite.offset - down.height;
+            down.draw(downPoint);
+            down.animate();
+            if (down.frame == 0) { //finished
+                this.animation.down = null;
             }
-
-            // drawing character model
-            this.sprite.draw(p);
-
-            if (up) {
-                var upPoint = new Point();
-                upPoint.x = s.x - up.width/2;
-                upPoint.y = p.y + this.sprite.height + this.sprite.offset - up.height;
-                up.draw(upPoint);
-                up.animate();
-                if (up.frame == 0) { //finished
-                    this.animation.up = null;
-                }
-            }
-
-            this.drawEffects();
-
-
-            if (this != game.controller.world.hovered && this == game.player.target)
-                this.drawHovered();
         }
+
+        // drawing character model
+        this.sprite.draw(p);
+
+        if (up) {
+            var upPoint = new Point();
+            upPoint.x = s.x - up.width/2;
+            upPoint.y = p.y + this.sprite.height + this.sprite.offset - up.height;
+            up.draw(upPoint);
+            up.animate();
+            if (up.frame == 0) { //finished
+                this.animation.up = null;
+            }
+        }
+
+        this.drawEffects();
+
+        if (this != game.controller.world.hovered && this == game.player.target)
+            this.drawHovered();
+    },
+    drawCorpsePointer: function() {
+        var p = new Point(this.Corpse);
+
+        var X = this.X - p.x;
+        var Y = this.Y - p.y;
+        var L = Math.hypot(X, Y);
+
+        var l = Math.min(game.screen.width, game.screen.height)/2;
+        if (L > l) {
+            p.x = this.X - X*l/L;
+            p.y = this.Y - Y*l/L;
+        }
+        p.toScreen();
+
+        var r = 14;
+        game.ctx.fillStyle = "#000";
+        game.ctx.beginPath();
+        game.ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        game.ctx.fill();
+        p.x -= Character.skull.width - r;
+        p.y -= Character.skull.height - r;
+        Character.skull.draw(p);
     },
     drawEffects: function() {
         var p = this.getDrawPoint();
