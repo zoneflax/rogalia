@@ -387,7 +387,7 @@ Character.prototype = {
             switch (this.Type) {
             case "cow":
                 this._loadNpcSprites();
-                break;
+                return;
             case "vendor":
                 type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
                     return hash + c.charCodeAt(0);
@@ -580,7 +580,7 @@ Character.prototype = {
     },
     drawCorpsePointer: function() {
         if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
-            return
+            return;
         var p = new Point(this.Corpse);
         var X = this.X - p.x;
         var Y = this.Y - p.y;
