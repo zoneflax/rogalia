@@ -40,6 +40,10 @@ function Controller(game) {
         hovered: null,
         setCursor: function(item, x, y, callback) {
             var entity = Entity.get(item.id);
+            if (!entity) {
+                game.sendError("setCursor: entity not found: " + item.id);
+                return;
+            }
             var canvas = document.createElement("canvas");
             canvas.width = item.width;
             canvas.height = item.height;
