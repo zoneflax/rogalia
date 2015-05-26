@@ -46,47 +46,20 @@ function Fight() {
             return;
         }
 
-        switch (action) {
-        case "tenkan":
-        case "irimi":
-        case "kaiten":
-        case "tsuki":
-        case "shomen":
-            if (!(game.player.target instanceof Character)) {
-                game.controller.showWarning("You have no target");
-                return;
-            }
-            var args = {Name: util.ucfirst(action), Id: game.player.target.Id};
-            switch (action) {
-            case "irimi":
-            case "kaiten":
-                args.X = game.controller.world.x;
-                args.Y = game.controller.world.y;
-            }
-            panels.action.classList.add("locked");
-            locked = true;
-            game.network.send("waza", args);
+        if (!(game.player.target instanceof Character)) {
+            game.controller.showWarning("You have no target");
             return;
         }
-
-
-        var cmd = {
-            Action: action,
-        };
-        if (action != "defend") {
-            if (game.player.target instanceof Character) {
-                cmd.EnemyId = +game.player.target.Id;
-            } else {
-                game.controller.showWarning("You have no target");
-                return
-            }
+        var args = {Name: util.ucfirst(action), Id: game.player.target.Id};
+        switch (action) {
+        case "irimi":
+        case "kaiten":
+            args.X = game.controller.world.x;
+            args.Y = game.controller.world.y;
         }
-        if (target)
-            cmd.Target = target;
-
-        game.network.send("fight", cmd);
         panels.action.classList.add("locked");
         locked = true;
+        game.network.send("waza", args);
     }
 
     var actions = {};
@@ -112,7 +85,7 @@ function Fight() {
         targets[id] = this;
         this.addEventListener("click", function() {
             setTarget(id);
-        })
+        });
     });
 
     this.hotkey = function(key) {
@@ -123,22 +96,19 @@ function Fight() {
             setTarget(Object.keys(targets)[id]);
             return;
         }
-        if (game.player.target && !game.player.target.IsNpc)
-            apply(Object.keys(actions)[id+5]);
-        else
-            apply(Object.keys(actions)[id]);
-    }
+        apply(Object.keys(actions)[id]);
+    };
 
     this.update = function() {
-        if (game.player.idle() && !game.player.Fight.Action) {
+        if (game.player.idle()) {
             panels.action.classList.remove("locked");
             locked = false;
         }
-    }
+    };
 
     this.show = function() {
         visible = true;
         util.dom.show(this.panel);
         util.dom.hide(game.controller.hotbar.panel);
-    }
+    };
 }

@@ -36,10 +36,11 @@ function Info(message, character) {
         if (character == game.player)
             this.text = T("You missed");
         else
-            this.text = T("Evade");
+            this.text = "Evade from " + this.data + " attack"; //TODO: use ~T.printf
         break;
     case "damage":
         if (this.data instanceof Object) {
+            console.log("IN");
             this.value = this.data.Dmg;
             if (this.target == game.player)
                 this.text = this.character.Name + " " + this.data.Action + "ed you in the " + this.data.Target;
