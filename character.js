@@ -159,7 +159,6 @@ Character.prototype = {
 	case "cat":
 	case "pony":
 	case "sheep":
-	case "wolf":
 	case "butterfly":
 	    this.sprite.width = 32;
 	    this.sprite.height = 32;
@@ -297,6 +296,7 @@ Character.prototype = {
         case "moroz":
         case "vendor":
         case "boris":
+        case "bertran":
         case "bruno":
             this.sprite.nameOffset = 96;
             this.sprite.frames = {
@@ -304,6 +304,7 @@ Character.prototype = {
                 "run": 1,
             };
             break;
+        case "wolf":
         case "cow":
 	    this.sprite.width = 100;
 	    this.sprite.height = 100;
@@ -386,6 +387,7 @@ Character.prototype = {
         default:
             switch (this.Type) {
             case "cow":
+            case "wolf":
                 this._loadNpcSprites();
                 return;
             case "vendor":
@@ -758,7 +760,12 @@ Character.prototype = {
         return this.Dx == 0 && this.Dy == 0 && this.Action.Name == "";
     },
     animate: function() {
-        var simpleSprite = this.IsNpc && this.Type != "cow";
+        var simpleSprite = this.IsNpc;
+        switch (this.Type) {
+        case "cow":
+        case "wolf":
+            simpleSprite = false;
+        }
         var animation = "idle";
         if(this.Dx || this.Dy) {
             animation = "run";
@@ -1399,6 +1406,7 @@ Character.prototype = {
         switch (this.Name) {
         case "Shot":
         case "Bruno":
+        case "Bertran":
         case "Boris":
             type = this.Name.toLowerCase();
             break;
@@ -1417,6 +1425,7 @@ Character.prototype = {
         case "Margo":
         case "Umi":
         case "Bruno":
+        case "Bertran":
         case "Boris":
             return true;
         }
