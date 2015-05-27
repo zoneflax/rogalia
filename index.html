@@ -1,1 +1,174 @@
-game.html
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Rogalik :: Alpha :: Early access</title>
+    <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
+    <script>
+     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+     ga('create', 'UA-32173828-2', 'auto');
+     ga('send', 'pageview');
+
+     /* (function (d, w, c) {
+        (w[c] = w[c] || []).push(function() {
+        try {
+        w.yaCounter22856329 = new Ya.Metrika({id:22856329,
+        webvisor:true,
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true});
+        } catch(e) { }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+        s = d.createElement("script"),
+        f = function () { n.parentNode.insertBefore(s, n); };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+        d.addEventListener("DOMContentLoaded", f, false);
+        } else { f(); }
+        })(document, window, "yandex_metrika_callbacks"); */
+    </script>
+    <link rel="icon" type="image/png" href="favicon.ico?v2" />
+    <link rel="stylesheet" href="main.css"/>
+    <link rel="stylesheet" media="(max-width: 1280px), (max-height: 768px)" href="small.css" />
+  </head>
+  <body>
+      <!-- <div id="adsence">
+         <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5659182463296220" data-ad-slot="2188089399" data-ad-format="auto"></ins>
+         <div id="adsence-explanation">Откуда тут взялась реклама?</div>
+         </div> -->
+    <div id="cursor"></div>
+    <div id="menu" class="panel"></div>
+    <div id="world">
+      <canvas id="canvas"></canvas>
+      <div id="minimap-container">
+        <canvas id="minimap"></canvas>
+      </div>
+      <div id="interface" class="button-panel">
+	<div class="button" id="stats-button"></div>
+	<div class="button" id="inventory-button"></div>
+	<div class="button" id="skills-button">Skills</div>
+	<div class="button" id="terra-bar-button">Terra</div>
+	<div class="button" id="craft-button">Craft</div>
+	<div class="button" id="chat-button">Chat</div>
+	<div class="button" id="map-button">Map</div>
+        <div class="button" id="wiki-button">Wiki</div>
+        <div class="button" id="system-button">System</div>
+        <div id="strips">
+	  <div id="hp"><div></div><div></div></div>
+	  <div id="fullness"><div></div><div></div></div>
+	  <div id="stamina"><div></div><div></div></div>
+        </div>
+      </div>
+      <div id="build-warning"></div>
+      <div title="Game time" id="time">00:00</div>
+      <div id="maximize" title="Maximize"></div>
+      <div id="effects"></div>
+      <div id="warning"></div>
+      <div id="anouncement"></div>
+      <div id="messages"></div>
+      <div id="hotbar" class="button-panel">
+        <div class="button" id="pick-up-button">Pick Up<i>X</i></div>
+	<div class="button" id="lift-button">Lift<i>A</i></div>
+	  <div class="button" id="fight-button">Fight<i>F</i></div>
+	  <div class="button" id="action-button"></div>
+      </div>
+      <meter id="action-progress" max="6.28" class="hidden"></meter>
+      <div id="fight-panel" class="hidden">
+        <div id="fight-commands">
+          <div id="fight-action" class="button-panel">
+            <div class="button tooltip" id="irimi-button">
+                Irimi
+                <i>1</i>
+                <span>Шаг вперед</span>
+            </div>
+            <div class="button tooltip" id="tenkan-button">
+                Tenkan
+                <i>2</i>
+                <span>Разворот на 180</span>
+            </div>
+            <div class="button tooltip" id="kaiten-button">
+                Kaiten
+                <i>3</i>
+                <span>Шаг с разворотом</span>
+            </div>
+            <div class="button tooltip" id="tsuki-button">
+                Tsuki
+                <i>4</i>
+                <span>Колющий удар</span>
+            </div>
+            <div class="button tooltip" id="shomen-button">
+                Shomen
+                <i>5</i>
+                <span>Режущий удар</span>
+            </div>
+          </div>
+        </div>
+        <div id="fight-target">
+          <div class="badge">Target:</div>
+          <div class="button" id="head-button">Head<i>Shift-1</i></div>
+          <div class="button" id="body-button">Body<i>Shift-2</i></div>
+          <div class="button" id="legs-button">Legs<i>Shift-3</i></div>
+        </div>
+        <div class="button" id="fight-close-panel-button">Close</div>
+      </div>
+    </div>
+    <!-- <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
+    <script src="//ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js"></script>
+    <script src="lib/rawinflate.js"></script>
+    <script src="lib/stats.min.js"></script>
+    <script src="lib/sprintf.js"></script>
+    <script src="lib/binary-search-tree.js"></script>
+    <script src="lib/image-filters.js"></script>
+    <script src="polyfill.js"></script>
+    <script src="hashtable.js"></script>
+    <script src="config.js"></script>
+    <script src="util.js"></script>
+    <script src="items.min.js"></script>
+    <script src="dict-ru.js"></script>
+    <script src="dict.js"></script>
+    <script src="talks.js"></script>
+    <script src="point.js"></script>
+    <script src="sprite.js"></script>
+    <script src="loader.js"></script>
+    <script src="sound.js"></script>
+    <script src="stage.js"></script>
+    <script src="camera.js"></script>
+    <script src="panel.js"></script>
+    <script src="chat.js"></script>
+    <script src="craft.js"></script>
+    <script src="minimap.js"></script>
+    <script src="users.js"></script>
+    <script src="stats.js"></script>
+    <script src="skills.js"></script>
+    <script src="settings.js"></script>
+    <script src="wiki.js"></script>
+    <script src="system.js"></script>
+    <script src="donate.js"></script>
+    <script src="news.js"></script>
+    <script src="fight.js"></script>
+    <script src="controller.js"></script>
+    <script src="network.js"></script>
+    <script src="container.js"></script>
+    <script src="entity.js"></script>
+    <script src="entities.js"></script>
+    <script src="info.js"></script>
+    <script src="character.js"></script>
+    <script src="characters.js"></script>
+    <script src="map.js"></script>
+    <script src="menu.js"></script>
+    <script src="game.js"></script>
+    <script src="vendor.js"></script>
+    <script src="help.js"></script>
+    <!-- <script src="ads.js"></script> -->
+    <script src="main.js"></script>
+  </body>
+</html>
