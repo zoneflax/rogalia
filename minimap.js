@@ -1,9 +1,10 @@
 function Minimap() {
     var defaultScale = 0.25;
     var SCALE = defaultScale;
-    this.mapImage = game.loader.loadImage("map.png");
+    var loader = new Loader(window.location.protocol + "//" + game.network.addr);
+    this.mapImage = loader.loadImage("/map");
     var width = 1;
-    game.loader.ready(function() {
+    loader.ready(function() {
         width = this.mapImage.width;
         this.mapImage.width = width * SCALE;
     }.bind(this));
@@ -53,7 +54,7 @@ function Minimap() {
 
     this.sync = function(data) {
         if (!data)
-            return
+            return;
         this.characters = data;
         this.update();
     };

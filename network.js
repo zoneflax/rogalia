@@ -1,6 +1,18 @@
 function Network() {
     var override = document.location.search.match(/server=([^&]+)/);
-    this.url = (override) ? override[1] : document.location.hostname;
+
+    this.host = (override) ? override[1] : document.location.hostname;
+
+    if (window.location.protocol == "https:") {
+        this.proto = "wss://";
+        this.port = 49443;
+    } else {
+        this.port = 49000;
+        this.proto = "ws://";
+    }
+
+    this.addr = this.host + ":" + this.port;
+
     this.data = null;
     this.socket = null;
 
@@ -8,14 +20,7 @@ function Network() {
     this.defaultCallback = null;
 
     this.run = function() {
-        var proto = "ws://";
-        var port = 49000;
-        if (window.location.protocol == "https:") {
-            proto = "wss://";
-            port = 49443;
-        }
-        var url = proto + this.url + ":" + port;
-        this.socket = new WebSocket(url, "rogalik-protocol");
+        this.socket = new WebSocket(this.proto + this.addr, "rogalik-protocol");
         this.socket.binaryType = "arraybuffer";
         this.socket.onopen = function() {
             game.setStage("login");

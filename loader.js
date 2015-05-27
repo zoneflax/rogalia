@@ -16,8 +16,10 @@ Loader.prototype = {
         this.runCallbacks();
     },
     loadImage: function(name) {
-        if(name == undefined)
-            game.error("Trying to load undefined image");
+        if(name == undefined || name.length == 0) {
+            game.sendError("Trying to load undefined or empty image");
+            return;
+        }
 
         var image = this.images[name];
         if (image) {
