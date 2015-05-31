@@ -312,7 +312,7 @@ Craft.prototype = {
             var label = document.createElement("label");
             var checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.checked = (name != "unavailable") ;
+            checkbox.checked = true; //TODO: save to localStorage
             checkbox.onchange = function(e) {
                 recipeList.classList.toggle("filter-"+name);
             };
@@ -320,7 +320,6 @@ Craft.prototype = {
             label.appendChild(document.createTextNode(T(name)));
             filters.appendChild(label);
         });
-        recipeList.classList.toggle("filter-unavailable");
         return filters;
     },
     searchHandler: function(e) {

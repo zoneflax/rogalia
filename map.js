@@ -22,7 +22,7 @@ function Map() {
     this.tiles = [];
 
     this.rotateMinimap = function() {
-        this.minimap.style.transform = (config.ui.rotateMinimap) ?"rotate(45deg)" : "";
+        this.minimap.style.transform = (config.ui.rotateMinimap) ?"scaleY(0.5) rotate(45deg)" : "";
     };
     this.rotateMinimap();
 

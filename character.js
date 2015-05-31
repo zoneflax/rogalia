@@ -588,7 +588,7 @@ Character.prototype = {
         var Y = this.Y - p.y;
         var L = Math.hypot(X, Y);
 
-        var l = Math.min(game.screen.width, game.screen.height)/2;
+        var l = Math.min(game.screen.width, game.screen.height)/3;
         if (L > l) {
             p.x = this.X - X*l/L;
             p.y = this.Y - Y*l/L;

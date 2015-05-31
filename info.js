@@ -158,7 +158,7 @@ Info.prototype = {
             break;
         case "combo":
             game.ctx.save();
-            game.setFontSize(30);
+            game.setFontSize(50);
             this.drawValue("#fff", this.text);
             game.ctx.restore();
         }
