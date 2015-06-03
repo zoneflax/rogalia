@@ -1025,7 +1025,7 @@ ol li a:hover {
     color: #999;
 }
 
-#time, #maximize, #build-warning {
+#time, #maximize, #mute, #build-warning {
     position: absolute;
     right: 3px;
     top: 3px;
@@ -1036,14 +1036,24 @@ ol li a:hover {
 }
 #time {
     right: 28px;
-    display: none;
+    display: none!important;
 }
-#maximize {
-    background-image: url("assets/bg/maximize.png");
+#maximize, #mute {
     background-position: center;
     background-repeat: no-repeat;
     width: 18px;
     height: 18px;
+}
+#maximize {
+    background-image: url("assets/bg/maximize.png");
+}
+#mute {
+    right: 28px;
+    background-image: url("assets/bg/mute.png");
+}
+
+#mute.unmute {
+    background-image: url("assets/bg/unmute.png");
 }
 #build-warning {
     right: 100px;

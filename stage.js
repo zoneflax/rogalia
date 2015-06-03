@@ -347,8 +347,6 @@ function connectingStage() {
 Stage.add(connectingStage);
 
 function mainStage() {
-    game.sound.playMusic();
-
     this.sync = function (data) {
         if (data.Warning) {
             game.controller.showWarning(data.Warning);

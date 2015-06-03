@@ -131,7 +131,7 @@ function Controller(game) {
                 if(hovered){
                     hovered.classList.add("hovered");
                     if(hovered.check && !hovered.check(controller.iface.cursor))
-                        hovered.classList.add("invalid")
+                        hovered.classList.add("invalid");
                 }
             }
             controller.iface.hovered = hovered;
