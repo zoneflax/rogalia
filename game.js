@@ -46,9 +46,9 @@ function Game() {
 
     util.ajax("build-warning.html", function(warn) {
         if (!warn) {
-            util.dom.hide(document.getElementById("build-warning"));
             return;
         }
+        util.dom.show(document.getElementById("build-warning"));
 
         var panel = new Panel("build-warning-panel", "");
         panel.contents.innerHTML = warn;
@@ -367,8 +367,8 @@ function Game() {
         },
         bugtracker: function() {
             var bugtracker = document.createElement("button");
-            bugtracker.textContent = T("Bugtracker")
-            bugtracker.onclick = openLink("/wiki/index.php/Bugtracker");
+            bugtracker.textContent = T("Bugtracker");
+            bugtracker.onclick = openLink("//github.com/TatriX/rogalik/issues");
             return bugtracker;
         },
         logout: function() {

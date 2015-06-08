@@ -720,7 +720,7 @@ var dict = {
     "Mutton": "Баранина",
     "Baked chicken wing": "Запеченная куриное крыло",
     "Wooden bow": "Деревянный лук",
-    "Waypoint": "Односторонняя точка телепортации",
+    "Waypoint": "Точка телепортации",
     "Titanium plate": "Титановая пластина",
     "Fir tree stick": "Палка Ели",
     "Butterfly wings": "Крылья бабочки",
