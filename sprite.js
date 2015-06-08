@@ -69,7 +69,7 @@ Sprite.prototype = {
         this.outline = canvas;
     },
     draw: function(p) {
-        if (!this.image.width)
+        if (this.frame * this.width + this.width > this.image.width)
             return;
         // try {
         game.ctx.drawImage(
@@ -85,17 +85,11 @@ Sprite.prototype = {
         );
         // } catch(e) {
         //     console.log(
-        //         this.image,
-        //         this.image.width,
-        //         this.image.height,
+        //         this,
         //         this.frame * this.width,
         //         this.position * this.height,
-        //         this.width,
-        //         this.height,
         //         p.x,
-        //         p.y,
-        //         this.width,
-        //         this.height
+        //         p.y
         //     );
         // }
     },

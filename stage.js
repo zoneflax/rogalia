@@ -213,7 +213,7 @@ function loginStage() {
     registerButton.onclick = function() {
         if (registering)
             return true;
-        invite = prompt("Enter code; To get code write at rogalik@tatrix.org");
+        // invite = prompt("Enter code; To get code write at rogalik@tatrix.org");
         registering = true;
         loginButton.style.display = "none";
         hr.style.display = "none";
@@ -430,9 +430,21 @@ function mainStage() {
         game.sortedEntities.traverse(drawUI);
 
         game.controller.draw();
+        // TODO: debug-remove
         // game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
         // game.ctx.fillRect(game.camera.x, game.camera.y, game.screen.width, game.screen.height);
 
+        // TODO: debug-remove
+        // if (game.network.astar) {
+        //     game.network.astar.forEach(function(node) {
+        //         if (node.Unpassable)
+        //             return;
+        //         game.ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        //         game.iso.fillRect(node.X, node.Y, node.Width, node.Height);
+        //             game.ctx.strokeStyle = "#333";
+        //         game.iso.strokeRect(node.X, node.Y, node.Width, node.Height);
+        //     });
+        // }
         game.ctx.restore();
     };
     this.end = function() {};
