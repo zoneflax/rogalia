@@ -190,7 +190,7 @@ function Chat() {
     alwaysVisibleChkbx.checked = true;
     alwaysVisibleChkbx.onclick = function() {
         semi.always = !semi.always;
-        this.messagesElement.classList.toggle("always-visible");
+        this.panel.contents.classList.toggle("semi-hidden");
     }.bind(this);
     alwaysVisibleLabel.appendChild(alwaysVisibleChkbx);
     alwaysVisibleLabel.appendChild(document.createTextNode(T("always visible")));
@@ -241,8 +241,8 @@ function Chat() {
         semi.focus = false;
         semihide();
     };
-    this.panel.contents.onmouseenter = semishow;
-    this.panel.contents.onmouseleave = semihide;
+    this.newMessageElement.onmouseenter = semishow;
+    this.newMessageElement.onmouseleave = semihide;
 
 
     this.names = {

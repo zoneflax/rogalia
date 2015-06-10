@@ -293,7 +293,7 @@ a:hover {
 }
 
 .main-stage #world {
-    background: #333;
+    background: #111;
 }
 .main-stage #world > div > * {
     display: inherit;
@@ -658,8 +658,11 @@ a:hover {
 }
 #attached-chat.semi-hidden{
     opacity: 0.5;
+    pointer-events: none;
 }
+
 #attached-chat.semi-hidden > .messages {
+    pointer-events: none;
     border: none;
     overflow: hidden;
     background: transparent;
@@ -668,8 +671,10 @@ a:hover {
     position: absolute;
     right: 0;
     bottom: 0;
+    pointer-events: auto!important;
 }
 .messages, #new-message {
+    pointer-events: auto;
     display: block;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
