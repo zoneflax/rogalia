@@ -158,7 +158,6 @@ Character.prototype = {
         case "dog":
 	case "cat":
 	case "pony":
-	case "sheep":
 	case "butterfly":
 	    this.sprite.width = 32;
 	    this.sprite.height = 32;
@@ -305,8 +304,9 @@ Character.prototype = {
                 "run": 1,
             };
             break;
-        case "wolf":
         case "cow":
+        case "wolf":
+        case "sheep":
 	    this.sprite.width = 100;
 	    this.sprite.height = 100;
             this.sprite.offset = 45;
@@ -389,6 +389,7 @@ Character.prototype = {
             switch (this.Type) {
             case "cow":
             case "wolf":
+            case "sheep":
                 this._loadNpcSprites();
                 return;
             case "vendor":
@@ -765,6 +766,7 @@ Character.prototype = {
         switch (this.Type) {
         case "cow":
         case "wolf":
+        case "sheep":
             simpleSprite = false;
         }
         var animation = "idle";

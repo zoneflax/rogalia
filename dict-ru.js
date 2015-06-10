@@ -1,5 +1,7 @@
 //TODO: deprecated; use items.js instead; refactor me;
 var dict = {
+    "Raw coconut cookies": "Сырое кокосовое печенье",
+    "Coconut cookies": "Кокосовое печенье",
     "Change character": "Сменить персонажа",
     "Blacksmith": "Кузнец",
     "Tailor": "Портной",
