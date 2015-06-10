@@ -752,7 +752,7 @@ Character.prototype = {
             dy = 0;
         }
         if (drawName) {
-            game.ctx.fillStyle = (this.Karma < 0)
+            game.ctx.fillStyle = (this.Karma < 0 || this.Aggressive)
                 ? "#f00"
                 : ((this == game.player) ? "#ff0" : "#fff");
             game.drawStrokedText(name, x, y - dy / 2);
