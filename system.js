@@ -56,6 +56,7 @@ function System() {
             game.button.authors(),
             donate,
             util.hr(),
+            game.button.lobby(),
             game.button.logout(),
         ]
     );

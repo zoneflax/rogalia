@@ -121,7 +121,7 @@ function Game() {
     );
 
     this.login = null;
-    this.player = new Character();
+    this.player = new Character(); // will be replaced in Character.sync()
 
     this.map = new Map();
 
@@ -370,6 +370,14 @@ function Game() {
             bugtracker.textContent = T("Bugtracker");
             bugtracker.onclick = openLink("//github.com/TatriX/rogalik/issues");
             return bugtracker;
+        },
+        lobby: function() {
+            var lobby = document.createElement("button");
+            lobby.textContent = T("Change character");
+            lobby.onclick = function() {
+                game.reload(); //TODO: we should not reload
+            };
+            return lobby;
         },
         logout: function() {
             var logout = document.createElement("button");

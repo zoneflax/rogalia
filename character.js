@@ -49,7 +49,7 @@ function Character(id, name) {
 
     this.ballon = null;
     this.shownEffects = {};
-    this.isPlayer = (this.Name == game.login);
+    this.isPlayer = false;
 
     this.Action = {};
     this.action = {
@@ -204,6 +204,7 @@ Character.prototype = {
             };
             break;
 	case "desu":
+        case "suiseiseki":
 	    this.sprite.width = 68;
 	    this.sprite.height = 96;
             this.sprite.angle = Math.PI*2;

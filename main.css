@@ -29,6 +29,11 @@ label {
     display: inline-block;
 }
 
+/* see util.dom.createInput() */
+label > input[type=text] {
+    margin-left: 5px;
+}
+
 button {
     color: #ffffff;
     background: #435665;
@@ -76,6 +81,8 @@ a:hover {
 }
 #world {
     background: #222;
+    background-image: url("assets/bg/loading-3.png");
+    background-size: 100%;
     background-repeat: no-repeat;
     background-position: center;
 
@@ -94,10 +101,6 @@ a:hover {
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
-}
-}
-#canvas {
-    z-index: 1;
 }
 #menu {
     text-align: left;
@@ -288,6 +291,10 @@ a:hover {
 #world > div > * {
     display: none;
 }
+
+.main-stage #world {
+    background: #333;
+}
 .main-stage #world > div > * {
     display: inherit;
 }
@@ -301,13 +308,7 @@ a:hover {
     background-image: url("assets/bg/exit.png");
     background-position: 50% bottom;
 }
-.loading-stage #world {
-    background-image: url("assets/bg/loading-3.png");
-    background-size: 100%;
-}
-.login-stage #world {
-    background-image: url("assets/bg/loading-3.png");
-}
+
 .login-stage .button-link {
     float: left;
     background: none;
@@ -911,8 +912,31 @@ a.extern {
     border-radius: 5px;
 }
 
-.login-form {
+#lobby > div {
+    display: block;
+}
+
+#lobby .avatar {
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 3px;
+}
+
+#lobby .avatar:hover {
+    background: #435665;
+    background: linear-gradient(to bottom,  #435665 0%,#3f4c6b 100%);
+}
+
+#lobby .avatar > img {
+    display: block;
+}
+
+.login-form, #lobby, #create-character {
     position: absolute;
+    z-index: 2;
     left: 10px;
     top: 10px;
     display: inline-block;

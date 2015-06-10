@@ -30,8 +30,10 @@ Character.sync = function(data, remove) {
         if (!to) {
             to = new Character(id, from.Name);
             game.addCharacter(to);
-            if (from.Name == game.login)
+            if (from.Name == game.player.Name) {
+                to.isPlayer = true;
                 game.player = to;
+            }
             to.init(from);
         } else {
             to.sync(from);

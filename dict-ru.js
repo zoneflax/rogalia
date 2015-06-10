@@ -1,5 +1,16 @@
 //TODO: deprecated; use items.js instead; refactor me;
 var dict = {
+    "Change character": "Сменить персонажа",
+    "Blacksmith": "Кузнец",
+    "Tailor": "Портной",
+    "Alchemyst": "Алхимик",
+    "Farmer": "Фермер",
+    "Carpenter": "Плотник",
+    "Cook": "Повар",
+    "Hunter": "Охотник",
+    "Male": "Мужчина",
+    "Female": "Женщина",
+    "Enter": "Войти",
     "Apple tree log": "Яблоневое бревно",
     "Bulletin board": "Доска объявлений",
     "Bavarian sausage": "Баварская сосиска",

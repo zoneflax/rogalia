@@ -97,6 +97,25 @@ var util = new function() {
                 this.classList.remove(name);
             });
         },
+        createInput: function(text) {
+            var input = document.createElement("input");
+            input.type = "text";
+            var label = document.createElement("label");
+            label.appendChild(document.createTextNode(text));
+            label.appendChild(input);
+            input.label = label;
+            return input;
+        },
+        createRadioButton: function(text, name) {
+            var input = document.createElement("input");
+            input.type = "radio";
+            input.name = name;
+            var label = document.createElement("label");
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(text));
+            input.label = label;
+            return input;
+        }
     };
 
     this.ucfirst = function(string) {

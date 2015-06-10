@@ -69,8 +69,9 @@ Sprite.prototype = {
         this.outline = canvas;
     },
     draw: function(p) {
-        if (this.frame * this.width + this.width > this.image.width)
+        if (this.frame * this.width + this.width > this.image.width) {
             return;
+        }
         // try {
         game.ctx.drawImage(
             this.image,
