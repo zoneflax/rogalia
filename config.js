@@ -43,7 +43,7 @@ var config = {
     },
     cursor: {
         dontHide: false,
-        autoHighlightDoors: false,
+        autoHighlightDoors: true,
     },
     sound: {
         playSounds: true,

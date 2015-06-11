@@ -209,6 +209,7 @@ function Chat() {
         util.dom.remove(contents);
         game.world.appendChild(contents);
         util.dom.hide(this.panel.button);
+        this.panel.hide();
         semihide();
     };
 

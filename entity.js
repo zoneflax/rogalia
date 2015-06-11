@@ -670,7 +670,15 @@ Entity.prototype = {
         if (config.cursor.autoHighlightDoors && this.Group == "gate")
             return true;
 
-        return noignore || (!this.Sprite.Unselectable && !this.Disposition);
+        return noignore || this.selectable();
+    },
+    selectable: function() {
+        switch (this.Group) {
+        case "entrance":
+        case "exit":
+            return true;
+        }
+        return (!this.Sprite.Unselectable && !this.Disposition);
     },
     //used for controller.hovered
     intersects: function(x, y, noignore) {
