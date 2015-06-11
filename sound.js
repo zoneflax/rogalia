@@ -87,14 +87,12 @@ function Sound() {
     };
 
     this.toggleMusic = function() {
+        if (!currentTrack)
+            return;
         if (currentTrack.paused)
             currentTrack.play();
         else
             currentTrack.pause();
-    };
-
-    this.stopMusic = function() {
-        currentTrack.pause();
     };
 
     this.playSound = function(name, repeat) {
