@@ -469,7 +469,8 @@ function Chat() {
 
         var notification = new Notification(subject, config);
         notification.onclick = function() {
-            this.panel.show();
+            if (!config.ui.chatAttached)
+                this.panel.show();
             notification.close();
         }.bind(this);
     };
