@@ -110,6 +110,9 @@ Character.prototype = {
         this.syncMessages(this.Messages);
         this.syncMessages(this.PrivateMessages);
 
+        if ("Path" in data)
+            this.followPath();
+
         if (!init && JSON.stringify(this.getParts()) != this._parts)
             this.reloadSprite();
 
