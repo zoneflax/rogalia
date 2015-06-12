@@ -101,8 +101,8 @@ function Network() {
         args = args || {};
         args.command = command;
 
-        if (game.stage.name == "main")
-            args.fps = game.controller.system.fps.currentFps();
+        // if (game.stage.name == "main")
+        //     args.fps = game.controller.system.fps.currentFps();
 
         this.sendStart = Date.now();
         this.socket.send(JSON.stringify(args));
