@@ -270,6 +270,24 @@ Character.prototype = {
             };
             this.speed = 20000;
             break;
+        case "imp":
+            this.sprite.width = 107;
+	    this.sprite.height = 68;
+            this.sprite.frames = {
+                "idle": 3,
+                "run": 4,
+            };
+            this.speed = 20000;
+            break;
+        case "lesser-daemon":
+            this.sprite.width = 160;
+	    this.sprite.height = 102;
+            this.sprite.frames = {
+                "idle": 3,
+                "run": 4,
+            };
+            this.speed = 20000;
+            break;
         case "daemon":
 	    this.sprite.width = 214;
 	    this.sprite.height = 136;
@@ -712,7 +730,7 @@ Character.prototype = {
         }
         if (game.controller.modifier.shift) {
             name += " | " + T("Lvl") + ": " + this.Lvl;
-            name += " | " + ["♀", "♂"][this.Sex];
+            name += " | " + ["♂", "♀"][this.Sex];
         }
 
         var p = this.screen();
@@ -977,7 +995,7 @@ Character.prototype = {
             drop.textContent = T("Drop");
             button.appendChild(drop);
             button.onclick = function() {
-                this.liftStop()
+                this.liftStop();
             }.bind(this);
             break;
         default:
@@ -1028,13 +1046,13 @@ Character.prototype = {
                 button.onclick = function() {
                     panel.hide();
                     game.network.send("fishing-move", {move: this.move}, repeat);
-                }
+                };
                 buttons.appendChild(button);
             });
             panel = new Panel("fishing", "Fishing", [rating, buttons]);
             panel.rating = rating;
         }
-        panel.rating.textContent = T(data.Rating)
+        panel.rating.textContent = T(data.Rating);
         panel.show();
         return repeat;
     },
