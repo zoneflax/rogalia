@@ -46,11 +46,21 @@ function Fight() {
             return;
         }
 
-        if (!(game.player.target instanceof Character)) {
-            game.controller.showWarning("You have no target");
-            return;
+        switch (action) {
+        case "irimi":
+        case "kaiten":
+        case "tenkan":
+            break;
+        default:
+            if (!(game.player.target instanceof Character)) {
+                game.controller.showWarning("You have no target");
+                return;
+            }
         }
-        var args = {Name: util.ucfirst(action), Id: game.player.target.Id};
+
+        var args = {Name: util.ucfirst(action)};
+        if (game.player.target)
+            args.Id = game.player.target.Id;
         switch (action) {
         case "irimi":
         case "kaiten":
