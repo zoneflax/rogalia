@@ -268,6 +268,11 @@ Controller.prototype = {
                     this.fight.show();
                 }
             },
+            9: { //tab
+                callback: function() {
+                    game.player.selectNextTarget();
+                }
+            },
             13: { //enter
                 callback: function() {
                     game.controller.chat.panel.show();
@@ -300,7 +305,7 @@ Controller.prototype = {
             }
         };
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function(key) {
-            this.hotkeys[key] = {
+            this.hotkeys[String(key).charCodeAt(0)] = {
                 callback: function() {
                     if (game.menu.visible)
                         game.menu.activate(key);

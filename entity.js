@@ -702,7 +702,7 @@ Entity.prototype = {
             p.x, p.y,
             offset.x, offset.y, w, h
         )) {
-            return false
+            return false;
         }
 
         var pixel = this.sprite.imageData.data[p.y*4*this.sprite.imageData.width + p.x*4-1];

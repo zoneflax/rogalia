@@ -326,6 +326,12 @@ Character.prototype = {
                 "run": 1,
             };
             break;
+        case "spider":
+	    this.sprite.width = 128;
+	    this.sprite.height = 128;
+            this.sprite.offset = 45;
+            this.sprite.speed = 21000;
+            break;
         case "cow":
         case "wolf":
         case "sheep":
@@ -409,6 +415,7 @@ Character.prototype = {
             break;
         default:
             switch (this.Type) {
+            case "spider":
             case "cow":
             case "wolf":
             case "sheep":
@@ -787,6 +794,7 @@ Character.prototype = {
         var simpleSprite = this.IsNpc;
         switch (this.Type) {
         case "cow":
+        case "spider":
         case "wolf":
         case "sheep":
             simpleSprite = false;
@@ -1490,5 +1498,18 @@ Character.prototype = {
         loader.ready(function() {
             this.animation = animation;
         }.bind(this));
-    }
+    },
+    distanceTo: function(e) {
+        return Math.hypot(this.X - e.X, this.Y - e.Y);
+    },
+    selectNextTarget: function() {
+        var self = this;
+        var list = game.findCharsNear(this.X, this.Y, 5*CELL_SIZE).filter(function(c) {
+            return c != self && c != self.target;;
+        }).sort(function(a, b) {
+            return a.distanceTo(self) - b.distanceTo(self);
+        });
+        if (list.length > 0)
+            this.target = list[0];
+    },
 };
