@@ -556,6 +556,8 @@ Controller.prototype = {
             } else {
                 game.controller.actionQueue = [];
                 game.network.send(command, args, callback);
+                if (this.world.cursor instanceof Entity)
+                    game.sortedEntities.remove(this.world.cursor);
             }
 
             this.clearCursors();
