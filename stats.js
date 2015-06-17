@@ -37,15 +37,6 @@ function Stats() {
         }
     );
 }
-Stats.update = function() {
-    var button = document.getElementById("stats-button");
-    button.innerHTML = "";
-    var icon = game.player.icon();
-    var canvas = icon.cloneNode();
-    canvas.getContext("2d").drawImage(icon, 0, 0);
-
-    button.appendChild(canvas);
-};
 
 Stats.formatParam = function(param, digits) {
     return util.toFixed(param.Current, digits) + ' / ' + util.toFixed(param.Max, digits);
@@ -107,6 +98,8 @@ Stats.prototype = {
         this.update();
     },
     update: function() {
+        this.updateExp();
+
         this.equipContainer.update();
         this.createSection("summary");
 
@@ -220,5 +213,11 @@ Stats.prototype = {
 
         }
         return null;
-    }
+    },
+    updateExp: function() {
+        var xp = document.getElementById("xp-progress");
+        var exp = game.player.Exp
+        var width = exp.Current/exp.Max * 100;
+        xp.style.width = width + "%";
+    },
 }

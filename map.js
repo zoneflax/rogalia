@@ -17,23 +17,27 @@ function Map() {
 
     this.minimapContainer = document.getElementById("minimap-container");
     this.minimap = document.getElementById("minimap");
+    this.minimapCanvas = document.getElementById("minimap-canvas");
     this.location = new Point();
 
     this.tiles = [];
 
     this.rotateMinimap = function() {
-        this.minimap.style.transform = (config.ui.rotateMinimap) ?"scaleY(0.5) rotate(45deg)" : "";
+        this.minimap.style.transform = (config.ui.rotateMinimap)
+            ? "scaleY(0.5) rotate(45deg) scale(1.5) translate(44px, 11px)"
+            : "";
     };
     this.rotateMinimap();
 
     this.parse = function(img) {
-        this.minimap.width = img.width;
-        this.minimap.height = img.height;
+        this.minimapCanvas.width = 2*img.width;
+        this.minimapCanvas.height = img.height;
 
-        var ctx = this.minimap.getContext("2d");
+        var ctx = this.minimapCanvas.getContext("2d");
         ctx.drawImage(img, 0, 0);
 
         var pixels = ctx.getImageData(0, 0, img.width, img.height).data;
+
         var data = [];
         var i = 0;
         var color = 0;
@@ -287,7 +291,7 @@ function Map() {
 
         game.debug.map.grid && this.drawGrid();
 
-        this.updateObjects();
+        this.drawMinimap();
     };
 
     this.makeLayers = function() {
@@ -423,61 +427,41 @@ function Map() {
         return (cell) ? this.bioms[cell.id] : null;
     };
 
-        var objects = {};
-    this.updateObject = function(object) {
-        if (!config.ui.minimapObjects)
-            return;
-        var dot = objects[object.Id];
-        if (!dot) {
-            dot = document.createElement("div");
-            objects[object.Id] = dot;
+    var minimapObjectsCanvas = document.getElementById("minimap-objects-canvas");
+    var mctx = minimapObjectsCanvas.getContext("2d");
 
-            dot.className = "object";
-            var w = object.Width || object.Radius;
-            var h = object.Height || object.Radius;
-            dot.style.width = w / CELL_SIZE;
-            dot.style.width = h / CELL_SIZE;
-            this.minimapContainer.appendChild(dot);
-            if (object instanceof Character) {
-                if (object == game.player)
-                    dot.classList.add("me");
-                else
-                    dot.classList.add((object.Karma >= 0) ? "passive" : "aggressive");
-            } else {
-                switch (object.Creator) {
-                case game.player.Id:
-                    dot.classList.add("mine");
-                    break;
-                case 0:
-                    break;
-                default:
-                    dot.classList.add("not-mine");
+    this.drawMinimap = function() {
+        minimapObjectsCanvas.width = this.minimapCanvas.width;
+        minimapObjectsCanvas.height = this.minimapCanvas.height;
+        // mctx.clearRect(0, 0, minimapObjectsCanvas.width, minimapObjectsCanvas.height);
+        var loc = game.player.Location;
+        game.entities.forEach(function(e) {
+            var k = 1;
+            if (e instanceof Character) {
+                if (e == game.player) {
+                    mctx.fillStyle = "#0f0";
+                    k = 10;
+                } else if (e.Karma < 0 || e.Aggressive) {
+                    mctx.fillStyle = "#f00";
+                    k = 10;
+                } else {
+                    mctx.fillStyle = "pink";
+                    k = 6;
                 }
+            } else if (!e.inWorld()) {
+                return;
+            } else if (e.Creator == game.player.Id) {
+                mctx.fillStyle = "#393";
+            } else if (e.Creator){
+                mctx.fillStyle = "#f0f";
             }
-            dot.object = object;
-        }
-    };
+            var x = (e.X - loc.X) / CELL_SIZE;
+            var y = (e.Y - loc.Y) / CELL_SIZE;
+            var w = (e.Width || e.Radius) / CELL_SIZE;
+            var h = (e.Height || e.Radius) / CELL_SIZE;
 
-    this.removeObject = function(id) {
-        if (!config.ui.minimapObjects)
-            return;
-
-        var dot = objects[id];
-        if (dot) {
-            util.dom.remove(dot);
-            delete objects[id];
-        }
-    };
-
-    this.updateObjects = function() {
-        if (!config.ui.minimapObjects)
-            return;
-
-        for (var i in objects) {
-            var dot = objects[i];
-            dot.style.left = (dot.object.X - this.location.x) / CELL_SIZE + "px";
-            dot.style.top = (dot.object.Y - this.location.y) / CELL_SIZE + "px";
-        }
+            mctx.fillRect(x, y, w * k, h * k);
+        });
     };
 
 }

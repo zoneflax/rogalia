@@ -13,7 +13,7 @@ html, body {
     text-align: center;
     color: white;
     overflow: hidden;
-    background: url("assets/bg/pattern.png") repeat;
+    background: url("assets/bg/bg.png") repeat;
 }
 :-webkit-full-screen {
   width: 100%;
@@ -43,6 +43,7 @@ button {
     margin: 1px;
     text-decoration: none;
 }
+
 /* Remove button padding in FF */
 button::-moz-focus-inner {
     border:0;
@@ -85,10 +86,11 @@ a:hover {
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center;
-
     position: relative;
     overflow: hidden;
     margin: auto;
+    border: 4px solid #55381d;
+    border-top: none;
 }
 #canvas {
     position: absolute;
@@ -289,14 +291,14 @@ a:hover {
 }
 
 #world > div > * {
-    display: none;
+    /* display: none; */
 }
 
 .main-stage #world {
     background: #111;
 }
 .main-stage #world > div > * {
-    display: inherit;
+    /* display: inherit; */
 }
 .main-stage #wiki-button {
     display: block!important;
@@ -322,16 +324,12 @@ a:hover {
 .login-stage .button-link:hover {
     text-decoration: underline;
 }
-#interface, #hotbar, #fight-panel, #effects, #strips {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1;
-    margin: 0.5em;
-}
-#world > #interface > .button {
+
+#world > #controls-bar > .button {
     display: none;
 }
+
+
 
 #system  button {
     width: 99%;
@@ -348,42 +346,6 @@ a:hover {
 }
 #fps-stats > #stats {
     margin: auto;
-}
-
-#hotbar, #fight-panel {
-    bottom: 0;
-    top: auto;
-    right: 0;
-    left: inherit;
-
-}
-#hotbar .button, #fight-panel .button {
-    background-image: url("assets/bg/hotkey.png");
-}
-#hotbar .button:hover, #fight-panel .button:hover {
-    background-image: url("assets/bg/hotkey-hover.png");
-}
-#hotbar .button:active, #fight-panel .button:active {
-    background-image: url("assets/bg/hotkey-active.png");
-}
-
-#fight-action {
-    width: 407px;
-}
-#fight-target {
-    display: none!important;
-    position: absolute;
-    bottom: 150px;
-    left: 0;
-    width: 64px
-}
-#fight-target > .badge {
-    margin-bottom: 4px;
-}
-#fight-close-panel-button {
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
 }
 
 #effects {
@@ -412,24 +374,29 @@ a:hover {
     opacity: 0.5;
     background: red;
 }
+
 .button {
     background-image: url("assets/bg/button.png");
     background-repeat: no-repeat;
     background-position: 50% 50%;
     color: white;
-    width: 64px;
-    height: 64px;
-    line-height: 64px;
+    width: 68px;
+    height: 45px;
+    line-height: 45px;
     position: relative;
-    border: 1px solid transparent;
-    float: left;
-    margin-right: 2px;
-    text-align: center;
     cursor: pointer;
-
+    margin: -1px -9px;
 }
-.button:hover {
-    background-image: url("assets/bg/button-hover.png");
+.button > img {
+    position: relative;
+    top: 2px;
+}
+.button.opened > img {
+    top: 0px;
+    left: -1px;
+}
+.button:not(.opened):hover > img {
+    opacity: 0.6;
 }
 
 .locked, .locked .button {
@@ -451,7 +418,7 @@ a:hover {
 .button.opened {
     text-decoration: underline;
 }
-.button-panel i, .button i {
+.button-bar i, .button i {
     display: block;
     font-size: smaller;
     position: absolute;
@@ -460,35 +427,13 @@ a:hover {
     top: 1.25em;
 }
 
-.button-panel i:before {
+.button-bar i:before {
     content: "(";
 }
-.button-panel i:after {
+.button-bar i:after {
     content: ")";
 }
 
-#action-button:after {
-    content: "(Space)";
-    font-style: italic;
-    font-size: smaller;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -14px;
-}
-
-#stats-button {
-    background-image: url("assets/button.png");
-    background-position: 0 0, 0 0;
-    overflow: hidden;
-}
-#stats-button > canvas {
-    position: relative;
-    left: -16px;
-}
-#inventory-button {
-    background-image: url("assets/bag.png"), url("assets/button.png");
-}
 #warning, #messages, #anouncement {
     position: absolute;
     top: 7em;
@@ -653,9 +598,23 @@ a:hover {
     z-index: 1;
     text-align: left;
 }
-#attached-chat > .messages {
+
+#chat-tab-content {
+    background:
+    url("assets/bg/chat-corner.png") no-repeat top right,
+    url("assets/bg/border-top.png") repeat-x top,
+    url("assets/bg/border-right.png") repeat-y right,
+    #61411c; 
+    padding-bottom: 5px;
+}
+.chat-tab {
+    background: url("assets/bg/chat-tab.png");
+}
+
+#attached-chat .messages {
     height: 8em;
 }
+
 #attached-chat.semi-hidden{
     opacity: 0.5;
     pointer-events: none;
@@ -667,10 +626,10 @@ a:hover {
     overflow: hidden;
     background: transparent;
 }
-.chat-settings {
+#chat-settings {
     position: absolute;
     right: 0;
-    bottom: 0;
+    top: 0;
     pointer-events: auto!important;
 }
 .messages, #new-message {
@@ -681,16 +640,19 @@ a:hover {
     box-sizing: border-box;
     width: 100%;
     padding: 0;
-    border: 1px solid #ccc;
+}
+#new-message {
+    background: url("assets/bg/chat-send.png") no-repeat 99%, #845721;
+    border: none;
+    width: 95%;
+    margin-left: 2%;
 }
 
 .messages {
     width: 30em;
-    background: #eee;
     height: 20em;
     overflow: auto;
-    resize: both;
-    padding: 0;
+    padding: 5px;
     margin: 0 0 10px 0;
 }
 
@@ -1010,6 +972,7 @@ ol li a:hover {
 }
 
 #strips {
+    display: none!important;
     top: 70px;
 }
 #strips div {
@@ -1051,7 +1014,7 @@ ol li a:hover {
 }
 
 .message.channel-7 .body {
-    color: #999;
+    color: #fff;
 }
 
 #time, #maximize, #mute, #build-warning {
@@ -1096,13 +1059,6 @@ ol li a:hover {
     height: 100px;
 }
 
-.badge {
-    width: 64px;
-    line-height: 16px;
-    background: #333;
-    padding: 3px 0;
-    border-radius: 5px;
-}
 #settings label {
     display: block;
 }
@@ -1138,36 +1094,19 @@ big {
 
 #minimap-container {
     position: absolute;
-    top: 24px;
+    top: 7px;
     right: 0;
     display: none;
-    overflow: hidden;
-    /* background-color: #ccc; */
-    /* background-image: url("assets/bg/minimap.png"); */
-    padding: 4px;
+    background-image: url("assets/bg/minimap.png");
 }
-#minimap-container .object {
+#minimap {
+    width: 154px;
+    height: 90px;
+}
+#minimap-canvas, #minimap-objects-canvas {
     position: absolute;
-    border: 1px solid #333;
-    background: white;
-}
-#minimap-container .object.mine {
-    border-color: #0f0;
-}
-#minimap-container .object.not-mine {
-    border-color: #f0f;
-}
-#minimap-container .object.me {
-    border-color: #0f0;
-    border-width: 2px;
-}
-#minimap-container .object.aggressive {
-    border-color: #f00;
-    border-width: 2px;
-}
-#minimap-container .object.passive {
-    border-color: pink;
-    border-width: 2px;
+    top: 0;
+    left: 0;
 }
 .lot-quantity > input, .price > input {
     width: 25px;
@@ -1475,4 +1414,62 @@ big {
 	background: -webkit-linear-gradient(top, #363232, #222);
 	background: linear-gradient(top, #363232, #222);
 	border: 1px solid #0ff;
+}
+
+#controls-bar, #action-hotbar-container{
+    position: absolute;
+    right: 4px;
+    z-index: 1;
+}
+
+#controls-bar {
+    bottom: 0;
+    top: 0;
+    margin: auto;
+    height: 376px;
+}
+
+#action-hotbar-container {
+    position: absolute;
+    bottom: 0;
+}
+
+#main-action-button {
+    background-image: url("assets/bg/main-button.png");
+    width: 105px;
+    height: 67px;
+    display: inline-block;
+    margin: -10px;
+}
+
+#xp-progress-bar {
+    position: absolute;
+    right: 7px;
+    top: 0;
+    height: 7px;
+    width: 358px;
+    background: url("assets/bg/xp.png") repeat-x;
+}
+#xp-progress-bar:before {
+    position: absolute;
+    top: -7px;
+    left: -5px;
+    content: url("assets/bg/xp-left.png");
+}
+#xp-progress-bar:after {
+    position: absolute;
+    top: -7px;
+    right: -5px;
+    content: url("assets/bg/xp-right.png");
+}
+#xp-progress {
+    background: url("assets/bg/xp-full.png") repeat-x;
+    height: 7px;
+}
+
+#action-hotbar {
+    display: inline-block;
+}
+#action-hotbar > .button {
+    display: inline-block;
 }

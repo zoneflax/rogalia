@@ -31,9 +31,6 @@ Entity.sync = function(data, remove) {
         }
         entity.sync(edata);
         entity.initSprite();
-        if (entity.MoveType == Entity.MT_STATIC) {
-            game.map.updateObject(entity);
-        }
 
         if(game.containers[entity.Id]) {
             containers.push(game.containers[entity.Id]);

@@ -316,16 +316,23 @@ Controller.prototype = {
         }.bind(this));
     },
     initHotbar: function() {
-        this.hotbar = {
-            panel: document.getElementById("hotbar"),
-        };
-        for (var key in this.hotkeys) {
-            var hotkey = this.hotkeys[key];
-            if (!hotkey.button)
-                continue;
-            this.hotbar[key] = document.getElementById(hotkey.button + "-button");
-            this.hotbar[key].addEventListener('click', hotkey.callback.bind(this));
-        }
+        //TODO: fixme
+        util.dom.forEach("#action-hotbar > .button",  function() {
+            var icon = new Image();
+            icon.src = "assets/icons/actions/" + this.id.replace("-button", "") + ".png";
+            this.appendChild(icon);
+        });
+
+        // this.hotbar = {
+        //     panel: document.getElementById("hotbar"),
+        // };
+        // for (var key in this.hotkeys) {
+        //     var hotkey = this.hotkeys[key];
+        //     if (!hotkey.button)
+        //         continue;
+        //     this.hotbar[key] = document.getElementById(hotkey.button + "-button");
+        //     this.hotbar[key].addEventListener('click', hotkey.callback.bind(this));
+        // }
     },
     fpsStatsBegin: function() {
         if (this.fpsStats)
@@ -364,10 +371,10 @@ Controller.prototype = {
         game.help = this.system.help;
 
         this.iface.cursor = document.getElementById("cursor");
-        this.iface.actionButton = document.getElementById("action-button");
+        this.iface.actionButton = document.getElementById("main-action-button");
         this.iface.actionButton.state = "";
 
-        this.iface.element = document.getElementById("interface");
+        this.iface.element = document.getElementById("controls-bar");
         document.getElementById("effects").style.display = "inline-block";
 
         this.createButton(this.skills.panel, "skills");
@@ -382,25 +389,25 @@ Controller.prototype = {
 
         this.inventory.panel.button.onclick = this.toggleBag;
 
-        if (game.player.IsAdmin) {
-            var bioms = game.map.bioms.map(function(biom, i) {
-                var div = document.createElement("div");
-                div.appendChild(game.map.tiles[i]);
-                div.classList.add("slot");
-                div.title = biom.Name;
-                return div;
-            });
-            this.createButton(new Panel(
-                "terra-bar",
-                "Terraforming",
-                bioms,
-                this.bind(function(e) {
-                    if(!e.target.id)
-                        return;
-                    this.terraCursor(e.target);
-                })
-            ));
-        }
+        // if (game.player.IsAdmin) {
+        //     var bioms = game.map.bioms.map(function(biom, i) {
+        //         var div = document.createElement("div");
+        //         div.appendChild(game.map.tiles[i]);
+        //         div.classList.add("slot");
+        //         div.title = biom.Name;
+        //         return div;
+        //     });
+        //     this.createButton(new Panel(
+        //         "terra-bar",
+        //         "Terraforming",
+        //         bioms,
+        //         this.bind(function(e) {
+        //             if(!e.target.id)
+        //                 return;
+        //             this.terraCursor(e.target);
+        //         })
+        //     ));
+        // }
 
         this.initHotkeys();
         this.initHotbar();
@@ -436,6 +443,11 @@ Controller.prototype = {
         button.style.display = "block";
         object.button = button;
         button.onclick = makeToggle(button, object);
+
+        var icon = new Image();
+        icon.src = "assets/icons/controls/" + buttonName + ".png";
+        button.appendChild(icon);
+
         this.iface[name] = button;
     },
     terraCursor: function(tile) {
@@ -837,7 +849,8 @@ Controller.prototype = {
             warn.timeout = null;
         }, 3000);
 
-        game.chat.addMessage(warn.textContent);
+        if (game.chat)
+            game.chat.addMessage(warn.textContent);
 
     },
     showError: function(message) {

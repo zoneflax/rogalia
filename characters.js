@@ -38,7 +38,6 @@ Character.sync = function(data, remove) {
         } else {
             to.sync(from);
         }
-        game.map.updateObject(to);
     }
 
     game.player.updateEffects();

@@ -279,13 +279,11 @@ function Game() {
         }
 
         game.sortedEntities.remove(game.entities.get(id));
-        game.map.removeObject(id);
         game.entities.remove(id);
         game.claims.remove(id);
     };
 
     this.removeCharacterById = function(id) {
-        game.map.removeObject(id);
         var c = game.entities.get(id);
         game.sortedEntities.remove(c);
         var name = c.Name;

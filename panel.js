@@ -151,8 +151,10 @@ Panel.prototype = {
         this.hooks.hide && this.hooks.hide.call(this);
         this.savePosition();
         this.element.style.display = "none";
-        if (this.button)
+        if (this.button) {
             this.button.classList.remove("opened");
+            this.button.firstChild.src = this.button.firstChild.src.replace("-active.png", ".png");
+        }
         this.visible = false;
         var next = Panel.stack.pop();
         if (next)
@@ -182,8 +184,11 @@ Panel.prototype = {
     show: function() {
         this.toTop();
         this.element.style.display = "block";
-        if (this.button)
+        if (this.button) {
             this.button.classList.add("opened");
+            console.log(this.button.firstChild);
+            this.button.firstChild.src = this.button.firstChild.src.replace(".png", "-active.png");
+        }
         this.visible = true;
         if (!util.rectIntersects(
             this.x, this.y, this.width, this.height,

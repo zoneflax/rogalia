@@ -196,7 +196,7 @@ function Chat() {
     alwaysVisibleLabel.appendChild(document.createTextNode(T("always visible")));
 
     this.settingsElement = document.createElement("div");
-    this.settingsElement.className = "chat-settings";
+    this.settingsElement.id = "chat-settings";
     this.settingsElement.appendChild(alwaysVisibleLabel);
 
     this.removeAlert = function() {
@@ -221,10 +221,28 @@ function Chat() {
         util.dom.show(this.panel.button);
     };
 
+    this.tabs = document.createElement("div");
+    this.tabs.id = "chat-tabs";
+    this.tabs.appendChild(this.channelGroupsElement);
+    this.tabs.appendChild(this.settingsElement);
+
+    // ["general"].forEach(function(name) {
+    //     var title = document.createElement("span");
+    //     title.textContent = T(name);
+    //     var tab = document.createElement("div");
+    //     tab.appendChild(title);
+    //     this.tabs.appendChild(tab);
+    // }.bind(this));
+
+    var tabContents = document.createElement("div");
+    tabContents.id = "chat-tab-content";
+    tabContents.appendChild(this.messagesElement);
+    tabContents.appendChild(this.newMessageElement);
+
     this.panel = new Panel(
         "chat",
         "Chat",
-        [this.messagesElement, this.newMessageElement, this.channelGroupsElement, this.settingsElement]
+        [this.tabs, tabContents]
     );
 
     this.panel.hooks.show = function() {
