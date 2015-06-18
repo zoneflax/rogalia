@@ -1051,7 +1051,7 @@ ol li a:hover {
     display: none;
 }
 
-.message.channel-7 .body {
+.message.channel-7 .body, .message.channel-5 .body {
     color: #999;
 }
 
