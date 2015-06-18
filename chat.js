@@ -154,7 +154,7 @@ function Chat() {
 
     this.channelGroupsElement = document.createElement("div");
     this.channelGroups = {};
-    ["system", "players", "npc"].map(function(name) {
+    ["system", "server", "players", "npc"].map(function(name) {
         var label = document.createElement("label");
         var channelGroup = document.createElement("input");
         channelGroup.type = "checkbox";
@@ -416,8 +416,6 @@ function Chat() {
                 color = "#03c";
                 break;
             case this.names.server:
-                if (!message.Channel)
-                    message.Channel = 7;
                 color = "brown";
                 break;
             default:
@@ -537,5 +535,12 @@ function Chat() {
         setTimeout(function() {
             character.ballon && character.ballon.remove();
         }, 3000);
+    };
+
+    this.activate = function() {
+        if (config.ui.chatAttached)
+            this.newMessageElement.focus();
+        else
+            this.panel.show();
     };
 }

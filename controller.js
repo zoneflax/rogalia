@@ -275,7 +275,7 @@ Controller.prototype = {
             },
             13: { //enter
                 callback: function() {
-                    game.controller.chat.panel.show();
+                    game.controller.chat.activate();
                 }
             },
             27: { //esc

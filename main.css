@@ -1044,6 +1044,7 @@ ol li a:hover {
     color: orange;
 }
 
+.channel-group-server .channel-5,
 .channel-group-system .channel-7,
 .channel-group-npc .channel-9,
 .channel-group-players .channel-0 {
