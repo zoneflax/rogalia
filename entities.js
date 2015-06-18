@@ -70,13 +70,24 @@ Entity.getPreview = function(group) {
     }
     image.className = "item-preview";
     return image;
-}
+};
 
 Entity.find  = function(pattern) {
     var regex = new RegExp(pattern);
     return game.entities.filter(function(e) {
         return regex.test(e.Type);
     });
+};
+
+Entity.wipe = function(pattern) {
+    var queue = Entity.find("corpse");
+    var interval = setInterval(function() {
+        if (queue.length > 0) {
+            queue.pop().destroy();
+        } else {
+            clearInterval(interval);
+        }
+    }, 500);
 };
 
 Entity.makeDescription = function(type) {
