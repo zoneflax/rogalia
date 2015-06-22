@@ -512,7 +512,7 @@ Character.prototype = {
         return util.distanceLessThan(len_x, len_y, Math.hypot(game.screen.width, game.screen.height));
     },
     setDst: function(x, y) {
-        if (this.Disabled || this.Waza.Active)
+        if (this.Disabled)
             return;
         var leftBorder, rightBorder, topBorder, bottomBorder;
         leftBorder = this.Radius;
