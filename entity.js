@@ -169,7 +169,7 @@ Entity.prototype = {
         var k = 4;
 
         if (this.round) {
-            if (r >= 32)
+            if (r > 32)
                 k = 8;
             else if (r < 16)
                 k = 16;
