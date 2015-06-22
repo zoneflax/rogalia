@@ -80,7 +80,7 @@ Entity.find  = function(pattern) {
 };
 
 Entity.wipe = function(pattern) {
-    var queue = Entity.find("corpse");
+    var queue = Entity.find(pattern);
     var interval = setInterval(function() {
         if (queue.length > 0) {
             queue.pop().destroy();

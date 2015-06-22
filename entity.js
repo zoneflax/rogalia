@@ -392,8 +392,6 @@ Entity.prototype = {
     },
     //used by sign
     edit: function() {
-        if (this.Props.Text && !game.player.IsAdmin)
-            return;
         var text = prompt("Edit message", this.Props.Text);
         if (text) {
             game.network.send("sign-edit", {Id: this.Id, Text: text});
