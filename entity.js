@@ -171,7 +171,7 @@ Entity.prototype = {
         if (this.round) {
             if (r >= 32)
                 k = 8;
-            else if (r <= 16)
+            else if (r < 16)
                 k = 16;
         }
         r = this.sprite.width/k;
