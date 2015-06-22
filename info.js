@@ -73,8 +73,8 @@ function Info(message, character) {
                     dy: -8
                 }
             });
+            game.sound.playSound("heal");
         }
-        game.sound.playSound("heal");
         break;
     case "item-gain":
     case "craft-success":
@@ -104,7 +104,7 @@ function Info(message, character) {
     case "combo":
         this.text = this.data;
     }
-    this.value = util.toFixed(this.value, 2);
+    this.value = util.toFixed(this.value, 0);
 
     if (!this.text)
         return;
