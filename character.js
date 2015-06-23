@@ -1042,11 +1042,12 @@ Character.prototype = {
             rating.className = "rating";
             var buttons = document.createElement("div");
             buttons.id = "fishing-buttons";
-            var actions = ["IMMA-FIRIN", "MAH-LAZOR" ,"SHOOP-DA-WOOP", "yoro", "grlmrgl", "zap"];
+            var actions = [">", ">>", ">>>", "<", "<<", "<<<"];
             actions.forEach(function(action, index) {
                 var button = document.createElement("button");
                 button.textContent = T(action);
                 button.move = index;
+                button.style.width = "100px";
                 button.disabled = true;
                 button.onclick = function() {
                     game.network.send("fishing-move", {move: this.move}, repeat);
