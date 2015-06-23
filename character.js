@@ -1035,33 +1035,60 @@ Character.prototype = {
         }
     },
     fish: function fish(data) {
+        console.log(data);
         var repeat = fish.bind(this);
         var panel = game.panels["fishing"];
-        if (data.Done || data.Ack != "fishing") {
-            panel && panel.hide();
-            return repeat;
-        }
-
         if (!panel) {
             var rating = document.createElement("div");
             rating.className = "rating";
             var buttons = document.createElement("div");
+            buttons.id = "fishing-buttons";
             var actions = ["IMMA-FIRIN", "MAH-LAZOR" ,"SHOOP-DA-WOOP", "yoro", "grlmrgl", "zap"];
             actions.forEach(function(action, index) {
                 var button = document.createElement("button");
                 button.textContent = T(action);
                 button.move = index;
+                button.disabled = true;
                 button.onclick = function() {
-                    panel.hide();
                     game.network.send("fishing-move", {move: this.move}, repeat);
+                    util.dom.forEach("#fishing-buttons > button", function() {
+                        this.disabled = true;
+                    });
                 };
                 buttons.appendChild(button);
             });
-            panel = new Panel("fishing", "Fishing", [rating, buttons]);
+            var playerMeter = document.createElement("meter");
+            playerMeter.max = 300;
+            playerMeter.style.width = "100%";
+            playerMeter.title = T("Player");
+
+            var fishMeter = document.createElement("meter");
+            fishMeter.max = 300;
+            fishMeter.style.width = "100%";
+            fishMeter.title = T("Fish");
+
+            panel = new Panel("fishing", "Fishing", [rating, playerMeter, fishMeter, buttons]);
+            panel.player = playerMeter;
+            panel.fish = fishMeter;
             panel.rating = rating;
+            panel.buttons = buttons;
         }
-        panel.rating.textContent = T(data.Rating);
-        panel.show();
+        if ("Rating" in data) {
+            panel.player.value = +data.Player;
+            panel.fish.value = +data.Fish;
+            panel.rating.textContent = T(data.Rating);
+        }
+        if (data.Ack == "fishing" || data.Done) {
+            util.dom.forEach("#fishing-buttons > button", function() {
+                this.disabled = false;
+            });
+        }
+        if (data.Done) {
+            panel && panel.hide();
+            return null;
+        } else {
+            panel.show();
+        }
         return repeat;
     },
     updateEffect: function(name, effect) {

@@ -104,7 +104,7 @@ function Info(message, character) {
     case "combo":
         this.text = this.data;
     }
-    this.value = util.toFixed(this.value, 0);
+    this.value = util.toFixed(this.value, 2);
 
     if (!this.text)
         return;
