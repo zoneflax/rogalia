@@ -1035,7 +1035,6 @@ Character.prototype = {
         }
     },
     fish: function fish(data) {
-        console.log(data);
         var repeat = fish.bind(this);
         var panel = game.panels["fishing"];
         if (!panel) {
@@ -1083,7 +1082,10 @@ Character.prototype = {
                 this.disabled = false;
             });
         }
-        if (data.Done) {
+        if (data.Done || data.Warning) {
+            util.dom.forEach("#fishing-buttons > button", function() {
+                this.disabled = true;
+            });
             panel && panel.hide();
             return null;
         } else {
