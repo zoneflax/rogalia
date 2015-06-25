@@ -1074,8 +1074,8 @@ Character.prototype = {
             panel.buttons = buttons;
         }
         if ("Rating" in data) {
-            panel.player.value = +data.Player;
-            panel.fish.value = +data.Fish;
+            panel.player.value = +data.Player || 0;
+            panel.fish.value = +data.Fish || 0;
             panel.rating.textContent = T(data.Rating);
         }
         if (data.Ack == "fishing" || data.Done) {
