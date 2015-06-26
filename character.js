@@ -1320,8 +1320,9 @@ Character.prototype = {
         }
         var len_x = entity.X - this.X;
         var len_y = entity.Y - this.Y;
-        var r = Math.max(Math.max(entity.Radius, Math.min(entity.Width, entity.Height) / 2), this.Radius);
-        return util.distanceLessThan(len_x, len_y, r*2 + 1);
+        var r = 2*this.Radius + Math.max(entity.Radius, Math.min(entity.Width, entity.Height) / 2) + 1;
+
+        return util.distanceLessThan(len_x, len_y, r);
     },
     drawHovered: function() {
         if (this.Invisible)

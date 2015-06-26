@@ -209,6 +209,7 @@ Entity.prototype = {
         case "wooden-table":
         case "bookshelf":
         case "wooden-trough":
+        case "steel-pike":
         case "stack-of-wood":
             if (!this.Props.Slots)
                 break;
@@ -399,17 +400,17 @@ Entity.prototype = {
     },
     //used by container
     open: function(data) {
-        if (data && !data.Done) {
-            this.open.bind(this);
-            return;
+        if (game.player.canUse(this)) {
+            var container = Container.open(this.Id);
+            container.panel.show();
+            return null;
+        }
+        if (!data) {
+            game.network.send("Open", {Id: this.Id}, this.open.bind(this));
+            return null;
         }
 
-        if (!game.player.canUse(this)) {
-            game.network.send("Open", {Id: this.Id}, this.open.bind(this));
-            return;
-        }
-        var container = Container.open(this.Id);
-        container.panel.show();
+        return this.open.bind(this);
     },
     disassemble: function() {
         game.network.send("disassemble", {Id: this.Id});
