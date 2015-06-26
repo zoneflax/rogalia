@@ -1009,17 +1009,21 @@ Character.prototype = {
         default:
             var action = "dig";
             var callback = null;
+            var align = true;
             switch (tool.Group) {
             case "fishing-rod":
                 action = "fish";
                 callback = this.fish.bind(this);
+            case "taming":
+                action = "tame";
             case "shovel":
             case "pickaxe":
                 button.appendChild(tool.icon());
                 button.onclick = function() {
                     var cursor = new Entity(0, tool.Type);
                     cursor.initSprite();
-                    cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
+                    if (action != "tame")
+                        cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
                     var icon = tool._icon || tool.icon();
                     cursor.Width = CELL_SIZE;
                     cursor.Height = CELL_SIZE;
