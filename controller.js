@@ -220,6 +220,13 @@ Controller.prototype = {
             return;
         container.panel.toggle();
     },
+    initAvatar: function() {
+        document.getElementById("avatar-container").onclick = function() {
+            game.controller.stats.panel.toggle();
+        };
+        var avatar = document.getElementById("avatar");
+        avatar.src = "assets/avatars/minato.png";
+    },
     initHotkeys: function() {
         function toggle(panel) {
             return panel.toggle.bind(panel);
@@ -275,7 +282,7 @@ Controller.prototype = {
             },
             13: { //enter
                 callback: function() {
-                    game.controller.chat.panel.show();
+                    game.controller.chat.activate();
                 }
             },
             27: { //esc
@@ -319,8 +326,15 @@ Controller.prototype = {
         //TODO: fixme
         util.dom.forEach("#action-hotbar > .button",  function() {
             var icon = new Image();
-            icon.src = "assets/icons/actions/" + this.id.replace("-button", "") + ".png";
+            var base = "assets/icons/actions/" + this.id.replace("-button", "");
+            icon.src = base + ".png";
             this.appendChild(icon);
+            icon.parentNode.addEventListener("mouseover", function() {
+                icon.src = base + "-hover.png";
+            });
+            icon.parentNode.addEventListener("mouseleave", function() {
+                icon.src = base + ".png";
+            });
         });
 
         // this.hotbar = {
@@ -409,6 +423,7 @@ Controller.prototype = {
         //     ));
         // }
 
+        this.initAvatar();
         this.initHotkeys();
         this.initHotbar();
 
@@ -444,10 +459,9 @@ Controller.prototype = {
         object.button = button;
         button.onclick = makeToggle(button, object);
 
-        var icon = new Image();
-        icon.src = "assets/icons/controls/" + buttonName + ".png";
+        var icon = document.createElement("div");
+        icon.className = "icon";
         button.appendChild(icon);
-
         this.iface[name] = button;
     },
     terraCursor: function(tile) {
@@ -568,6 +582,8 @@ Controller.prototype = {
             } else {
                 game.controller.actionQueue = [];
                 game.network.send(command, args, callback);
+                if (this.world.cursor instanceof Entity)
+                    game.sortedEntities.remove(this.world.cursor);
             }
 
             this.clearCursors();

@@ -113,7 +113,7 @@ Entity.prototype = {
         return new Point(this.X, this.Y);
     },
     get round() {
-        return this.Width > 0;
+        return this.Width == 0;
     },
     showInfo: function() {
         var elements = [];
@@ -157,20 +157,25 @@ Entity.prototype = {
         return this.Sprite.Dx || this.sprite.width/2;
     },
     getDrawDy: function() {
+        // switch (this.Type) {
+        // case "apple-tree":
+        //     return 240;
+        // }
         if (this.Sprite.Dy)
             return this.Sprite.Dy;
+
+        // fucking hate it
         var r = this.Radius;
+        var k = 4;
+
         if (this.round) {
-            var k = 4;
-            // fucking hate it
-            switch (this.Group) {
-            case "plant":
-                if (this.Width > 32)
-                    k = 2;
-                break;
-            }
-            r = this.sprite.width/k;
+            if (r >= 32)
+                k = 8;
+            else if (r <= 16)
+                k = 16;
         }
+        r = this.sprite.width/k;
+
         return this.sprite.height - r;
     },
     getDrawPoint: function() {
@@ -537,9 +542,9 @@ Entity.prototype = {
             if (this.Type == "blank") {
                 game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
                 if (this.round) {
-                    game.iso.fillRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
-                } else {
                     game.iso.fillCircle(this.X, this.Y, this.Radius);
+                } else {
+                    game.iso.fillRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
                 }
             }
             this.sprite.draw(p);
@@ -595,9 +600,9 @@ Entity.prototype = {
         game.ctx.fillStyle = color || "#ccc";
         var p = this.screen();
         if (this.round) {
-            game.iso.fillStrokedRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
-        } else {
             game.iso.fillStrokedCircle(this.X, this.Y, this.Radius);
+        } else {
+            game.iso.fillStrokedRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
         }
         game.ctx.restore();
     },

@@ -451,9 +451,9 @@ function Map() {
             } else if (!e.inWorld()) {
                 return;
             } else if (e.Creator == game.player.Id) {
-                mctx.fillStyle = "#393";
+                mctx.fillStyle = "#9f9";
             } else if (e.Creator){
-                mctx.fillStyle = "#f0f";
+                mctx.fillStyle = "#999";
             }
             var x = (e.X - loc.X) / CELL_SIZE;
             var y = (e.Y - loc.Y) / CELL_SIZE;

@@ -1014,7 +1014,9 @@ Character.prototype = {
                 callback = this.fish.bind(this);
             case "shovel":
             case "pickaxe":
-                button.appendChild(tool.icon());
+                var bigIcon = loader.loadImage("bg/" + tool.Group + ".png");
+
+                button.appendChild(bigIcon);
                 button.onclick = function() {
                     var cursor = new Entity(0, tool.Type);
                     cursor.initSprite();

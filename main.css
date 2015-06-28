@@ -325,11 +325,81 @@ a:hover {
     text-decoration: underline;
 }
 
-#world > #controls-bar > .button {
-    display: none;
+#controls-bar > .button > .icon {
+    width: 45px;
+    height: 45px;
+    display: inline-block;
 }
 
+#stats-button > .icon {
+    background-image: url("assets/icons/controls/stats.png");
+}
+#stats-button:hover > .icon {
+    background-image: url("assets/icons/controls/stats-hover.png");
+}
+#stats-button.active > .icon {
+    background-image: url("assets/icons/controls/stats-active.png");
+}
 
+#wiki-button > .icon {
+    background-image: url("assets/icons/controls/wiki.png");
+}
+#wiki-button:hover > .icon {
+    background-image: url("assets/icons/controls/wiki-hover.png");
+}
+#wiki-button.active > .icon {
+    background-image: url("assets/icons/controls/wiki-active.png");
+}
+
+#system-button > .icon {
+    background-image: url("assets/icons/controls/system.png");
+}
+#system-button:hover > .icon {
+    background-image: url("assets/icons/controls/system-hover.png");
+}
+#system-button.active > .icon {
+    background-image: url("assets/icons/controls/system-active.png");
+}
+
+#map-button > .icon {
+    background-image: url("assets/icons/controls/map.png");
+}
+#map-button:hover > .icon {
+    background-image: url("assets/icons/controls/map-hover.png");
+}
+#map-button.active > .icon {
+    background-image: url("assets/icons/controls/map-active.png");
+}
+
+#inventory-button > .icon {
+    background-image: url("assets/icons/controls/inventory.png");
+}
+#inventory-button:hover > .icon {
+    background-image: url("assets/icons/controls/inventory-hover.png");
+}
+#inventory-button.active > .icon {
+    background-image: url("assets/icons/controls/inventory-active.png");
+}
+
+#craft-button > .icon {
+    background-image: url("assets/icons/controls/craft.png");
+}
+#craft-button:hover > .icon {
+    background-image: url("assets/icons/controls/craft-hover.png");
+}
+#craft-button.active > .icon {
+    background-image: url("assets/icons/controls/craft-active.png");
+}
+
+#skills-button > .icon {
+    background-image: url("assets/icons/controls/skills.png");
+}
+#skills-button:hover > .icon {
+    background-image: url("assets/icons/controls/skills-hover.png");
+}
+#skills-button.active > .icon {
+    background-image: url("assets/icons/controls/skills-active.png");
+}
 
 #system  button {
     width: 99%;
@@ -387,17 +457,6 @@ a:hover {
     cursor: pointer;
     margin: -1px -9px;
 }
-.button > img {
-    position: relative;
-    top: 2px;
-}
-.button.opened > img {
-    top: 0px;
-    left: -1px;
-}
-.button:not(.opened):hover > img {
-    opacity: 0.6;
-}
 
 .locked, .locked .button {
     opacity: 0.9;
@@ -412,12 +471,6 @@ a:hover {
     text-shadow: 0 0 6px;
 }
 
-.button:hover {
-    color: #ff0;
-}
-.button.opened {
-    text-decoration: underline;
-}
 .button-bar i, .button i {
     display: block;
     font-size: smaller;
@@ -662,7 +715,7 @@ a:hover {
     padding: 2px 1px;
 }
 .message .from {
-    color: #000;
+    color: #fff;
 }
 .message.from-me .from{
     color: green;
@@ -698,9 +751,6 @@ a:hover {
     cursor: pointer;
     text-decoration: underline;
     color: green;
-}
-.message .body a {
-    color: blue;
 }
 #users .user {
     list-style-type: square;
@@ -971,57 +1021,26 @@ ol li a:hover {
     cursor: pointer;
 }
 
-#strips {
-    display: none!important;
-    top: 70px;
-}
-#strips div {
-    width: 64px;
-    height: 5px;
-    border: 0;
-}
-#strips > div {
-    border: 1px solid #000;
-    margin-bottom: 1px;
-    background: red;
-    position: relative;
-}
-#strips > div > div {
-    background: #333;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-}
-#strips #hp > div:first-child{
-    background: green;
-}
-#strips #fullness > div:first-child {
-    background: orange;
-}
-#strips #stamina > div:first-child {
-    background: teal;
-}
-
 .unavailable {
     color: orange;
 }
 
+.channel-group-server .channel-5,
 .channel-group-system .channel-7,
 .channel-group-npc .channel-9,
 .channel-group-players .channel-0 {
     display: none;
 }
 
-.message.channel-7 .body {
-    color: #fff;
+.message.channel-7 .body, .message.channel-5 .body {
+    color: #ccc;
 }
 
 #time, #maximize, #mute, #build-warning {
     position: absolute;
     right: 3px;
     top: 3px;
-    background: #222;
+    background: #55381d;
     border-radius: 2px;
     padding: 2px;
     cursor: pointer;
@@ -1092,17 +1111,78 @@ big {
     max-width: none;
 }
 
-#minimap-container {
+#avatar-container, #minimap-container {
     position: absolute;
-    top: 7px;
-    right: 0;
-    display: none;
-    background-image: url("assets/bg/minimap.png");
+    background-image: url("assets/bg/rhombus.png");
+    width: 154px;
+    height: 90px;
 }
+
+#avatar-container {
+    left: 0;
+}
+#avatar {
+    position: absolute;
+    left: 26px;
+}
+
+#strips {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    width: 83px;
+    height: 31px;
+    background-image: url("assets/bg/strips.png");
+}
+#strips div {
+    height: 5px;
+}
+#strips > div:first-child {
+    margin-top: 6px;
+}
+#strips > div {
+    margin: auto;
+    width: 58px;
+    margin-bottom: 2px;
+    position: relative;
+}
+#strips > div > div {
+    background: #333;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+}
+#strips #hp{
+    background: linear-gradient(to bottom,  #57130e 0%, #9e3320 100%);
+}
+#strips #hp > div:first-child{
+    background: linear-gradient(to bottom,  #5a140f 0%, #e23d23 100%);
+}
+
+#strips #fullness{
+    background: linear-gradient(to bottom,  #49440c 0%, #8c771d 100%);
+}
+#strips #fullness > div:first-child {
+    background: linear-gradient(to bottom,  #7b7000 0%, #cfb20d 100%);
+}
+
+#strips #stamina{
+    background: linear-gradient(to bottom,  #0d3550 0%, #3c6378 100%);
+}
+#strips #stamina > div:first-child {
+    background: linear-gradient(to bottom,  #155783 0%, #4690bc 100%);
+}
+
+#minimap-container {
+    right: 0;
+}
+
 #minimap {
     width: 154px;
     height: 90px;
 }
+
 #minimap-canvas, #minimap-objects-canvas {
     position: absolute;
     top: 0;
@@ -1439,37 +1519,44 @@ big {
     width: 105px;
     height: 67px;
     display: inline-block;
-    margin: -10px;
 }
 
 #xp-progress-bar {
     position: absolute;
     right: 7px;
-    top: 0;
+    top: 6px;
     height: 7px;
     width: 358px;
     background: url("assets/bg/xp.png") repeat-x;
 }
 #xp-progress-bar:before {
     position: absolute;
-    top: -7px;
-    left: -5px;
+    top: -6px;
+    left: -4px;
     content: url("assets/bg/xp-left.png");
 }
 #xp-progress-bar:after {
     position: absolute;
-    top: -7px;
-    right: -5px;
+    top: -6px;
+    right: -4px;
     content: url("assets/bg/xp-right.png");
 }
 #xp-progress {
     background: url("assets/bg/xp-full.png") repeat-x;
     height: 7px;
 }
-
 #action-hotbar {
     display: inline-block;
+    position: relative;
+    overflow: hidden;
 }
+
 #action-hotbar > .button {
     display: inline-block;
 }
+
+#action-hotbar > .button > img {
+    position: relative;
+    top: 4px;
+}
+

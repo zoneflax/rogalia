@@ -152,8 +152,7 @@ Panel.prototype = {
         this.savePosition();
         this.element.style.display = "none";
         if (this.button) {
-            this.button.classList.remove("opened");
-            this.button.firstChild.src = this.button.firstChild.src.replace("-active.png", ".png");
+            this.button.classList.remove("active");
         }
         this.visible = false;
         var next = Panel.stack.pop();
@@ -185,9 +184,7 @@ Panel.prototype = {
         this.toTop();
         this.element.style.display = "block";
         if (this.button) {
-            this.button.classList.add("opened");
-            console.log(this.button.firstChild);
-            this.button.firstChild.src = this.button.firstChild.src.replace(".png", "-active.png");
+            this.button.classList.add("active");
         }
         this.visible = true;
         if (!util.rectIntersects(
@@ -222,4 +219,4 @@ Panel.prototype = {
         this.element.style.width = w + pad + "px";
         this.element.style.maxWidth = w + pad + "px";
     },
-}
+};
