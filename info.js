@@ -73,8 +73,8 @@ function Info(message, character) {
                     dy: -8
                 }
             });
+            game.sound.playSound("heal");
         }
-        game.sound.playSound("heal");
         break;
     case "item-gain":
     case "craft-success":

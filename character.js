@@ -511,7 +511,7 @@ Character.prototype = {
         return util.distanceLessThan(len_x, len_y, Math.hypot(game.screen.width, game.screen.height));
     },
     setDst: function(x, y) {
-        if (this.Disabled || this.Waza.Active)
+        if (this.Disabled)
             return;
         var leftBorder, rightBorder, topBorder, bottomBorder;
         leftBorder = this.Radius;
@@ -1008,10 +1008,13 @@ Character.prototype = {
         default:
             var action = "dig";
             var callback = null;
+            var align = true;
             switch (tool.Group) {
             case "fishing-rod":
                 action = "fish";
                 callback = this.fish.bind(this);
+            case "taming":
+                action = "tame";
             case "shovel":
             case "pickaxe":
                 var bigIcon = loader.loadImage("bg/" + tool.Group + ".png");
@@ -1020,7 +1023,8 @@ Character.prototype = {
                 button.onclick = function() {
                     var cursor = new Entity(0, tool.Type);
                     cursor.initSprite();
-                    cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
+                    if (action != "tame")
+                        cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
                     var icon = tool._icon || tool.icon();
                     cursor.Width = CELL_SIZE;
                     cursor.Height = CELL_SIZE;
@@ -1038,31 +1042,61 @@ Character.prototype = {
     fish: function fish(data) {
         var repeat = fish.bind(this);
         var panel = game.panels["fishing"];
-        if (data.Done || data.Ack != "fishing") {
-            panel && panel.hide();
-            return repeat;
-        }
-
         if (!panel) {
             var rating = document.createElement("div");
             rating.className = "rating";
             var buttons = document.createElement("div");
-            var actions = ["IMMA-FIRIN", "MAH-LAZOR" ,"SHOOP-DA-WOOP", "yoro", "grlmrgl", "zap"];
+            buttons.id = "fishing-buttons";
+            var actions = [">", ">>", ">>>", "<", "<<", "<<<"];
             actions.forEach(function(action, index) {
                 var button = document.createElement("button");
                 button.textContent = T(action);
                 button.move = index;
+                button.style.width = "100px";
+                button.disabled = true;
                 button.onclick = function() {
-                    panel.hide();
                     game.network.send("fishing-move", {move: this.move}, repeat);
+                    util.dom.forEach("#fishing-buttons > button", function() {
+                        this.disabled = true;
+                    });
                 };
                 buttons.appendChild(button);
             });
-            panel = new Panel("fishing", "Fishing", [rating, buttons]);
+            var playerMeter = document.createElement("meter");
+            playerMeter.max = 300;
+            playerMeter.style.width = "100%";
+            playerMeter.title = T("Player");
+
+            var fishMeter = document.createElement("meter");
+            fishMeter.max = 300;
+            fishMeter.style.width = "100%";
+            fishMeter.title = T("Fish");
+
+            panel = new Panel("fishing", "Fishing", [rating, playerMeter, fishMeter, buttons]);
+            panel.player = playerMeter;
+            panel.fish = fishMeter;
             panel.rating = rating;
+            panel.buttons = buttons;
         }
-        panel.rating.textContent = T(data.Rating);
-        panel.show();
+        if ("Rating" in data) {
+            panel.player.value = +data.Player || 0;
+            panel.fish.value = +data.Fish || 0;
+            panel.rating.textContent = T(data.Rating);
+        }
+        if (data.Ack == "fishing" || data.Done) {
+            util.dom.forEach("#fishing-buttons > button", function() {
+                this.disabled = false;
+            });
+        }
+        if (data.Done || data.Warning) {
+            util.dom.forEach("#fishing-buttons > button", function() {
+                this.disabled = true;
+            });
+            panel && panel.hide();
+            return null;
+        } else {
+            panel.show();
+        }
         return repeat;
     },
     updateEffect: function(name, effect) {
@@ -1291,8 +1325,9 @@ Character.prototype = {
         }
         var len_x = entity.X - this.X;
         var len_y = entity.Y - this.Y;
-        var r = Math.max(Math.max(entity.Radius, Math.min(entity.Width, entity.Height) / 2), this.Radius);
-        return util.distanceLessThan(len_x, len_y, r*2 + 1);
+        var r = 2*this.Radius + Math.max(entity.Radius, Math.min(entity.Width, entity.Height) / 2) + 1;
+
+        return util.distanceLessThan(len_x, len_y, r);
     },
     drawHovered: function() {
         if (this.Invisible)
