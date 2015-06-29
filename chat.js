@@ -223,16 +223,28 @@ function Chat() {
 
     this.tabs = document.createElement("div");
     this.tabs.id = "chat-tabs";
-    this.tabs.appendChild(this.channelGroupsElement);
-    this.tabs.appendChild(this.settingsElement);
+    // this.tabs.appendChild(this.channelGroupsElement);
+    // this.tabs.appendChild(this.settingsElement);
 
-    // ["general"].forEach(function(name) {
-    //     var title = document.createElement("span");
-    //     title.textContent = T(name);
-    //     var tab = document.createElement("div");
-    //     tab.appendChild(title);
-    //     this.tabs.appendChild(tab);
-    // }.bind(this));
+    var tabs = ["general", "friends", "system"];
+    tabs.forEach(function(name, i) {
+        var icon = new Image();
+        icon.src = "assets/icons/chat/tab-" + name + ".png";
+        icon.className = "chat-tab-icon";
+
+        var title = document.createElement("span");
+        title.textContent = T(name);
+
+        var tab = document.createElement("div");
+        tab.className = "chat-tab";
+        tab.id = "chat-tab-" + name;
+        tab.appendChild(icon);
+        tab.appendChild(title);
+        tab.style.zIndex = tabs.length - i;
+
+        this.tabs.appendChild(tab);
+    }.bind(this));
+    this.tabs.firstChild.classList.add("active");
 
     var tabContents = document.createElement("div");
     tabContents.id = "chat-tab-content";

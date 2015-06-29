@@ -262,8 +262,6 @@ Craft.prototype = {
                     item.classList.add("selected");
                     this.selected = item;
                 }
-                if (recipe.isNew)
-                    item.classList.add("new");
 
                 if (!this.safeToCreate(recipe))
                     item.classList.add("unavailable");
@@ -369,12 +367,6 @@ Craft.prototype = {
         recipeDetails.textContent = T("Select recipe");
         return recipeDetails;
     },
-    seen: function(item) {
-        if (item.recipe.isNew) {
-            item.recipe.isNew = false;
-            item.classList.remove("new");
-        }
-    },
     clickListener: function(e) {
         var recipe = e.target.recipe;
         if(!recipe)
@@ -389,8 +381,6 @@ Craft.prototype = {
             return;
         }
 
-
-        this.seen(e.target);
         e.target.classList.add("selected");
 
         if (this.selected)

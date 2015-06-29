@@ -43,7 +43,6 @@ function Panel(name, title, elements, listener, hooks) {
     close.className = "close";
     close.panel = this;
     close.onclick = this.hide.bind(this);
-    close.innerHTML = "&times;";
     titleBar.appendChild(close);
 
     this.element.appendChild(titleBar);
@@ -215,7 +214,7 @@ Panel.prototype = {
         localStorage.setItem(this.lsKey, JSON.stringify(config));
     },
     setWidth: function(w) {
-        var pad = 12;
+        var pad = 20;
         this.element.style.width = w + pad + "px";
         this.element.style.maxWidth = w + pad + "px";
     },

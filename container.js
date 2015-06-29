@@ -21,7 +21,7 @@ function Container(id) {
     this.update();
 };
 
-Container.SLOT_SIZE = 64;
+Container.SLOT_SIZE = 50;
 
 Container.open = function(id) {
     var container = game.containers[id];
@@ -34,7 +34,7 @@ Container.moveItem = function(id, from, to, slot) {
     id = parseInt(id);
     from.moveEnd(id);
     if (slot === undefined)
-        slot = -1
+        slot = -1;
     var args = {
         Id: id,
         ToId: to.id,
@@ -358,38 +358,37 @@ Container.prototype = {
                 item.slot = this.slots[i];
                 item.slot.title = item.title;
                 var progress = false;
-                var sup = document.createElement("sup");
+
+                var quality = document.createElement("sup");
+                quality.className = "quality";
+                quality.textContent = e.Quality;
+                if (e.almostBroken())
+                    quality.classList.add("almost-broken");
+
+
+                this.slots[i].appendChild(item);
+                this.slots[i].appendChild(quality);
+                this.slots[i].item = item;
+                this.slots[i].classList.add("has-item");
+
+                var addSub = function(text) {
+                    var sub = document.createElement("sub");
+                    sub.textContent = text;
+                    this.slots[i].appendChild(sub);
+                }.bind(this);
+
                 if (this.container && this.container.HideAdded) {
                     var added = new Date(this.container.HideAdded);
                     var duration = this.container.HideDuration / 1e6;
                     var diff = Date.now() - added;
                     if (diff < duration) {
-                        sup.textContent = util.toFixed(100*diff / duration) + "%";
-                        progress = true;
+                        addSub(util.toFixed(100*diff / duration) + "%");
                     }
+                } else if (e.Group == "atom") {
+                    addSub(e.Type);
+                } else if ("Amount" in e) {
+                    addSub(e.Amount);
                 }
-                var sub = null;
-                if (!progress) {
-                    if (e.Group == "atom") {
-                        sub = document.createElement("sub");
-                        sub.textContent = e.Type;
-                    }
-                    sup.textContent = e.Amount || e.Quality;
-
-                    if (e.almostBroken()) {
-                        sup.style.color = "#f33";
-                        sup.style.cursor = "help";
-                        sup.title = T("Almost broken");
-                    }
-                }
-
-                this.slots[i].appendChild(item);
-                if (sub)
-                    this.slots[i].appendChild(sub);
-                this.slots[i].appendChild(sup);
-                this.slots[i].item = item;
-                this.slots[i].classList.add("has-item");
-
             }
             this.items[i] = item;
         }
