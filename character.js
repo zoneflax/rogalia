@@ -450,6 +450,13 @@ Character.prototype = {
                 }
             };
             break;
+        case "cow":
+            actions = {
+                "Milk": function() {
+                    game.network.send("milk", {Id: this.Id});
+                }
+            };
+            break;
         case "rabbit":
         case "chicken":
             actions = {
@@ -457,6 +464,7 @@ Character.prototype = {
                     game.network.send("catch-animal", {Id: this.Id});
                 }
             };
+            break;
         default:
             if (this.Riding) {
                 actions = {
