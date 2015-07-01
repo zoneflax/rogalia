@@ -579,6 +579,7 @@ Character.prototype = {
             return;
         if (!game.player.see(this))
             return;
+
         this.drawDst();
 
         if (!this.sprite.ready)
@@ -1274,7 +1275,7 @@ Character.prototype = {
         var p = new Point(this);
         var sector = (this.sprite.position - 1);
         // y = 1 used to fix rendering order
-        var offset = new Point(20, 1).rotate(2*Math.PI - sector * Math.PI/4);
+        var offset = new Point(this.plow.Radius, 1).rotate(2*Math.PI - sector * Math.PI/4);
         p.add(offset);
         this.plow.X = p.x;
         this.plow.Y = p.y;
