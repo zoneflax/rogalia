@@ -39,6 +39,7 @@ function Character(id, name) {
 
     this.Burden = 0;
     this.burden = null;
+    this.plow = null;
 
     this.Effects = {};
     this.Clothes = [];
@@ -106,6 +107,7 @@ Character.prototype = {
         Character.copy(this, data);
 
         this.burden = (this.Burden) ? Entity.get(this.Burden) : null;
+        this.plow = ("Plowing" in this.Effects) ? Entity.get(this.Effects.Plowing.Plow) : null;
 
         this.syncMessages(this.Messages);
         this.syncMessages(this.PrivateMessages);
@@ -815,7 +817,7 @@ Character.prototype = {
             var index = Math.round(angle / sector);
             index += sectors + 1;
             index %= sectors;
-            var multiple = sector / self.sprite.angle;
+            var multiple = sector / this.sprite.angle;
             position = Math.floor(index) * multiple;
         } else if (!simpleSprite) {
             var sitting = this.Effects.Sitting;
@@ -1267,11 +1269,19 @@ Character.prototype = {
         }
     },
     updatePlow: function() {
-        if (!this.Effects.Plowing)
+        if (!this.plow)
             return;
-        var plow = Entity.get(this.Effects.Plowing.Plow);
-        plow.X = this.X;
-        plow.Y = this.Y;
+        var p = new Point(this);
+        var sector = (this.sprite.position - 1);
+        // y = 1 used to fix rendering order
+        var offset = new Point(20, 1).rotate(2*Math.PI - sector * Math.PI/4);
+        p.add(offset);
+        this.plow.X = p.x;
+        this.plow.Y = p.y;
+        this.plow.sprite.position = this.sprite.position;
+
+        if (this.Dx || this.Dy)
+            this.plow.sprite.animate();
     },
     pickUp: function() {
         var self = this;

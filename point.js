@@ -120,6 +120,14 @@ Point.prototype = {
         this.y /= len;
         return this;
     },
+    rotate: function(angle) {
+        var cs = Math.cos(angle);
+        var sn = Math.sin(angle);
+        var x = this.x * cs - this.y * sn;
+        this.y = this.x * sn + this.y * cs;
+        this.x = x;
+        return this;
+    },
     align: function(to) {
         if (to.x != 0) {
             this.x = to.x * Math.floor((this.x + to.x/2) / to.x);
