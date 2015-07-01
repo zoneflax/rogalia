@@ -852,12 +852,10 @@ Character.prototype = {
             }
         }
 
-        if (!simpleSprite) {
-            if (this.mount)
-                animation = "sit";
-            this.sprite = this.sprites[animation];
-            this.sprite.position = position;
-        }
+        if (this.mount)
+            animation = "sit";
+        this.sprite = this.sprites[animation];
+        this.sprite.position = position;
 
         if (!this.sprite.ready) {
             this.loadSprite();
