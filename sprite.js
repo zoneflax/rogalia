@@ -69,7 +69,7 @@ Sprite.prototype = {
         this.outline = canvas;
     },
     draw: function(p) {
-        if (this.frame * this.width + this.width > this.image.width) {
+        if (this.image.width == 0 || this.frame * this.width + this.width > this.image.width) {
             return;
         }
         // try {

@@ -90,6 +90,7 @@ var dict = {
     "Thirsty": "Жажда",
     "Overeat": "Переедание",
     "Sitting": "Сидим",
+    "Plowing": "Пашем",
     "Tool": "Инструмент",
     "Equipment": "Оборудование",
     "You must be near equipment": "Вы должны быть рядом с оборудованием",

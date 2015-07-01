@@ -39,6 +39,7 @@ function Character(id, name) {
 
     this.Burden = 0;
     this.burden = null;
+    this.plow = null;
 
     this.Effects = {};
     this.Clothes = [];
@@ -106,6 +107,7 @@ Character.prototype = {
         Character.copy(this, data);
 
         this.burden = (this.Burden) ? Entity.get(this.Burden) : null;
+        this.plow = ("Plowing" in this.Effects) ? Entity.get(this.Effects.Plowing.Plow) : null;
 
         this.syncMessages(this.Messages);
         this.syncMessages(this.PrivateMessages);
@@ -169,16 +171,6 @@ Character.prototype = {
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 3],
-            };
-            break;
-	case "horse":
-	    this.sprite.width = 80;
-	    this.sprite.height = 80;
-            this.sprite.angle = Math.PI/2;
-            this.sprite.speed = 21000;
-            this.sprite.frames = {
-                "idle": 1,
-                "run": [0, 4],
             };
             break;
 	case "rabbit":
@@ -332,6 +324,11 @@ Character.prototype = {
             this.sprite.offset = 45;
             this.sprite.speed = 21000;
             break;
+        case "horse":
+            this.sprite.width = 150;
+	    this.sprite.height = 150;
+            this.sprite.offset = 43;
+            break;
         case "cow":
         case "wolf":
         case "sheep":
@@ -415,6 +412,7 @@ Character.prototype = {
         default:
             switch (this.Type) {
             case "spider":
+            case "horse":
             case "cow":
             case "wolf":
             case "sheep":
@@ -449,6 +447,13 @@ Character.prototype = {
                 }
             };
             break;
+        case "cow":
+            actions = {
+                "Milk": function() {
+                    game.network.send("milk", {Id: this.Id});
+                }
+            };
+            break;
         case "rabbit":
         case "chicken":
             actions = {
@@ -456,6 +461,7 @@ Character.prototype = {
                     game.network.send("catch-animal", {Id: this.Id});
                 }
             };
+            break;
         default:
             if (this.Riding) {
                 actions = {
@@ -560,7 +566,7 @@ Character.prototype = {
     },
     getDrawPoint: function() {
         var p = this.screen();
-        var dy = (this.mount) ? this.mount.sprite.height/2 : 0;
+        var dy = (this.mount) ? this.mount.sprite.offset : 0;
         return {
             p: p,
             x: Math.round(p.x - this.sprite.width / 2),
@@ -572,6 +578,7 @@ Character.prototype = {
             return;
         if (!game.player.see(this))
             return;
+
         this.drawDst();
 
         if (!this.sprite.ready)
@@ -792,6 +799,7 @@ Character.prototype = {
     animate: function() {
         var simpleSprite = this.IsNpc;
         switch (this.Type) {
+        case "horse":
         case "cow":
         case "spider":
         case "wolf":
@@ -799,19 +807,18 @@ Character.prototype = {
             simpleSprite = false;
         }
         var animation = "idle";
-        if(this.Dx || this.Dy) {
+        var self = (this.mount) ? this.mount : this;
+        var position = self.sprite.position;
+        if(self.Dx || self.Dy) {
             animation = "run";
-            if (!simpleSprite)
-                this.sprite = this.sprites["run"];
-
-            var sector = (this.mount) ? this.mount.sprite.angle : this.sprite.angle;
+            var sector = self.sprite.angle;
             var sectors = 2*Math.PI / sector;
-            var angle = Math.atan2(-this.Dy, this.Dx);
+            var angle = Math.atan2(-self.Dy, self.Dx);
             var index = Math.round(angle / sector);
             index += sectors + 1;
             index %= sectors;
             var multiple = sector / this.sprite.angle;
-            this.sprite.position = Math.floor(index) * multiple;
+            position = Math.floor(index) * multiple;
         } else if (!simpleSprite) {
             var sitting = this.Effects.Sitting;
             if (sitting) {
@@ -820,13 +827,13 @@ Character.prototype = {
                 if (seat) {
                     switch (seat.Orientation) {
                     case "w":
-                        this.sprite.position = 1; break;
+                        position = 1; break;
                     case "s":
-                        this.sprite.position = 3; break;
+                        position = 3; break;
                     case "e":
-                        this.sprite.position = 5; break;
+                        position = 5; break;
                     case "n":
-                        this.sprite.position = 7; break;
+                        position = 7; break;
                     }
                 }
             } else {
@@ -842,10 +849,12 @@ Character.prototype = {
                     animation = "craft";
                 }
             }
-            var position = this.sprite.position;
-            this.sprite = this.sprites[animation];
-            this.sprite.position = position;
         }
+
+        if (this.mount)
+            animation = "sit";
+        this.sprite = this.sprites[animation];
+        this.sprite.position = position;
 
         if (!this.sprite.ready) {
             this.loadSprite();
@@ -854,6 +863,7 @@ Character.prototype = {
 
         var now = Date.now();
         var speed = (this.Speed && this.Speed.Current || 100);
+
 
         if (animation == "run")
             speed *= this.speed;
@@ -1259,11 +1269,19 @@ Character.prototype = {
         }
     },
     updatePlow: function() {
-        if (!this.Effects.Plowing)
+        if (!this.plow)
             return;
-        var plow = Entity.get(this.Effects.Plowing.Plow);
-        plow.X = this.X;
-        plow.Y = this.Y;
+        var p = new Point(this);
+        var sector = (this.sprite.position - 1);
+        // y = 1 used to fix rendering order
+        var offset = new Point(this.plow.Radius, 1).rotate(2*Math.PI - sector * Math.PI/4);
+        p.add(offset);
+        this.plow.X = p.x;
+        this.plow.Y = p.y;
+        this.plow.sprite.position = this.sprite.position;
+
+        if (this.Dx || this.Dy)
+            this.plow.sprite.animate();
     },
     pickUp: function() {
         var self = this;

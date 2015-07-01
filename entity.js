@@ -518,7 +518,8 @@ Entity.prototype = {
             return;
         }
 
-        this.sprite.animate();
+        if (this.Group != "plow")
+            this.sprite.animate();
 
         var p = this.getDrawPoint();
         if (this.Id && this.Id == game.player.Burden) {
