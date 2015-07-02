@@ -581,7 +581,7 @@ function Exchange() {
             tr.appendChild(ingots);
             table.appendChild(tr);
         });
-        var panel = new Panel("bank", "Bank", [table]);
+        var panel = new Panel("exchange", "Exchange", [table]);
         panel.show();
         return null;
     });
