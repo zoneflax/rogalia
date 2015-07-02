@@ -117,6 +117,9 @@ Character.npcActions = {
     "Bank": function() {
         new Bank();
     },
+    "Exchange": function() {
+        new Exchange();
+    },
     "Quest": function() {
         var id = this.Id;
         var name = this.Name;

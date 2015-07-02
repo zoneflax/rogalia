@@ -1480,3 +1480,12 @@ big {
 	background: linear-gradient(top, #363232, #222);
 	border: 1px solid #0ff;
 }
+
+#exchange-rates-table td {
+    border: 1px solid #ccc;
+    text-align: center;
+}
+#exchange-rates-table input {
+    width: 40px;
+    margin: 1px 3px;
+}
