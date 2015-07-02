@@ -37,15 +37,6 @@ function Stats() {
         }
     );
 }
-Stats.update = function() {
-    var button = document.getElementById("stats-button");
-    button.innerHTML = "";
-    var icon = game.player.icon();
-    var canvas = icon.cloneNode();
-    canvas.getContext("2d").drawImage(icon, 0, 0);
-
-    button.appendChild(canvas);
-};
 
 Stats.formatParam = function(param, digits) {
     return util.toFixed(param.Current, digits) + ' / ' + util.toFixed(param.Max, digits);

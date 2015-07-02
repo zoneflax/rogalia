@@ -53,6 +53,10 @@ button[disabled] {
     color: #ccc;
 }
 
+quote {
+    color: #789922;
+}
+
 button:not([disabled]):hover {
   background: #3f4c6b;
 }
@@ -478,8 +482,7 @@ a:hover {
 }
 
 #stats-button {
-    background-image: url("assets/button.png");
-    background-position: 0 0, 0 0;
+    background: url("assets/avatars/default.png") no-repeat center center, url("assets/button.png");
     overflow: hidden;
 }
 #stats-button > canvas {

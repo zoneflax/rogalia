@@ -353,14 +353,13 @@ Controller.prototype = {
         this.skills = new Skills();
         this.stats = new Stats();
         this.craft = new Craft();
-        this.chat = new Chat();
+        this.chat = game.chat = new Chat();
         this.minimap = new Minimap();
         this.system = new System();
         this.wiki = new Wiki();
         this.fpsStats = this.system.fps;
         this.inventory = Container.open(game.player.Equip[0]); //0 - SLOT_BAG
 
-        game.chat = this.chat;
         game.help = this.system.help;
 
         this.iface.cursor = document.getElementById("cursor");

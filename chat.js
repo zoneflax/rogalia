@@ -224,7 +224,12 @@ function Chat() {
     this.panel = new Panel(
         "chat",
         "Chat",
-        [this.messagesElement, this.newMessageElement, this.channelGroupsElement, this.settingsElement]
+        [
+            this.messagesElement,
+            this.newMessageElement,
+            this.channelGroupsElement,
+            this.settingsElement,
+        ]
     );
 
     this.panel.hooks.show = function() {
@@ -251,7 +256,7 @@ function Chat() {
     };
 
     this.format = function(body) {
-        var matches = body.match(/\${[^}]+}|https?:\/\/\S+|#\S+/g);
+        var matches = body.match(/\${[^}]+}|https?:\/\/\S+|#\S+|^>.*/g);
         var content = document.createElement("span");
         content.className = "body";
         if (matches) {
@@ -267,6 +272,7 @@ function Chat() {
         return content;
     };
 
+
     function parseMatch (content, body, match) {
         var index = body.indexOf(match);
         if (index > 0) {
@@ -275,7 +281,7 @@ function Chat() {
         }
 
         var element = null;
-        var simple = {type: "code", className: ""};
+        var simple = {tag: "code", className: "", content: ""};
 
         switch(match) {
         case "${lmb}":
@@ -285,18 +291,25 @@ function Chat() {
             simple.className = "rmb";
             break;
         case "${hr}":
-            simple.type = "hr";
+            simple.tag = "hr";
             break;
         default:
-             element = parseComplexMatch(match);
+            switch (match[0]) {
+            case ">":
+                simple.tag = "quote";
+                simple.content = match;
+                break;
+            default:
+                element = parseComplexMatch(match);
+            }
         }
 
         if (!element) {
-            element =  document.createElement(simple.type);
+            element =  document.createElement(simple.tag);
             element.className = simple.className;
+            element.textContent = simple.content;
         }
         content.appendChild(element);
-
 
         return body.substr(index + match.length);
     };
@@ -308,6 +321,7 @@ function Chat() {
         "b:": makeTagParser("b"),
         "i:": makeTagParser("i"),
         "u:": makeTagParser("u"),
+        "img:": imgParser,
     };
 
     function parseComplexMatch(match) {
@@ -360,6 +374,24 @@ function Chat() {
         };
         return link;
     }
+
+    function imgParser(data) {
+        var img = Entity.getPreview(data);
+        img.className = "";
+        var title = T(data);
+
+        var code = document.createElement("code");
+        code.textContent = title;
+
+
+        var cnt = document.createElement("span");
+        cnt.appendChild(code);
+        if (img.width) {
+            cnt.appendChild(img);
+        }
+
+        return cnt;
+    };
 
     var appendMessage = function(contents) {
         var messageElement = document.createElement("li");

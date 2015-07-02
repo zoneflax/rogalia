@@ -395,7 +395,6 @@ Character.prototype = {
             sprite.makeOutline();
             sprite.ready = true;
             sprite.loading = false;
-            Stats.update();
         });
     },
     loadNpcSprite: function() {

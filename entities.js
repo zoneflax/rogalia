@@ -17,7 +17,7 @@ Entity.init = function(data) {
         e.sync(props);
         Entity.templates[e.Type] = e;
     });
-}
+};
 
 
 Entity.sync = function(data, remove) {
