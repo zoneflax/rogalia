@@ -262,7 +262,17 @@ function lobbyStage(data) {
 
     util.dom.show(lobby);
 
+    function fastenter() {
+        var avatars = document.getElementsByClassName("avatar");
+        if (avatars.length > 0)
+            avatars[0].click();
+    }
+
+    window.addEventListener("keypress", fastenter);
+
+
     this.end = function() {
+        window.removeEventListener("keypress", fastenter);
         util.dom.hide(lobby);
     };
     // first data packet of the loading stage has no ack field
