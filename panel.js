@@ -24,8 +24,8 @@ function Panel(name, title, elements, listener, hooks) {
     this.element = document.createElement("div");
     this.element.id = name;
     this.element.className = "panel";
-    this.element.style.left = this.position.x + "px";
-    this.element.style.top = this.position.y + "px";
+    this.x = this.position.x;
+    this.y = this.position.y;
 
     this.contents = document.createElement("div");
     this.contents.className = "contents";
@@ -123,8 +123,16 @@ Panel.prototype = {
     get x() {
         return this.element.offsetLeft || this.position.x;
     },
+    set x(x) {
+        this.position.x = x;
+        this.element.style.left = x + "px";
+    },
     get y() {
         return this.element.offsetTop || this.position.y;
+    },
+    set y(y) {
+        this.position.y = y;
+        this.element.style.top = y + "px";
     },
     get width() {
         return parseInt(getComputedStyle(this.element).width);
@@ -190,8 +198,8 @@ Panel.prototype = {
             this.x, this.y, this.width, this.height,
             0, 0, window.innerWidth, window.innerHeight
         )) {
-            this.element.style.left = game.offset.x + "px";
-            this.element.style.top = game.offset.y + "px";
+            this.x = game.offset.x;
+            this.y = game.offset.y;
         }
         this.hooks.show && this.hooks.show.call(this);
         window.scrollTo(0, 0);

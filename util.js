@@ -17,6 +17,14 @@ var util = new function() {
     this.hr = function() {
         return document.createElement("hr");
     };
+    this.vr = function() {
+        var vr = document.createElement("div");
+        vr.className = "vr";
+        return vr;
+    };
+    this.br = function() {
+        return document.createElement("br");
+    };
 
     this.ajax = function(url, callback){
 	var oReq = new XMLHttpRequest();

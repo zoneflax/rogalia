@@ -1,5 +1,6 @@
+//TODO: use panel methods!
 function Menu(x, y) {
-    this.container = document.getElementById("menu");
+    this.container = null;
     this.visible = false;
     this.length = 0;
     this.offset = {
@@ -25,14 +26,12 @@ Menu.prototype = {
         if (!actions)
             return false;
 
-        x = x || game.controller.iface.x;
-        y = y || game.controller.iface.y;
-
-        this.container.style.display = "inline-block";
-        this.container.innerHTML = '';
-        if (!reuse) {
-            this.container.style.left = x + game.offset.x + "px";
-            this.container.style.top = y + game.offset.y + "px";
+        if (reuse && this.container) {
+            x = this.container.x;
+            y = this.container.y;
+        } else {
+            x = (x || game.controller.iface.x) + game.offset.x;
+            y = (y || game.controller.iface.y) + game.offset.y;
         }
 
         if (!Array.isArray(actions))
@@ -42,10 +41,16 @@ Menu.prototype = {
             actions[0]["Use"] = object.defaultAction;
 
         this.length = 0;
-        actions.forEach(function(actions) {
-            if (Object.keys(actions).length > 0)
-                this.container.appendChild(this.createMenu(actions, object));
+        var contents = actions.filter(function(actions) {
+            return (Object.keys(actions).length > 0);
+        }).map(function(actions) {
+            return this.createMenu(actions, object);
         }.bind(this));
+
+        this.container = new Panel("menu", "Menu", contents)
+        this.container.x = x;
+        this.container.y = y;
+        this.container.show();
 
         this.visible = true;
         return true;
@@ -60,7 +65,7 @@ Menu.prototype = {
     hide: function() {
         if(!this.visible)
             return;
-        this.container.style.display = "none";
+        this.container.hide();
         this.visible = false;
         game.controller.world.menuHovered = null;
     },

@@ -977,6 +977,9 @@ Character.prototype = {
 
         this.inBuilding = (n && w && s && e);
     },
+    equipSlot: function(name) {
+        return this.Equip[Character.equipSlots.indexOf(name)];
+    },
     updateBar: function() {
         ["Hp", "Fullness", "Stamina"].map(function(name) {
             var strip = document.getElementById(util.lcfirst(name));
@@ -991,7 +994,7 @@ Character.prototype = {
         var button = game.controller.iface.actionButton;
 
         var state = "";
-        var tool = Entity.get(this.Equip[Character.equipSlots.indexOf("right-hand")]);
+        var tool = Entity.get(this.equipSlot("right-hand"));
         if (this.burden)
             state = "drop";
         else if (tool)
@@ -1426,7 +1429,7 @@ Character.prototype = {
                 color: hairStyle[1],
                 opacity: hairStyle[2],
             };
-            parts.splice(Character.clothesIndex("legs"), 0, hair);
+            parts.unshift(hair);
         }
         return parts;
     },
@@ -1502,9 +1505,12 @@ Character.prototype = {
             type = "margo";
             break;
         }
-        var sex = ["male", "female"][game.player.Sex];
+        var sex = game.player.sex();
         var faction = game.player.Citizenship.Faction.toLowerCase();
         return game.talks.get(type, faction, sex);
+    },
+    sex: function() {
+        return ["male", "female"][this.Sex];
     },
     isInteractive: function() {
         switch (this.Name) {

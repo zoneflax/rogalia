@@ -443,7 +443,7 @@ function Chat() {
                 color = "#922";
                 break;
             case "TatriX":
-                color = "#03c";
+                color = "#0cc";
                 break;
             case this.names.server:
                 color = "red";

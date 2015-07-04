@@ -95,7 +95,7 @@ Stats.prototype = {
     sync: function() {
         if (this.panel && !this.panel.visible)
             return;
-        this.update();
+        // this.update();
     },
     update: function() {
         this.updateExp();
@@ -105,38 +105,49 @@ Stats.prototype = {
 
         var player = game.player;
 
-        var name = document.createElement("div");
-        name.textContent = '[' + player.Name + ']';
+        var name = document.createElement("span");
+        name.textContent = player.Name;
         this.summary.appendChild(name);
 
-        var lvl = document.createElement("div");
-        lvl.textContent = T("Level") + " " + player.Lvl;
+        var lvl = document.createElement("span");
+        lvl.textContent = " " + T("level") + " " + player.Lvl;
         this.summary.appendChild(lvl);
 
         var faction = player.Citizenship.Faction;
         if (faction) {
-            var citizenship = document.createElement("div");
+            this.summary.appendChild(util.br());
+
+            var citizenship = document.createElement("span");
             citizenship.style.marginTop = "10px";
-            citizenship.textContent = "{ " + T(faction) + " }";
+            citizenship.textContent = T(faction);
             this.summary.appendChild(citizenship);
 
-            var rank = document.createElement("div");
-            rank.textContent = T("Rank") + ": " + player.Citizenship.Rank;
+            var rank = document.createElement("span");
+            rank.textContent = " " + T("rank") + ": " + player.Citizenship.Rank;
             this.summary.appendChild(rank);
         }
 
         this.createSection("equip");
         for(var i = 0, l = this.equipContainer.slots.length; i < l; i++) {
-            this.equip.appendChild(this.equipContainer.slots[i]);
+            var slot = this.equipContainer.slots[i];
+            this.equip.appendChild(slot);
         }
 
         this.createSection("doll");
-        this.characterImage = player.icon();
-        this.doll.appendChild(this.characterImage);
+        var sex = player.sex();
+        this.doll.classList.add(sex);
+        var worn =  ["feet", "legs", "body", "head"].filter(function(name) {
+            return !!player.equipSlot(name);
+        });
+        worn.push("naked");
+        var dollStyle = worn.map(function(name) {
+            return "url('assets/bg/doll/" + sex + "/" + name + ".png')";
+        }).join(",");
+        this.doll.style.backgroundImage = dollStyle;
 
         this.createSection("vital");
         ["Hp", "Fullness", "Stamina"].forEach(function(param) {
-            this.vital.appendChild(this.createParam(param, player[param], 2, true));
+            this.vital.appendChild(this.createParam(param, player[param], 0, true));
         }.bind(this));
 
         this.createSection("main");
@@ -159,11 +170,12 @@ Stats.prototype = {
         }.bind(this));
 
         this.main.appendChild(attributes);
+        this.main.appendChild(util.vr());
         this.main.appendChild(health);
 
         this.createSection("params");
         ["Speed", "Armor", "Defence", "Accuracy"].forEach(function(param) {
-            this.params.appendChild(this.createParam(param, player[param], 2, true));
+            this.params.appendChild(this.createParam(param, player[param], 0, true));
         }.bind(this));
 
         this.createSection("exp");

@@ -2,8 +2,9 @@ function Skills() {
     this.current = null;
 
     this.skills = document.createElement("div");
+    this.skills.className = "skill-list";
 
-    this.description = document.createElement("fieldset");
+    this.description = document.createElement("div");
     this.description.classList.add("description");
     this.description.textContent = T("Select skill to see it's description");
 

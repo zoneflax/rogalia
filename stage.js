@@ -17,27 +17,11 @@ function connectingStage() {
     game.ctx.fillStyle = "#fff";
     game.ctx.fillText("...", CELL_SIZE, CELL_SIZE);
 
-    function run() {
-        game.network.run();
-        game.ctx.clear();
-        game.ctx.fillText("Connecting...", CELL_SIZE, CELL_SIZE);
-    }
-
-    if (!window.WebFont) {
-        run();
-        return;
-    }
-
-    WebFont.load({
-        google: {
-            families: ["Philosopher::latin,cyrillic"]
-        },
-        active: function() {
-            console.info("Fonts loaded");
-            run();
-        }
-    });
+    game.network.run();
+    game.ctx.clear();
+    game.ctx.fillText("Connecting...", CELL_SIZE, CELL_SIZE);
 }
+
 Stage.add(connectingStage);
 
 function loginStage() {
@@ -233,43 +217,38 @@ function loginStage() {
 Stage.add(loginStage);
 
 function lobbyStage(data) {
-    setTimeout(function() {
-        var name = "TatriX";
-        game.player.Name = name;
-        game.network.send("enter", {Name: name, Version: game.version});
-    }, 100);
-    // var characters = data.Characters || [];
-    // var container = document.getElementById("lobby-characters");
-    // var lobby = document.getElementById("lobby");
+    var characters = data.Characters || [];
+    var container = document.getElementById("lobby-characters");
+    var lobby = document.getElementById("lobby");
 
-    // characters.forEach(function(name) {
-    //     var avatar = document.createElement("div");
-    //     avatar.className = "avatar";
-    //     avatar.appendChild(loader.loadImage("avatars/default.png").cloneNode());
-    //     avatar.appendChild(document.createTextNode(name));
-    //     avatar.onclick = function() {
-    //         game.player.Name = name;
-    //         game.network.send("enter", {Name: name, Version: game.version});
-    //     };
+    characters.forEach(function(name) {
+        var avatar = document.createElement("div");
+        avatar.className = "avatar";
+        avatar.appendChild(loader.loadImage("avatars/default.png").cloneNode());
+        avatar.appendChild(document.createTextNode(name));
+        avatar.onclick = function() {
+            game.player.Name = name;
+            game.network.send("enter", {Name: name, Version: game.version});
+        };
 
-    //     container.appendChild(avatar);
-    // });
+        container.appendChild(avatar);
+    });
 
-    // container.appendChild(util.hr());
+    container.appendChild(util.hr());
 
-    // var createCharacter = document.createElement("button");
-    // createCharacter.textContent = (T("Create character"));
-    // createCharacter.onclick = function() {
-    //     util.dom.hide(lobby);
-    //     game.setStage("createCharacter");
-    // };
-    // container.appendChild(createCharacter);
+    var createCharacter = document.createElement("button");
+    createCharacter.textContent = (T("Create character"));
+    createCharacter.onclick = function() {
+        util.dom.hide(lobby);
+        game.setStage("createCharacter");
+    };
+    container.appendChild(createCharacter);
 
-    // util.dom.show(lobby);
+    util.dom.show(lobby);
 
-    // this.end = function() {
-    //     util.dom.hide(lobby);
-    // };
+    this.end = function() {
+        util.dom.hide(lobby);
+    };
     // first data packet of the loading stage has no ack field
     // so use this.sync instead of network.send callback
     this.sync = function(data) {

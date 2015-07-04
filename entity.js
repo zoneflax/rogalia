@@ -81,7 +81,8 @@ Entity.prototype = {
 
         if (!("Amount" in this))
             name += "\n" + T("Quality") + ": " + this.Quality;
-
+        if (this.Comment)
+            name += "\n" + this.Comment;
         return name;
     },
     set name(value) {

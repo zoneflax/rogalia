@@ -6,7 +6,8 @@
     user-select: none!important;
 }
 html, body {
-    font:  14px/18px Philosopher, cursive;
+    font:  13px/18px Dejavu Sans, Sans;
+    letter-spacing: -0.6px;
     padding: 0;
     margin: 0;
     background: #666;
@@ -23,7 +24,9 @@ input, textarea, code, .messages, .message, .message .body, .message .from{
     -webkit-user-select: text!important;
     -moz-user-select: text!important;
     user-select: text!important;
-    font:  14px/18px Philosopher, cursive;
+    font:  13px/18px Dejavu Sans, Sans;
+    letter-spacing: -0.6px;
+    color: white;
 }
 label {
     display: inline-block;
@@ -80,6 +83,18 @@ a:hover {
     color: lightgreen;
 }
 
+hr {
+    border: 0;
+    height: 3px;
+    background: #593815 url("assets/bg/hr.png") repeat-x;
+    margin: 2px -5px;
+}
+.vr {
+    background: url("assets/bg/vr.png") repeat-y;
+    width: 3px;
+    display: inline-block;
+}
+
 #account {
     position: absolute;
     right: 1em;
@@ -115,12 +130,10 @@ a:hover {
 #menu {
     text-align: left;
     position: absolute;
-    border: 2px solid #333;
-    border-radius: 7px;
-    padding: 1em;
-    padding-left: 2em;
+    z-index: 999999!important;
+}
+#menu .title-bar{
     display: none;
-    z-index: 999999;
 }
 #menu ul, #vendor ul {
     margin: 0;
@@ -169,8 +182,9 @@ a:hover {
     width: 15px;
     height: 13px;
     z-index: 100;
-    line-height: 1.4;
-    font-size: 10px;
+    line-height: 15px;
+    font-size: 9px;
+    letter-spacing: -1px;
     right: 0;
 }
 .slot > .quality {
@@ -228,14 +242,14 @@ a:hover {
 
 .panel {
     color: white;
-    background: #7b5323;
     position: absolute;
     display: none;
     z-index: 1;
     text-align: left;
 }
-.panel.top > .title-bar {
-    text-decoration: underline;
+.panel.top {
+    box-shadow: 0 0 2px 3px rgba(200, 144, 21, 0.8);
+    border-radius: 6px 6px 1px 1px;
 }
 .panel > .title-bar {
     background-color: #db9416;
@@ -245,20 +259,23 @@ a:hover {
     url("assets/bg/panel/header.png") repeat-x;
     cursor: default;
     width: 100%;
+    height: 14px;
     box-sizing: border-box;
-    padding-left: 10px;
-    position: absolute;
-    top: -18px;
-    border-radius: 9px 9px 0 0;
+    padding-left: 6px;
+    position: relative;
+    border-radius: 5px 5px 0 0;
 }
 .panel > .title-bar > .title-text {
     width: 90%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 15px;
+    font-size: 11px;
+    letter-spacing: 0.6px;
 }
 .panel .contents {
-    background:
+    background: 
     url("assets/bg/panel/border-top-left.png") no-repeat top left,
     url("assets/bg/panel/border-top-right.png") no-repeat top right,
     url("assets/bg/panel/border-top.png") repeat-x top,
@@ -266,16 +283,17 @@ a:hover {
     url("assets/bg/panel/border-bottom-right.png") no-repeat bottom right,
     url("assets/bg/panel/border-bottom.png") repeat-x bottom,
     url("assets/bg/panel/border-left.png") repeat-y left,
-    url("assets/bg/panel/border-right.png") repeat-y right;
+    url("assets/bg/panel/border-right.png") repeat-y right,
+    #7b5323;
 
     overflow: auto;
-    padding: 10px; /* update Panel.setWidth(); pad = 2*(padding) */
+    padding: 8px 10px; /* update Panel.setWidth(); pad = 2*(padding) */
 }
 .panel .close{
     border-left: 1px solid #6f350d;
     background: url("assets/bg/panel/close.png") no-repeat center;
     display: block;
-    height: 14px;
+    height: 13px;
     width: 14px;
     position: absolute;
     right: 0px;
@@ -438,14 +456,16 @@ a:hover {
 }
 
 #effects {
-    top: 70px;
-    left: 70px;
+    top: 4px;
+    left: 125px;
+    position: absolute;
 }
 .effect {
     margin-left: 3px;
-    border: 1px solid #ccc;
-    background: #666;
-    padding: 3px;
+    border: 1px solid #c6700e;
+    border-radius: 2px;
+    background: #7b5323;
+    padding: 1px;
     cursor: pointer;
     float: left;
     position: relative;
@@ -758,7 +778,7 @@ a:hover {
     color: green;
 }
 .message .body {
-    color: #333;
+    color: #fff;
     border: 0;
     padding: 0;
 }
@@ -831,11 +851,58 @@ a.extern {
 .param > .value {
     float: right;
 }
+.param .meter-wrapper:before {
+    width: 16px;
+    height: 16px;
+    content: url("assets/icons/test.png");
+    position: absolute;
+    top: 1px;
+    margin-left: -17px;
+}
+
 .param > .meter-wrapper {
     display: inline-block;
     width: 50%;
     position: relative;
 }
+meter {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+meter::-moz-meter-bar {
+    background: #99682e;
+}
+
+meter::-webkit-meter-bar {
+    background: #99682e;
+}
+
+meter::-webkit-meter-optimum-value {
+    background: #ac7637;
+}
+
+meter:-moz-meter-optimum::-moz-meter-bar {
+    background: #ac7637;
+}
+
+meter::-webkit-meter-suboptimum-value {
+    background: #ac7637;
+}
+
+meter:-moz-meter-sub-optimum::-moz-meter-bar {
+    background: #ac7637;
+}
+
+meter::-webkit-meter-even-less-good-value {
+    background: #ac7637;
+}
+
+meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
+    background: #ac7637;
+}
+
 .param meter {
     width: 100%;
 }
@@ -844,9 +911,7 @@ a.extern {
     top: 0;
     width: 100%;
     text-align: center;
-    color: #222;
-    text-shadow: 0px 0px 2px #ddd;
-    font-size: 12px;
+    color: #fff;
 }
 .param.strength, .param.protein {
     color: #f99;
@@ -873,8 +938,6 @@ a.extern {
 
 #stats .summary {
     text-align: center;
-    width: 100%;
-    position: absolute;
 }
 
 #stats .main {
@@ -882,26 +945,33 @@ a.extern {
 }
 #stats .attributes {
     width: 48%;
+    display: inline-block;
 }
 #stats .health {
-    border-left: 1px solid #ccc;
-    padding-left: 2%;
-    position: absolute;
-    top: 0;
-    right: 0px;
+    display: inline-block;
     width: 48%;
 }
 
 .doll {
     position: absolute;
-    width: 100%;
+    width: 71px;
+    height: 191px;
     text-align: center;
-    top: 96px;
+    margin: auto!important;
+    left: 0;
+    right: 0;
+}
+
+.doll.male {
+    background-image: url("assets/bg/doll/male/naked.png");
+}
+.doll.female {
+    background-image: url("assets/bg/doll/female/naked.png");
 }
 
 .equip {
     position: relative;
-    height: 256px;
+    height: 200px;
 }
 
 .equip > .slot {
@@ -918,16 +988,16 @@ a.extern {
     background-image: url("assets/bg/bag.png"), url("assets/bg/slot.png");
 }
 .equip-neck {
-    top: 64px;
+    top: 50px;
     background-image: url("assets/bg/neck.png"), url("assets/bg/slot.png");
 }
 .equip-right-hand {
-    top: 128px;
+    top: 100px;
     background-image: url("assets/bg/right-hand.png"), url("assets/bg/slot.png");
 }
 
 .equip-left-hand {
-    top: 192px;
+    top: 150px;
     background-image: url("assets/bg/left-hand.png"), url("assets/bg/slot.png");
 }
 /* right column */
@@ -936,22 +1006,19 @@ a.extern {
     background-image: url("assets/bg/head.png"), url("assets/bg/slot.png");
 }
 .equip-body {
-    top: 64px;
+    top: 50px;
     right: 0;
     background-image: url("assets/bg/body.png"), url("assets/bg/slot.png");
 }
 .equip-legs {
-    top: 128px;
+    top: 100px;
     right: 0;
     background-image: url("assets/bg/legs.png"), url("assets/bg/slot.png");
 }
 .equip-feet {
-    top: 192px;
+    top: 150px;
     right: 0;
     background-image: url("assets/bg/feet.png"), url("assets/bg/slot.png");
-}
-.attributes {
-    clear: both;
 }
 .ballon {
     position: absolute;
@@ -1031,7 +1098,7 @@ a.extern {
     padding: 0.5em;
 }
 #skills {
-    width: 300px;
+    width: 320px;
     white-space: pre-wrap;
 }
 #skills .skill {
@@ -1042,9 +1109,14 @@ a.extern {
 }
 #skills .description {
     min-height: 150px;
+    background: #74481b;
+    margin: 4px 0 4px;
+    border: 1px solid #6a4011;
+    padding: 4px;
 }
+
 #skills .skill.selected, #skills .skill:hover {
-    background: #666;
+    background: #74481b;
 }
 
 ol li{
@@ -1135,7 +1207,6 @@ big {
 }
 #crash-help > button {
     width: 100%;
-    padding: 5px;
     margin: 5px;
     display: inline-block;
     height: auto;

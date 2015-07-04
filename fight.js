@@ -61,4 +61,9 @@ function Fight() {
             //TODO: unlock panel
         }
     };
+
+    this.hotkey = function(key) {
+        var action = ["irimi", "tenkan", "kaiten", "tsuki", "shomen"][key-1];
+        apply(action);
+    };
 }

@@ -269,12 +269,6 @@ Controller.prototype = {
                     game.player.liftStart();
                 },
             },
-            F: {
-                button: "fight",
-                callback: function() {
-                    this.fight.show();
-                }
-            },
             9: { //tab
                 callback: function() {
                     game.player.selectNextTarget();
