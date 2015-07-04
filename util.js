@@ -182,7 +182,7 @@ var util = new function() {
         return (len1 * len1 + len2 * len2 < r * r);
     };
 
-    this.hash = function(string){
+    this.hash = function(string) {
         var hash = 0, i, char;
         if (string.length == 0) return hash;
         for (var i = 0, l = string.length; i < l; i++) {

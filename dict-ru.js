@@ -71,6 +71,8 @@ var dict = {
     "Deposit": "Положить",
     "Withdraw" : "Снять",
     "Bank": "Банк",
+    "Exchange": "Биржа",
+    "Rate": "Курс",
     "Get claim": "Получить клейм",
     "Get village claim": "Получить деревенский клейм",
     "Quest": "Квест",

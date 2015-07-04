@@ -492,3 +492,97 @@ function Bank() {
         panel.show();
     }
 }
+
+function Exchange() {
+    game.network.send("get-exchange-info", {}, function callback(data) {
+        if (data.Warning)
+            return null;
+        if (!data.Done)
+            return callback;
+        var table = document.createElement("table");
+        table.id = "exchange-rates-table";
+        table.innerHTML = "<tr>" +
+            "<th>" + T("Rate") + "</th>" +
+            "<th>" + T("Rate") + "</th>" +
+            "<th>" + T("Buy") + "</th>" +
+            "<th>" + T("Rate") + "</th>" +
+            "<th>" + T("Sell") + "</th>" +
+            "<th>" + T("Sell ingots") + "</th>" +
+            "</tr>";
+        Object.keys(data.Rates).forEach(function(assignation) {
+            var rate = data.Rates[assignation];
+            {
+                var name = document.createElement("td");
+                name.textContent = T(assignation);
+                name.title = T("Sold") + ": " + rate.Stats.Sold + "\n" + 
+                    T("Bought") + ": " + rate.Stats.Bought;
+            }
+            {
+                var rateBuy = document.createElement("td");
+                rateBuy.appendChild(Vendor.createPrice(rate.Buy));
+            }
+            {
+                var inputBuy = document.createElement("input");
+                var buttonBuy = document.createElement("button");
+                buttonBuy.textContent = T("Buy");
+                buttonBuy.onclick = function() {
+                    game.network.send(
+                        "exchange", {Assignation: assignation, Amount: +inputBuy.value}
+                    );
+                };
+
+                var buy = document.createElement("td");
+                buy.appendChild(inputBuy);
+                buy.appendChild(buttonBuy);
+            }
+            {
+                var rateSell = document.createElement("td");
+                rateSell.appendChild(Vendor.createPrice(rate.Sell));
+            }
+            {
+                var inputSell = document.createElement("input");
+                var buttonSell = document.createElement("button");
+                buttonSell.textContent = T("Sell");
+                buttonSell.onclick = function() {
+                    game.network.send(
+                        "exchange", {Assignation: assignation, Amount: -inputSell.value}
+                    );
+                };
+
+
+                var sell = document.createElement("td");
+                sell.appendChild(inputSell);
+                sell.appendChild(buttonSell);
+            }
+            {
+                var inputIngots = document.createElement("input");
+                var buttonIngots = document.createElement("button");
+                buttonIngots.textContent = T("Sell");
+                buttonIngots.onclick = function() {
+                    game.network.send(
+                        "exchange", {
+                            Assignation: assignation,
+                            Amount: +inputIngots.value,
+                            Ingot: true,
+                        }
+                    );
+                };
+                var ingots = document.createElement("td");
+                ingots.appendChild(inputIngots);
+                ingots.appendChild(buttonIngots);
+            }
+
+            var tr = document.createElement("tr");
+            tr.appendChild(name);
+            tr.appendChild(rateBuy);
+            tr.appendChild(buy);
+            tr.appendChild(rateSell);
+            tr.appendChild(sell);
+            tr.appendChild(ingots);
+            table.appendChild(tr);
+        });
+        var panel = new Panel("exchange", "Exchange", [table]);
+        panel.show();
+        return null;
+    });
+};

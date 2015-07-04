@@ -5,7 +5,7 @@ function Help() {
         "skills-button": function() {
             addMessage("${hr}В меню ${Skills} отображается текущий и максимальный уровень ваших навыков.");
             addMessage("Навыки влияют на качество добываемых ресурсов, качество создаваемых предметов и т.д.");
-            addMessage("Помимо этого, навыки открывают соответсвующие им рецепты, а также разблокируют действия, например навык ${lumberjacking} разблокирует способность рубить деревья.");
+            addMessage("Помимо этого, навыки открывают соответсвующие им рецепты, а также разблокируют действия, например навык ${Lumberjacking} разблокирует способность рубить деревья.");
         },
         "inventory-button": function() {
             addMessage("${hr}Для перемещения предметов в инвентаре щелкните один раз ${lmb} для начала переноса, " +
@@ -55,8 +55,8 @@ function Help() {
                 return game.player.hasItems({stone: 1});
             },
             text: [
-                "Войдите в портал рядом чтобы перенестись в случайную точку мира.",
-                "Затем найдите маленький ${Stone} лежащий на земле и поднимите его (${lmb})",
+                "Найдите телепорт с табличкой \"в случайное место\" или мост на сушу.",
+                "Затем найдите ${img:stone} лежащий на земле и поднимите его (${lmb})",
                 "В округе камней может не оказаться. В таком случае ищите их дальше от точки телепортации",
             ]
         },
@@ -154,7 +154,8 @@ function Help() {
             },
             text: [
                 "Хорошо. Теперь вернемся к рецепту топора.",
-                "${lmb} ${Stoneworking} > ${Stone axe}"
+                "${lmb} ${Stoneworking} > ${Stone axe}",
+                "${recipe:Stone axe}"
             ]
         },
         {
@@ -162,8 +163,8 @@ function Help() {
                 return game.player.hasItems({bough: 1, branch: 1});
             },
             text: [
-                "Нужно найти ветку и сук.",
-                "Их можно найти на деревьях (${rmb} ${Get branch})",
+                "Нужно найти: ${img:branch} и ${img:bough}.",
+                "Их можно найти на деревьях (${rmb} ${Get branch}, ${Get bough})",
             ]
         },
         {
@@ -231,7 +232,7 @@ function Help() {
         },
         {
             text: [
-                "Выбирите раздел ${Survival}, а в нем рецепт ${Respawn}",
+                "Выбирите раздел ${Survival}, а в нем ${recipe:Respawn}",
                 "А затем нажмите ${Create} и разместите постройку",
             ],
             check: function() {
@@ -241,7 +242,10 @@ function Help() {
         {
             text: [
                 "Осталось добыть нужные ингредиенты и построить респаун",
-                "Добывать камни можно при помощи молота: найдите ${stone-block} и ${rmb} ${Chip}",
+                "Добывать камни можно при помощи кирки ${recipe:pickaxe}",
+                "(Которую как и топор нужно предварительно взять в руки)",
+                "Найдите ${img:stone-block}",
+                "И нажмите ${rmb} ${Chip}",
             ],
             check: function() {
                 return (help.lastAction == "build-respawn");
@@ -263,7 +267,6 @@ function Help() {
             ]
         },
     ];
-    this.load();
 
     this.messages = document.createElement("ul");
     this.messages.className = "messages no-drag";
@@ -302,7 +305,8 @@ function Help() {
         this.save();
         this.messages.innerHTML = "";
     }.bind(this);
-    disableHelp.onclick();
+
+    // disableHelp.onclick();
 
     var toggleTopics = document.createElement("button");
     toggleTopics.className = "hidden";
@@ -330,6 +334,7 @@ function Help() {
             }
         }
     );
+    this.load();
 }
 
 Help.prototype = {
@@ -341,9 +346,14 @@ Help.prototype = {
     steps: [],
     load: function() {
         var i = localStorage.getItem("help.step") || 0;
-
         if (i >= 0 && i < this.steps.length)
             this.step = this.steps[i];
+        for (var j = 0; j < i; j++) {
+            var step = this.steps[j];
+            this.addStepText(step)
+            if ("check" in step)
+                this.addMessage("${hr}")
+        }
 
         var runned =  localStorage.getItem("help.runnedHooks");
         if (runned)
@@ -381,7 +391,6 @@ Help.prototype = {
         var step = this.step;
         if (!step)
             return;
-
         switch(step.state || "") {
         case "check":
             if (!step.lastCheck || step.lastCheck + 500 < Date.now()) {
@@ -394,14 +403,11 @@ Help.prototype = {
         case "wait":
             break;
         default:
-            if (typeof step.text == 'string')
-                step.text = [step.text];
-
             step.highlight && step.highlight.forEach(function(what) {
                 game.controller.highlight(what);
             });
 
-            step.text.forEach(this.addMessage.bind(this));
+            this.addStepText(step)
             this.showHelp();
             if (step.check) {
                 step.state = "check";
@@ -415,6 +421,12 @@ Help.prototype = {
                 step.state = "wait";
             }
         }
+    },
+    addStepText: function(step) {
+        if (typeof step.text == 'string')
+            step.text = [step.text];
+
+        step.text.forEach(this.addMessage.bind(this));
     },
     addMessage: function(text) {
         var item = document.createElement("li");
