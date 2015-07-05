@@ -10,7 +10,7 @@ html, body {
     letter-spacing: -0.6px;
     padding: 0;
     margin: 0;
-    background: #666;
+    background: #7b5323;
     text-align: center;
     color: white;
     overflow: hidden;
@@ -27,7 +27,6 @@ input, textarea, code, .messages, .message, .message .body, .message .from{
     font:  13px/18px Dejavu Sans, Sans;
     letter-spacing: -0.6px;
     color: white;
-    background: #845721;
 }
 label {
     display: inline-block;
@@ -36,6 +35,7 @@ label {
 /* see util.dom.createInput() */
 label > input[type=text] {
     margin-left: 5px;
+    background: #845721;
     border: 1px solid #a57031;
 }
 
@@ -111,7 +111,7 @@ hr {
     font-size: large;
 }
 #world {
-    background: #222;
+    background: #7b5323;
     background-image: url("assets/bg/loading-3.png");
     background-size: 100%;
     background-repeat: no-repeat;
@@ -334,16 +334,6 @@ hr {
     cursor: none!important;
 }
 
-#world > div > * {
-    /* display: none; */
-}
-
-.main-stage #world {
-    background: #111;
-}
-.main-stage #world > div > * {
-    /* display: inherit; */
-}
 .main-stage #wiki-button {
     display: block!important;
 }
@@ -709,12 +699,14 @@ hr {
 }
 
 #chat-tab-content {
+    width: 30em;
+    overflow: hidden;
     background:
     url("assets/bg/chat/corner.png") no-repeat top right,
     url("assets/bg/panel/border-top.png") repeat-x top,
     url("assets/bg/panel/border-right.png") repeat-y right,
     #61411c;
-    padding-bottom: 5px;
+    padding: 5px 0;
 }
 .chat-tab {
     background: url("assets/bg/chat/tab.png") no-repeat;
@@ -776,9 +768,9 @@ hr {
 }
 
 .messages {
-    width: 30em;
+    width: 32em;
     height: 20em;
-    overflow: hidden;
+    overflow: auto;
     padding: 5px;
     margin: 0 0 10px 0;
 }
@@ -787,6 +779,7 @@ hr {
     display: block;
     word-wrap: break-word;
     padding: 2px 1px;
+    padding-right: 2em;
 }
 .message .from {
     color: #fff;
@@ -800,13 +793,13 @@ hr {
     padding: 0;
 }
 .message .body code:not([class]) {
-    background: #ddd;
-    border: 1px solid #bbb;
+    background: #a47030;
+    border: 1px solid #714616;
     border-radius: 3px;
     padding: 1px;
     font-size: small;
     white-space: nowrap;
-    color: #333;
+    color: #fff;
 }
 .message .body .lmb, .message .body .rmb {
     width: 14px;
@@ -1037,7 +1030,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 }
 .ballon {
     position: absolute;
-    background: #333;
+    background: #7b5323;
     z-index: 1;
     word-wrap: break-word;
     max-width: 10em;
@@ -1266,7 +1259,6 @@ big {
     position: relative;
 }
 #strips > div > div {
-    background: #333;
     position: absolute;
     top: 0;
     left: 0;
