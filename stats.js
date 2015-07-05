@@ -95,7 +95,7 @@ Stats.prototype = {
     sync: function() {
         if (this.panel && !this.panel.visible)
             return;
-        // this.update();
+        this.update();
     },
     update: function() {
         this.updateExp();
