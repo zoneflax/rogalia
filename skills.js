@@ -2,7 +2,7 @@ function Skills() {
     this.current = null;
 
     this.skills = document.createElement("div");
-    this.skills.className = "skill-list";
+    this.skills.id = "skill-list";
 
     this.description = document.createElement("div");
     this.description.classList.add("description");

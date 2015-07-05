@@ -11,12 +11,14 @@ function Craft() {
 
     this.list = this.createList();
 
-    this.searchInpue = null;
+    this.searchInput = null;
 
-    this.controls = document.createElement("div");
-    this.controls.className = "craft-controls";
-    this.controls.appendChild(this.createSearchField());
-    this.controls.appendChild(this.createFilters());
+    this.listWrapper = document.createElement("div");;
+    this.listWrapper.id = "recipe-list-wrapper";
+    this.listWrapper.appendChild(this.createSearchField());
+    this.listWrapper.appendChild(util.hr());
+    this.listWrapper.appendChild(this.createFilters());
+    this.listWrapper.appendChild(this.list);
 
 
     this.titleElement = document.createElement("div");
@@ -28,10 +30,9 @@ function Craft() {
     this.panel = new Panel(
         "craft",
         "Craft",
-        [this.controls, this.list, this.recipeDetails],
+        [this.listWrapper, util.vr(), this.recipeDetails],
         this.clickListener.bind(this)
     );
-    this.panel.element.style.minWidth = "500px";
     this.panel.hooks.hide = this.cleanUp.bind(this);
     this.panel.hooks.show = this.update.bind(this);
 
@@ -315,7 +316,7 @@ Craft.prototype = {
                 recipeList.classList.toggle("filter-"+name);
             };
             label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(T(name)));
+            label.title = T(name);
             filters.appendChild(label);
         });
         return filters;
@@ -363,7 +364,7 @@ Craft.prototype = {
     },
     createRecipeDetails: function() {
         var recipeDetails = document.createElement("div");
-        recipeDetails.className = "recipe-details";
+        recipeDetails.id = "recipe-details";
         recipeDetails.textContent = T("Select recipe");
         return recipeDetails;
     },
@@ -396,7 +397,7 @@ Craft.prototype = {
         };
         var template = Entity.templates[e.target.type];
         if (template.MoveType == Entity.MT_PORTABLE)
-            this.renderRecipe()
+            this.renderRecipe();
         else
             this.renderBuildRecipe(e);
     },
@@ -408,6 +409,7 @@ Craft.prototype = {
         var recipe = this.current.recipe;
 
         var title = document.createElement("span");
+        title.className = "recipe-title";
         title.textContent = T(this.current.title);
         this.type = this.current.type;
         var ingredients = document.createElement("ul");
@@ -440,19 +442,10 @@ Craft.prototype = {
             }
         }
 
-        var hr = function() {
-            this.recipeDetails.appendChild(util.hr());
-        }.bind(this);
-        this.recipeDetails.appendChild(title);
-        hr();
-        this.recipeDetails.appendChild(this.makePreview(this.current.type));
-        hr();
-        this.renderRequirements(recipe);
-        hr();
-        this.recipeDetails.appendChild(ingredients);
-        hr();
+        var slotsWrapper = document.createElement("div");
+        slotsWrapper.id = "recipe-slots";
         for(var i = 0, l = slots.length; i < l; i++) {
-            this.recipeDetails.appendChild(slots[i]);
+            slotsWrapper.appendChild(slots[i]);
             this.slots.push(slots[i]);
         }
 
@@ -471,15 +464,35 @@ Craft.prototype = {
         all.textContent = T("Craft all");
         all.onclick = this.craftAll.bind(this);
 
-        this.recipeDetails.appendChild(all);
-        this.recipeDetails.appendChild(auto);
-        this.recipeDetails.appendChild(create);
+        var buttons = document.createElement("div");
+        buttons.id = "recipe-buttons";
+        buttons.appendChild(all);
+        buttons.appendChild(auto);
+        buttons.appendChild(create);
+
+        var hr = function() {
+            this.recipeDetails.appendChild(util.hr());
+        }.bind(this);
+
+        this.recipeDetails.appendChild(this.makePreview(this.current.type));
+        this.recipeDetails.appendChild(title);
+        hr();
+        this.renderRequirements(recipe);
+        hr();
+        this.recipeDetails.appendChild(document.createTextNode(T("Ingredients") + ":"));
+        this.recipeDetails.appendChild(ingredients);
+        this.recipeDetails.appendChild(slotsWrapper);
+        hr();
+        this.recipeDetails.appendChild(buttons);
+        hr();
+        this.recipeDetails.appendChild(Entity.makeDescription(this.current.type));
     },
     renderBuildRecipe: function(e) {
         var recipe = e.target.recipe;
         this.recipeDetails.innerHTML = "";
 
         var title = document.createElement("span");
+        title.className = "recipe-title";
         title.textContent = e.target.title;
 
         this.blank.type = e.target.type;
@@ -495,19 +508,18 @@ Craft.prototype = {
         var hr = function() {
             this.recipeDetails.appendChild(util.hr());
         }.bind(this);
-        this.recipeDetails.appendChild(title);
-        hr();
-        this.recipeDetails.appendChild(this.makePreview(this.blank.type));
-        hr();
-        this.requirements = null; //force renderRequirements append new requirements
-        this.renderRequirements(recipe);
-        this.recipeDetails.appendChild(ingredients);
-
         var create = document.createElement("button");
         create.className = "recipe-create";
         create.textContent = T("Create");
         create.onclick = this.build.bind(this);
 
+        this.recipeDetails.appendChild(this.makePreview(this.blank.type));
+        this.recipeDetails.appendChild(title);
+        hr();
+        this.requirements = null; //force renderRequirements append new requirements
+        this.renderRequirements(recipe);
+        this.recipeDetails.appendChild(ingredients);
+        hr();
         this.recipeDetails.appendChild(create);
     },
     auto: function() {
@@ -561,7 +573,7 @@ Craft.prototype = {
     renderRequirements: function(recipe) {
         var requirements = document.createElement("div");
 
-        requirements.appendChild(document.createTextNode(T("Requirements")));
+        requirements.appendChild(document.createTextNode(T("Requirements") + ":"));
         var deps = document.createElement("ul");
 
 
@@ -616,7 +628,6 @@ Craft.prototype = {
         var preview = Entity.templates[type].icon();
         preview.id = "item-preview";
         previewWrapper.appendChild(preview);
-        previewWrapper.appendChild(Entity.makeDescription(type));
         return previewWrapper;
     },
 };

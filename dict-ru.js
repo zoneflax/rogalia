@@ -106,6 +106,7 @@ var dict = {
     "Anti plague potion": "Противочумное зелье",
     "Vial": "Флакон",
     "Requirements": "Требования",
+    "Ingredients": "Ингредиенты",
     "Close": "Закрыть",
     "Help": "Справка",
     "Навыки [Skills]": "Навыки [Skills]",

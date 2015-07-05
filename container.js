@@ -168,7 +168,7 @@ Container.prototype = {
         this.panel = new Panel(
             "container-" + this.id,
             this.name,
-            [slots, this.fuel, moveAll, sort],
+            [slots, this.fuel, util.hr(), moveAll, sort],
             {
                 mousedown: this.clickListener.bind(this)
             }
