@@ -1,7 +1,8 @@
 function Network() {
     var override = document.location.search.match(/server=([^&]+)/);
-
-    this.host = (override) ? override[1] : document.location.hostname;
+    var defaultServer = document.location.hostname;
+    defaultServer = "beta.rogalik.tatrix.org";
+    this.host = (override) ? override[1] : defaultServer;
 
     if (window.location.protocol == "https:") {
         this.proto = "wss://";
