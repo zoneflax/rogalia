@@ -1023,11 +1023,16 @@ Character.prototype = {
             var callback = null;
             var align = true;
             switch (tool.Group) {
+            case "taming":
+                var cursor = new Entity(0, tool.Type);
+                cursor.initSprite();
+                action = "tame";
+                button.appendChild(tool.icon());
+                game.controller.creatingCursor(cursor, action, callback);
+                break;
             case "fishing-rod":
                 action = "fish";
                 callback = this.fish.bind(this);
-            case "taming":
-                action = "tame";
             case "shovel":
             case "pickaxe":
                 var bigIcon = loader.loadImage("bg/" + tool.Group + ".png");
