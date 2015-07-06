@@ -119,8 +119,9 @@ Character.prototype = {
         if (!init && JSON.stringify(this.getParts()) != this._parts)
             this.reloadSprite();
 
-        if (data.Dir !== undefined)
+        if (data.Dir !== undefined) {
             this.sprite.position = data.Dir;
+        }
     },
     syncMessages: function(messages) {
         while(messages && messages.length > 0) {
@@ -809,6 +810,11 @@ Character.prototype = {
         var animation = "idle";
         var self = (this.mount) ? this.mount : this;
         var position = self.sprite.position;
+
+        if (self.sprite.angle == Math.PI/2 && position > 4) {
+            position = (position / 2)<<0;
+        }
+
         if(self.Dx || self.Dy) {
             animation = "run";
             var sector = self.sprite.angle;
