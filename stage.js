@@ -542,10 +542,18 @@ function mainStage(data) {
     // game.ctx.scale(0.3, 0.3);
     // game.ctx.translate(1000, 1000);
 
+    var hueRotate = 0;
     this.draw = function() {
         game.ctx.clear();
         game.ctx.save();
         game.ctx.translate(-game.camera.x, -game.camera.y);
+
+        if ("MushroomTrip" in game.player.Effects) {
+            game.canvas.style.filter = "hue-rotate(" + (hueRotate % 360) +"deg)";
+            hueRotate += 20;
+        } else {
+            game.canvas.style.filter = "";
+        }
 
         game.map.draw();
         game.claims.forEach(drawClaim);
