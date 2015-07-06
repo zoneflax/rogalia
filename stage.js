@@ -538,6 +538,10 @@ function mainStage(data) {
             game.map.drawDarkness();
         game.sortedEntities.traverse(drawUI);
         game.controller.draw();
+        // this.debug();
+        game.ctx.restore();
+    };
+    this.debug = function() {
         // TODO: debug-remove
         // game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
         // game.ctx.fillRect(game.camera.x, game.camera.y, game.screen.width, game.screen.height);
@@ -553,7 +557,7 @@ function mainStage(data) {
         //         game.iso.strokeRect(node.X, node.Y, node.Width, node.Height);
         //     });
         // }
-        game.ctx.restore();
+
     };
     this.end = function() {};
 }
