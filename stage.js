@@ -512,7 +512,6 @@ function mainStage(data) {
         game.controller.update();
     };
 
-
     function drawObject(t) {
         t.draw();
     }
@@ -531,6 +530,8 @@ function mainStage(data) {
         game.ctx.save();
         game.ctx.translate(-game.camera.x, -game.camera.y);
 
+        this.drawGlobalEffects();
+
         game.map.draw();
         game.claims.forEach(drawClaim);
         game.sortedEntities.traverse(drawObject);
@@ -541,6 +542,17 @@ function mainStage(data) {
         // this.debug();
         game.ctx.restore();
     };
+
+    var hueRotate = 0;
+    this.drawGlobalEffects = function() {
+        if ("MushroomTrip" in game.player.Effects) {
+            game.canvas.style.filter = "hue-rotate(" + (hueRotate % 360) +"deg)";
+            hueRotate += 20;
+        } else {
+            game.canvas.style.filter = "";
+        }
+    };
+
     this.debug = function() {
         // TODO: debug-remove
         // game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
