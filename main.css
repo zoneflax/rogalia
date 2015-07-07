@@ -57,6 +57,10 @@ quote {
     color: #789922;
 }
 
+pre {
+    margin: 0;
+}
+
 button:not([disabled]):hover {
   background: #3f4c6b;
 }
