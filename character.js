@@ -688,7 +688,7 @@ Character.prototype = {
             game.ctx.fillStyle = "#f00";
             this.Path.forEach(function(p) {
                 game.iso.fillRect(p.X-r, p.Y-r, 2*r, 2*r);
-            })
+            });
         }
         if (this.dst.radius <= 0)
             return;
@@ -696,7 +696,7 @@ Character.prototype = {
         if (this.dst.time + 33 > now) {
             game.ctx.strokeStyle = "#fff";
             game.ctx.beginPath();
-            var p = new Point(this.dst.x, this.dst.y).toScreen()
+            var p = new Point(this.dst.x, this.dst.y).toScreen();
             game.ctx.arc(p.x, p.y, this.dst.radius--, 0, Math.PI * 2);
             game.ctx.stroke();
             this.dst.time = now;
@@ -705,7 +705,7 @@ Character.prototype = {
     drawBox: function() {
         var p = this.screen();
         game.ctx.strokeStyle = "cyan";
-        game.iso.strokeRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height)
+        game.iso.strokeRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
         game.iso.strokeCircle(this.X, this.Y, this.Radius);
 
         // game.ctx.beginPath();
@@ -1392,7 +1392,7 @@ Character.prototype = {
                 continue;
             var entity = Entity.get(eid);
             if (!entity) {
-                game.sendError("hasItems: cannot find %d", eid)
+                game.sendError("hasItems: cannot find %d", eid);
                 continue;
             }
             if (items[entity.Group]) {

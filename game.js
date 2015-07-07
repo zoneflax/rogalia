@@ -467,6 +467,7 @@ function Game() {
 
         game.update(currentTime);
         game.draw();
+
         game.controller.fpsStatsEnd();
 
         requestAnimationFrame(tick);
