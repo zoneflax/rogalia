@@ -76,6 +76,10 @@ quote {
     color: #789922;
 }
 
+pre {
+    margin: 0;
+}
+
 button:active {
     -webkit-filter: brightness(120%) contrast(130%);
     filter: brightness(120%) contrast(130%);

@@ -318,6 +318,11 @@ function Chat() {
         case "${hr}":
             simple.tag = "hr";
             break;
+        case "${triforce}":
+            element = document.createElement("pre");
+            element.style.lineHeight = 1;
+            element.innerHTML = " ▲\n▲ ▲";
+            break;
         default:
             switch (match[0]) {
             case ">":
