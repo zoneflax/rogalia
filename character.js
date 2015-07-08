@@ -1036,6 +1036,8 @@ Character.prototype = {
             case "fishing-rod":
                 action = "fish";
                 callback = this.fish.bind(this);
+            case "tool":
+                action = "use-tool";
             case "shovel":
             case "pickaxe":
                 button.appendChild(tool.icon());
