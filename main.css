@@ -293,7 +293,7 @@ hr {
     letter-spacing: 0.6px;
 }
 .panel .contents {
-    background: 
+    background:
     url("assets/bg/panel/border-top-left.png") no-repeat top left,
     url("assets/bg/panel/border-top-right.png") no-repeat top right,
     url("assets/bg/panel/border-top.png") repeat-x top,
@@ -626,10 +626,9 @@ hr {
     display: list-item!important;
 }
 .recipe-list ul {
-    padding-left: 10px;
+    padding: 0;
 }
-.recipe-list > li:before {
-    content: url("assets/icons/test.png");
+.recipe-list > li > img {
     position: absolute;
     left: 0;
 }
@@ -639,7 +638,11 @@ hr {
     cursor: pointer;
 }
 .recipe-list li li {
-    list-style-type: disc;
+    list-style-type: none;
+    background: #74481b;
+}
+.recipe-list li li:nth-child(even) {
+    background: #683f16;
 }
 .recipe-list .recipe.selected {
     color: #0f0;
@@ -702,6 +705,25 @@ hr {
     max-width: none;
 }
 
+#chat-always-visible-label {
+    position: absolute;
+    top: 28px;
+    right: 9px;
+    width: 16px;
+    height: 16px;
+    background: url("assets/icons/chat/always-visible.png");
+    pointer-events: all;
+}
+
+#chat-always-visible-label:hover {
+    -webkit-filter: brightness(150%);
+    filter: brightness(150%);
+}
+
+#chat-always-visible {
+    display:none;
+}
+
 #attached-chat {
     position: absolute;
     bottom: 0px;
@@ -746,7 +768,7 @@ hr {
     height: 8em;
 }
 
-#attached-chat.semi-hidden{
+#attached-chat.semi-hidden, #attached-chat.semi-hidden a{
     opacity: 0.5;
     pointer-events: none;
 }
@@ -790,8 +812,7 @@ hr {
 .message {
     display: block;
     word-wrap: break-word;
-    padding: 2px 1px;
-    padding-right: 2em;
+    padding: 0 2em 0 0;
 }
 .message .from {
     color: #fff;
@@ -873,13 +894,12 @@ a.extern {
 .param > .value {
     float: right;
 }
-.param .meter-wrapper:before {
+.param .meter-wrapper > img {
     width: 16px;
     height: 16px;
-    content: url("assets/icons/test.png");
     position: absolute;
     top: 1px;
-    margin-left: -17px;
+    left: -17px;
 }
 
 .param > .meter-wrapper {
@@ -957,7 +977,27 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 }
 
 #stats .summary {
+    background: url("assets/bg/strip/center.png") repeat-x;
+    height: 32px;
+    line-height: 32px;
+    display: table;
+    margin: auto;
+    position: relative;
     text-align: center;
+}
+
+#stats .summary::before,
+#stats .summary::after {
+    position: absolute;
+    top: -5px;
+}
+#stats .summary::before {
+    content: url("assets/bg/strip/left.png");;
+    left: -60px;
+}
+#stats .summary::after {
+    content: url("assets/bg/strip/right.png");
+    right: -60px;
 }
 
 #stats .main {
@@ -1124,7 +1164,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     cursor: pointer;
 }
 #skills .skill.capped {
-    color: orange;
+    color: #f7b56d;
 }
 #skills .description {
     min-height: 150px;
@@ -1254,21 +1294,21 @@ big {
     position: absolute;
     top: 30px;
     left: 50%;
-    width: 83px;
-    height: 31px;
-    background-image: url("assets/bg/strips.png");
+    width: 65px;
+    height: 29px;
+    background: url("assets/bg/strips.png") no-repeat;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-content: flex-start;
 }
 #strips div {
-    height: 5px;
-}
-#strips > div:first-child {
-    margin-top: 6px;
+    height: 7px;
 }
 #strips > div {
-    margin: auto;
-    width: 58px;
-    margin-bottom: 2px;
+    width: 59px;
     position: relative;
+    margin-top: 2px;
 }
 #strips > div > div {
     position: absolute;
@@ -1510,16 +1550,34 @@ big {
     display: block;
     margin: 5px auto;
 }
+
+
 #action-progress {
-  /* background: none repeat scroll 0 0 orange; */
-  bottom: 76px;
-  /* height: 16px; */
-  left: 0;
-  margin: auto;
-  position: absolute;
-  right: 0;
-  width: 300px;
-  z-index: 99999999;
+    background:
+    url("assets/bg/action-progress/top.png") repeat-x top,
+    url("assets/bg/action-progress/bottom.png") repeat-x bottom;
+    bottom: 170px;
+    height: 23px;
+    left: 0;
+    margin: auto;
+    position: absolute;
+    right: 0;
+    width: 300px;
+    z-index: 99999999;
+    padding: 3px;
+}
+#action-progress::before,
+#action-progress::after {
+    position: absolute;
+    top: -2px;
+}
+#action-progress::before {
+    content: url("assets/bg/action-progress/left.png");
+    left: 0;
+}
+#action-progress::after {
+    content: url("assets/bg/action-progress/right.png");
+    right: 0;
 }
 
 #talk, #story {
@@ -1636,6 +1694,7 @@ big {
 #action-hotbar-container {
     position: absolute;
     bottom: 0;
+    width: 461px;
 }
 
 #main-action-button {

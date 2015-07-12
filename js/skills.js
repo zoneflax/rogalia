@@ -43,7 +43,16 @@ Skills.prototype = {
         var max = 100;
         Object.keys(game.player.Skills).forEach(function(name) {
             var skill = game.player.Skills[name];
-            var item = Stats.prototype.createParam(name, {Current: skill.Value.Current, Max: max});
+            var item = Stats.prototype.createParam(
+                name,
+                {Current: skill.Value.Current, Max: max},
+                2,
+                false,
+                "skills/" + name
+            );
+            if (skill.Value.Current == max) {
+                item.getElementsByClassName("meter-title")[0].textContent = "max";
+            }
             item.name = name;
             item.skill = skill;
             item.classList.add("skill");

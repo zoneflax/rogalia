@@ -40,41 +40,7 @@ function Chat() {
         this.send("${recipe:" + type +"}");
     };
 
-    var myMessages = {
-        ring: [],
-        current: 0,
-        backup: "",
-    };
-    myMessages.last = function() {
-        if (this.ring.length == 0)
-            return null;
-        return this.ring[this.ring.length-1];
-    };
-    myMessages.prev = function() {
-        this.current = Math.max(0, this.current-1);
-        if (this.ring.length == 0)
-            return this.backup;
-
-        return this.ring[this.current];
-    };
-    myMessages.next = function() {
-        this.current = Math.min(this.ring.length, this.current+1);
-        if (this.current == this.ring.length)
-            return this.backup;
-
-        return this.ring[this.current];
-    };
-    myMessages.save = function(message) {
-        if (this.current >= this.ring.length)
-            this.backup = message;
-    };
-    myMessages.push = function(message) {
-        if (this.last() == message)
-            return;
-
-        this.ring.push(message);
-        this.current = this.ring.length;
-    };
+    var myMessages = new ChatRing();
 
     this.keydown = function(e) {
         var message = e.target.value;
@@ -183,21 +149,8 @@ function Chat() {
         this.panel.contents.classList.remove("semi-hidden");
     }.bind(this);
 
-
-    var alwaysVisibleLabel = document.createElement("label");
-    var alwaysVisibleChkbx = document.createElement("input");
-    alwaysVisibleChkbx.type = "checkbox";
-    alwaysVisibleChkbx.checked = true;
-    alwaysVisibleChkbx.onclick = function() {
-        semi.always = !semi.always;
-        this.panel.contents.classList.toggle("semi-hidden");
-    }.bind(this);
-    alwaysVisibleLabel.appendChild(alwaysVisibleChkbx);
-    alwaysVisibleLabel.appendChild(document.createTextNode(T("always visible")));
-
     this.settingsElement = document.createElement("div");
     this.settingsElement.id = "chat-settings";
-    this.settingsElement.appendChild(alwaysVisibleLabel);
 
     this.removeAlert = function() {
         game.controller.unhighlight("chat");
@@ -246,16 +199,33 @@ function Chat() {
     }.bind(this));
     this.tabs.firstChild.classList.add("active");
 
+    var alwaysVisible = util.dom.createCheckBox();
+    alwaysVisible.id = "chat-always-visible";
+    alwaysVisible.label.id = "chat-always-visible-label";
+    alwaysVisible.label.title = T("Always visible");
+    alwaysVisible.checked = localStorage.getItem("chat.alwaysVisible") == "true";
+    alwaysVisible.onclick = function() {
+        semi.always = !semi.always;
+        localStorage.setItem("chat.alwaysVisible", semi.always);
+        this.panel.contents.classList.toggle("semi-hidden");
+    }.bind(this);
+
+
     var tabContents = document.createElement("div");
     tabContents.id = "chat-tab-content";
     tabContents.appendChild(this.messagesElement);
     tabContents.appendChild(this.newMessageElement);
+    tabContents.appendChild(alwaysVisible.label);
 
     this.panel = new Panel(
         "chat",
         "Chat",
         [this.tabs, tabContents]
     );
+
+    // hide on load
+    if (!alwaysVisible.checked)
+        alwaysVisible.onclick();
 
     this.panel.hooks.show = function() {
         this.initNotifications();

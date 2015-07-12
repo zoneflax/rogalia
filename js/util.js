@@ -105,25 +105,24 @@ var util = new function() {
                 this.classList.remove(name);
             });
         },
-        createInput: function(text) {
+        createInput: function(text, name, type) {
             var input = document.createElement("input");
-            input.type = "text";
+            input.type = type || "text" ;
+            if (name)
+                input.name = name;
             var label = document.createElement("label");
-            label.appendChild(document.createTextNode(text));
+            if (text)
+                label.appendChild(document.createTextNode(text));
             label.appendChild(input);
             input.label = label;
             return input;
         },
         createRadioButton: function(text, name) {
-            var input = document.createElement("input");
-            input.type = "radio";
-            input.name = name;
-            var label = document.createElement("label");
-            label.appendChild(input);
-            label.appendChild(document.createTextNode(text));
-            input.label = label;
-            return input;
-        }
+            return this.createInput(text, name, "radio");
+        },
+        createCheckBox: function(text, name) {
+            return this.createInput(text, name, "checkbox");
+        },
     };
 
     this.ucfirst = function(string) {

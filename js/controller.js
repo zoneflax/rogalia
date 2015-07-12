@@ -225,7 +225,7 @@ Controller.prototype = {
             game.controller.stats.panel.toggle();
         };
         var avatar = document.getElementById("avatar");
-        avatar.src = "assets/avatars/minato.png";
+        avatar.src = "assets/avatars/" + game.player.sex() + ".png";
     },
     initHotkeys: function() {
         function toggle(panel) {

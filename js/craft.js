@@ -141,13 +141,9 @@ Craft.prototype = {
         auto.onclick = function() {
             var list = [];
             var items = [];
-            for (var i in game.containers) {
-                var container = game.containers[i];
-                container.visible && container.items.forEach(function(item) {
-                    if (item)
-                        items.push(item.entity);
-                });
-            }
+            this.auto(function(item) {
+                items.push(item.entity);
+            });
             for (var group in blank.Props.Ingredients) {
                 var has = blank.Props.Ingredients[group];
                 var required = recipe.Ingredients[group];
@@ -167,7 +163,7 @@ Craft.prototype = {
             }
             if (list.length > 0)
                 game.network.send("build-add", {Blank: blank.Id, List: list});
-        };
+        }.bind(this);
 
         var buildButton = document.createElement("button");
         buildButton.textContent = T("Build");
@@ -232,13 +228,13 @@ Craft.prototype = {
         var list = document.createElement("ul");
         list.className = "recipe-list no-drag";
         var groups = {};
+        for (var group in game.player.Skills) {
+            groups[group] = {};
+        }
         Entity.getSortedRecipeTuples().forEach(function(tuple) {
             var type = tuple[0];
             var recipe = tuple[1];
-            var group = recipe.Skill;
-            if (!groups[group])
-                groups[group] = {};
-            groups[group][type] = recipe;
+            groups[recipe.Skill][type] = recipe;
         });
 
         for (var group in groups) {
@@ -267,6 +263,7 @@ Craft.prototype = {
                 if (!this.safeToCreate(recipe))
                     item.classList.add("unavailable");
 
+
                 subtree.appendChild(item);
             }
 
@@ -283,6 +280,11 @@ Craft.prototype = {
                 util.dom.toggle(this);
                 visibleGroups[this.group] = !this.classList.contains("hidden");
             }.bind(subtree);
+
+            var icon = new Image();
+            icon.src = "assets/icons/skills/" + group.toLowerCase() + ".png";
+
+            subtreeLi.appendChild(icon);
             subtreeLi.appendChild(groupToggle);
             subtreeLi.appendChild(subtree);
             list.appendChild(subtreeLi);
@@ -452,7 +454,11 @@ Craft.prototype = {
         var auto = document.createElement("button");
         auto.className = "recipe-auto";
         auto.textContent = T("Auto");
-        auto.onclick = this.auto;
+        auto.onclick = function() {
+            this.auto(function(item, container) {
+                container.dwimCraft(item);
+            });
+        }.bind(this);
 
         var create = document.createElement("button");
         create.className = "recipe-create";
@@ -522,12 +528,16 @@ Craft.prototype = {
         hr();
         this.recipeDetails.appendChild(create);
     },
-    auto: function() {
+    auto: function(callback) {
         for (var i in game.containers) {
             var container = game.containers[i];
-            container.visible && container.items.forEach(function(item) {
-                item && container.dwimCraft(item);
-            });
+            var entity = Entity.get(container.id);
+            if (entity && entity.belongsTo(game.player) || container.visible) {
+                container.items.forEach(function(item) {
+                    if (item)
+                        callback(item, container);
+                });
+            }
         }
     },
     craftAll: function() {

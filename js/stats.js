@@ -39,11 +39,13 @@ function Stats() {
 }
 
 Stats.formatParam = function(param, digits) {
-    return util.toFixed(param.Current, digits) + ' / ' + util.toFixed(param.Max, digits);
+    var current = (param.Current == 0) ? "0" : util.toFixed(param.Current, digits);
+    var max = util.toFixed(param.Max, 0);
+    return current + ' / ' + max;
 };
 
 Stats.prototype = {
-    createParam: function(label, param, digits, useColors) {
+    createParam: function(label, param, digits, useColors, icon) {
         var max = param.Max || 0;
         var text = Stats.formatParam(param, digits);
         var meter = document.createElement("meter");
@@ -61,6 +63,11 @@ Stats.prototype = {
         meterWrapper.className = "meter-wrapper value";
         meterWrapper.appendChild(meter);
 
+        if (icon) {
+            var img = new Image();
+            img.src = "assets/icons/" + icon.toLowerCase() + ".png";
+            meterWrapper.appendChild(img);
+        }
 
         if (config.ui.showMeterValues)  {
             var titleElem = document.createElement("div");
@@ -113,19 +120,19 @@ Stats.prototype = {
         lvl.textContent = " " + T("level") + " " + player.Lvl;
         this.summary.appendChild(lvl);
 
-        var faction = player.Citizenship.Faction;
-        if (faction) {
-            this.summary.appendChild(util.br());
+        // var faction = player.Citizenship.Faction;
+        // if (faction) {
+        //     this.summary.appendChild(util.br());
 
-            var citizenship = document.createElement("span");
-            citizenship.style.marginTop = "10px";
-            citizenship.textContent = T(faction);
-            this.summary.appendChild(citizenship);
+        //     var citizenship = document.createElement("span");
+        //     citizenship.style.marginTop = "10px";
+        //     citizenship.textContent = T(faction);
+        //     this.summary.appendChild(citizenship);
 
-            var rank = document.createElement("span");
-            rank.textContent = " " + T("rank") + ": " + player.Citizenship.Rank;
-            this.summary.appendChild(rank);
-        }
+        //     var rank = document.createElement("span");
+        //     rank.textContent = " " + T("rank") + ": " + player.Citizenship.Rank;
+        //     this.summary.appendChild(rank);
+        // }
 
         this.createSection("equip");
         for(var i = 0, l = this.equipContainer.slots.length; i < l; i++) {
@@ -147,7 +154,13 @@ Stats.prototype = {
 
         this.createSection("vital");
         ["Hp", "Fullness", "Stamina"].forEach(function(param) {
-            this.vital.appendChild(this.createParam(param, player[param], 0, true));
+            this.vital.appendChild(this.createParam(
+                param,
+                player[param],
+                0,
+                true,
+                "stats/" + param
+            ));
         }.bind(this));
 
         this.createSection("main");
@@ -175,11 +188,17 @@ Stats.prototype = {
 
         this.createSection("params");
         ["Speed", "Armor", "Defence", "Accuracy"].forEach(function(param) {
-            this.params.appendChild(this.createParam(param, player[param], 0, true));
+            this.params.appendChild(this.createParam(
+                param,
+                player[param],
+                0,
+                true,
+                "stats/" + param
+            ));
         }.bind(this));
 
         this.createSection("exp");
-        this.exp.appendChild(this.createParam("Exp", player.Exp));
+        this.exp.appendChild(this.createParam("Exp", player.Exp, 0, false, "stats/xp"));
         this.exp.appendChild(this.createValue("Learning points", player.LP));
 
         this.createSection("social");
@@ -191,7 +210,7 @@ Stats.prototype = {
         this.statistics.appendChild(this.createValue("Kills", player.Statistics.Kills));
         this.statistics.appendChild(this.createValue("Players killed", player.Statistics.PlayersKilled));
         this.statistics.appendChild(this.createValue("Death", player.Statistics.Death));
-        var sp = {Current: player.Citizenship.StatusPoints, Max: Math.pow(10, player.Citizenship.Rank)}
+        var sp = {Current: player.Citizenship.StatusPoints, Max: Math.pow(10, player.Citizenship.Rank)};
         this.statistics.appendChild(this.createParam("Status points", sp));
         this.statistics.appendChild(util.hr());
     },
