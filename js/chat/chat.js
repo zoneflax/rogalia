@@ -160,7 +160,7 @@ function Chat() {
         var contents = this.panel.contents;
         contents.id = "attached-chat";
         util.dom.remove(contents);
-        game.world.appendChild(contents);
+        game.interface.appendChild(contents);
         util.dom.hide(this.panel.button);
         this.panel.hide();
         semihide();

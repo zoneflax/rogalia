@@ -2,6 +2,7 @@ function Game() {
     window.game = this;
 
     this.world = document.getElementById("world");
+    this.interface = document.getElementById("interface");
     this.canvas = document.getElementById("canvas");
     this.ctx = canvas.getContext("2d");
     this.ctx.clear = function() {
@@ -248,11 +249,23 @@ function Game() {
         document.location.reload();
     };
 
-    this.logout = function() {
+    this.clearLogin = function() {
         localStorage.setItem("login", "-");
-        localStorage.removeItem("password");
-        game.reload();
     };
+
+    this.clearPassword = function() {
+        localStorage.removeItem("password");
+    };
+
+    this.clearCredentials = function() {
+        this.clearLogin();
+        this.clearPassword();
+    };
+
+    this.logout = function() {
+        this.clearCredentials();
+        this.reload();
+    }.bind(this);
 
     this.addCharacter = function(character) {
         this.characters.set(character.Name,  character);
@@ -434,7 +447,10 @@ function Game() {
     };
 
     var maximize = document.getElementById("maximize");
-    maximize.onclick = util.toggleFullscreen;
+    maximize.onclick = function() {
+        maximize.classList.toggle("maximized");
+        util.toggleFullscreen();
+    };
 
     var mute = document.getElementById("mute");
     if (this.sound.musicIsPlaying)

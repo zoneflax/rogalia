@@ -40,76 +40,77 @@
     <link rel="stylesheet" href="main.css"/>
   </head>
   <body>
-      <!-- <div id="adsence">
+    <!-- <div id="adsence">
          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5659182463296220" data-ad-slot="2188089399" data-ad-format="auto"></ins>
          <div id="adsence-explanation">Откуда тут взялась реклама?</div>
-         </div> -->
+    </div> -->
     <div id="cursor"></div>
     <div id="world">
       <canvas id="canvas"></canvas>
-      <div id="avatar-container">
-          <img id="avatar">
-          <div id="strips">
-	      <div id="hp"><div></div><div></div></div>
-	      <div id="fullness"><div></div><div></div></div>
-	      <div id="stamina"><div></div><div></div></div>
-          </div>
-      </div>
-      <div id="minimap-container">
-          <div id="minimap">
-              <canvas id="minimap-canvas"></canvas>
-              <canvas id="minimap-objects-canvas"></canvas>
-          </div>
-      </div>
-      <div id="lobby" class="hidden">
-          <div id="lobby-characters"></div>
-      </div>
-      <div id="controls-bar" class="button-bar">
-	<div class="button" id="stats-button"></div>
-	<div class="button" id="inventory-button"></div>
-	<div class="button" id="skills-button" title="Skills"></div>
-	<div class="button" id="craft-button" title="Craft"></div>
-	<div class="button" id="chat-button" title="Chat" style="display: none"></div>
-	<div class="button" id="map-button" title="Map"></div>
-        <div class="button" id="wiki-button" title="Wiki"></div>
-        <div class="button" id="system-button" title="System"></div>
-      </div>
+
       <div id="build-warning" class="hidden"></div>
-      <div title="Game time" id="time">00:00</div>
       <div id="maximize" title="Maximize"></div>
       <div id="mute" title="Mute"></div>
-      <div id="effects"></div>
-      <div id="warning"></div>
-      <div id="anouncement"></div>
-      <div id="messages"></div>
-      <div id="action-hotbar-container">
-          <div id="main-action-button" class="button"></div>
-          <div id="xp-progress-bar"><div id="xp-progress"></div></div>
-          <div id="action-hotbar" class="button-bar">
-              <div class="button tooltip" id="irimi-button">
-                  <span>Шаг вперед</span>
-              </div>
-              <div class="button tooltip" id="tenkan-button">
-                  <span>Разворот на 180</span>
-              </div>
-              <div class="button tooltip" id="kaiten-button">
-                  <span>Шаг с разворотом</span>
-              </div>
-              <div class="button tooltip" id="tsuki-button">
-                  <span>Колющий удар</span>
-              </div>
-              <div class="button tooltip" id="shomen-button">
-                  <span>Режущий удар</span>
-              </div>
-              <div class="button tooltip" id="pick-up-button">
-                  <span>Поднять</span>
-              </div>
-              <div class="button tooltip" id="lift-button">
-                  <span>Тащить</span>
+
+      <div id="interface">
+          <div id="avatar-container">
+              <img id="avatar">
+              <div id="strips">
+	          <div id="hp"><div></div><div></div></div>
+	          <div id="fullness"><div></div><div></div></div>
+	          <div id="stamina"><div></div><div></div></div>
               </div>
           </div>
+          <div id="minimap-container">
+              <div id="minimap">
+                  <canvas id="minimap-canvas"></canvas>
+                  <canvas id="minimap-objects-canvas"></canvas>
+              </div>
+          </div>
+          <div id="controls-bar" class="button-bar">
+	      <div class="button" id="stats-button"></div>
+	      <div class="button" id="inventory-button"></div>
+	      <div class="button" id="skills-button" title="Skills"></div>
+	      <div class="button" id="craft-button" title="Craft"></div>
+	      <div class="button" id="chat-button" title="Chat" style="display: none"></div>
+	      <div class="button" id="map-button" title="Map"></div>
+              <div class="button" id="wiki-button" title="Wiki"></div>
+              <div class="button" id="system-button" title="System"></div>
+          </div>
+          <div title="Game time" id="time">00:00</div>
+          <div id="effects"></div>
+          <div id="warning"></div>
+          <div id="anouncement"></div>
+          <div id="messages"></div>
+          <div id="action-hotbar-container">
+              <div id="main-action-button" class="button"></div>
+              <div id="xp-progress-bar"><div id="xp-progress"></div></div>
+              <div id="action-hotbar" class="button-bar">
+                  <div class="button tooltip" id="irimi-button">
+                      <span>Шаг вперед</span>
+                  </div>
+                  <div class="button tooltip" id="tenkan-button">
+                      <span>Разворот на 180</span>
+                  </div>
+                  <div class="button tooltip" id="kaiten-button">
+                      <span>Шаг с разворотом</span>
+                  </div>
+                  <div class="button tooltip" id="tsuki-button">
+                      <span>Колющий удар</span>
+                  </div>
+                  <div class="button tooltip" id="shomen-button">
+                      <span>Режущий удар</span>
+                  </div>
+                  <div class="button tooltip" id="pick-up-button">
+                      <span>Поднять</span>
+                  </div>
+                  <div class="button tooltip" id="lift-button">
+                      <span>Тащить</span>
+                  </div>
+              </div>
+          </div>
+          <meter id="action-progress" max="6.28" class="hidden"></meter>
       </div>
-      <meter id="action-progress" max="6.28" class="hidden"></meter>
     </div>
     <script src="js/lib/rawinflate.js"></script>
     <script src="js/lib/stats.min.js"></script>
@@ -120,6 +121,7 @@
     <script src="js/hashtable.js"></script>
     <script src="js/config.js"></script>
     <script src="js/util.js"></script>
+    <script src="js/panel.js"></script>
     <script src="js/items.min.js"></script>
     <script src="js/dict-ru.js"></script>
     <script src="js/dict.js"></script>
@@ -128,9 +130,16 @@
     <script src="js/sprite.js"></script>
     <script src="js/loader.js"></script>
     <script src="js/sound.js"></script>
-    <script src="js/stage.js"></script>
+    <script src="js/stages/stage.js"></script>
+    <script src="js/stages/connecting.js"></script>
+    <script src="js/stages/create-character.js"></script>
+    <script src="js/stages/exit.js"></script>
+    <script src="js/stages/loading.js"></script>
+    <script src="js/stages/lobby.js"></script>
+    <script src="js/stages/login.js"></script>
+    <script src="js/stages/main.js"></script>
+    <script src="js/stages/stage.js"></script>
     <script src="js/camera.js"></script>
-    <script src="js/panel.js"></script>
     <script src="js/chat/chat.js"></script>
     <script src="js/chat/ring.js"></script>
     <script src="js/craft.js"></script>

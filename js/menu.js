@@ -47,9 +47,10 @@ Menu.prototype = {
             return this.createMenu(actions, object);
         }.bind(this));
 
-        this.container = new Panel("menu", "Menu", contents)
+        this.container = new Panel("menu", "Menu", contents);
         this.container.x = x;
         this.container.y = y;
+        this.container.hideTitle();
         this.container.show();
 
         this.visible = true;

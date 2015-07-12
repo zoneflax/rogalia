@@ -146,7 +146,7 @@ function Controller(game) {
             if (controller.iface.hovered)
                 return;
         },
-    }
+    };
     this.world = {
         cursor: null,
         hovered: null,
@@ -757,7 +757,8 @@ Controller.prototype = {
             var iface = this.iface;
             // If non-interface element (like menu) is over
             // and item is not outside of the visible area
-            if (!iface.hovered && iface.mouseIsValid && this.currentTarget == game.canvas) {
+            if (!iface.hovered && iface.mouseIsValid &&
+                (this.currentTarget == game.canvas || this.currentTarget == game.interface)) {
                 hovered.drawHovered();
             }
         }

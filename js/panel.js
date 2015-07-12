@@ -35,17 +35,17 @@ function Panel(name, title, elements, listener, hooks) {
     this.setTitle(title);
 
 
-    var titleBar = document.createElement("header");
-    titleBar.className = "title-bar";
-    titleBar.appendChild(this._title);
+    this._titleBar = document.createElement("header");
+    this._titleBar.className = "title-bar";
+    this._titleBar.appendChild(this._title);
 
-    var close = document.createElement("span");
-    close.className = "close";
-    close.panel = this;
-    close.onclick = this.hide.bind(this);
-    titleBar.appendChild(close);
+    this._closeButton = document.createElement("span");
+    this._closeButton.className = "close";
+    this._closeButton.panel = this;
+    this._closeButton.onclick = this.hide.bind(this);
+    this._titleBar.appendChild(this._closeButton);
 
-    this.element.appendChild(titleBar);
+    this.element.appendChild(this._titleBar);
 
     hooks = hooks || {};
     this.hooks = {
@@ -81,7 +81,8 @@ function Panel(name, title, elements, listener, hooks) {
         game.controller.unhighlight(name);
     });
     this.element.id = name;
-    util.dom.insert(this.element);
+    game.world.appendChild(this.element);
+    // util.dom.insert(this.element);
 
     if ("visible" in config && config.visible)
         this.show();
@@ -165,6 +166,12 @@ Panel.prototype = {
         var next = Panel.stack.pop();
         if (next)
             Panel.top = next;
+    },
+    hideCloseButton: function() {
+        util.dom.hide(this._closeButton);
+    },
+    hideTitle: function() {
+        util.dom.hide(this._titleBar);
     },
     close: function() {
         this.hide();

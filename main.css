@@ -1,5 +1,3 @@
-@import url("bootstrap.css");
-
 * {
     -webkit-user-select: none!important;
     -moz-user-select: none!important;
@@ -32,10 +30,22 @@ label {
     display: inline-block;
 }
 
-input[type=text], input:not([type]) {
+:focus {
+    outline: 1px solid #c87b0e;
+    outline-offset: 0;
+}
+input[type=text], input[type=password], input:not([type]) {
     background: #845721;
     border: 1px solid #a57031;
 }
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: #845721;
+    color: #fff;
+}
+
 /* see util.dom.createInput() */
 label > input[type=text] {
     margin-left: 5px;
@@ -122,20 +132,26 @@ hr {
 }
 #world {
     background: #7b5323;
-    background-image: url("assets/bg/loading-3.png");
+    background-image: url("assets/bg/loading.png");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center;
     position: relative;
-    overflow: hidden;
     margin: auto;
     border: 4px solid #55381d;
     border-top: none;
 }
-#canvas {
+#interface {
+    display: none;
+}
+#canvas, #interface {
+    width: 100%;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
+}
+#canvas {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -148,9 +164,6 @@ hr {
     text-align: left;
     position: absolute;
     z-index: 999999!important;
-}
-#menu .title-bar{
-    display: none;
 }
 #menu ul, #vendor ul {
     margin: 0;
@@ -344,29 +357,15 @@ hr {
     cursor: none!important;
 }
 
-.main-stage #wiki-button {
-    display: block!important;
+.main-stage #interface {
+    display: block;
 }
-.exit-stage #world > div, .exit-stage .panel {
+.exit-stage .panel {
     display: none!important;
 }
 .exit-stage #world {
     background-image: url("assets/bg/exit.png");
     background-position: 50% bottom;
-}
-
-.login-stage .button-link {
-    float: left;
-    background: none;
-    color: white;
-    width: auto;
-    cursor: pointer;
-    padding: 0 5px;
-    margin: 0;
-}
-
-.login-stage .button-link:hover {
-    text-decoration: underline;
 }
 
 #controls-bar > .button > .icon {
@@ -1090,69 +1089,80 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     border-radius: 5px;
 }
 
-#lobby > div {
-    display: block;
+#lobby {
+    width: 236px;
+    text-align: center;
 }
 
-#lobby .avatar {
-    border-radius: 3px;
-    border: 1px solid #ccc;
-    padding: 10px;
+#lobby-account {
+    background: url("assets/bg/strip/center.png") repeat-x;
+    height: 32px;
+    line-height: 32px;
+    display: table;
+    margin: auto;
+    position: relative;
+    text-align: center;
+}
+
+#lobby-account::before,
+#lobby-account::after {
+    position: absolute;
+    top: -5px;
+}
+#lobby-account::before {
+    content: url("assets/bg/strip/left.png");;
+    left: -60px;
+}
+#lobby-account::after {
+    content: url("assets/bg/strip/right.png");
+    right: -60px;
+}
+
+#lobby .avatar-container {
+    background: url("assets/bg/main-button.png") no-repeat;
+    width: 105px;
+    height: 86px;
     cursor: pointer;
     display: inline-block;
     margin-right: 3px;
+    position: relative;
 }
-
-#lobby .avatar:hover {
-    background: linear-gradient(to bottom,  #74481b 0%,#c06901 100%);
-}
-
-#lobby .avatar > img {
-    display: block;
-}
-
-.login-form, #lobby, #create-character {
+#lobby .create {
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 24px;
     position: absolute;
-    z-index: 2;
-    left: 10px;
-    top: 10px;
-    display: inline-block;
-    background: #7b5323;
-    color: #fff;
-    border-radius: 5px;
-    text-align: left;
-    padding: 1.5em;
+}
+#lobby .avatar-name {
+    margin-top: 8px;
+}
+#lobby .avatar-container:hover {
+    -webkit-filter: brightness(120%);
+    filter: brightness(120%);
+}
+    
+#lobby .avatar {
+    width: 60px;
+    height: 58px;
+    overflow: hidden;
+    margin: auto;
 }
 
-.login-form label {
-    margin-bottom: 1em;
+#login-panel, #lobby, #create-character {
+    top: 20px!important;
+    left: 75px!important;
 }
 
-.login-form label:last-child {
-    margin-bottom: 0;
+#login-form  {
+    display: flex;
+    flex-flow: column wrap;
+    position: relative;
 }
-
-.login-form label, .login-form button, .login-form input {
-    font-size: 16px;
+#login-form > label > input {
     display: block;
-    border: none;
-    border-radius: 3px;
-    width: 20em;
 }
 
-.login-form button {
-    height: 2em;
-    margin-bottom: 1em;
-}
-.login-form button:last-child {
-    margin-bottom: 0;
-}
-
-.login-form input {
-    margin: 8px 0 0;
-    width: 19em;
-    padding: 0.5em;
-}
 #skills {
     width: 320px;
     white-space: pre-wrap;
@@ -1205,10 +1215,11 @@ ol li a:hover {
     position: absolute;
     right: 3px;
     top: 3px;
-    background: #55381d;
     border-radius: 2px;
     padding: 2px;
     cursor: pointer;
+    background: #99682e;
+    z-index: 2;
 }
 #time {
     right: 28px;
@@ -1222,6 +1233,9 @@ ol li a:hover {
 }
 #maximize {
     background-image: url("assets/bg/maximize.png");
+}
+#maximize.maximized {
+    background-image: url("assets/bg/minimize.png");
 }
 #mute {
     right: 28px;
@@ -1437,13 +1451,12 @@ big {
 }
 
 #lang-selector {
-    margin: 5px 0;
+    margin: 0;
     padding: 0;
-    height: 20px;
     border: none;
     position: absolute;
-    right: 1.5em;
-    bottom: 1.5em;
+    right: 0;
+    top: 0;
 }
 
 #authors cite {
@@ -1681,7 +1694,6 @@ big {
 #controls-bar, #action-hotbar-container{
     position: absolute;
     right: 4px;
-    z-index: 1;
 }
 
 #controls-bar {
