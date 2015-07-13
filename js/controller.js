@@ -330,7 +330,12 @@ Controller.prototype = {
                 icon.src = base + ".png";
             });
         });
-
+        document.getElementById("pick-up-button").onclick = function() {
+            game.player.pickUp();
+        };
+        document.getElementById("lift-button").onclick = function() {
+            game.player.liftStart();
+        };
         // this.hotbar = {
         //     panel: document.getElementById("hotbar"),
         // };
@@ -621,6 +626,10 @@ Controller.prototype = {
         this.iface.cursor.innerHTML = "";
         this.iface.cursor.entity = null;
     },
+    targetInWorld: function(target) {
+        target = target || this.currentTarget;
+        return target == game.canvas || target == game.interface;
+    },
     mousedown: function(e, x, y) {
         if(this.callback[e.button] != null) { // if callback for button is set
             if(!this.callback[e.button].call(this, e)) //if callback didn't handled click
@@ -629,7 +638,7 @@ Controller.prototype = {
         } else {
             switch(e.button) {
             case 0:
-                if (e.target == game.canvas) {
+                if (this.targetInWorld(e.target)) {
                     if(this.world.hovered) {
                         if (this.modifier.shift) {
                             game.chat.linkEntity(this.world.hovered);
@@ -661,7 +670,7 @@ Controller.prototype = {
 
                 if (this.world.hovered == game.player) {
                     return this.world.hovered.defaultAction();
-                } else if (this.world.hovered && this.currentTarget == game.canvas) {
+                } else if (this.world.hovered && this.targetInWorld()) {
                     if (!game.menu.show(this.world.hovered)) {
                         game.menu.hide();
                     }
@@ -757,8 +766,7 @@ Controller.prototype = {
             var iface = this.iface;
             // If non-interface element (like menu) is over
             // and item is not outside of the visible area
-            if (!iface.hovered && iface.mouseIsValid &&
-                (this.currentTarget == game.canvas || this.currentTarget == game.interface)) {
+            if (!iface.hovered && iface.mouseIsValid && this.targetInWorld()) {
                 hovered.drawHovered();
             }
         }

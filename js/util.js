@@ -115,6 +115,7 @@ var util = new function() {
                 label.appendChild(document.createTextNode(text));
             label.appendChild(input);
             input.label = label;
+
             return input;
         },
         createRadioButton: function(text, name) {

@@ -62,8 +62,15 @@ function Fight() {
         }
     };
 
+    var actions = ["irimi", "tenkan", "kaiten", "tsuki", "shomen"];
+    actions.forEach(function(action) {
+        var button = document.getElementById(action + "-button");
+        button.onclick = function() {
+            apply(action);
+        };
+    });
     this.hotkey = function(key) {
-        var action = ["irimi", "tenkan", "kaiten", "tsuki", "shomen"][key-1];
+        var action = actions[key-1];
         apply(action);
     };
 }

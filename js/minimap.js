@@ -34,22 +34,22 @@ function Minimap() {
         this.mapImage.width = width * SCALE;
     }.bind(this);
 
+    this.mapImage.onclick = function(e) {
+        if (!game.player.IsAdmin)
+            return;
+        var rect = e.target.getBoundingClientRect();
+        var x = e.pageX - rect.left;
+        var y = e.pageY - rect.top;
+        game.network.send(
+            "teleport",
+            {"x": x / SCALE * CELL_SIZE, "y": y / SCALE * CELL_SIZE}
+        );
+    };
+
     this.panel = new Panel(
         "map",
         "Map",
-        [wrapper, zoom],
-        {
-            click: function(e) {
-                if (e.target != this.mapImage || !game.player.IsAdmin)
-                    return;
-                var x = e.pageX - wrapper.offsetLeft - this.panel.element.offsetLeft;
-                var y = e.pageY - wrapper.offsetTop - this.panel.element.offsetTop;
-                game.network.send(
-                    "teleport",
-                    {"x": x / SCALE * CELL_SIZE, "y": y / SCALE * CELL_SIZE}
-                );
-            }.bind(this)
-        }
+        [wrapper, zoom]
     );
 
     this.sync = function(data) {

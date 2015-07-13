@@ -108,9 +108,8 @@ function Game() {
     // this.ads = new Ads();
 
     this.offset = {
-        world: this.world,
-        get x() { return this.world.offsetLeft; },
-        get y() { return this.world.offsetTop; },
+        get x() { return game.world.offsetLeft; },
+        get y() { return game.world.offsetTop; },
     };
 
     this.loader = new Loader("assets/");

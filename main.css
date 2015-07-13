@@ -35,9 +35,25 @@ label {
     outline-offset: 0;
 }
 input[type=text], input[type=password], input:not([type]) {
-    background: #845721;
     border: 1px solid #a57031;
+    background: url("assets/bg/chat/send.png") no-repeat 99%, #99682e;
 }
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #ddd;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #ddd;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #ddd;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+   color:    #ddd;
+}
+
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -140,6 +156,7 @@ hr {
     margin: auto;
     border: 4px solid #55381d;
     border-top: none;
+    overflow: hidden;
 }
 #interface {
     display: none;
@@ -357,6 +374,9 @@ hr {
     cursor: none!important;
 }
 
+.main-stage #canvas {
+    background-color: #333;
+}
 .main-stage #interface {
     display: block;
 }
@@ -794,8 +814,6 @@ hr {
     padding: 0;
 }
 #new-message {
-    background: url("assets/bg/chat/send.png") no-repeat 99%, #845721;
-    border: none;
     width: 95%;
     margin-left: 2%;
 }
@@ -1089,12 +1107,12 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     border-radius: 5px;
 }
 
-#lobby {
+#lobby, #create-character {
     width: 236px;
     text-align: center;
 }
 
-#lobby-account {
+.lobby-account {
     background: url("assets/bg/strip/center.png") repeat-x;
     height: 32px;
     line-height: 32px;
@@ -1104,16 +1122,16 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     text-align: center;
 }
 
-#lobby-account::before,
-#lobby-account::after {
+.lobby-account::before,
+.lobby-account::after {
     position: absolute;
     top: -5px;
 }
-#lobby-account::before {
+.lobby-account::before {
     content: url("assets/bg/strip/left.png");;
     left: -60px;
 }
-#lobby-account::after {
+.lobby-account::after {
     content: url("assets/bg/strip/right.png");
     right: -60px;
 }
@@ -1149,9 +1167,41 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     margin: auto;
 }
 
-#login-panel, #lobby, #create-character {
-    top: 20px!important;
-    left: 75px!important;
+#create-character {
+    text-align: center;
+    width: 230px;
+}
+#create-character .profession-tab.active {
+    -webkit-filter: brightness(130%);
+    filter: brightness(130%);
+}
+#create-character .profession-tabs {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+#create-character .professions {
+    text-align: left;
+}
+#new-male {
+    background: url("assets/avatars/new-male.png") center, url("assets/bg/main-button.png");
+}
+#new-female {
+    background: url("assets/avatars/new-female.png") center, url("assets/bg/main-button.png");
+}
+.new-sex {
+    background-repeat: no-repeat!important;
+    width: 105px;
+    height: 67px;
+}
+
+.new-sex.checked {
+    -webkit-filter: brightness(150%);
+    filter: brightness(150%);
+} 
+
+.new-sex input {
+    display: none;
 }
 
 #login-form  {

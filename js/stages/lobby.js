@@ -1,6 +1,6 @@
 function lobbyStage(data) {
     var account = document.createElement("div");
-    account.id = "lobby-account";
+    account.className = "lobby-account";
     account.textContent = game.login;
 
     var characters = (data && data.Characters) || lobbyStage.characters || [];
@@ -40,7 +40,7 @@ function lobbyStage(data) {
 
         var nameElem = document.createElement("div");
         nameElem.className = "avatar-name";
-        nameElem.textContent = (name == "+") ? T("New") : name;
+        nameElem.textContent = (name == "+") ? T("Create") : name;
 
         avatarContainer.appendChild(avatar);
         avatarContainer.appendChild(nameElem);
@@ -63,7 +63,7 @@ function lobbyStage(data) {
         quit,
     ]);
     panel.hideCloseButton();
-    panel.show();
+    panel.show(LOBBY_X, LOBBY_Y);
 
     function fastenter() {
         var avatars = document.getElementsByClassName("avatar");

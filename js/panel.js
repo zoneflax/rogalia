@@ -12,20 +12,21 @@ function Panel(name, title, elements, listener, hooks) {
 
     this.lsKey = "panels." + this.name;
     var config = JSON.parse(localStorage.getItem(this.lsKey)) || {};
+
+    var position = {
+            x: game.screen.width / 2,
+            y: game.screen.height / 2,
+    };
+
     if("position" in config) {
-        this.position = config.position;
-    } else {
-        this.position = {
-            x: game.offset.x + game.screen.width / 2,
-            y: game.offset.y + game.screen.height / 2,
-        };
+        position = config.position;
     }
 
     this.element = document.createElement("div");
     this.element.id = name;
     this.element.className = "panel";
-    this.x = this.position.x;
-    this.y = this.position.y;
+    this.x = position.x;
+    this.y = position.y;
 
     this.contents = document.createElement("div");
     this.contents.className = "contents";
@@ -81,8 +82,7 @@ function Panel(name, title, elements, listener, hooks) {
         game.controller.unhighlight(name);
     });
     this.element.id = name;
-    game.world.appendChild(this.element);
-    // util.dom.insert(this.element);
+    util.dom.insert(this.element);
 
     if ("visible" in config && config.visible)
         this.show();
@@ -122,18 +122,16 @@ Panel.stack = [];
 
 Panel.prototype = {
     get x() {
-        return this.element.offsetLeft || this.position.x;
+        return this.element.offsetLeft - game.offset.x;
     },
     set x(x) {
-        this.position.x = x;
-        this.element.style.left = x + "px";
+        this.element.style.left = x + game.offset.x + "px";
     },
     get y() {
-        return this.element.offsetTop || this.position.y;
+        return this.element.offsetTop - game.offset.y;
     },
     set y(y) {
-        this.position.y = y;
-        this.element.style.top = y + "px";
+        this.element.style.top = y + game.offset.y + "px";
     },
     get width() {
         return parseInt(getComputedStyle(this.element).width);
@@ -194,19 +192,25 @@ Panel.prototype = {
         back.onclick = function() {};
         return back;
     },
-    show: function() {
+    show: function(x, y) {
         this.toTop();
         this.element.style.display = "block";
         if (this.button) {
             this.button.classList.add("active");
         }
+
+        if (x !== undefined)
+            this.x = x;
+        if (y !== undefined)
+            this.y = y;
+
         this.visible = true;
         if (!util.rectIntersects(
             this.x, this.y, this.width, this.height,
             0, 0, window.innerWidth, window.innerHeight
         )) {
-            this.x = game.offset.x;
-            this.y = game.offset.y;
+            this.x = 0;
+            this.y = 0;
         }
         this.hooks.show && this.hooks.show.call(this);
         window.scrollTo(0, 0);
@@ -220,10 +224,11 @@ Panel.prototype = {
     savePosition: function() {
         if (this.temporary)
             return;
-        this.position.x = this.x;
-        this.position.y = this.y;
         var config = {
-            position: this.position,
+            position: {
+                x: this.x,
+                y: this.y,
+            },
             visible: this.visible,
         };
         localStorage.setItem(this.lsKey, JSON.stringify(config));

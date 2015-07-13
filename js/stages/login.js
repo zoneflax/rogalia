@@ -158,7 +158,7 @@ function loginStage() {
     };
     var panel = new Panel("login-panel", "", [form]);
     panel.hideCloseButton();
-    panel.show();
+    panel.show(LOBBY_X, LOBBY_Y);
 
     if (autoLogin)
         panel.hide();

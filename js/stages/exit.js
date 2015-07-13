@@ -25,6 +25,6 @@ function exitStage(message) {
     help.appendChild(reset);
     help.appendChild(game.button.logout());
     help.appendChild(reload);
-    game.offset.world.appendChild(help);
+    game.world.appendChild(help);
 };
 Stage.add(exitStage);

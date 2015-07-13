@@ -30,8 +30,8 @@ Menu.prototype = {
             x = this.container.x;
             y = this.container.y;
         } else {
-            x = (x || game.controller.iface.x) + game.offset.x;
-            y = (y || game.controller.iface.y) + game.offset.y;
+            x = (x || game.controller.iface.x);
+            y = (y || game.controller.iface.y);
         }
 
         if (!Array.isArray(actions))
