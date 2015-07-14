@@ -1039,30 +1039,34 @@ Character.prototype = {
             case "fishing-rod":
                 action = "fish";
                 callback = this.fish.bind(this);
+                break;
             case "tool":
                 action = "use-tool";
+                break;
             case "shovel":
             case "pickaxe":
-                var bigIcon = loader.loadImage("bg/" + tool.Group + ".png");
-
-                button.appendChild(bigIcon);
-                button.onclick = function() {
-                    var cursor = new Entity(0, tool.Type);
-                    cursor.initSprite();
-                    if (action != "tame")
-                        cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
-                    var icon = tool._icon || tool.icon();
-                    cursor.Width = CELL_SIZE;
-                    cursor.Height = CELL_SIZE;
-                    cursor.Sprite.Dx = 6;
-                    cursor.Sprite.Dy = 56;
-                    cursor.sprite.image = icon;
-                    cursor.sprite.width = icon.width;
-                    cursor.sprite.height = icon.height;
-                    game.controller.creatingCursor(cursor, action, callback);
-                };
                 break;
+            default:
+                return;
             }
+            var bigIcon = loader.loadImage("bg/" + tool.Group + ".png");
+
+            button.appendChild(bigIcon);
+            button.onclick = function() {
+                var cursor = new Entity(0, tool.Type);
+                cursor.initSprite();
+                if (action != "tame")
+                    cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
+                var icon = tool._icon || tool.icon();
+                cursor.Width = CELL_SIZE;
+                cursor.Height = CELL_SIZE;
+                cursor.Sprite.Dx = 6;
+                cursor.Sprite.Dy = 56;
+                cursor.sprite.image = icon;
+                cursor.sprite.width = icon.width;
+                cursor.sprite.height = icon.height;
+                game.controller.creatingCursor(cursor, action, callback);
+            };
         }
     },
     fish: function fish(data) {
