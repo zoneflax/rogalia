@@ -191,8 +191,8 @@ Vendor.buy = function(data) {
             );
         };
 
-        var sell = document.createElement("fieldset");
-        var legend = document.createElement("legend");
+        var sell = document.createElement("div");
+        var legend = document.createElement("div");
         legend.textContent = T("Sell item");
         sell.appendChild(legend);
         sell.appendChild(lot);
@@ -200,6 +200,7 @@ Vendor.buy = function(data) {
         sell.appendChild(price);
         sell.appendChild(button);
 
+        elements.push(util.hr());
         elements.push(sell);
 
         function cleanUp() {
@@ -413,10 +414,10 @@ Vendor.sell = function(data) {
                 },
                 open
             );
-        }
+        };
 
-        var sell = document.createElement("fieldset");
-        var legend = document.createElement("legend");
+        var sell = document.createElement("div");
+        var legend = document.createElement("div");
         legend.textContent = T("Buy item");
         sell.appendChild(legend);
         sell.appendChild(lot);
@@ -426,6 +427,7 @@ Vendor.sell = function(data) {
         sell.appendChild(quantityLabel);
         sell.appendChild(total);
 
+        elements.push(util.hr());
         elements.push(sell);
     }
 
@@ -514,7 +516,7 @@ function Exchange() {
             {
                 var name = document.createElement("td");
                 name.textContent = T(assignation);
-                name.title = T("Sold") + ": " + rate.Stats.Sold + "\n" + 
+                name.title = T("Sold") + ": " + rate.Stats.Sold + "\n" +
                     T("Bought") + ": " + rate.Stats.Bought;
             }
             {

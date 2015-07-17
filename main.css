@@ -586,7 +586,6 @@ hr {
 #messages {
     display: block;
     top: 8em;
-    overflow: hidden;
 }
 #warning.warning {
     color: yellow;
@@ -807,11 +806,8 @@ hr {
 .messages, #new-message {
     pointer-events: auto;
     display: block;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    width: 100%;
     padding: 0;
+    overflow: hidden;
 }
 #new-message {
     width: 95%;
@@ -819,9 +815,8 @@ hr {
 }
 
 .messages {
-    width: 32em;
+    position: relative;
     height: 20em;
-    overflow: auto;
     padding: 5px;
     margin: 0 0 10px 0;
 }
@@ -1009,7 +1004,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     top: -5px;
 }
 #stats .summary::before {
-    content: url("assets/bg/strip/left.png");;
+    content: url("assets/bg/strip/left.png");
     left: -60px;
 }
 #stats .summary::after {
@@ -1149,7 +1144,6 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     margin: auto;
     left: 0;
     right: 0;
-    top: 24px;
     position: absolute;
 }
 #lobby .avatar-name {
@@ -1335,10 +1329,6 @@ big {
     height: auto;
 }
 
-#help {
-    max-width: none;
-}
-
 #avatar-container, #minimap-container {
     position: absolute;
     background-image: url("assets/bg/rhombus.png");
@@ -1417,8 +1407,7 @@ big {
 }
 .lot-quantity > input, .price > input {
     width: 25px;
-    border: 1px solid #ccc;
-    background: #666;
+    background-image: none;
     text-align: right;
     line-height: 15px;
     vertical-align: bottom;
@@ -1447,13 +1436,18 @@ big {
     height: 500px;
     overflow-x: hidden;
     overflow-y: auto;
-    border: 1px solid #ccc;
+    margin: 0 -5px!important;
 }
 .lot {
     overflow: auto;
-    border-bottom: 1px solid #ccc;
-    padding: 5px;
-    margin-top: -1px;
+    padding: 0 5px;
+}
+.lot:after {
+    content: "";
+    display: block;
+    height: 3px;
+    background: #593815 url("assets/bg/hr.png") repeat-x;
+    margin: 0 -5px;
 }
 .lot:last-child {
     border: none;
@@ -1811,4 +1805,13 @@ big {
 #exchange-rates-table input {
     width: 40px;
     margin: 1px 3px;
+}
+
+.scroll-indicator {
+    position: absolute;
+    width: 5px;
+    height: 10px;
+    top: 0;
+    right: 0;
+    background: red;
 }

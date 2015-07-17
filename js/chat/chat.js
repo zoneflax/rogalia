@@ -19,6 +19,19 @@ function Chat() {
     this.messagesElement = document.createElement("ul");
     this.messagesElement.className = "messages no-drag";
 
+    var scrollIndicator = document.createElement("div");
+    scrollIndicator.className = "scroll-indicator";
+    this.messagesElement.appendChild(scrollIndicator);
+
+    this.messagesElement.addEventListener("wheel", function(e) {
+        var el = this.messagesElement;
+        el.scrollTop += 5*e.deltaY;
+        var height = Math.max(el.offsetHeight, el.scrollHeight);
+        var pos = el.scrollTop + el.offsetHeight * (el.scrollTop / height);
+        scrollIndicator.style.top = pos + "px";
+    }.bind(this));
+
+
     this.newMessageElement = document.createElement("input");
     this.newMessageElement.id = "new-message";
 
