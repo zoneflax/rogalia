@@ -151,16 +151,21 @@ Container.prototype = {
 
         var id = this.id;
 
-        var moveAll = document.createElement("button");
-        moveAll.textContent = T("Move all");
+        var moveAll = new Image();
+        moveAll.className = "icon-button";
+        moveAll.src = "assets/icons/panel/move-all.png";
+        moveAll.title = T("Move all");
+
         moveAll.onclick = function() {
             var top = this.getTopExcept(id);
             if (top)
                 game.network.send("move-all", {From: id, To: top.id});
         }.bind(this);
 
-        var sort = document.createElement("button");
-        sort.textContent = T("Sort");
+        var sort = new Image();
+        sort.className = "icon-button";
+        sort.src = "assets/icons/panel/sort.png";
+        sort.title = T("Sort");
         sort.onclick = function() {
             game.network.send("Sort", {Id: id});
         };

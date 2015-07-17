@@ -89,6 +89,7 @@ function createCharacterStage() {
         var icon = new Image();
         icon.className = "profession-tab";
         icon.src = "assets/icons/skills/" + mainSkill + ".png";
+        icon.title = T(prof.name);
 
 
         var desc = document.createElement("p");
@@ -123,6 +124,8 @@ function createCharacterStage() {
             util.dom.show(li);
         };
     });
+    // activate default profession
+    tabs.children[3].click();
 
     var submit = document.createElement("button");
     submit.textContent = T("Create");
@@ -162,7 +165,6 @@ function createCharacterStage() {
         name,
         util.hr(),
         tabs,
-        util.hr(),
         professions,
         util.hr(),
         submit,
