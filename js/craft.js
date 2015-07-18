@@ -308,6 +308,8 @@ Craft.prototype = {
     },
     createFilters: function() {
         var filters = document.createElement("div");
+        return filters;
+        //TODO: add icons and remove return
         var recipeList = this.list;
         ["portable", "liftable", "static", "unavailable"].forEach(function(name) {
             var label = document.createElement("label");

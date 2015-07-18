@@ -997,16 +997,16 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     text-align: center;
 }
 
-#stats .summary::before,
-#stats .summary::after {
+#stats .summary:before,
+#stats .summary:after {
     position: absolute;
     top: -5px;
 }
-#stats .summary::before {
+#stats .summary:before {
     content: url("assets/bg/strip/left.png");
     left: -60px;
 }
-#stats .summary::after {
+#stats .summary:after {
     content: url("assets/bg/strip/right.png");
     right: -60px;
 }
@@ -1116,16 +1116,16 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     text-align: center;
 }
 
-.lobby-account::before,
-.lobby-account::after {
+.lobby-account:before,
+.lobby-account:after {
     position: absolute;
     top: -5px;
 }
-.lobby-account::before {
+.lobby-account:before {
     content: url("assets/bg/strip/left.png");;
     left: -60px;
 }
-.lobby-account::after {
+.lobby-account:after {
     content: url("assets/bg/strip/right.png");
     right: -60px;
 }
@@ -1621,6 +1621,9 @@ big {
 }
 
 
+#action-progress-value {
+    background: #ac7637;
+}
 #action-progress {
     background:
     url("assets/bg/action-progress/top.png") repeat-x top,
@@ -1629,23 +1632,25 @@ big {
     bottom: 170px;
     height: 23px;
     left: 0;
+    box-sizing: border-box;
+    display: flex;
+    padding: 3px;
     margin: auto;
     position: absolute;
     right: 0;
     width: 300px;
     z-index: 99999999;
-    padding: 3px;
 }
-#action-progress::before,
-#action-progress::after {
+#action-progress:before,
+#action-progress:after {
     position: absolute;
     top: -2px;
 }
-#action-progress::before {
+#action-progress:before {
     content: url("assets/bg/action-progress/left.png");
     left: 0;
 }
-#action-progress::after {
+#action-progress:after {
     content: url("assets/bg/action-progress/right.png");
     right: 0;
 }

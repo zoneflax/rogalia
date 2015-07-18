@@ -500,7 +500,8 @@ Character.prototype = {
     drawAction: function() {
         if(this.Action.Duration) {
             if (this.isPlayer) {
-                game.controller.iface.actionProgress.value = this.action.progress;
+                var ap = game.controller.iface.actionProgress.firstChild;
+                ap.style.width = this.action.progress / (2*Math.PI) * 100  + "%";
             } else {
                 game.ctx.strokeStyle = "orange";
                 game.ctx.beginPath();
