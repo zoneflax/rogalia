@@ -62,7 +62,7 @@ function Fight() {
         }
     };
 
-    var actions = ["irimi", "tenkan", "kaiten", "tsuki", "shomen"];
+    var actions = ["tsuki", "shomen", "irimi", "tenkan", "kaiten"];
     actions.forEach(function(action) {
         var button = document.getElementById(action + "-button");
         button.onclick = function() {
