@@ -384,8 +384,7 @@ hr {
     display: none!important;
 }
 .exit-stage #world {
-    background-image: url("assets/bg/exit.png");
-    background-position: 50% bottom;
+    background: url("assets/bg/exit.png") no-repeat center bottom;
 }
 
 #controls-bar > .button > .icon {
@@ -1687,6 +1686,8 @@ big {
     margin: auto;
     width: 85px;
     height: 85px;
+    border: 1px solid #a57031;
+    background: #99682e;
 }
 .claim-action-north, .claim-action-south {
     right: 3px;

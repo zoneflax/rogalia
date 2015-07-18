@@ -501,7 +501,7 @@ function Chat() {
                 color = "#0cc";
                 break;
             case this.names.server:
-                color = "red";
+                color = "yellow";
                 break;
             default:
                 if (message.Channel == 9) {

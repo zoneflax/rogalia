@@ -615,6 +615,8 @@ Character.prototype = {
         }
 
         this.drawEffects();
+        if (config.ui.showAttackRadius && this.sprite.name == "attack")
+            this.drawAttack();
 
         if (this != game.controller.world.hovered && this == game.player.target)
             this.drawHovered();
@@ -661,7 +663,7 @@ Character.prototype = {
         if (!game.player.see(this))
             return;
 
-        if (game.debug.player.box) {
+        if (game.debug.player.box || game.controller.hideStatic()) {
             this.drawBox();
         }
 
@@ -905,6 +907,14 @@ Character.prototype = {
                 this.sprite.lastUpdate = now + util.rand(5, 60) * 60;
         }
     },
+    drawAttack: function() {
+        var p = new Point(this);
+        var sector = (this.sprite.position - 1);
+        var offset = new Point(CELL_SIZE, 0).rotate(2*Math.PI - sector * Math.PI/4);
+        p.add(offset);
+        game.ctx.fillStyle = (this.isPlayer) ? "rgba(255, 255, 0, 0.3)" : "rgba(255, 0, 0, 0.3)";
+        game.iso.fillCircle(p.x, p.y, CELL_SIZE);
+    },
     toggleActionSound: function() {
         if (this.action.name)
             game.sound.stopSound(this.action.name);
@@ -1050,7 +1060,10 @@ Character.prototype = {
             default:
                 return;
             }
-            var bigIcon = loader.loadImage("bg/" + tool.Group + ".png");
+            if (tool.Group == "pickaxe")
+                var bigIcon = loader.loadImage("bg/" + tool.Group + ".png");
+            else
+                bigIcon = tool.icon();
 
             button.appendChild(bigIcon);
             button.onclick = function() {
