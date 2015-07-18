@@ -122,6 +122,25 @@ function Chat() {
                     e.target.blur();
                     break;
                 }
+            case "terra":
+                var bioms = game.map.bioms.map(function(biom, i) {
+                    var div = document.createElement("div");
+                    div.appendChild(game.map.tiles[i]);
+                    div.classList.add("slot");
+                    div.title = biom.Name;
+                    return div;
+                });
+                new Panel(
+                    "terra-bar",
+                    "Terraforming",
+                    bioms,
+                    function(e) {
+                        if(!e.target.id)
+                            return;
+                        game.controller.terraCursor(e.target);
+                    }
+                ).show();
+                break;
             case "list":
                 for (var i in Entity.templates) {
                     var t = Entity.templates[i];

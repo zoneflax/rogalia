@@ -332,6 +332,7 @@ Character.prototype = {
             break;
         case "cow":
         case "wolf":
+        case "warg":
         case "sheep":
 	    this.sprite.width = 100;
 	    this.sprite.height = 100;
@@ -416,6 +417,7 @@ Character.prototype = {
             case "horse":
             case "cow":
             case "wolf":
+            case "warg":
             case "sheep":
                 this._loadNpcSprites();
                 return;
@@ -807,6 +809,7 @@ Character.prototype = {
         case "cow":
         case "spider":
         case "wolf":
+        case "warg":
         case "sheep":
             simpleSprite = false;
         }

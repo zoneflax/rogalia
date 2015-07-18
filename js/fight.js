@@ -39,6 +39,9 @@ function Fight() {
             break;
         default:
             if (!(game.player.target instanceof Character)) {
+                game.player.selectNextTarget();
+            }
+            if (!(game.player.target instanceof Character)) {
                 game.controller.showWarning("You have no target");
                 return;
             }

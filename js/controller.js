@@ -401,26 +401,6 @@ Controller.prototype = {
 
         this.inventory.panel.button.onclick = this.toggleBag;
 
-        // if (game.player.IsAdmin) {
-        //     var bioms = game.map.bioms.map(function(biom, i) {
-        //         var div = document.createElement("div");
-        //         div.appendChild(game.map.tiles[i]);
-        //         div.classList.add("slot");
-        //         div.title = biom.Name;
-        //         return div;
-        //     });
-        //     this.createButton(new Panel(
-        //         "terra-bar",
-        //         "Terraforming",
-        //         bioms,
-        //         this.bind(function(e) {
-        //             if(!e.target.id)
-        //                 return;
-        //             this.terraCursor(e.target);
-        //         })
-        //     ));
-        // }
-
         this.initAvatar();
         this.initHotkeys();
         this.initHotbar();
