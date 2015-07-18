@@ -20,6 +20,7 @@ function Chat() {
     this.messagesElement.className = "messages no-drag";
 
 
+    //TODO: encapsulate
     var scrollIndicator = document.createElement("div");
     scrollIndicator.className = "scroll-indicator";
 
@@ -27,17 +28,25 @@ function Chat() {
     scrollbar.className = "scrollbar";
     scrollbar.appendChild(scrollIndicator);
 
-    this.messagesElement.appendChild(scrollbar);
-
-    this.messagesElement.addEventListener("wheel", function(e) {
+    var scrollDy = parseInt(getComputedStyle(scrollbar).top);
+    var scrollStep = 7;
+    var updateScroll = function(e) {
         var el = this.messagesElement;
-        scrollbar.style.height = el.offsetHeight + "px";
-        el.scrollTop += 5*e.deltaY;
-        var height = Math.max(el.offsetHeight, el.scrollHeight);
-        var pos = el.scrollTop + el.offsetHeight * (el.scrollTop / height);
-        scrollIndicator.style.top = pos + "px";
-    }.bind(this));
+        el.scrollTop += scrollStep * e.deltaY;
+        if (el.scrollHeight <= el.offsetHeight)
+            return;
+        scrollbar.style.display = "block";
+        var height = el.offsetHeight;
+        var sbh = height - scrollDy;
+        scrollbar.style.height = sbh + "px"; //TODO: make once
 
+        scrollIndicator.style.height = sbh * (height / el.scrollHeight) + "px";
+        scrollIndicator.style.top = (sbh * el.scrollTop) / el.scrollHeight + "px";
+
+        return false;
+    }.bind(this)
+
+    this.messagesElement.addEventListener("wheel", updateScroll);
 
     this.newMessageElement = document.createElement("input");
     this.newMessageElement.id = "new-message";
@@ -138,24 +147,6 @@ function Chat() {
         return true;
     };
 
-    this.channelGroupsElement = document.createElement("div");
-    this.channelGroups = {};
-    ["system", "server", "players", "npc"].map(function(name) {
-        var label = document.createElement("label");
-        var channelGroup = document.createElement("input");
-        channelGroup.type = "checkbox";
-        channelGroup.checked = true;
-        channelGroup.addEventListener("change", function(e) {
-            self.messagesElement.classList[
-                (this.checked) ? "remove" : "add"
-            ]("channel-group-" + name);
-        });
-        label.appendChild(channelGroup);
-        label.appendChild(document.createTextNode(T(name)));
-        this.channelGroupsElement.appendChild(label);
-        this.channelGroups[name] = true;
-    }.bind(this));
-
     var semi = {
         focus: false,
         always: true,
@@ -168,9 +159,6 @@ function Chat() {
     var semishow = function() {
         this.panel.contents.classList.remove("semi-hidden");
     }.bind(this);
-
-    this.settingsElement = document.createElement("div");
-    this.settingsElement.id = "chat-settings";
 
     this.removeAlert = function() {
         game.controller.unhighlight("chat");
@@ -196,8 +184,6 @@ function Chat() {
 
     this.tabs = document.createElement("div");
     this.tabs.id = "chat-tabs";
-    // this.tabs.appendChild(this.channelGroupsElement);
-    // this.tabs.appendChild(this.settingsElement);
 
     var tabs = ["general", "friends", "system"];
     tabs.forEach(function(name, i) {
@@ -219,6 +205,13 @@ function Chat() {
     }.bind(this));
     this.tabs.firstChild.classList.add("active");
 
+    var activeTab = {
+        elem: this.tabs.firstChild,
+        name: tabs[0],
+    }
+
+
+    //TODO: get rid of checkbox
     var alwaysVisible = util.dom.createCheckBox();
     alwaysVisible.id = "chat-always-visible";
     alwaysVisible.label.id = "chat-always-visible-label";
@@ -230,11 +223,50 @@ function Chat() {
         this.panel.contents.classList.toggle("semi-hidden");
     }.bind(this);
 
+    var settingsIcon = new Image();
+    settingsIcon.src = "assets/icons/chat/settings.png";
+    settingsIcon.id = "chat-settings-icon";
+    settingsIcon.onclick = function() {
+        var name = document.createElement("div");
+        name.textContent = activeTab.name;
+        var checkboxes = document.createElement("div");
+        ["system", "server", "players", "npc"].map(function(name) {
+            var label = document.createElement("label");
+            label.style.display = "block";
+            var channelGroup = document.createElement("input");
+            channelGroup.type = "checkbox";
+            channelGroup.checked = true;
+            channelGroup.addEventListener("change", function(e) {
+                self.messagesElement.classList[
+                    (this.checked) ? "remove" : "add"
+                ]("channel-group-" + name);
+            });
+            label.appendChild(channelGroup);
+            label.appendChild(document.createTextNode(T(name)));
+            checkboxes.appendChild(label);
+        });
+        var save = document.createElement("button");
+        save.textContent = T("Save");
+        save.onclick = function() {
+            alert("TODO");
+        }
+        var panel = new Panel("chat-settings", T("Tab settings"), [
+            name,
+            util.hr(),
+            checkboxes,
+            util.hr(),
+            save
+        ]);
+        panel.show();
+    };
+
 
     var tabContents = document.createElement("div");
     tabContents.id = "chat-tab-content";
+    tabContents.appendChild(scrollbar);
     tabContents.appendChild(this.messagesElement);
     tabContents.appendChild(this.newMessageElement);
+    tabContents.appendChild(settingsIcon);
     tabContents.appendChild(alwaysVisible.label);
 
     this.panel = new Panel(
@@ -427,6 +459,7 @@ function Chat() {
         this.messagesElement.appendChild(messageElement);
         if (scroll)
             this.messagesElement.scrollTop = this.messagesElement.scrollHeight;
+        updateScroll({deltaY: 99999});
 
         return messageElement;
     }.bind(this);

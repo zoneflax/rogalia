@@ -723,17 +723,21 @@ hr {
     max-width: none;
 }
 
-#chat-always-visible-label {
+#chat-always-visible-label, #chat-settings-icon {
     position: absolute;
     top: 28px;
     right: 9px;
     width: 16px;
     height: 16px;
-    background: url("assets/icons/chat/always-visible.png");
-    pointer-events: all;
 }
-
-#chat-always-visible-label:hover {
+#chat-settings-icon {
+    right: 28px;
+}
+#chat-always-visible-label {
+    pointer-events: all;
+    background: url("assets/icons/chat/always-visible.png");
+}
+#chat-always-visible-label:hover, #chat-settings-icon:hover {
     -webkit-filter: brightness(150%);
     filter: brightness(150%);
 }
@@ -797,17 +801,11 @@ hr {
     overflow: hidden;
     background: transparent;
 }
-#chat-settings {
-    position: absolute;
-    right: 0;
-    top: 0;
-    pointer-events: auto!important;
-}
 .messages, #new-message {
     pointer-events: auto;
     display: block;
     padding: 0;
-    overflow: hidden;
+    overflow-y: scroll;
 }
 #new-message {
     width: 95%;
@@ -818,7 +816,8 @@ hr {
     position: relative;
     height: 20em;
     padding: 5px;
-    margin: 0 0 10px 0;
+    margin: 0;
+    margin-right: -15px;
 }
 
 .message {
@@ -1625,7 +1624,8 @@ big {
 #action-progress {
     background:
     url("assets/bg/action-progress/top.png") repeat-x top,
-    url("assets/bg/action-progress/bottom.png") repeat-x bottom;
+    url("assets/bg/action-progress/bottom.png") repeat-x bottom,
+    #99682e;
     bottom: 170px;
     height: 23px;
     left: 0;
@@ -1821,9 +1821,10 @@ big {
 }
 
 .scrollbar {
+    display: none;
     position: absolute;
     width: 5px;
-    top: 22px;
+    top: 46px;
     right: 10px;
     background: #99682e;
 }

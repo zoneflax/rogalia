@@ -455,9 +455,7 @@ Craft.prototype = {
         auto.className = "recipe-auto";
         auto.textContent = T("Auto");
         auto.onclick = function() {
-            this.auto(function(item, container) {
-                container.dwimCraft(item);
-            });
+            this.auto();
         }.bind(this);
 
         var create = document.createElement("button");
@@ -529,6 +527,9 @@ Craft.prototype = {
         this.recipeDetails.appendChild(create);
     },
     auto: function(callback) {
+        callback = callback || function(item, container) {
+            container.dwimCraft(item);
+        };
         for (var i in game.containers) {
             var container = game.containers[i];
             var entity = Entity.get(container.id);
