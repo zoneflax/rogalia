@@ -1,6 +1,7 @@
 //TODO: make panels linked via back button
 function Panel(name, title, elements, listener, hooks) {
     if (name in game.panels) {
+        game.panels[name].temporary = true; //dont save position
         game.panels[name].close();
     }
 

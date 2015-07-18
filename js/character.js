@@ -1519,7 +1519,7 @@ Character.prototype = {
             wrapper.appendChild(buttons);
             contents.push(wrapper);
 
-            panel = new Panel("talk", self.Name, contents);
+            panel = new Panel("vendor", self.Name, contents);
             panel.show();
             return null;
         });

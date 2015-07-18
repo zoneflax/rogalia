@@ -122,6 +122,14 @@ function Chat() {
                     e.target.blur();
                     break;
                 }
+            case "list":
+                for (var i in Entity.templates) {
+                    var t = Entity.templates[i];
+                    if (t.Type.contains(arg)) {
+                        game.chat.addMessage(t.Type);
+                    }
+                }
+                break;
             case "terra":
                 var bioms = game.map.bioms.map(function(biom, i) {
                     var div = document.createElement("div");
@@ -140,14 +148,6 @@ function Chat() {
                         game.controller.terraCursor(e.target);
                     }
                 ).show();
-                break;
-            case "list":
-                for (var i in Entity.templates) {
-                    var t = Entity.templates[i];
-                    if (t.Type.contains(arg)) {
-                        game.chat.addMessage(t.Type);
-                    }
-                }
                 break;
             case "get-translations":
                 dict.getTranslations();
