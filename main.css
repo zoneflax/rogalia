@@ -810,7 +810,6 @@ hr {
     pointer-events: auto;
     display: block;
     padding: 0;
-    overflow-y: scroll;
 }
 #new-message {
     width: 95%;
@@ -818,6 +817,7 @@ hr {
 }
 
 .messages {
+    overflow-y: scroll;
     position: relative;
     height: 20em;
     padding: 5px;
@@ -1364,7 +1364,7 @@ big {
 #strips {
     position: absolute;
     top: 30px;
-    left: 50%;
+    left: 57%;
     width: 65px;
     height: 29px;
     background: url("assets/bg/strips.png") no-repeat;
