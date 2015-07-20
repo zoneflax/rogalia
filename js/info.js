@@ -154,6 +154,7 @@ Info.prototype = {
             this.drawValue("#ccc", "miss");
             break;
         case "damage":
+            game.setFontSize(20);
             this.drawValue("#f00", null);
             break;
         case "combo":
