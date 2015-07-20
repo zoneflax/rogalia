@@ -50,13 +50,17 @@ function Fight() {
         var args = {Name: util.ucfirst(action)};
         if (game.player.target)
             args.Id = game.player.target.Id;
-        switch (action) {
-        case "irimi":
-        case "kaiten":
+
+        game.controller.callback[game.controller.RIGHT] = function() {
+            if (!game.controller.iface.mouseIsValid)
+                return false;
+
             args.X = game.controller.world.x;
             args.Y = game.controller.world.y;
+
+            game.network.send("waza", args);
+            return true;
         }
-        game.network.send("waza", args);
     }
 
     this.update = function() {
