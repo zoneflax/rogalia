@@ -31,6 +31,8 @@ function Fight() {
             game.controller.showWarning("Action is blocked");
             return;
         }
+        if (!game.controller.iface.mouseIsValid)
+            return false;
 
         switch (action) {
         case "irimi":
@@ -51,16 +53,10 @@ function Fight() {
         if (game.player.target)
             args.Id = game.player.target.Id;
 
-        game.controller.callback[game.controller.RIGHT] = function() {
-            if (!game.controller.iface.mouseIsValid)
-                return false;
+        args.X = game.controller.world.x;
+        args.Y = game.controller.world.y;
 
-            args.X = game.controller.world.x;
-            args.Y = game.controller.world.y;
-
-            game.network.send("waza", args);
-            return true;
-        }
+        game.network.send("waza", args);
     }
 
     this.update = function() {
