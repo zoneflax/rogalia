@@ -55,7 +55,7 @@ function loadingStage(data) {
 
     this.draw = function() {
         game.ctx.clear();
-        game.ctx.fillStyle = "#333";
+        game.ctx.fillStyle = "#fff";
         game.ctx.fillText(
             game.loader.status,
             CELL_SIZE,
