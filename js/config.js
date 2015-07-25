@@ -30,7 +30,7 @@ var config = {
         strokeClaim: true,
         rotateMinimap: false,
         chatAttached: true,
-        chatBallons: true,
+        chatBalloons: true,
         showAttackRadius: true,
     },
     graphics: {

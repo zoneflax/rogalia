@@ -592,7 +592,7 @@ function Chat() {
 
 
     this.addBallon = function(message) {
-        if (!config.chatBallons)
+        if (!config.ui.chatBalloons)
             return;
         var character = game.characters.get(message.From);
         if(!character)
