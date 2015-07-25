@@ -1785,13 +1785,13 @@ big {
 }
 #xp-progress-bar:before {
     position: absolute;
-    top: -7px;
+    top: -6px;
     left: -4px;
     content: url("assets/bg/xp-left.png");
 }
 #xp-progress-bar:after {
     position: absolute;
-    top: -7px;
+    top: -6px;
     right: -4px;
     content: url("assets/bg/xp-right.png");
 }

@@ -319,6 +319,12 @@ Character.prototype = {
                 "run": 1,
             };
             break;
+        case "small-spider":
+	    this.sprite.width = 64;
+	    this.sprite.height = 64;
+            this.sprite.offset = 25;
+            this.sprite.speed = 21000;
+            break;
         case "spider":
 	    this.sprite.width = 128;
 	    this.sprite.height = 128;
@@ -413,6 +419,7 @@ Character.prototype = {
             break;
         default:
             switch (this.Type) {
+            case "small-spider":
             case "spider":
             case "horse":
             case "cow":
@@ -807,6 +814,7 @@ Character.prototype = {
         switch (this.Type) {
         case "horse":
         case "cow":
+        case "small-spider":
         case "spider":
         case "wolf":
         case "warg":
