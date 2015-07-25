@@ -29,10 +29,10 @@ function Chat() {
     scrollbar.appendChild(scrollIndicator);
 
     var scrollDy = parseInt(getComputedStyle(scrollbar).top);
-    var scrollStep = 7;
+    var scrollStep = 3;
     var updateScroll = function(e) {
         var el = this.messagesElement;
-        el.scrollTop += scrollStep * e.deltaY;
+        el.scrollTop += scrollStep * (e.deltaY / Math.abs(e.deltaY));
         if (el.scrollHeight <= el.offsetHeight)
             return;
         scrollbar.style.display = "block";
@@ -44,7 +44,7 @@ function Chat() {
         scrollIndicator.style.top = (sbh * el.scrollTop) / el.scrollHeight + "px";
 
         return false;
-    }.bind(this)
+    }.bind(this);
 
     this.messagesElement.addEventListener("wheel", updateScroll);
 
