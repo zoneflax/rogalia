@@ -40,7 +40,6 @@ function Info(message, character) {
         break;
     case "damage":
         if (this.data instanceof Object) {
-            console.log("IN");
             this.value = this.data.Dmg;
             if (this.target == game.player)
                 this.text = this.character.Name + " " + this.data.Action + "ed you in the " + this.data.Target;
