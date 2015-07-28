@@ -300,6 +300,7 @@ hr {
     z-index: 1;
     text-align: left;
     overflow: hidden;
+    max-width: 500px;
 }
 .panel.top {
     box-shadow: 0 0 2px 3px rgba(200, 144, 21, 0.8);
@@ -866,7 +867,7 @@ hr {
 .message .body .recipe-link {
     cursor: pointer;
     text-decoration: underline;
-    color: green;
+    color: lightgreen;
 }
 #users .user {
     list-style-type: square;
@@ -1446,9 +1447,7 @@ big {
 .price.negative {
     border-bottom: 1px dotted red;
 }
-#vendor {
-    width: 400px;
-}
+
 #lot-list {
     height: 500px;
     overflow-x: hidden;

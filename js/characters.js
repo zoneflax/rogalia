@@ -121,38 +121,75 @@ Character.npcActions = {
     },
     "Quest": function() {
         var id = this.Id;
-        var name = this.Name;
+        var self = this;
         var talks = {
             getActions: function() {
-                switch (name) {
-                case "Charles":
-                    return {
-                        "Faction tribute": function() {
-                            var descr = document.createElement("p");
-                            descr.textContent = "I'll take 10 food from your bag and give you status point as a reward. Deal?";
-                            var accept = document.createElement("button");
-                            accept.textContent  = "Accept";
-                            accept.onclick = function() {
-                                game.network.send("quest", {Id: id});
-                            };
-                            var panel = new Panel("quest", "Quest", [descr, accept]);
-                            panel.show();
-                        },
-                        "Tour": function() {
-                            alert("Пока не готово, извиняй.");
-                        },
-                    };
-                case "Umi":
-                case "Margo":
-                case "Shot":
-                default:
-                    return {
-                        "Tour": function() {
-                            alert("Пока не готово, извиняй.");
+                var actions = {};
+                self.AvailableQuests.forEach(function(q) {
+                    var quest = game.quests[q.Id];
+                    actions[quest.name[game.lang]] = function() {
+                        var desc = document.createElement("p");
+                        desc.textContent = quest.desc[game.lang];
+
+                        var start = document.createElement("button");
+                        start.textContent = T("Accept");
+                        start.onclick = function() {
+                            game.network.send("quest", {QuestId: q.Id});
+                            panel.close();
+                        };
+
+                        var goal = document.createElement("div");
+                        {
+                            var end = document.createElement("div");
+                            end.textContent = q.End + " " + T("wants:");
+                            goal.appendChild(end);
                         }
+                        var makeList = function(items) {
+                            var list = document.createElement("ul");
+                            for (var item in items) {
+                                var li = document.createElement("li");
+                                li.textContent = TS(item) + ": x" + q.HaveItems[item];
+                                list.appendChild(li);
+                            }
+                            return list;
+                        };
+                        if (q.Goal.HaveItems) {
+                            goal.appendChild(document.createTextNode(T("You need to have these items:")));
+                            goal.appendChild(makeList(q.HaveItems));
+                        }
+                        if (q.Goal.BringItems) {
+                            goal.appendChild(document.createTextNode(T("You need to bring these items:")));
+                            goal.appendChild(makeList(q.Goal.BringItems));
+                        }
+
+                        var rewards = document.createElement("div");
+                        rewards.appendChild(document.createTextNode(T("Rewards:")));
+
+                        if (q.Reward.Xp) {
+                            var xp = document.createElement("div");
+                            xp.textContent = "+" + q.Reward.Xp + "xp";
+                            rewards.appendChild(xp);
+                        }
+                        if (q.Reward.Currency) {
+                            rewards.appendChild(Vendor.createPrice(q.Reward.Currency));
+                        }
+                        if (q.Reward.Items) {
+                            goal.appendChild(makeList(q.Goal.BringItems));
+                        }
+
+                        var panel = new Panel("quest", "Quest", [
+                            desc,
+                            util.hr(),
+                            goal,
+                            util.hr(),
+                            rewards,
+                            util.hr(),
+                            start
+                        ]);
+                        panel.show();
                     };
-                }
-                return {};
+                });
+                return actions;
             }
         };
         game.menu.show(talks);

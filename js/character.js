@@ -672,6 +672,10 @@ Character.prototype = {
         if (!game.player.see(this))
             return;
 
+        //TODO: draw apropriate marker based on quests (!) (?) ...
+        if (this.AvailableQuests)
+            this.drawQuestMarker();
+
         if (game.debug.player.box || game.controller.hideStatic()) {
             this.drawBox();
         }
@@ -693,6 +697,14 @@ Character.prototype = {
         }
 
         this.drawCorpsePointer();
+    },
+    drawQuestMarker: function() {
+        var p = this.screen();
+        p.y -= this.sprite.nameOffset;
+        game.setFontSize("30");
+        game.ctx.fillStyle = "yellow";
+        game.drawStrokedText("!", p.x, p.y);
+        game.setFontSize();
     },
     drawDst: function() {
         if (debug.player.path && this.Path) {
@@ -1483,7 +1495,13 @@ Character.prototype = {
 
             var panel = null;
             var contents = [];
-            var info = self.getTalks(); // TODO: omfg rename me
+            // TODO: omfg rename me
+            var info = self.getTalks();
+
+            if ("Quest" in info.actions && !self.AvailableQuests) {
+                delete info.actions["Quest"];
+            }
+
             info.talks.forEach(function(text) {
                 var p = document.createElement("p");
                 p.textContent = text;

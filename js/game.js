@@ -95,13 +95,13 @@ function Game() {
     };
 
     this.debug = debug;
-    delete window[debug];
-
     this.config = config;
-    delete window[config];
 
     Settings.load();
     dict.init();
+
+    //TODO:FIXME: remove bool flag and use select{lang1, lang2, ...}
+    this.lang = (config.language.Russian) ? "ru" : "en";
 
     this.talks = new Talks();
     this.sound = new Sound();
@@ -134,6 +134,8 @@ function Game() {
     this.characters = new HashTable();
     this.containers = {};
     this.vendors = {};
+
+    this.quests = new Quests();
 
     this.panels = {};
     this.epsilon = 0;
@@ -487,6 +489,4 @@ function Game() {
     };
 
     tick();
-
-    util.skewer();
 };

@@ -375,6 +375,7 @@ Controller.prototype = {
         this.craft = new Craft();
         this.chat = game.chat = new Chat();
         this.minimap = new Minimap();
+        this.quests = new QuestJournal();
         this.system = new System();
         this.wiki = new Wiki();
         this.fpsStats = this.system.fps;
@@ -394,6 +395,7 @@ Controller.prototype = {
         this.createButton(this.inventory.panel, "inventory");
         this.createButton(this.craft.panel, "craft");
         this.createButton(this.chat.panel, "chat");
+        this.createButton(this.quests.panel, "quests");
         this.createButton(this.minimap.panel, "map");
 
         this.createButton(this.wiki.panel, "wiki");

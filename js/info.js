@@ -155,12 +155,12 @@ Info.prototype = {
         case "damage":
             game.setFontSize(20);
             this.drawValue("#f00", null);
+            game.setFontSize();
             break;
         case "combo":
-            game.ctx.save();
             game.setFontSize(50);
             this.drawValue("#fff", this.text);
-            game.ctx.restore();
+            game.setFontSize();
         }
     },
     drawValue: function(color, text) {
