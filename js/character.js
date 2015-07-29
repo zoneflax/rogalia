@@ -673,7 +673,7 @@ Character.prototype = {
             return;
 
         //TODO: draw apropriate marker based on quests (!) (?) ...
-        if (this.AvailableQuests)
+        if (this.getQuests().length > 0)
             this.drawQuestMarker();
 
         if (game.debug.player.box || game.controller.hideStatic()) {
@@ -1498,7 +1498,7 @@ Character.prototype = {
             // TODO: omfg rename me
             var info = self.getTalks();
 
-            if ("Quest" in info.actions && !self.AvailableQuests) {
+            if ("Quest" in info.actions && self.getQuests().length == 0) {
                 delete info.actions["Quest"];
             }
 
@@ -1631,5 +1631,8 @@ Character.prototype = {
         });
         if (list.length > 0)
             this.target = list[0];
+    },
+    getQuests: function() {
+        return game.player.AvailableQuests[this.Name] || [];
     },
 };

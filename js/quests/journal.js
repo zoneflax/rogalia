@@ -1,11 +1,19 @@
 function QuestJournal() {
-    var list = document.createElement("ul");
-    for (var id in game.player.ActiveQuests) {
-        var quest = game.quests[id];
-        var li = document.createElement("li");
-        li.textContent = quest.name[game.lang];
-    }
+    this.list = document.createElement("ul");
 
-    var view = document.createElement("div");
-    this.panel = new Panel("quest-journal", "Quests", [list, view]);
+    this.view = document.createElement("div");
+    this.panel = new Panel("quest-journal", "Quests", [this.list, this.view]);
+    this.update();
 }
+
+QuestJournal.prototype = {
+    update: function() {
+        this.list.innerHTML = "";
+        for (var id in game.player.ActiveQuests) {
+            var quest = new Quest(game.player.ActiveQuests[id].Quest);
+            var li = document.createElement("li");
+            quest.renderDesc().forEach(li.appendChild.bind(li));
+            this.list.appendChild(li);
+        }
+    },
+};
