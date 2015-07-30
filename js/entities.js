@@ -1,3 +1,4 @@
+"use strict";
 Entity.MT_PORTABLE = 0;
 Entity.MT_LIFTABLE = 1;
 Entity.MT_STATIC = 2;

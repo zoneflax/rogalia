@@ -1,3 +1,4 @@
+"use strict";
 function Sprite(path, width, height, speed) {
     this.name = "";
     this.image = null;

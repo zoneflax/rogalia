@@ -1,3 +1,4 @@
+"use strict";
 function Users() {
     this.characters = [];
     this.listElement = document.createElement("ul");

@@ -1,3 +1,4 @@
+"use strict";
 function Donate() {
     var status = document.createElement("p");
     status.innerHTML = "Собрано 1 577,27";

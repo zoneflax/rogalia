@@ -1,3 +1,4 @@
+"use strict";
 Character.equipSlots =  [
     "bag",
     "right-hand",
@@ -128,7 +129,7 @@ Character.npcActions = {
                 self.getQuests().forEach(function(q) {
                     var quest = new Quest(q);
                     actions[quest.getName()] = function() {
-                        var panel = new Panel("quest", "Quest", quest.renderContents());
+                        var panel = new Panel("quest", "Quest", quest.getContents());
                         panel.show();
                     };
                 });

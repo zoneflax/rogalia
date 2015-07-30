@@ -1,3 +1,4 @@
+"use strict";
 function ChatRing() {
     this.ring = [];
     this.current =  0;

@@ -1,3 +1,4 @@
+"use strict";
 function Skills() {
     this.current = null;
 

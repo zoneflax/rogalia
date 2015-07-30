@@ -1,3 +1,4 @@
+"use strict";
 //TODO: make playlist shuffle
 function Sound() {
     var soundDir = "assets/sound/";

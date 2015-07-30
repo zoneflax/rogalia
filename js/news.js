@@ -1,3 +1,4 @@
+"use strict";
 function News() {
     var news = [
         [

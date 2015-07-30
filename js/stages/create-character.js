@@ -1,3 +1,4 @@
+"use strict";
 function createCharacterStage() {
     var account = document.createElement("div");
     account.className = "lobby-account";
@@ -156,7 +157,7 @@ function createCharacterStage() {
         game.setStage("lobby");
     };
 
-    var panel = new Panel("create-character", T("Create character"), [
+    var panel = new Panel("create-character", "Create character", [
         account,
         util.hr(),
         male.label,

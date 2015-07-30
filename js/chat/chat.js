@@ -1,3 +1,4 @@
+"use strict";
 function Chat() {
     var self = this;
     this.useNotifications = false;
@@ -269,7 +270,7 @@ function Chat() {
         save.onclick = function() {
             alert("TODO");
         }
-        var panel = new Panel("chat-settings", T("Tab settings"), [
+        var panel = new Panel("chat-settings", "Tab settings", [
             name,
             util.hr(),
             checkboxes,

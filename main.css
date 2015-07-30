@@ -600,13 +600,12 @@ hr {
     color: red;
 }
 
-.craft {
-    overflow: hidden;
+#craft {
+    width: 500px;
 }
 #craft .contents {
     display: flex;
     justify-content: space-around;
-    width: 500px;
     height: 500px;
 }
 #recipe-list-wrapper {
@@ -1848,4 +1847,24 @@ big {
 .icon-button:hover {
     -webkit-filter: brightness(150%);
     filter: brightness(150%);
+}
+#journal {
+    width: 500px;
+}
+#journal .contents {
+    display: flex;
+    justify-content: space-around;
+    height: 400px;
+}
+#quest-list {
+    width: 34%;
+    margin: 0;
+    padding: 0 0 0 18px;
+}
+#quest-list li:hover, #quest-list li.selected {
+    cursor: pointer;
+    color: lightgreen;
+}
+#quest-desc {
+    width: 65%;
 }

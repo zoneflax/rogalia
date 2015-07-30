@@ -1,3 +1,4 @@
+"use strict";
 function loadingStage(data) {
     game.addEventListeners();
 

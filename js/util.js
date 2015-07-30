@@ -1,3 +1,4 @@
+"use strict";
 if ( !window.requestAnimationFrame ) {
      window.requestAnimationFrame = ( function() {
          return window.webkitRequestAnimationFrame ||

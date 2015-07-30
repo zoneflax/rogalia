@@ -1,3 +1,4 @@
+"use strict";
 function Stats() {
     this.equipContainer = Container.open(0);
     this.update();

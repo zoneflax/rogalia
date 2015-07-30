@@ -1,3 +1,4 @@
+"use strict";
 function exitStage(message) {
     message = message || T("Refresh page...");
     game.ctx.fillStyle = "#fff";

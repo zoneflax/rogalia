@@ -1,3 +1,4 @@
+"use strict";
 function Talks() {
     return {
 	stories: {

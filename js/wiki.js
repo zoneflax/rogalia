@@ -1,3 +1,4 @@
+"use strict";
 function Wiki() {
     var iframe = document.createElement("iframe");
     iframe.resize = true;

@@ -1,3 +1,4 @@
+"use strict";
 function Ads() {
     var adsence = document.getElementById("adsence");
     document.getElementById("adsence-explanation").onclick = function() {

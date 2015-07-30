@@ -1,3 +1,4 @@
+"use strict";
 var CELL_SIZE = 32;
 var FONT_SIZE = 14;
 var DEFAULT_CLIENT_WIDTH = 1280;

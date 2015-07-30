@@ -1,3 +1,4 @@
+"use strict";
 function Loader(assetsDir) {
     this.assetsDir = assetsDir;
 };

@@ -1,3 +1,4 @@
+"use strict";
 /*
  * $Id: rawinflate.js,v 0.3 2013/04/09 14:25:38 dankogai Exp dankogai $
  *
@@ -488,7 +489,7 @@ var zip_inflate_fixed = function(buff, off, size) {
 	// distance table
 	for(i = 0; i < 30; i++)	// make an incomplete code set
 	    l[i] = 5;
-	zip_fixed_bd = 5;
+	window.zip_fixed_bd = 5;
 
 	h = new zip_HuftBuild(l, 30, 0, zip_cpdist, zip_cpdext, zip_fixed_bd);
 	if(h.status > 1) {

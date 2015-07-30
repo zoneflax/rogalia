@@ -1,3 +1,4 @@
+"use strict";
 //TODO: deprecated; use items.js instead; refactor me;
 var dict = {
     "Spiced wolf meat": "Волчатина с пряностями",
@@ -940,5 +941,13 @@ var dict = {
     "Quit": "Выйти",
     "New": "Новый",
     "Main skills": "Основные навыки",
+    "Journal": "Журнал",
     "Accept": "Принять",
+    "Finish": "Закончить",
+    "Rewards": "Награда",
+    "Soup": "Суп",
+    "Who": "Кто",
+    "You need to have these items": "Вам нужно получить следующие предметы",
+    "You need to bring these items": "Вам нужно принести следующие предметы",
+    "You need to": "Вам нужно",
 };

@@ -1,3 +1,4 @@
+"use strict";
 function Character(id, name) {
     this.Id = id;
     this.Name = name;
@@ -27,6 +28,7 @@ function Character(id, name) {
     };
 
     this.target = null;
+    this.interactTarget = {};
 
     this.Dx =  0;
     this.Dy = 0;
@@ -191,6 +193,7 @@ Character.prototype = {
             };
             break;
         case "charles":
+            console.log(this.Name);
 	    this.sprite.width = 40;
 	    this.sprite.height = 70;
             this.sprite.angle = Math.PI*2;
@@ -306,14 +309,14 @@ Character.prototype = {
                 "run": 3,
             };
             break;
+        case "vendor":
         case "cirno":
         case "snegurochka":
         case "moroz":
-        case "vendor":
         case "boris":
         case "bertran":
         case "bruno":
-            this.sprite.nameOffset = 96;
+            this.sprite.nameOffset = 70;
             this.sprite.frames = {
                 "idle": 1,
                 "run": 1,
@@ -672,9 +675,7 @@ Character.prototype = {
         if (!game.player.see(this))
             return;
 
-        //TODO: draw apropriate marker based on quests (!) (?) ...
-        if (this.getQuests().length > 0)
-            this.drawQuestMarker();
+        this.drawQuestMarker();
 
         if (game.debug.player.box || game.controller.hideStatic()) {
             this.drawBox();
@@ -699,12 +700,49 @@ Character.prototype = {
         this.drawCorpsePointer();
     },
     drawQuestMarker: function() {
-        var p = this.screen();
-        p.y -= this.sprite.nameOffset;
+        var marker = this.getQuestMarker();
+        if (!marker)
+            return;
+
         game.setFontSize("30");
-        game.ctx.fillStyle = "yellow";
-        game.drawStrokedText("!", p.x, p.y);
+        var p = this.screen();
+        p.x -= game.ctx.measureText(marker.text).width / 2;
+        p.y -= this.sprite.nameOffset;
+        game.ctx.fillStyle = marker.color;
+        game.forceDrawStrokedText(marker.text, p.x, p.y);
         game.setFontSize();
+    },
+    getQuestMarker: function() {
+        // has owner -> vendor -> no quests
+        if (this.Owner)
+            return null;
+        // 1. yellow (?) -> has "ready" quest
+        // 2. yellow (!) -> has "available" quest
+        // 3. gray (?) -> has "not ready" quest
+        var ready = false,
+            active = false,
+            hasQuests = this.getAvailableQuests().length > 0;
+
+        for (var name in game.player.ActiveQuests) {
+            var questLog = game.player.ActiveQuests[name];
+            var quest = questLog.Quest;
+            if (quest.End != this.Name)
+                continue;
+            ready = ready || questLog.State == "ready";
+            active = active || questLog.State == "active";
+        }
+
+        if (!ready && !active && !hasQuests)
+            return null;
+
+        var marker = {text: "?", color: "yellow"};
+
+        if (hasQuests)
+            marker.text = "!";
+        else if (active)
+            marker.color = "grey";
+
+        return marker;
     },
     drawDst: function() {
         if (debug.player.path && this.Path) {
@@ -1489,6 +1527,7 @@ Character.prototype = {
     },
     interact: function() {
         var self = this;
+        game.player.interactTarget = this;
         game.network.send("follow", {Name: this.Name}, function interact(data) {
             if (!data.Done)
                 return interact;
@@ -1625,14 +1664,23 @@ Character.prototype = {
     selectNextTarget: function() {
         var self = this;
         var list = game.findCharsNear(this.X, this.Y, 5*CELL_SIZE).filter(function(c) {
-            return c != self && c != self.target;;
+            return c != self && c != self.target;
         }).sort(function(a, b) {
             return a.distanceTo(self) - b.distanceTo(self);
         });
         if (list.length > 0)
             this.target = list[0];
     },
-    getQuests: function() {
+    getAvailableQuests: function() {
         return game.player.AvailableQuests[this.Name] || [];
+    },
+    getQuests: function() {
+        var quests =  this.getAvailableQuests();
+        for (var id in game.player.ActiveQuests) {
+            var quest = game.player.ActiveQuests[id].Quest;
+            if (quest.End == this.Name)
+                quests.push(quest);
+        }
+        return quests;
     },
 };

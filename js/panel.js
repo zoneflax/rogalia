@@ -1,3 +1,4 @@
+"use strict";
 //TODO: make panels linked via back button
 function Panel(name, title, elements, listener, hooks) {
     if (name in game.panels) {
@@ -56,7 +57,7 @@ function Panel(name, title, elements, listener, hooks) {
     };
 
     if (elements && elements.length) {
-        this.replace(elements);
+        this.setContents(elements);
     } else {
         var contents = document.getElementById(name);
         if (contents) {
@@ -179,9 +180,9 @@ Panel.prototype = {
     },
     setTitle: function(text) {
         this._title.title = T(text);
-        this._title.textContent = text;
+        this._title.textContent = T(text);
     },
-    replace: function(elements) {
+    setContents: function(elements) {
         this.contents.innerHTML = "";
         for(var i = 0, l = elements.length; i < l; i++) {
             this.contents.appendChild(elements[i]);
@@ -206,13 +207,15 @@ Panel.prototype = {
             this.y = y;
 
         this.visible = true;
-        if (!util.rectIntersects(
-            this.x, this.y, this.width, this.height,
-            0, 0, window.innerWidth, window.innerHeight
-        )) {
-            this.x = 0;
-            this.y = 0;
-        }
+
+        // protection from window going offscreen?
+        // if (!util.rectIntersects(
+        //     this.x, this.y, this.width, this.height,
+        //     0, 0, window.innerWidth, window.innerHeight
+        // )) {
+        //     this.x = 0;
+        //     this.y = 0;
+        // }
         this.hooks.show && this.hooks.show.call(this);
         window.scrollTo(0, 0);
     },

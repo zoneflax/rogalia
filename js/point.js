@@ -1,3 +1,4 @@
+"use strict";
 function Point(x, y) {
     switch(arguments.length) {
     case 0:

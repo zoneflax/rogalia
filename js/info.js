@@ -1,3 +1,4 @@
+"use strict";
 //TODO: get rid of switches
 function Info(message, character) {
     this.data = message.Data;

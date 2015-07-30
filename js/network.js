@@ -1,3 +1,4 @@
+"use strict";
 function Network() {
     var override = document.location.search.match(/server=([^&]+)/);
     var defaultServer = document.location.hostname;

@@ -1,3 +1,4 @@
+"use strict";
 function Minimap() {
     var defaultScale = 0.25;
     var SCALE = defaultScale;

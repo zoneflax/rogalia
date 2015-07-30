@@ -1,3 +1,4 @@
+"use strict";
 function Craft() {
     this.visibleGroups = {};
     this.buildButton = null;
@@ -176,7 +177,7 @@ Craft.prototype = {
         }.bind(this);
         this.buildButton = buildButton;
 
-        this.blank.panel.replace([
+        this.blank.panel.setContents([
             this.titleElement,
             util.hr(),
             slotHelp,

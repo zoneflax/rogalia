@@ -1,3 +1,4 @@
+"use strict";
 function Entity(id, type) {
     var e = this;
     if (type) {

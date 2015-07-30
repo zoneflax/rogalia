@@ -1,3 +1,4 @@
+"use strict";
 /*
  * Binary Search Tree implementation in JavaScript
  * Copyright (c) 2009 Nicholas C. Zakas

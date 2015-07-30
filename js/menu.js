@@ -1,3 +1,4 @@
+"use strict";
 //TODO: use panel methods!
 function Menu(x, y) {
     this.container = null;

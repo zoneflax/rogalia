@@ -1,3 +1,4 @@
+"use strict";
 function Fight() {
     var target = null;
     var locked = false;

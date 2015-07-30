@@ -1,10 +1,11 @@
+"use strict";
 function Game() {
     window.game = this;
 
     this.world = document.getElementById("world");
     this.interface = document.getElementById("interface");
     this.canvas = document.getElementById("canvas");
-    this.ctx = canvas.getContext("2d");
+    this.ctx = this.canvas.getContext("2d");
     this.ctx.clear = function() {
         game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
     };
@@ -146,6 +147,10 @@ function Game() {
             game.ctx.fillText(text, x, y);
             return;
         }
+        this.forceDrawStrokedText(text, x, y, strokeStyle);
+    };
+
+    this.forceDrawStrokedText = function(text, x, y, strokeStyle) {
         var lineJoin = game.ctx.lineJoin;
         game.ctx.strokeStyle = strokeStyle || "#333";
         game.ctx.lineWidth = 4;

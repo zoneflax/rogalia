@@ -1,3 +1,4 @@
+"use strict";
 function lobbyStage(data) {
     var account = document.createElement("div");
     account.className = "lobby-account";

@@ -1,3 +1,4 @@
+"use strict";
 dict.init = function() {
     window.TT = function(text, args) {
         text = T(text);

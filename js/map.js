@@ -1,3 +1,4 @@
+"use strict";
 function Map() {
     var CHUNK_SIZE = 8*CELL_SIZE;
     var ISO_CHUNK_SIZE = CHUNK_SIZE + CELL_SIZE;

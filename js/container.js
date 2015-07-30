@@ -1,3 +1,4 @@
+"use strict";
 function Container(id) {
     this.id = +id;
     this.button = null;

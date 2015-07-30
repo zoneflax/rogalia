@@ -1,3 +1,4 @@
+"use strict";
 function loginStage() {
     var signing = false;
     var registering = false;

@@ -1,3 +1,4 @@
+"use strict";
 function Help() {
     var help = this;
     var addMessage = this.addMessage.bind(this);

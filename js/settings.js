@@ -1,3 +1,4 @@
+"use strict";
 function Settings() {
     var sections = [this.makeSettingsSubTree(game.config, "Config")];
 

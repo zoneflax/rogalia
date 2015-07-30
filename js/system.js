@@ -1,3 +1,4 @@
+"use strict";
 function System() {
     this.fps = new FpsStats();
 

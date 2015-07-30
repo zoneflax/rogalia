@@ -1,3 +1,4 @@
+"use strict";
 function Vendor() {
 
 }
@@ -203,12 +204,12 @@ Vendor.buy = function(data) {
         elements.push(util.hr());
         elements.push(sell);
 
-        function cleanUp() {
+        var cleanUp = function() {
             lot.innerHTML = "";
             name.textContent = "";
             util.dom.hide(button);
             util.dom.hide(price);
-        }
+        };
 
         if (game.player.burden) {
             var burden = game.player.burden;
@@ -221,7 +222,7 @@ Vendor.buy = function(data) {
             sellCleanUp = function() {
                 cleanUp();
                 game.player.burden = null;
-            }
+            };
         } else {
             sellCleanUp = function() {
                 if (lot.item)
