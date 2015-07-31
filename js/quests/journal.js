@@ -12,6 +12,7 @@ function Journal() {
     this.update();
     this.panel.hooks.show = this.update.bind(this);
     this.hash = "";
+    this.selected = null;
 }
 
 Journal.prototype = {
@@ -34,9 +35,15 @@ Journal.prototype = {
             var quest = new Quest(game.player.ActiveQuests[id].Quest);
             var name = document.createElement("li");
             name.className = "quest";
+
+
+            if (id == this.selected)
+                name.classList.add("selected");
+
             name.textContent = quest.getName();
             name.onclick = function() {
                 util.dom.removeClass(".quest", "selected");
+                this.selected = id;
                 name.classList.add("selected");
                 this.view.innerHTML = "";
                 var title = document.createElement("b");

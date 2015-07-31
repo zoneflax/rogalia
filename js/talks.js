@@ -92,9 +92,9 @@ function Talks() {
                 ]
             },
             "actions": {
-                "Buy": "Купить еды или семян.",
-                "Drink water": "Выпить воды (5 серебряных).",
-                "Quest": "Квест.",
+                "Buy": "Купить еды или семян",
+                "Drink water": "Выпить воды (5 серебряных)",
+                "Quest": "Квест",
             }
         },
         "margo": {
@@ -130,7 +130,7 @@ function Talks() {
             },
             "actions": {
                 "Buy sex": "Купить секс (10 золота)",
-                "Quest": "Квест.",
+                "Quest": "Квест",
             }
         },
         "bruno": {
@@ -166,7 +166,7 @@ function Talks() {
             },
             "actions": {
                 "Buy": "Купить камней",
-                "Quest": "Квест.",
+                "Quest": "Квест",
             }
         },
         "boris": {
@@ -201,8 +201,8 @@ function Talks() {
                 ]
             },
             "actions": {
-                "Buy indulgence": "Купить индульгенцию (10 золотых +100 кармы).",
-                "Quest": "Квест.",
+                "Buy indulgence": "Купить индульгенцию (10 золотых +100 кармы)",
+                "Quest": "Квест",
             }
         },
         "bertran": {
@@ -218,7 +218,7 @@ function Talks() {
             },
             "actions": {
                 "Buy": "Мясная лавка",
-                "Quest": "Квест.",
+                "Quest": "Квест",
             }
 
         },
