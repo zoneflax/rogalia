@@ -884,5 +884,5 @@ Controller.prototype = {
         localStorage.clear();
         game.panels = {}; //dont save positions;
         game.reload();
-    }
+    },
 };

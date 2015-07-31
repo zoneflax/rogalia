@@ -124,6 +124,10 @@ Character.prototype = {
         if (data.Dir !== undefined) {
             this.sprite.position = data.Dir;
         }
+
+        if ("AvailableQuests"in data) {
+            this.updateActiveQuest();
+        }
     },
     syncMessages: function(messages) {
         while(messages && messages.length > 0) {
@@ -193,7 +197,6 @@ Character.prototype = {
             };
             break;
         case "charles":
-            console.log(this.Name);
 	    this.sprite.width = 40;
 	    this.sprite.height = 70;
             this.sprite.angle = Math.PI*2;
@@ -316,6 +319,7 @@ Character.prototype = {
         case "boris":
         case "bertran":
         case "bruno":
+        case "scrooge":
             this.sprite.nameOffset = 70;
             this.sprite.frames = {
                 "idle": 1,
@@ -1551,6 +1555,9 @@ Character.prototype = {
             var actions = document.createElement("ol");
             Object.keys(info.actions).forEach(function(title) {
                 var button = document.createElement("button");
+                if (title == "Quest") {
+                    button.className = "quest-button";
+                }
                 button.textContent = T(title);
                 button.onclick = function() {
                     panel.close();
@@ -1584,7 +1591,7 @@ Character.prototype = {
             wrapper.appendChild(buttons);
             contents.push(wrapper);
 
-            panel = new Panel("vendor", self.Name, contents);
+            panel = new Panel("interraction", self.Name, contents);
             panel.show();
             return null;
         });
@@ -1619,14 +1626,12 @@ Character.prototype = {
         case "Bruno":
         case "Bertran":
         case "Boris":
+        case "Charles":
+        case "Scrooge":
             return true;
+        default:
+            return this.Type == "vendor";
         }
-        switch (this.Type) {
-        case "charles":
-        case "vendor":
-            return true;
-        }
-        return false;
     },
     canUse: function(e) {
         switch (e.Location) {
@@ -1683,4 +1688,10 @@ Character.prototype = {
         }
         return quests;
     },
+    updateActiveQuest: function() {
+        var panel = game.panels.quest;
+        if (!panel)
+            return;
+        panel.setContents(panel.quest.getContents());
+    }
 };

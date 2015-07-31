@@ -68,7 +68,6 @@ function Panel(name, title, elements, listener, hooks) {
 
     this.element.appendChild(this.contents);
 
-
     util.draggable(this.element);
 
     if(listener instanceof Function) {
@@ -89,28 +88,6 @@ function Panel(name, title, elements, listener, hooks) {
     if ("visible" in config && config.visible)
         this.show();
 }
-
-Panel.checkCollision = function() {
-    var x = game.controller.mouse.x;
-    var y = game.controller.mouse.y;
-
-    for(var name in game.panels) {
-        var panel = game.panels[name];
-        if(!panel.visible)
-            continue;
-        if(util.intersects(
-            x,
-            y,
-            panel.x,
-            panel.y,
-            panel.width,
-            panel.height
-        )) {
-            return panel;
-        }
-    }
-    return null;
-};
 
 Panel.save = function() {
     for(var panel in game.panels) {
@@ -158,7 +135,7 @@ Panel.prototype = {
     hide: function() {
         this.hooks.hide && this.hooks.hide.call(this);
         this.savePosition();
-        this.element.style.display = "none";
+        this.element.style.visibility = "hidden";
         if (this.button) {
             this.button.classList.remove("active");
         }
@@ -177,6 +154,8 @@ Panel.prototype = {
         this.hide();
         if (this.element && this.element.parentNode)
             util.dom.remove(this.element);
+
+        delete game.panels[this.name];
     },
     setTitle: function(text) {
         this._title.title = T(text);
@@ -196,7 +175,7 @@ Panel.prototype = {
     },
     show: function(x, y) {
         this.toTop();
-        this.element.style.display = "block";
+        this.element.style.visibility = "visible";
         if (this.button) {
             this.button.classList.add("active");
         }
@@ -209,13 +188,13 @@ Panel.prototype = {
         this.visible = true;
 
         // protection from window going offscreen?
-        // if (!util.rectIntersects(
-        //     this.x, this.y, this.width, this.height,
-        //     0, 0, window.innerWidth, window.innerHeight
-        // )) {
-        //     this.x = 0;
-        //     this.y = 0;
-        // }
+        if (!util.rectIntersects(
+            this.x, this.y, this.width, this.height,
+            0, 0, window.innerWidth, window.innerHeight
+        )) {
+            this.x = 0;
+            this.y = 0;
+        }
         this.hooks.show && this.hooks.show.call(this);
         window.scrollTo(0, 0);
     },

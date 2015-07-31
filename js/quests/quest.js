@@ -10,6 +10,27 @@ Quest.prototype = {
     getName: function() {
         return this.data.name[game.lang];
     },
+    getLog: function() {
+        return game.player.ActiveQuests[this.Id];
+    },
+    // getMarker: function() {
+    //     var marker = document.createElement("span");
+    //     if (this.ready()) {
+    //         marker.textContent = "?";
+    //         marker.style.color = "yellow";
+    //     } else if (!this.getLog()) {
+    //         marker.textContent = "!";
+    //         marker.style.color = "yellow";
+    //     } else {
+    //         marker.textContent = "?";
+    //         marker.style.color = "grey";
+    //     }
+    //     return marker;
+    // },
+    ready: function() {
+        var questLog = this.getLog();
+        return questLog && questLog.State == "ready";
+    },
     makeList: function(items) {
             var list = document.createElement("div");
             for (var item in items) {
@@ -20,25 +41,35 @@ Quest.prototype = {
             return list;
     },
     getDescContents: function() {
-        return [
+        var contents = [
             this.makeDesc(),
             util.hr(),
-            this.makeGoal(),
-            util.hr(),
-            this.makeRewards(),
         ];
+
+        var goal = this.makeGoal();
+        if (goal.children.length > 0) {
+            contents.push(goal);
+            contents.push(util.hr());
+        }
+
+        contents.push(this.makeReward());
+        return contents;
+
     },
     makeDesc: function() {
         var desc = document.createElement("div");
-        desc.textContent = this.data.desc[game.lang];
+        var source = (this.ready()) ? this.data.final : this.data.desc;
+        desc.textContent = source[game.lang];
         return desc;
     },
     makeGoal: function() {
         var goal = document.createElement("div");
 
-        var end = document.createElement("div");
-        end.textContent = T("Who") + ": " + this.End;
-        goal.appendChild(end);
+        if (!this.ready()) {
+            var end = document.createElement("div");
+            end.textContent = T("Who") + ": " + this.End;
+            goal.appendChild(end);
+        }
 
         if (this.Goal.HaveItems) {
             goal.appendChild(document.createTextNode(T("You need to have these items") + ":"));
@@ -54,56 +85,54 @@ Quest.prototype = {
 
         return goal;
     },
-    makeRewards: function() {
-        var rewards = document.createElement("div");
-        rewards.appendChild(document.createTextNode(T("Rewards") + ":"));
-
+    makeReward: function() {
+        var reward = document.createElement("div");
+        reward.appendChild(document.createTextNode(T("Rewards") + ":"));
         if (this.Reward.Xp) {
             var xp = document.createElement("div");
             xp.textContent = "+" + this.Reward.Xp + "xp";
-            rewards.appendChild(xp);
+            reward.appendChild(xp);
         }
         if (this.Reward.Currency) {
-            rewards.appendChild(Vendor.createPrice(this.Reward.Currency));
+            reward.appendChild(Vendor.createPrice(this.Reward.Currency));
         }
         if (this.Reward.Items) {
-            rewards.appendChild(this.makeList(this.Goal.BringItems));
+            reward.appendChild(this.makeList(this.Goal.BringItems));
         }
 
-        return rewards;
+        return reward;
     },
     getContents: function() {
-        var desc = this.getDescContents();
-        desc.push(util.hr());
+        var canStart = !this.getLog();
+        var action = (canStart) ? "Accept" : "Finish";
 
-        var id = this.Id;
-        var questLog = game.player.ActiveQuests[id];
-        var action = "";
-        if (!questLog) {
-            action = "Accept";
-        } else if (questLog.State == "ready") {
-            action = "Finish";
-        }
-        if (action) {
-            var button = document.createElement("button");
-            button.textContent = T(action);
+        var button = document.createElement("button");
+        button.textContent = T(action);
+
+        var nearEndNpc = game.player.interactTarget.Name == this.End;
+        var canEnd = this.ready() && nearEndNpc;
+
+        if (canEnd || canStart) {
             var self = this;
             button.onclick = function() {
-                game.network.send("quest", {QuestId: id}, function update(data) {
+                game.network.send("quest", {QuestId: self.Id}, function update(data) {
                     if (!data.Done) {
                         return update;
                     }
-
-                    if (!questLog && game.player.interactTarget.Name == self.End)
-                        game.panels.quest.setContents(self.getDescContents());
-                    else
+                    if (canEnd || !nearEndNpc)
                         game.panels.quest.close();
+                    else
+                        game.panels.quest.setContents(self.getContents());
                     return null;
                 });
             };
-            desc.push(button);
+        } else {
+            button.disabled = true;
         }
 
-        return desc;
+        return this.getDescContents().concat(
+            util.hr(),
+            button
+        );
     },
 };

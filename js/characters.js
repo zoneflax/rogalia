@@ -130,6 +130,7 @@ Character.npcActions = {
                     var quest = new Quest(q);
                     actions[quest.getName()] = function() {
                         var panel = new Panel("quest", "Quest", quest.getContents());
+                        panel.quest = quest;
                         panel.show();
                     };
                 });

@@ -188,7 +188,7 @@ hr {
     position: absolute;
     z-index: 999999!important;
 }
-#menu ul, #vendor ul {
+#menu ul, #vendor ul, #interraction ul {
     margin: 0;
     padding: 0;
 }
@@ -296,7 +296,7 @@ hr {
 .panel {
     color: white;
     position: absolute;
-    display: none;
+    visibility: hidden;
     z-index: 1;
     text-align: left;
     overflow: hidden;
@@ -1867,4 +1867,8 @@ big {
 }
 #quest-desc {
     width: 65%;
+}
+.quest-button:before {
+    content: "(!) ";
+    color: yellow;
 }

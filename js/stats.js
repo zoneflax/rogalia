@@ -223,32 +223,9 @@ Stats.prototype = {
             this[name].innerHTML = "";
         }
     },
-    checkCollision: function() {
-        if(!this.panel.visible)
-            return null;
-
-        var x = game.controller.mouse.x;
-        var y = game.controller.mouse.y;
-        for(var i = 0, l = this.equipContainer.slots.length; i < l; i++) {
-            var rx = this.panel.x + this.equipContainer.slots[i].offsetLeft;
-            var ry = this.panel.y + this.equipContainer.slots[i].offsetTop;
-            if(util.intersects(
-                x,
-                y,
-                rx,
-                ry,
-                CELL_SIZE,
-                CELL_SIZE
-            )) {
-                return this.equipContainer.slots[i];
-            }
-
-        }
-        return null;
-    },
     updateExp: function() {
         var xp = document.getElementById("xp-progress");
-        var exp = game.player.Exp
+        var exp = game.player.Exp;
         var width = exp.Current/exp.Max * 100;
         xp.style.width = width + "%";
     },
