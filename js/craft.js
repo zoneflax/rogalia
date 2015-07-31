@@ -196,7 +196,7 @@ Craft.prototype = {
         }
     },
     use: function(from, to) {
-        var e = Entity.get(from.id)
+        var e = Entity.get(from.id);
         if (!e.is(to.group))
             return false;
 

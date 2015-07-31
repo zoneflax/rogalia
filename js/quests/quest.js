@@ -32,29 +32,31 @@ Quest.prototype = {
         return questLog && questLog.State == "ready";
     },
     makeList: function(items) {
-            var list = document.createElement("div");
-            for (var item in items) {
-                var li = document.createElement("div");
-                li.textContent = TS(item) + ": x" + items[item];
-                list.appendChild(li);
-            }
-            return list;
+        var list = document.createElement("div");
+        for (var item in items) {
+            var slot = document.createElement("div");
+            slot.classList.add("slot");
+            slot.appendChild(Entity.getPreview(item));
+
+            var desc = document.createElement("div");
+            desc.textContent = TS(item) + ": x" + items[item];
+
+            var li = document.createElement("div");
+            li.className = "quest-item";
+            li.appendChild(slot);
+            li.appendChild(desc);
+            list.appendChild(li);
+        }
+        return list;
     },
     getDescContents: function() {
-        var contents = [
+        return [
             this.makeDesc(),
             util.hr(),
+            this.makeGoal(),
+            util.hr(),
+            this.makeReward(),
         ];
-
-        var goal = this.makeGoal();
-        if (goal.children.length > 0) {
-            contents.push(goal);
-            contents.push(util.hr());
-        }
-
-        contents.push(this.makeReward());
-        return contents;
-
     },
     makeDesc: function() {
         var desc = document.createElement("div");
@@ -65,11 +67,9 @@ Quest.prototype = {
     makeGoal: function() {
         var goal = document.createElement("div");
 
-        if (!this.ready()) {
-            var end = document.createElement("div");
-            end.textContent = T("Who") + ": " + this.End;
-            goal.appendChild(end);
-        }
+        var end = document.createElement("div");
+        end.textContent = T("Who") + ": " + this.End;
+        goal.appendChild(end);
 
         if (this.Goal.HaveItems) {
             goal.appendChild(document.createTextNode(T("You need to have these items") + ":"));
@@ -97,7 +97,7 @@ Quest.prototype = {
             reward.appendChild(Vendor.createPrice(this.Reward.Currency));
         }
         if (this.Reward.Items) {
-            reward.appendChild(this.makeList(this.Goal.BringItems));
+            reward.appendChild(this.makeList(this.Reward.Items));
         }
 
         return reward;
@@ -119,6 +119,11 @@ Quest.prototype = {
                     if (!data.Done) {
                         return update;
                     }
+                    // we must clear AvailableQuests because
+                    // server will send us only non-empty quest list
+                    // so when we accept the last "available" quest
+                    // we have to manually clean up here
+                    delete game.player.AvailableQuests[self.Name];
                     if (canEnd || !nearEndNpc)
                         game.panels.quest.close();
                     else

@@ -132,6 +132,9 @@ Entity.prototype = {
                 elements.push(elem);
             }.bind(this));
             elements.push(Stats.prototype.createValue("Energy", this.Props.Energy, 2));
+        } else if ("Armor" in this) {
+            var armor = this.Armor * (1 + this.Quality / 100);
+            elements.push(Stats.prototype.createValue("Armor", armor));
         } else if ("Damage" in this) {
             elements.push(Stats.prototype.createValue("Damage", this.Damage));
         } else if (this.Props.Capacity) {

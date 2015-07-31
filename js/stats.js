@@ -84,7 +84,7 @@ Stats.prototype = {
         return labelElem;
 
     },
-    createValue: function(label, value, digits) {
+    createValue: function(label, value, digits, icon) {
         var valueElem = document.createElement("span");
         valueElem.classList.add("value");
         digits = digits || 0;
@@ -97,6 +97,12 @@ Stats.prototype = {
         labelElem.classList.add("param");
         labelElem.textContent = T(label);
         labelElem.appendChild(valueElem);
+
+        if (icon) {
+            var img = new Image();
+            img.src = "assets/icons/" + icon.toLowerCase() + ".png";
+            labelElem.appendChild(img);
+        }
 
         return labelElem;
     },
@@ -188,13 +194,18 @@ Stats.prototype = {
         this.main.appendChild(health);
 
         this.createSection("params");
-        ["Speed", "Armor", "Defence", "Accuracy"].forEach(function(param) {
+        ["Speed", "Armor", "Defence", "Accuracy"].forEach(function(name) {
+            var param = player[name];
+            //TODO: actually now some of these is not params but simple ints
+            if (!(param instanceof Object))
+                param = {Max: param, Current: param};
+
             this.params.appendChild(this.createParam(
+                name,
                 param,
-                player[param],
                 0,
                 true,
-                "stats/" + param
+                "stats/" + name
             ));
         }.bind(this));
 
