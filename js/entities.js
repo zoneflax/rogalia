@@ -92,8 +92,10 @@ Entity.makeDescription = function(type) {
     var descr = document.createElement("div");
     descr.className = "item-descr";
     var info = Items[type];
-    if (info)
-        descr.textContent = info.desc.ru;
+    if (info) {
+        descr.appendChild(util.hr());
+        descr.appendChild(document.createTextNode(info.desc.ru));
+    }
     return descr;
 };
 
@@ -108,7 +110,7 @@ Entity.getSortedRecipeTuples = function() {
     }).sort(function(a, b){
         var diff = a[1].Lvl - b[1].Lvl;
         if (diff != 0)
-            return diff
+            return diff;
 
         return (T(a[0]) < T(b[0])) ? -1 : +1;
     });

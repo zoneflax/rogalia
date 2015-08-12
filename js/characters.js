@@ -121,14 +121,20 @@ Character.npcActions = {
         new Exchange();
     },
     "Quest": function() {
+        var quests = this.getQuests();
+        //TODO: remove quest button from dialog, instead of this stupid warning
+        if (quests.length == 0) {
+            game.controller.showWarning(T("No more quests"));
+            return;
+        }
         var id = this.Id;
-        var self = this;
         var talks = {
             getActions: function() {
                 var actions = {};
-                self.getQuests().forEach(function(q) {
+                quests.forEach(function(q) {
                     var quest = new Quest(q);
-                    actions[quest.getName()] = function() {
+                    var name = quest.getName() + " (" + quest.getStatusMarker() + ")";
+                    actions[name] = function() {
                         var panel = new Panel("quest", "Quest", quest.getContents());
                         panel.quest = quest;
                         panel.show();

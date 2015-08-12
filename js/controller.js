@@ -33,7 +33,51 @@ function Controller(game) {
         y: 0,
         cursor: null,
         actionProgress: document.getElementById("action-progress"),
-        actionButton: null,
+        actionButton: {
+            handler: null,
+            action: null,
+            icon: null,
+            inProgress: false,
+            element: document.getElementById("main-action-button"),
+            active: function() {
+                return this.handler && this.icon;
+            },
+            activate: function() {
+                this.handler();
+            },
+            startProgress: function() {
+                if (!this.inProgress && this.active()) {
+                    this.inProgress = true;
+                    this.loadIcon(this.action + "-active");
+                }
+            },
+            stopProgress: function() {
+                if (this.inProgress && this.active()) {
+                    this.inProgress = false;
+                    this.loadIcon(this.action);
+                }
+            },
+            setAction: function(action, handler) {
+                this.reset();
+                this.action = action;
+                this.handler = handler;
+                this.element.onclick = handler;
+                this.loadIcon(action);
+            },
+            reset: function() {
+                this.action = null;
+                this.handler = null;
+                this.element.onclick = null;
+                this.element.innerHTML = "";
+                this.icon = null;
+                this.inProgress = false;
+            },
+            loadIcon: function(action) {
+                this.element.innerHTML = "";
+                this.icon = loader.loadImage("icons/tools/" + action + ".png");
+                this.element.appendChild(this.icon);
+            },
+        },
         get mouseIsValid() {
             return this.x > 0 && this.y > 0 && this.x < game.screen.width && this.y < game.screen.height;
         },
@@ -385,8 +429,6 @@ Controller.prototype = {
         game.help = this.system.help;
 
         this.iface.cursor = document.getElementById("cursor");
-        this.iface.actionButton = document.getElementById("main-action-button");
-        this.iface.actionButton.state = "";
 
         this.iface.element = document.getElementById("controls-bar");
         document.getElementById("effects").style.display = "inline-block";
@@ -855,10 +897,10 @@ Controller.prototype = {
 
     },
     showError: function(message) {
-        this.showMessage(T(message), "error");
+        this.showMessage(TT(message), "error");
     },
     showWarning: function(message) {
-        this.showMessage(T(message), "warning");
+        this.showMessage(TT(message), "warning");
     },
     showAnouncement: function(message) {
         var anouncement = document.getElementById("anouncement");

@@ -46,9 +46,20 @@ Journal.prototype = {
                 this.selected = id;
                 name.classList.add("selected");
                 this.view.innerHTML = "";
-                var title = document.createElement("b");
+
+                var title = document.createElement("div");
+                title.className = "quest-title";
                 title.textContent = quest.getName();
+
+                var start = document.createElement("div");
+                start.className = "quest-start";
+                start.textContent = quest.Start + ":";
+
                 this.view.appendChild(title);
+                this.view.appendChild(util.hr());
+                this.view.appendChild(start);
+
+
                 quest.getDescContents().forEach(this.view.appendChild.bind(this.view));
             }.bind(this);
             this.list.appendChild(name);

@@ -151,64 +151,64 @@ Character.prototype = {
         this.sprite.speed = 14000;
         this.sprite.offset = this.Radius;
         this.sprite.angle = Math.PI/4;
-	switch (this.Type) {
-	case "kitty":
-	    this.sprite.width = 64;
-	    this.sprite.height = 64;
+        switch (this.Type) {
+        case "kitty":
+            this.sprite.width = 64;
+            this.sprite.height = 64;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
             };
             break;
-	case "chicken":
-	    this.sprite.width = 30;
-	    this.sprite.height = 29;
+        case "chicken":
+            this.sprite.width = 30;
+            this.sprite.height = 29;
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 3],
             };
             break;
         case "dog":
-	case "cat":
-	case "pony":
-	case "butterfly":
-	    this.sprite.width = 32;
-	    this.sprite.height = 32;
+        case "cat":
+        case "pony":
+        case "butterfly":
+            this.sprite.width = 32;
+            this.sprite.height = 32;
             this.sprite.angle = Math.PI/2;
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 3],
             };
             break;
-	case "rabbit":
-	    this.sprite.width = 23;
-	    this.sprite.height = 37;
+        case "rabbit":
+            this.sprite.width = 23;
+            this.sprite.height = 37;
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 2],
             };
             break;
-	case "jesus":
-	    this.sprite.width = 64;
-	    this.sprite.height = 96;
+        case "jesus":
+            this.sprite.width = 64;
+            this.sprite.height = 96;
             this.sprite.frames = {
                 "idle": 4,
                 "run": 8,
             };
             break;
         case "charles":
-	    this.sprite.width = 40;
-	    this.sprite.height = 70;
+            this.sprite.width = 40;
+            this.sprite.height = 70;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 1,
                 "run": 0,
             };
             break;
-	case "desu":
+        case "desu":
         case "suiseiseki":
-	    this.sprite.width = 68;
-	    this.sprite.height = 96;
+            this.sprite.width = 68;
+            this.sprite.height = 96;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 4,
@@ -216,8 +216,8 @@ Character.prototype = {
             };
             break;
         case "abu":
-	    this.sprite.width = 128;
-	    this.sprite.height = 128;
+            this.sprite.width = 128;
+            this.sprite.height = 128;
             this.sprite.angle = Math.PI/2;
             this.sprite.frames = {
                 "idle": 1,
@@ -225,8 +225,8 @@ Character.prototype = {
             };
             break;
         case "mocherator":
-	    this.sprite.width = 40;
-	    this.sprite.height = 40;
+            this.sprite.width = 40;
+            this.sprite.height = 40;
             this.sprite.angle = Math.PI/2;
             this.sprite.frames = {
                 "idle": 1,
@@ -234,8 +234,8 @@ Character.prototype = {
             };
             break;
         case "omsk-overlord":
-	    this.sprite.width = 128;
-	    this.sprite.height = 128;
+            this.sprite.width = 128;
+            this.sprite.height = 128;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 0,
@@ -243,17 +243,17 @@ Character.prototype = {
             };
             break;
         case "omsk":
-	    this.sprite.width = 40;
-	    this.sprite.height = 40;
+            this.sprite.width = 40;
+            this.sprite.height = 40;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 0,
                 "run": 0,
             };
             break;
-	case "ufo":
-	    this.sprite.width = 64;
-	    this.sprite.height = 64;
+        case "ufo":
+            this.sprite.width = 64;
+            this.sprite.height = 64;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 3,
@@ -261,8 +261,8 @@ Character.prototype = {
             };
             break;
         case "wyvern":
-	    this.sprite.width = 256;
-	    this.sprite.height = 256;
+            this.sprite.width = 256;
+            this.sprite.height = 256;
             this.sprite.frames = {
                 "idle": 4,
                 "run": 4,
@@ -271,7 +271,7 @@ Character.prototype = {
             break;
         case "imp":
             this.sprite.width = 107;
-	    this.sprite.height = 68;
+            this.sprite.height = 68;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
@@ -280,7 +280,7 @@ Character.prototype = {
             break;
         case "lesser-daemon":
             this.sprite.width = 160;
-	    this.sprite.height = 102;
+            this.sprite.height = 102;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
@@ -288,25 +288,25 @@ Character.prototype = {
             this.speed = 20000;
             break;
         case "daemon":
-	    this.sprite.width = 214;
-	    this.sprite.height = 136;
+            this.sprite.width = 214;
+            this.sprite.height = 136;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
             };
             this.speed = 20000;
             break;
-	case "naked-ass":
-	    this.sprite.width = 64;
-	    this.sprite.height = 96;
+        case "naked-ass":
+            this.sprite.width = 64;
+            this.sprite.height = 96;
             this.sprite.frames = {
                 "idle": 2,
                 "run": [0, 6],
             };
             break;
-	case "red-hair":
-	    this.sprite.width = 64;
-	    this.sprite.height = 96;
+        case "red-hair":
+            this.sprite.width = 64;
+            this.sprite.height = 96;
             this.sprite.frames = {
                 "idle": 1,
                 "run": 3,
@@ -327,37 +327,38 @@ Character.prototype = {
             };
             break;
         case "small-spider":
-	    this.sprite.width = 64;
-	    this.sprite.height = 64;
+            this.sprite.width = 64;
+            this.sprite.height = 64;
             this.sprite.offset = 25;
             this.sprite.speed = 21000;
             break;
         case "spider":
-	    this.sprite.width = 128;
-	    this.sprite.height = 128;
+            this.sprite.width = 128;
+            this.sprite.height = 128;
             this.sprite.offset = 45;
             this.sprite.speed = 21000;
             break;
         case "horse":
+        case "medved":
             this.sprite.width = 150;
-	    this.sprite.height = 150;
+            this.sprite.height = 150;
             this.sprite.offset = 43;
             break;
         case "cow":
         case "wolf":
         case "warg":
         case "sheep":
-	    this.sprite.width = 100;
-	    this.sprite.height = 100;
+            this.sprite.width = 100;
+            this.sprite.height = 100;
             this.sprite.offset = 45;
             break;
-	default:
+        default:
             this.sprite.nameOffset = 72;
             this.sprite.offset = 2*this.Radius;
-	    this.sprite.width = 96;
-	    this.sprite.height = 96;
-	    this.sprite.speed = 7000;
-	}
+            this.sprite.width = 96;
+            this.sprite.height = 96;
+            this.sprite.speed = 7000;
+        }
         if (!this.sprite.nameOffset)
             this.sprite.nameOffset = this.sprite.height;
     },
@@ -431,6 +432,7 @@ Character.prototype = {
             case "horse":
             case "cow":
             case "wolf":
+            case "medved":
             case "warg":
             case "sheep":
                 this._loadNpcSprites();
@@ -507,8 +509,9 @@ Character.prototype = {
         if (this.isInteractive()) {
             this.interact();
         } else {
-            if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.state != "")
-                game.controller.iface.actionButton.click();
+            // call actionButton on space
+            if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.active())
+                game.controller.iface.actionButton.activate();
             else if (this != game.player || config.allowSelfSelection)
                 game.player.target = this;
         }
@@ -539,9 +542,9 @@ Character.prototype = {
             return;
         var leftBorder, rightBorder, topBorder, bottomBorder;
         leftBorder = this.Radius;
-	topBorder = this.Radius;
-	rightBorder = game.map.full.width - this.Radius;
-	bottomBorder = game.map.full.height - this.Radius;
+        topBorder = this.Radius;
+        rightBorder = game.map.full.width - this.Radius;
+        bottomBorder = game.map.full.height - this.Radius;
 
         if (x < leftBorder) {
             x = leftBorder;
@@ -708,13 +711,10 @@ Character.prototype = {
         if (!marker)
             return;
 
-        game.setFontSize("30");
         var p = this.screen();
-        p.x -= game.ctx.measureText(marker.text).width / 2;
-        p.y -= this.sprite.nameOffset;
-        game.ctx.fillStyle = marker.color;
-        game.forceDrawStrokedText(marker.text, p.x, p.y);
-        game.setFontSize();
+        p.y -= this.sprite.nameOffset + marker.height;
+
+        game.ctx.drawImage(marker, p.x, p.y);
     },
     getQuestMarker: function() {
         // has owner -> vendor -> no quests
@@ -722,31 +722,23 @@ Character.prototype = {
             return null;
         // 1. yellow (?) -> has "ready" quest
         // 2. yellow (!) -> has "available" quest
-        // 3. gray (?) -> has "not ready" quest
-        var ready = false,
-            active = false,
-            hasQuests = this.getAvailableQuests().length > 0;
+        // 3. gray (?) -> has "active" quest
 
+        var active = false;
         for (var name in game.player.ActiveQuests) {
             var questLog = game.player.ActiveQuests[name];
             var quest = questLog.Quest;
             if (quest.End != this.Name)
                 continue;
-            ready = ready || questLog.State == "ready";
+            if (questLog.State == "ready")
+                return game.questMarkers["ready"];
             active = active || questLog.State == "active";
         }
-
-        if (!ready && !active && !hasQuests)
-            return null;
-
-        var marker = {text: "?", color: "yellow"};
-
-        if (hasQuests)
-            marker.text = "!";
-        else if (active)
-            marker.color = "grey";
-
-        return marker;
+        if (this.getAvailableQuests().length > 0)
+            return game.questMarkers["available"];
+        if (active)
+            return game.questMarkers["active"];
+        return null;
     },
     drawDst: function() {
         if (debug.player.path && this.Path) {
@@ -871,6 +863,7 @@ Character.prototype = {
         case "small-spider":
         case "spider":
         case "wolf":
+        case "medved":
         case "warg":
         case "sheep":
             simpleSprite = false;
@@ -999,14 +992,18 @@ Character.prototype = {
                 this.action.progress = 0;
                 this.action.last = this.Action.Started;
                 this.toggleActionSound();
-                if (this.isPlayer)
+                if (this.isPlayer) {
                     util.dom.show(game.controller.iface.actionProgress);
+                    game.controller.iface.actionButton.startProgress();
+                }
             }
-            if(this.Action.Duration) {
+            if (this.Action.Duration) {
                 this.action.progress += (Math.PI * 2 / this.Action.Duration * 1000 * k);
             } else {
-                if (this.isPlayer)
+                if (this.isPlayer) {
                     util.dom.hide(game.controller.iface.actionProgress);
+                    game.controller.iface.actionButton.stopProgress();
+                }
                 this.action.progress = 0;
             }
         }
@@ -1073,69 +1070,50 @@ Character.prototype = {
             strip.lastChild.style.width = Math.max(0, value - 100) + '%';
         }.bind(this));
 
-        var button = game.controller.iface.actionButton;
 
-        var state = "";
-        var tool = Entity.get(this.equipSlot("right-hand"));
-        if (this.burden)
-            state = "drop";
-        else if (tool)
-            state = tool.Type;
-
-        if (button.state == state) {
-            return;
+        var action = "";
+        if (this.burden) {
+            action = "drop";
+        } else {
+            var tool = Entity.get(this.equipSlot("right-hand"));
+            if (tool)
+                action = tool.Group;
         }
-        button.onclick = null;
-        button.innerHTML = "";
-        button.state = state;
 
-        switch (state) {
-        case "":
-            break;
+        var button = game.controller.iface.actionButton;
+        if (button.action == action)
+            return;
+
+        var callback = null;
+
+        switch (action) {
         case "drop":
-            var drop = document.createElement("div");
-            drop.textContent = T("Drop");
-            button.appendChild(drop);
-            button.onclick = function() {
-                this.liftStop();
-            }.bind(this);
+            callback = this.liftStop.bind(this);
             break;
-        default:
-            var action = "dig";
-            var callback = null;
-            var align = true;
-            switch (tool.Group) {
-            case "taming":
+        case "shovel":
+        case "pickaxe":
+        case "tool":
+        case "taming":
+        case "fishing-rod":
+            callback = function() {
+                var done = null;
+                var cmd = "dig";
                 var cursor = new Entity(0, tool.Type);
                 cursor.initSprite();
-                action = "tame";
-                button.appendChild(tool.icon());
-                game.controller.creatingCursor(cursor, action, callback);
-                break;
-            case "fishing-rod":
-                action = "fish";
-                callback = this.fish.bind(this);
-                break;
-            case "tool":
-                action = "use-tool";
-                break;
-            case "shovel":
-            case "pickaxe":
-                break;
-            default:
-                return;
-            }
-            if (tool.Group == "pickaxe")
-                var bigIcon = loader.loadImage("bg/" + tool.Group + ".png");
-            else
-                bigIcon = tool.icon();
-
-            button.appendChild(bigIcon);
-            button.onclick = function() {
-                var cursor = new Entity(0, tool.Type);
-                cursor.initSprite();
-                if (action != "tame")
+                switch (action) {
+                case "taming":
+                    cmd = "tame";
+                    break;
+                case "tool":
+                    cmd = "use-tool";
+                    break;
+                case "fishing-rod":
+                    cmd = "fish";
+                    done = this.fish.bind(this);
+                    break;
+                default:
                     cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
+                }
                 var icon = tool._icon || tool.icon();
                 cursor.Width = CELL_SIZE;
                 cursor.Height = CELL_SIZE;
@@ -1144,9 +1122,15 @@ Character.prototype = {
                 cursor.sprite.image = icon;
                 cursor.sprite.width = icon.width;
                 cursor.sprite.height = icon.height;
-                game.controller.creatingCursor(cursor, action, callback);
-            };
+                game.controller.creatingCursor(cursor, cmd, done);
+            }.bind(this);
+            break;
+        default:
+            button.reset();
+            return;
         }
+
+        button.setAction(action, callback);
     },
     fish: function fish(data) {
         var repeat = fish.bind(this);
@@ -1560,7 +1544,6 @@ Character.prototype = {
                 }
                 button.textContent = T(title);
                 button.onclick = function() {
-                    panel.close();
                     Character.npcActions[title].call(self);
                 };
                 buttons.appendChild(button);

@@ -441,7 +441,6 @@ function Chat() {
         link.textContent = T("Recipe") + ": " + TS(data);
         link.className = "recipe-link";
         link.onclick = function() {
-            game.controller.craft.panel.show();
             game.controller.craft.search(data, true);
         };
         return link;

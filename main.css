@@ -202,6 +202,9 @@ hr {
     color: lightgreen;
     cursor: pointer;
 }
+#vendor > .contents {
+    min-width: 250px;
+}
 
 .slot {
     background: url("assets/bg/slot.png") no-repeat center;
@@ -398,13 +401,16 @@ hr {
     width: 45px;
     height: 45px;
     display: inline-block;
+    background-repeat: no-repeat;
+}
+
+#controls-bar > .button:hover > .icon {
+    -webkit-filter: brightness(125%);
+    filter: brightness(125%);
 }
 
 #stats-button > .icon {
     background-image: url("assets/icons/controls/stats.png");
-}
-#stats-button:hover > .icon {
-    background-image: url("assets/icons/controls/stats-hover.png");
 }
 #stats-button.active > .icon {
     background-image: url("assets/icons/controls/stats-active.png");
@@ -413,18 +419,12 @@ hr {
 #wiki-button > .icon {
     background-image: url("assets/icons/controls/wiki.png");
 }
-#wiki-button:hover > .icon {
-    background-image: url("assets/icons/controls/wiki-hover.png");
-}
 #wiki-button.active > .icon {
     background-image: url("assets/icons/controls/wiki-active.png");
 }
 
 #system-button > .icon {
     background-image: url("assets/icons/controls/system.png");
-}
-#system-button:hover > .icon {
-    background-image: url("assets/icons/controls/system-hover.png");
 }
 #system-button.active > .icon {
     background-image: url("assets/icons/controls/system-active.png");
@@ -433,18 +433,12 @@ hr {
 #map-button > .icon {
     background-image: url("assets/icons/controls/map.png");
 }
-#map-button:hover > .icon {
-    background-image: url("assets/icons/controls/map-hover.png");
-}
 #map-button.active > .icon {
     background-image: url("assets/icons/controls/map-active.png");
 }
 
 #inventory-button > .icon {
     background-image: url("assets/icons/controls/inventory.png");
-}
-#inventory-button:hover > .icon {
-    background-image: url("assets/icons/controls/inventory-hover.png");
 }
 #inventory-button.active > .icon {
     background-image: url("assets/icons/controls/inventory-active.png");
@@ -453,9 +447,6 @@ hr {
 #craft-button > .icon {
     background-image: url("assets/icons/controls/craft.png");
 }
-#craft-button:hover > .icon {
-    background-image: url("assets/icons/controls/craft-hover.png");
-}
 #craft-button.active > .icon {
     background-image: url("assets/icons/controls/craft-active.png");
 }
@@ -463,11 +454,22 @@ hr {
 #skills-button > .icon {
     background-image: url("assets/icons/controls/skills.png");
 }
-#skills-button:hover > .icon {
-    background-image: url("assets/icons/controls/skills-hover.png");
-}
 #skills-button.active > .icon {
     background-image: url("assets/icons/controls/skills-active.png");
+}
+
+#chat-button > .icon {
+    background-image: url("assets/icons/controls/chat.png");
+}
+#chat-button.active > .icon {
+    background-image: url("assets/icons/controls/chat-active.png");
+}
+
+#journal-button > .icon {
+    background-image: url("assets/icons/controls/journal.png");
+}
+#journal-button.active > .icon {
+    background-image: url("assets/icons/controls/journal-active.png");
 }
 
 #system  button {
@@ -1481,6 +1483,7 @@ big {
 }
 .lot-info, .lot-buy, .lot-sell, .lot-cancel {
     float: right;
+    min-width: 0;
 }
 .lot-quantity {
     margin-top: 10px;
@@ -1536,7 +1539,6 @@ big {
 #item-info .item-descr {
     padding-top: 3px;
     margin-top: 5px;
-    border-top: 1px solid #ccc;
 }
 
 #item-preview {
@@ -1774,6 +1776,15 @@ big {
     background-image: url("assets/bg/main-button.png");
     width: 105px;
     height: 67px;
+    display: flex;
+    justify-content: space-around;
+}
+#main-action-button > img {
+    margin: auto;
+}
+#main-action-button:hover > img {
+    -webkit-filter: brightness(125%);
+    filter: brightness(125%);
 }
 
 #xp-progress-bar {
@@ -1854,7 +1865,7 @@ big {
 #journal .contents {
     display: flex;
     justify-content: space-around;
-    height: 400px;
+    min-height: 500px;
 }
 #quest-list {
     width: 34%;
@@ -1874,4 +1885,20 @@ big {
 }
 .quest-item {
     overflow: auto;
+}
+.quest-start {
+    float: left;
+    font-style: italic;
+    margin-right: 0.5em;
+}
+
+#version {
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: #ccc;
+    font-family: monospace;
+    font-size: small;
 }

@@ -15,20 +15,11 @@ function Panel(name, title, elements, listener, hooks) {
     this.lsKey = "panels." + this.name;
     var config = JSON.parse(localStorage.getItem(this.lsKey)) || {};
 
-    var position = {
-            x: game.screen.width / 2,
-            y: game.screen.height / 2,
-    };
 
-    if("position" in config) {
-        position = config.position;
-    }
 
     this.element = document.createElement("div");
     this.element.id = name;
     this.element.className = "panel";
-    this.x = position.x;
-    this.y = position.y;
 
     this.contents = document.createElement("div");
     this.contents.className = "contents";
@@ -85,8 +76,21 @@ function Panel(name, title, elements, listener, hooks) {
     this.element.id = name;
     util.dom.insert(this.element);
 
-    if ("visible" in config && config.visible)
+    if ("visible" in config && config.visible) {
         this.show();
+    }
+
+    var position = {
+        x: game.screen.width / 2 - this.width / 2,
+        y: game.screen.height / 2 - this.height / 2,
+    };
+
+    if("position" in config) {
+        position = config.position;
+    }
+
+    this.x = position.x;
+    this.y = position.y;
 }
 
 Panel.save = function() {

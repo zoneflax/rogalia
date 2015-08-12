@@ -101,10 +101,10 @@ function Network() {
             return;
         lastSend = now;
         args = args || {};
-        args.command = command;
+        args.Command = command;
 
         // if (game.stage.name == "main")
-        //     args.fps = game.controller.system.fps.currentFps();
+        //     args.Fps = game.controller.system.fps.currentFps();
 
         this.sendStart = Date.now();
         this.socket.send(JSON.stringify(args));

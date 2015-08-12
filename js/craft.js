@@ -330,7 +330,11 @@ Craft.prototype = {
         var input = e.target;
         this.search(e.target.value);
     },
+    makeSearch: function(pattern) {
+        return this.search.bind(this, pattern, true);
+    },
     search: function(pattern, selectMatching) {
+        this.panel.show();
         //TODO: fast solution; make another one
         var id = "#" + this.panel.name + " ";
         util.dom.removeClass(id + ".recipe-list .found", "found");
@@ -343,7 +347,7 @@ Craft.prototype = {
         pattern = pattern.toLowerCase().replace(" ", "-");
         try {
             var selector = id + ".recipe[type*='" + pattern + "']," +
-                id + ".recipe[data-search*='" + pattern + "']"
+                    id + ".recipe[data-search*='" + pattern + "']";
             util.dom.addClass(selector, "found");
         } catch(e) {
             return;
@@ -362,9 +366,7 @@ Craft.prototype = {
 
 
         if (matching) {
-            selectFirst = false;
             this.clickListener({target: matching}); //omfg it's ugly
-
         }
     },
     createRecipeDetails: function() {
@@ -430,6 +432,7 @@ Craft.prototype = {
             for(var j = 0; j < required; j++) {
                 var slot = document.createElement("div");
                 slot.className = "slot";
+                slot.onclick = game.controller.craft.makeSearch(group);
                 var image = Entity.getPreview(group);
 
                 image.title = groupTitle;

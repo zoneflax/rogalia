@@ -84,6 +84,7 @@ function loginStage() {
                 if ("Warning" in data) {
                     onWarning(data.Warning);
                 } else {
+                    document.getElementById("version").textContent = data.Version;
                     game.setStage("lobby", data);
                 }
             }

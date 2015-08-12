@@ -146,7 +146,7 @@ Vendor.buy = function(data) {
         buy.className = "lot-buy";
         buy.textContent = T("Buy");
         buy.onclick = function() {
-            if (confirm(T("Buy") + " "+ item.Name + "?")) {
+            if (confirm(T("Buy") + " "+ e.name + "?")) {
                 game.network.send("buy", {Id: item.Id, Vendor: vendor.Id}, open);
             }
         };

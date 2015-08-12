@@ -299,22 +299,14 @@ function Help() {
     var disableHelp = document.createElement("button");
     disableHelp.className = "hidden";
     disableHelp.textContent = T("Disable help");
-    disableHelp.onclick = function() {
-        this.step = null;
-        for (var i in this.hooks)
-            this.runnedHooks[i] = true;
-        this.save();
-        this.messages.innerHTML = "";
-    }.bind(this);
-
-    // disableHelp.onclick();
+    disableHelp.onclick = this.disableHelp.bind(this);
 
     var toggleTopics = document.createElement("button");
     toggleTopics.className = "hidden";
-    toggleTopics.textContent = T("Topics");
+        toggleTopics.textContent = T("Topics");
     toggleTopics.onclick = function() {
         util.dom.toggle(list);
-    }
+    };
 
     var options = document.createElement("button");
     options.textContent = "⚙";
@@ -322,7 +314,7 @@ function Help() {
         util.dom.toggle(resetHelp);
         util.dom.toggle(disableHelp);
         util.dom.toggle(toggleTopics);
-    }
+    };
 
     this.panel = new Panel(
         "help",
@@ -345,15 +337,26 @@ Help.prototype = {
     subjects: {},
     step: null,
     steps: [],
+    disableHelp: function() {
+        this.step = null;
+        for (var i in this.hooks)
+            this.runnedHooks[i] = true;
+        this.save();
+        this.messages.innerHTML = "";
+    },
     load: function() {
+        this.disableHelp();
+        return;
+
         var i = localStorage.getItem("help.step") || 0;
+        i = this.steps.length;
         if (i >= 0 && i < this.steps.length)
             this.step = this.steps[i];
         for (var j = 0; j < i; j++) {
             var step = this.steps[j];
-            this.addStepText(step)
+            this.addStepText(step);
             if ("check" in step)
-                this.addMessage("${hr}")
+                this.addMessage("${hr}");
         }
 
         var runned =  localStorage.getItem("help.runnedHooks");
@@ -365,7 +368,7 @@ Help.prototype = {
         localStorage.setItem("help.runnedHooks", JSON.stringify(this.runnedHooks));
     },
     runHook: function(data) {
-        var hook = this.hooks[data.type]
+        var hook = this.hooks[data.type];
         if (!hook || this.runnedHooks[data.type])
             return;
         this.showHelp();

@@ -13,23 +13,19 @@ Quest.prototype = {
     getLog: function() {
         return game.player.ActiveQuests[this.Id];
     },
-    // getMarker: function() {
-    //     var marker = document.createElement("span");
-    //     if (this.ready()) {
-    //         marker.textContent = "?";
-    //         marker.style.color = "yellow";
-    //     } else if (!this.getLog()) {
-    //         marker.textContent = "!";
-    //         marker.style.color = "yellow";
-    //     } else {
-    //         marker.textContent = "?";
-    //         marker.style.color = "grey";
-    //     }
-    //     return marker;
-    // },
+    active: function() {
+        return !!this.getLog();
+    },
     ready: function() {
         var questLog = this.getLog();
         return questLog && questLog.State == "ready";
+    },
+    getStatusMarker: function() {
+        if (this.ready())
+            return "?";
+        if (this.active())
+            return "…";
+        return "!";
     },
     makeList: function(items) {
         var list = document.createElement("div");
@@ -37,9 +33,11 @@ Quest.prototype = {
             var slot = document.createElement("div");
             slot.classList.add("slot");
             slot.appendChild(Entity.getPreview(item));
+            slot.onclick = game.controller.craft.makeSearch(item);
 
             var desc = document.createElement("div");
-            desc.textContent = TS(item) + ": x" + items[item];
+            var count = (items[item] instanceof Object) ? items[item].Count : items[item];
+            desc.textContent = TS(item) + ": x" + count;
 
             var li = document.createElement("div");
             li.className = "quest-item";
@@ -49,18 +47,18 @@ Quest.prototype = {
         }
         return list;
     },
-    getDescContents: function() {
+    getDescContents: function(ready) {
         return [
-            this.makeDesc(),
+            this.makeDesc(ready),
             util.hr(),
             this.makeGoal(),
             util.hr(),
             this.makeReward(),
         ];
     },
-    makeDesc: function() {
+    makeDesc: function(ready) {
         var desc = document.createElement("div");
-        var source = (this.ready()) ? this.data.final : this.data.desc;
+        var source = (ready) ? this.data.final : this.data.desc;
         desc.textContent = source[game.lang];
         return desc;
     },
@@ -69,6 +67,10 @@ Quest.prototype = {
 
         var end = document.createElement("div");
         end.textContent = T("Who") + ": " + this.End;
+        switch (this.Period) {
+        case "day":
+            end.textContent += " [" + T("daily") + "]";
+        }
         goal.appendChild(end);
 
         if (this.Goal.HaveItems) {
@@ -81,6 +83,11 @@ Quest.prototype = {
         }
         if (this.Goal.Cmd) {
             goal.appendChild(document.createTextNode(T("You need to") + ": " + TS(this.Goal.Cmd)));
+        }
+
+        if (this.data.tip) {
+            var tip = " (" + this.data.tip[game.lang] + ")";
+            goal.appendChild(document.createTextNode(tip));
         }
 
         return goal;
@@ -103,7 +110,7 @@ Quest.prototype = {
         return reward;
     },
     getContents: function() {
-        var canStart = !this.getLog();
+        var canStart = !this.active();
         var action = (canStart) ? "Accept" : "Finish";
 
         var button = document.createElement("button");
@@ -135,7 +142,7 @@ Quest.prototype = {
             button.disabled = true;
         }
 
-        return this.getDescContents().concat(
+        return this.getDescContents(canEnd).concat(
             util.hr(),
             button
         );
