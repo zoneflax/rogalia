@@ -116,10 +116,7 @@ function Game() {
     this.loader = new Loader("assets/");
     window.loader = this.loader;
 
-    this.menu = new Menu(
-        this.offset.x + CELL_SIZE / 2,
-        this.offset.y
-    );
+    this.menu = new Menu();
 
     this.login = null;
     this.player = new Character(); // will be replaced in Character.sync()

@@ -51,6 +51,11 @@ Journal.prototype = {
                 title.className = "quest-title";
                 title.textContent = quest.getName();
 
+                // switch (quest.Period) {
+                // case "day":
+                //     title.textContent += " (" + T("daily") + ")";
+                // }
+
                 var start = document.createElement("div");
                 start.className = "quest-start";
                 start.textContent = quest.Start + ":";

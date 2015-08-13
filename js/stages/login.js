@@ -204,9 +204,10 @@ function loginStage() {
 
         return false;
     };
+
     var panel = new Panel("login-panel", "", [form]);
     panel.hideCloseButton();
-    panel.show(LOBBY_X, LOBBY_Y);
+    panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
 
     if (autoLogin)
         panel.hide();

@@ -81,8 +81,8 @@ function Panel(name, title, elements, listener, hooks) {
     }
 
     var position = {
-        x: game.screen.width / 2 - this.width / 2,
-        y: game.screen.height / 2 - this.height / 2,
+        x: game.offset.x + game.screen.width / 2 - this.width / 2,
+        y: game.offset.y + game.screen.height / 2 - this.height / 2,
     };
 
     if("position" in config) {
@@ -105,16 +105,16 @@ Panel.stack = [];
 
 Panel.prototype = {
     get x() {
-        return this.element.offsetLeft - game.offset.x;
+        return this.element.offsetLeft;
     },
     set x(x) {
-        this.element.style.left = x + game.offset.x + "px";
+        this.element.style.left = x + "px";
     },
     get y() {
-        return this.element.offsetTop - game.offset.y;
+        return this.element.offsetTop;
     },
     set y(y) {
-        this.element.style.top = y + game.offset.y + "px";
+        this.element.style.top = y + "px";
     },
     get width() {
         return parseInt(getComputedStyle(this.element).width);
@@ -190,7 +190,6 @@ Panel.prototype = {
             this.y = y;
 
         this.visible = true;
-
         // protection from window going offscreen?
         if (!util.rectIntersects(
             this.x, this.y, this.width, this.height,

@@ -267,9 +267,10 @@ function Chat() {
         });
         var save = document.createElement("button");
         save.textContent = T("Save");
+        save.disabled = true;
+        //TODO: implement
         save.onclick = function() {
-            alert("TODO");
-        }
+        };
         var panel = new Panel("chat-settings", "Tab settings", [
             name,
             util.hr(),

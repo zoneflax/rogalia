@@ -1,13 +1,9 @@
 "use strict";
 //TODO: use panel methods!
-function Menu(x, y) {
+function Menu() {
     this.container = null;
     this.visible = false;
     this.length = 0;
-    this.offset = {
-        x: x,
-        y: y,
-    };
 };
 
 Menu.prototype = {
@@ -31,8 +27,8 @@ Menu.prototype = {
             x = this.container.x;
             y = this.container.y;
         } else {
-            x = (x || game.controller.iface.x);
-            y = (y || game.controller.iface.y);
+            x = (x || game.controller.mouse.x);
+            y = (y || game.controller.mouse.y);
         }
 
         if (!Array.isArray(actions))
@@ -49,10 +45,8 @@ Menu.prototype = {
         }.bind(this));
 
         this.container = new Panel("menu", "Menu", contents);
-        this.container.x = x;
-        this.container.y = y;
         this.container.hideTitle();
-        this.container.show();
+        this.container.show(x, y);
 
         this.visible = true;
         return true;

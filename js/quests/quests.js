@@ -332,10 +332,10 @@ function Quests() {
                 "ru": "",
             },
         },
-        "faction": {
+        "faction-dayly-1": {
             name: {
                 "en": "",
-                "ru": "Помощь фракции",
+                "ru": "Помощь фракции (ежедневный)",
             },
             desc: {
                 "en": "",

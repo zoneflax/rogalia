@@ -67,10 +67,6 @@ Quest.prototype = {
 
         var end = document.createElement("div");
         end.textContent = T("Who") + ": " + this.End;
-        switch (this.Period) {
-        case "day":
-            end.textContent += " [" + T("daily") + "]";
-        }
         goal.appendChild(end);
 
         if (this.Goal.HaveItems) {
@@ -94,7 +90,7 @@ Quest.prototype = {
     },
     makeReward: function() {
         var reward = document.createElement("div");
-        reward.appendChild(document.createTextNode(T("Rewards") + ":"));
+        reward.appendChild(document.createTextNode(T("Rewards") + ": "));
         if (this.Reward.Xp) {
             var xp = document.createElement("div");
             xp.textContent = "+" + this.Reward.Xp + "xp";
