@@ -32,6 +32,8 @@ Container.open = function(id) {
 }
 
 Container.moveItem = function(id, from, to, slot) {
+    if (!to)
+        return;
     id = parseInt(id);
     from.moveEnd(id);
     if (slot === undefined)
