@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 // code adapted from https://github.com/mezzoblue/PaintbrushJS/
 
 var ImageFilter = {
