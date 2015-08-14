@@ -172,7 +172,7 @@ function createCharacterStage() {
         back,
     ]);
     panel.hideCloseButton();
-    panel.show(LOBBY_X, LOBBY_Y);
+    panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
     name.focus();
 
     this.sync = function(data) {

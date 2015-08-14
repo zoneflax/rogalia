@@ -39,6 +39,13 @@ function Info(message, character) {
         else
             this.text = "Evade from " + this.data + " attack"; //TODO: use ~T.printf
         break;
+    case "block":
+        if (character == game.player)
+            this.text = T("Enemy blocked your attack");
+        else
+            this.text = "Blocked from " + this.data + " attack"; //TODO: use ~T.printf
+        break;
+
     case "damage":
         if (this.data instanceof Object) {
             this.value = this.data.Dmg;
@@ -152,6 +159,9 @@ Info.prototype = {
             break;
         case "miss":
             this.drawValue("#ccc", "miss");
+            break;
+        case "block":
+            this.drawValue("#ccc", "block");
             break;
         case "damage":
             game.setFontSize(20);

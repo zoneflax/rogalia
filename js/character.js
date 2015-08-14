@@ -70,6 +70,7 @@ function Character(id, name) {
     this.sprite = this.sprites.idle;
 
     this._parts = "[]"; //defauls for npcs
+
 }
 
 Character.prototype = {
@@ -344,6 +345,12 @@ Character.prototype = {
             this.sprite.height = 150;
             this.sprite.offset = 43;
             break;
+        case "preved-medved":
+            this.sprite.width = 210;
+            this.sprite.height = 210;
+            this.sprite.offset = 44;
+            this.sprite.nameOffset = 150;
+            break;
         case "cow":
         case "wolf":
         case "warg":
@@ -433,6 +440,7 @@ Character.prototype = {
             case "cow":
             case "wolf":
             case "medved":
+            case "preved-medved":
             case "warg":
             case "sheep":
                 this._loadNpcSprites();
@@ -863,6 +871,7 @@ Character.prototype = {
         case "small-spider":
         case "spider":
         case "wolf":
+        case "preved-medved":
         case "medved":
         case "warg":
         case "sheep":
@@ -876,7 +885,7 @@ Character.prototype = {
             position = (position / 2)<<0;
         }
 
-        if(self.Dx || self.Dy) {
+        if (self.Dx || self.Dy) {
             animation = "run";
             var sector = self.sprite.angle;
             var sectors = 2*Math.PI / sector;
@@ -911,6 +920,7 @@ Character.prototype = {
                     break;
                 case "defecate":
                 case "":
+                    animation = "idle";
                     break;
                 default:
                     animation = "craft";
@@ -922,6 +932,7 @@ Character.prototype = {
             animation = "sit";
         this.sprite = this.sprites[animation];
         this.sprite.position = position;
+        this._animation = animation;
 
         if (!this.sprite.ready) {
             this.loadSprite();
