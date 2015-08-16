@@ -630,7 +630,11 @@ hr {
 }
 
 .recipe-search, .recipe-search > input {
-    width: 100%;
+    width: 94%;
+}
+.recipe-search-clear {
+    min-width: 0;
+    position: absolute;
 }
 .recipe-list.filter-portable .recipe.portable,
 .recipe-list.filter-liftable .recipe.liftable,

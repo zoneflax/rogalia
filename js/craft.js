@@ -302,9 +302,20 @@ Craft.prototype = {
         input.addEventListener("keyup", this.searchHandler.bind(this));
         this.searchInput = input;
 
+        var clear = document.createElement("button");
+        clear.className = "recipe-search-clear";
+        clear.textContent = "❌";
+        clear.title = T("Clear search");
+        clear.onclick = function() {
+            input.value = "";
+            this.search("");
+        }.bind(this);
+
         var label = document.createElement("label");
         label.className = "recipe-search";
         label.appendChild(input);
+        label.appendChild(clear);
+
         return label;
     },
     createFilters: function() {
