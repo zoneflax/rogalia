@@ -198,8 +198,8 @@ Character.prototype = {
             };
             break;
         case "charles":
-            this.sprite.width = 40;
-            this.sprite.height = 70;
+            this.sprite.width = 73;
+            this.sprite.height = 88;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 1,
