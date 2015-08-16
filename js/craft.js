@@ -307,8 +307,9 @@ Craft.prototype = {
         clear.textContent = "❌";
         clear.title = T("Clear search");
         clear.onclick = function() {
-            input.value = "";
             this.search("");
+            input.value = "";
+            input.focus();
         }.bind(this);
 
         var label = document.createElement("label");
