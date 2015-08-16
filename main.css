@@ -840,7 +840,7 @@ hr {
     padding: 0 2em 0 0;
 }
 .message .from {
-    color: #fff;
+    color: rgba(249, 194, 124, 0.86);
 }
 .message.from-me .from{
     color: lightgreen;
