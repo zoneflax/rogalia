@@ -720,6 +720,7 @@ Character.prototype = {
             return;
 
         var p = this.screen();
+        p.x -= marker.width / 2;
         p.y -= this.sprite.nameOffset + marker.height;
 
         game.ctx.drawImage(marker, p.x, p.y);
