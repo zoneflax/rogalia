@@ -630,10 +630,13 @@ hr {
 }
 
 .recipe-search, .recipe-search > input {
-    width: 94%;
+    width: 138px;
+    position: relative;
 }
 .recipe-search-clear {
     min-width: 0;
+    right: -26px;
+    top: 0;
     position: absolute;
 }
 .recipe-list.filter-portable .recipe.portable,
