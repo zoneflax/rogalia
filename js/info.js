@@ -187,7 +187,7 @@ Info.prototype = {
                 {
                     self: ["#c33"],
                     target: ["#aac"],
-                    other: ["#eee"],
+                    other: ["#e66"],
                 }
             );
             break;
@@ -310,6 +310,7 @@ Info.prototype = {
             }
         },
         "damage": function () {
+            console.log(this);
             switch (this.targetType) {
             case "self":
                 return TT("You've got {value} damage from {source}", {
@@ -318,7 +319,8 @@ Info.prototype = {
                 });
             default:
                 return TT("{name} got {value} damage from {source}", {
-                    value: this.character.Name,
+                    name: this.character.Name,
+                    value: this.value,
                     source: this.data.Source,
                 });
             }
