@@ -677,6 +677,10 @@ var dict = {
     "Farmer shirt": "Фермерская рубашка",
     "Copper hammer": "Медный молот",
     "Iron shield": "Железный щит",
+    "Steel shield": "Стальной щит",
+    "Titanium shield": "Титановый щит",
+    "Meteorite shield": "Метеоритный щит",
+    "Bloody shield": "Кровавый щит",
     "Meteorite helmet": "Метеоритный шлем",
     "Bark basket": "Корзина из коры",
     "Small atomic trap": "Малая атомная ловушка",
@@ -956,4 +960,6 @@ var dict = {
     "Buy water": "Купить воды",
     "daily": "ежедневный",
     "Clear search": "Очистить поиск",
+    "Block": "Блок",
+    "axe": "топор",
 };

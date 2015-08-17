@@ -692,7 +692,7 @@ Controller.prototype = {
                 //     x: x,
                 //     y: y,
                 // }
-
+                game.player.target = null;
                 if (this.world.hovered == game.player) {
                     return this.world.hovered.defaultAction();
                 } else if (this.world.hovered && this.targetInWorld()) {

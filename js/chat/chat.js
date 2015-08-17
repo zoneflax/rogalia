@@ -525,7 +525,7 @@ function Chat() {
                 break;
             default:
                 if (message.Channel == 9) {
-                    color = "#939";
+                    color = "#ccc";
                     sendNotification = false;
                 }
             }

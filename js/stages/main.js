@@ -55,6 +55,9 @@ function mainStage(data) {
     function drawUI(t) {
         t.drawUI();
     }
+    function drawAura(t) {
+        t.drawAura();
+    }
     function drawClaim(t) {
         t.drawClaim();
     }
@@ -70,11 +73,12 @@ function mainStage(data) {
         this.drawGlobalEffects();
 
         game.map.draw();
+        game.characters.forEach(drawAura);
         game.claims.forEach(drawClaim);
         game.sortedEntities.traverse(drawObject);
         if (config.map.darkness)
             game.map.drawDarkness();
-        game.sortedEntities.traverse(drawUI);
+        game.characters.forEach(drawUI);
         game.controller.draw();
         // this.debug();
         game.ctx.restore();

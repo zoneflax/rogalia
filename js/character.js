@@ -169,9 +169,6 @@ Character.prototype = {
                 "run": [0, 3],
             };
             break;
-        case "dog":
-        case "cat":
-        case "pony":
         case "butterfly":
             this.sprite.width = 32;
             this.sprite.height = 32;
@@ -617,9 +614,10 @@ Character.prototype = {
         var up = this.animation && this.animation.up;
         var down = this.animation && this.animation.down;
         if (down) {
-            var downPoint = new Point();
-            downPoint.x = s.x - down.width/2;
-            downPoint.y = p.y + this.sprite.height + this.sprite.offset - down.height;
+            var downPoint = new Point(
+                s.x - down.width/2,
+                p.y + this.sprite.height + this.sprite.offset - down.height
+            );
             down.draw(downPoint);
             down.animate();
             if (down.frame == 0) { //finished
@@ -631,9 +629,10 @@ Character.prototype = {
         this.sprite.draw(p);
 
         if (up) {
-            var upPoint = new Point();
-            upPoint.x = s.x - up.width/2;
-            upPoint.y = p.y + this.sprite.height + this.sprite.offset - up.height;
+            var upPoint = new Point(
+                s.x - up.width/2,
+                p.y + this.sprite.height + this.sprite.offset - up.height
+            );
             up.draw(upPoint);
             up.animate();
             if (up.frame == 0) { //finished
@@ -642,11 +641,9 @@ Character.prototype = {
         }
 
         this.drawEffects();
-        if (config.ui.showAttackRadius && this.sprite.name == "attack")
-            this.drawAttack();
 
         if (this != game.controller.world.hovered && this == game.player.target)
-            this.drawHovered();
+            this.drawHovered(true);
     },
     drawCorpsePointer: function() {
         if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
@@ -685,6 +682,10 @@ Character.prototype = {
             sprite.draw(p);
             sprite.animate(); //TODO: should be animated per character basis;
         }
+    },
+    drawAura: function() {
+        if (config.ui.showAttackRadius && this.sprite.name == "attack")
+            this.drawAttackRadius();
     },
     drawUI: function() {
         if (!game.player.see(this))
@@ -977,12 +978,12 @@ Character.prototype = {
                 this.sprite.lastUpdate = now + util.rand(5, 60) * 60;
         }
     },
-    drawAttack: function() {
+    drawAttackRadius: function() {
         var p = new Point(this);
         var sector = (this.sprite.position - 1);
         var offset = new Point(CELL_SIZE, 0).rotate(2*Math.PI - sector * Math.PI/4);
         p.add(offset);
-        game.ctx.fillStyle = (this.isPlayer) ? "rgba(255, 255, 0, 0.3)" : "rgba(255, 0, 0, 0.3)";
+        game.ctx.fillStyle = (this.isPlayer) ? "rgba(255, 255, 255, 0.4)" : "rgba(255, 0, 0, 0.2)";
         game.iso.fillCircle(p.x, p.y, CELL_SIZE);
     },
     toggleActionSound: function() {
@@ -1442,12 +1443,20 @@ Character.prototype = {
 
         return util.distanceLessThan(len_x, len_y, r);
     },
-    drawHovered: function() {
+    drawHovered: function(nameOnly) {
         if (this.Invisible)
             return;
 
-        this.sprite.drawOutline(this.getDrawPoint());
+        if (!nameOnly)
+            this.sprite.drawOutline(this.getDrawPoint());
+
+        if (this == game.player.target)
+            game.setFontSize(20);
+
         this.drawName(true, true);
+
+        if (this == game.player.target)
+            game.setFontSize(0);
     },
     intersects: Entity.prototype.intersects,
     canIntersect: function() {

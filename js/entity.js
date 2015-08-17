@@ -135,8 +135,12 @@ Entity.prototype = {
         } else if ("Armor" in this) {
             var armor = this.Armor * (1 + this.Quality / 100);
             elements.push(Stats.prototype.createValue("Armor", armor));
+        } else if ("Block" in this) {
+            var block = this.Block;
+            elements.push(Stats.prototype.createValue("Block", block));
         } else if ("Damage" in this) {
-            elements.push(Stats.prototype.createValue("Damage", this.Damage));
+            var damage = this.Damage + this.Quality / 10;
+            elements.push(Stats.prototype.createValue("Damage", damage));
         } else if (this.Props.Capacity) {
             elements.push(Stats.prototype.createParam("Capacity", this.Props.Capacity));
         }
@@ -594,9 +598,6 @@ Entity.prototype = {
             game.iso.strokeRect(x, y, w, h);
             game.ctx.lineWidth = 1;
         }
-    },
-    drawUI: function() {
-        //TODO: write
     },
     drawBox: function(color) {
         game.ctx.save();

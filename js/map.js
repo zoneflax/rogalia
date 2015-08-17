@@ -437,17 +437,21 @@ function Map() {
         // mctx.clearRect(0, 0, minimapObjectsCanvas.width, minimapObjectsCanvas.height);
         var loc = game.player.Location;
         game.entities.forEach(function(e) {
-            var k = 1;
+            var x = (e.X - loc.X) / CELL_SIZE;
+            var y = (e.Y - loc.Y) / CELL_SIZE;
+            var w = (e.Width || e.Radius) / CELL_SIZE;
+            var h = (e.Height || e.Radius) / CELL_SIZE;
+
             if (e instanceof Character) {
                 if (e == game.player) {
                     mctx.fillStyle = "#0f0";
-                    k = 10;
+                    w = h = 5;
                 } else if (e.Karma < 0 || e.Aggressive) {
                     mctx.fillStyle = "#f00";
-                    k = 10;
+                    w = h = 5;
                 } else {
                     mctx.fillStyle = "pink";
-                    k = 6;
+                    w = h = 3;
                 }
             } else if (!e.inWorld()) {
                 return;
@@ -456,12 +460,8 @@ function Map() {
             } else if (e.Creator){
                 mctx.fillStyle = "#999";
             }
-            var x = (e.X - loc.X) / CELL_SIZE;
-            var y = (e.Y - loc.Y) / CELL_SIZE;
-            var w = (e.Width || e.Radius) / CELL_SIZE;
-            var h = (e.Height || e.Radius) / CELL_SIZE;
 
-            mctx.fillRect(x, y, w * k, h * k);
+            mctx.fillRect(x, y, w, h);
         });
     };
 

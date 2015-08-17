@@ -16,7 +16,6 @@ function Sound() {
         localStorage.setItem(lastTrackLsKey, trackId);
     };
 
-
     var volume = 0.3;
     var currentTrack = null;
     var nextTrack = null;
@@ -24,10 +23,9 @@ function Sound() {
     this.track = null;
     this.sounds = {};
 
-    var sounds = ["beep.ogg", "chop.webm", "lvl-up.ogg", "eat.ogg", "xp.ogg", "heal.ogg"];
+    var sounds = ["beep", "chop", "lvl-up", "eat", "xp", "heal", "hit", "punch"];
     sounds.forEach(function(name) {
-        var audio =  new Audio(soundDir + name);
-        name = name.split(".").slice(0, -1).join("."); // name without extension
+        var audio =  new Audio(soundDir + name + ".ogg");
         this.sounds[name] = audio;
     }.bind(this));
 

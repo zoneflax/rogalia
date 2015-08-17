@@ -1,5 +1,4 @@
 "use strict";
-//TODO: get rid of switches
 function Info(message, character) {
     this.data = message.Data;
     this.character = character;
@@ -10,7 +9,14 @@ function Info(message, character) {
     this.y = 0;
     this.duration = 2500;
     this.value = null;
+
     this.target = this.getTarget();
+    this.targetType = "other";
+
+    if (this.target == game.player)
+        this.targetType = "self";
+    else if (this.character == game.player)
+        this.targetType = "target";
 
     if (game.help)
         game.help.runHook(this);
@@ -30,38 +36,29 @@ function Info(message, character) {
             }
         });
         game.sound.playSound("lvl-up");
-        if (character.isPlayer)
-            this.text = T("Lvl up") + ": " + character.Lvl + "!";
         break;
-    case "miss":
-        if (character == game.player)
-            this.text = T("You missed");
+    case "attack":
+        this.target.drawAnimation({
+            up: {
+                name: "damage",
+                width: 64,
+                height: 63,
+                dy: -this.target.sprite.height/2,
+            },
+        });
+        if (this.target.IsNpc)
+            game.sound.playSound("hit");
         else
-            this.text = "Evade from " + this.data + " attack"; //TODO: use ~T.printf
-        break;
-    case "block":
-        if (character == game.player)
-            this.text = T("Enemy blocked your attack");
-        else
-            this.text = "Blocked from " + this.data + " attack"; //TODO: use ~T.printf
-        break;
-
+            game.sound.playSound("punch");
     case "damage":
-        if (this.data instanceof Object) {
-            this.value = this.data.Dmg;
-            if (this.target == game.player)
-                this.text = this.character.Name + " " + this.data.Action + "ed you in the " + this.data.Target;
-            else
-                this.text = "You " + this.data.Action + "ed " + this.data.To + " in the " + this.data.Target;
-        } else {
-            this.value = this.data;
-        }
+        this.value = this.data.Value;
+        break;
+    case "combo":
+        this.text = this.data.Combo;
+        this.x = 30;
         break;
     case "exp-gain":
         this.value = this.data;
-        game.sound.playSound("xp");
-        if (this.target == game.player)
-            this.text = "You've got " + this.value + " xp and LP";
         break;
     case "heal":
         this.value = this.data;
@@ -89,7 +86,7 @@ function Info(message, character) {
         var item = Entity.get(this.data);
         if (!item) {
             game.sendErrorf("(Info.js) Cannot find item %d", this.data);
-            return
+            return;
         }
         // it's possible when we replace item e.g. in onCraft
         var container = game.containers[item.Container];
@@ -108,13 +105,16 @@ function Info(message, character) {
         var blank = Entity.get(this.data);
         game.controller.craft.open(blank);
         return;
-    case "combo":
-        this.text = this.data;
     }
-    this.value = util.toFixed(this.value, 2);
+    this.value = util.toFixed(this.value, (this.value < 1) ? 2 : 0);
+
+    var formatter = this.formatters[this.type];
+    if (formatter)
+        this.text = formatter.call(this);
 
     if (!this.text)
         return;
+
 
     if (game.chat)
         game.chat.addMessage(this.text);
@@ -129,11 +129,9 @@ function Info(message, character) {
             record.parentNode.removeChild(record);
         }, this.duration);
     }
-    this.frame = 0;
 };
 
 Info.prototype = {
-    damageTexture: null,
     update: function(k) {
         if (this.time + this.duration < Date.now()) {
             this.character.info.splice(this.character.info.indexOf(this), 1);
@@ -143,76 +141,212 @@ Info.prototype = {
         case "text":
             break;
         default:
-            this.y -= 10 * k;
+            this.y -= 20 * k;
         }
     },
     draw: function() {
         if (!this.target) //on teleport/death can be empty
             return;
 
+        var big = 20;
+        var huge = 50;
         switch(this.type) {
         case "heal":
-            this.drawValue("#0c0", "+" + this.value + "hp");
+            this.drawValue(
+                "+" + this.value + "hp",
+                {
+                    self: ["#0c0", big],
+                    target: ["#0f0", big],
+                    other: ["#0c0"],
+                }
+            );
             break;
         case "exp-gain":
-            this.drawValue("#ff0", "+" + this.value + "xp");
+            this.drawValue(
+                "+" + this.value + "xp",
+                {
+                    self: ["#ff0", big],
+                    other: ["#ff0"],
+                }
+            );
             break;
         case "miss":
-            this.drawValue("#ccc", "miss");
-            break;
         case "block":
-            this.drawValue("#ccc", "block");
+            this.drawValue(
+                this.type,
+                {
+                    self: ["#aaf", big],
+                    target: ["#fff", big],
+                    other: ["#ccc"],
+                }
+            );
             break;
         case "damage":
-            game.setFontSize(20);
-            this.drawValue("#f00", null);
-            game.setFontSize();
+            this.drawValue(
+                this.value,
+                {
+                    self: ["#c33"],
+                    target: ["#aac"],
+                    other: ["#eee"],
+                }
+            );
+            break;
+        case "attack":
+            this.drawValue(
+                this.value,
+                {
+                    self: ["#f33", big],
+                    target: ["#aaf", big],
+                    other: ["#ccc"],
+                }
+            );
             break;
         case "combo":
-            game.setFontSize(50);
-            this.drawValue("#fff", this.text);
-            game.setFontSize();
+            this.drawValue(
+                this.text,
+                {
+                    self: ["#f33", big],
+                    target: ["#aaf", huge],
+                    other: ["#ccc"],
+                }
+            );
+            break;
         }
     },
-    drawValue: function(color, text) {
-        var p = this.target.screen();
-        p.y -= this.target.sprite.nameOffset + 2*FONT_SIZE;
+    drawValue: function(text, config) {
+        var target = this.target;
 
-        if (this.data.To) //TODO: fix creepy condition
-            this.drawDamage(p);
+        config = config[this.targetType];
 
-        text = text || this.value;
-        p.x = p.x + this.x - game.ctx.measureText(text).width / 2;
+        var color = config[0] || "#f00";
+        var size = config[1];
 
         game.ctx.fillStyle = color;
-        game.drawStrokedText(text, p.x, p.y + this.y);
-    },
-    drawDamage: function(p) {
-        //TODO: omfg
-        if (this.damageTexture && this.frame * 64 < this.damageTexture.width) {
-            game.ctx.drawImage(
-                this.damageTexture,
-                64 * this.frame++,
-                0,
-                64,
-                63,
-                Math.round(p.x - 32),
-                Math.round(p.y - ((this.target.Type == "human") ? 64 : 32)),
-                64,
-                63
-            );
+
+        var p = target.screen();
+        p.y -= target.sprite.nameOffset + 2*FONT_SIZE;
+        p.x += this.x - game.ctx.measureText(text).width / 2;
+
+        if (size) {
+            game.setFontSize(size);
+            p.x += size;
         }
+
+
+        game.drawStrokedText(text, p.x, p.y + this.y);
+
+        if (size)
+            game.setFontSize();
     },
     getTarget: function() {
         switch (this.type) {
-        case "damage":
-            if (this.data && this.data.To) {
-                return game.characters.get(this.data.To);
-            }
-            break;
+        case "murder":
         case "miss":
+        case "block":
             return game.characters.get(this.data);
+        case "combo":
+        case "attack":
+            return game.characters.get(this.data.Target);
         }
         return this.character;
     },
+    formatters: {
+        "lvl-up": function() {
+            switch (this.targetType) {
+            case "self":
+                return  T("Lvl up") + ": " + this.character.Lvl + "!";
+            default:
+                return TT("{name} got a new lvl", {name: this.character.Name});
+            }
+        },
+        "exp-gain": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("You've got {value} XP and LP", {value: this.value});
+            default:
+                return TT("{name} got {value} XP and LP", {
+                    name: this.character.Name,
+                    value: this.value,
+                });
+            }
+        },
+        "miss": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("You evaded from {name}'s attack", {name: this.character.Name});
+            case "target":
+                return TT("{name} evaded from your attack", {name: this.target.Name});
+            default:
+                return TT(
+                    "{who} evaded from {which}'s attack",
+                    {who: this.target.Name, which: this.character.Name}
+                );
+            }
+        },
+        "block": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("Blocked {name}'s attack", {name: this.character.Name});
+            case "target":
+                return TT("{name} blocked your attack", {name: this.target.Name});
+            default:
+                return TT(
+                    "{who} blocked {which}'s attack",
+                    {who: this.target.Name, which: this.character.Name}
+                );
+            }
+        },
+        "murder": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("{name} killed you", {name: this.character.Name});
+            case "target":
+                return TT("You killed {name}", {name: this.target.Name});
+            default:
+                return TT(
+                    "{who} killed {whom}",
+                    {who: this.target.Name, whom: this.character.Name}
+                );
+            }
+        },
+        "damage": function () {
+            switch (this.targetType) {
+            case "self":
+                return TT("You've got {value} damage from {source}", {
+                    value: this.value,
+                    source: this.data.Source,
+                });
+            default:
+                return TT("{name} got {value} damage from {source}", {
+                    value: this.character.Name,
+                    source: this.data.Source,
+                });
+            }
+        },
+        "attack": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("{name} did {value} damage to you with {attack}", {
+                    name: this.character.Name,
+                    value: this.value,
+                    attack: this.data.Attack,
+                });
+            case "target":
+                return TT("You did {value} damage to {name} with {attack}", {
+                    name: this.target.Name,
+                    value: this.value,
+                    attack: this.data.Attack,
+                });
+            default:
+                return TT(
+                    "{who} did {value} damage to {whom} with {attack}", {
+                        who: this.character.Name,
+                        value: this.value,
+                        whom: this.target.Name,
+                        attack: this.data.Attack,
+                    }
+                );
+            }
+        },
+    }
 };

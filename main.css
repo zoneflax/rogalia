@@ -1350,9 +1350,6 @@ big {
 }
 #crash-help > button {
     width: 100%;
-    margin: 5px;
-    display: inline-block;
-    height: auto;
 }
 
 #avatar-container, #minimap-container {

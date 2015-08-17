@@ -19,8 +19,6 @@ function loadingStage(data) {
     Entity.metaGroups = data.MetaGroups;
     game.initTime(data.Time, data.Tick);
 
-    Info.prototype.damageTexture = loader.loadImage("damage.png");
-
     this.sync = function(data) {
         //TODO: don't send them!
         // ignore non init packets
