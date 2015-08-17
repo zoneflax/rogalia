@@ -827,6 +827,7 @@ hr {
 
 .messages {
     overflow-y: scroll;
+    overflow-x: hidden;
     position: relative;
     height: 20em;
     padding: 5px;
