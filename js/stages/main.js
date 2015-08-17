@@ -88,9 +88,11 @@ function mainStage(data) {
     this.drawGlobalEffects = function() {
         if ("MushroomTrip" in game.player.Effects) {
             game.canvas.style.filter = "hue-rotate(" + (hueRotate % 360) +"deg)";
+            game.canvas.style.webkitFilter = "hue-rotate(" + (hueRotate % 360) +"deg)";
             hueRotate += 20;
         } else {
             game.canvas.style.filter = "";
+            game.canvas.style.webkitFilter = "";
         }
     };
 

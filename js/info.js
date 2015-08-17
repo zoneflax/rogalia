@@ -310,7 +310,6 @@ Info.prototype = {
             }
         },
         "damage": function () {
-            console.log(this);
             switch (this.targetType) {
             case "self":
                 return TT("You've got {value} damage from {source}", {
