@@ -268,7 +268,7 @@ function Talks() {
         if (!factionData)
             return result;
 
-        result.talks = factionData[sex];
+        result.talks = factionData[sex] || factionData["male"];
         return result;
     };
 }
