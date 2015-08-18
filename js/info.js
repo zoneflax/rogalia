@@ -11,6 +11,10 @@ function Info(message, character) {
     this.value = null;
 
     this.target = this.getTarget();
+
+    if (!this.target) // target disappared (tp or death)
+        return;
+
     this.targetType = "other";
 
     if (this.target == game.player)
