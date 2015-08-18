@@ -448,10 +448,10 @@ function Map() {
                     w = h = 5;
                 } else if (e.Karma < 0 || e.Aggressive) {
                     mctx.fillStyle = "#f00";
-                    w = h = 5;
+                    w = h = ((e.Lvl >= 50) ? 6 : 4);;
                 } else {
                     mctx.fillStyle = "pink";
-                    w = h = 3;
+                    w = h = ((e.Lvl >= 50) ? 5 : 3);
                 }
             } else if (!e.inWorld()) {
                 return;
