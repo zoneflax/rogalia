@@ -1608,6 +1608,8 @@ Character.prototype = {
         case "Bruno":
         case "Bertran":
         case "Boris":
+        case "Diego":
+        case "Scrooge":
             type = this.Name.toLowerCase();
             break;
         case "Margo":
