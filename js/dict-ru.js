@@ -962,4 +962,5 @@ var dict = {
     "Clear search": "Очистить поиск",
     "Block": "Блок",
     "axe": "топор",
+    "Tripwire": "Растяжка",
 };
