@@ -139,7 +139,7 @@ Entity.prototype = {
             var block = this.Block;
             elements.push(Stats.prototype.createValue("Block", block));
         } else if ("Damage" in this) {
-            var damage = this.Damage + this.Quality / 10;
+            var damage = this.Damage * (1 + this.Quality / 250);
             elements.push(Stats.prototype.createValue("Damage", damage));
         } else if (this.Props.Capacity) {
             elements.push(Stats.prototype.createParam("Capacity", this.Props.Capacity));
