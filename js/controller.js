@@ -881,7 +881,7 @@ Controller.prototype = {
     // TODO: refactor names
     showMessage: function(message, cls) {
         var warn = document.getElementById("warning");
-        warn.textContent = message;
+        warn.textContent = TT(message);
         if(warn.timeout)
             clearTimeout(warn.timeout);
         warn.style.display = "inline-block";
@@ -897,14 +897,14 @@ Controller.prototype = {
 
     },
     showError: function(message) {
-        this.showMessage(TT(message), "error");
+        this.showMessage(message, "error");
     },
     showWarning: function(message) {
-        this.showMessage(TT(message), "warning");
+        this.showMessage(message, "warning");
     },
     showAnouncement: function(message) {
         var anouncement = document.getElementById("anouncement");
-        anouncement.textContent = T(message);
+        anouncement.textContent = message;
         if(anouncement.timeout)
             clearTimeout(anouncement.timeout);
         anouncement.style.display = "inline-block";

@@ -2,7 +2,7 @@
 function Info(message, character) {
     this.data = message.Data;
     this.character = character;
-    this.text = message.Text;
+    this.text = TT(message.Text);
     this.type = message.Type;
     this.time = Date.now();
     this.x = 0;

@@ -194,6 +194,7 @@ Character.prototype = {
                 "run": 8,
             };
             break;
+        case "diego":
         case "charles":
             this.sprite.width = 73;
             this.sprite.height = 88;
