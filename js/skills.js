@@ -46,7 +46,7 @@ Skills.prototype = {
             var skill = game.player.Skills[name];
             var item = Stats.prototype.createParam(
                 name,
-                {Current: skill.Value.Current, Max: max},
+                skill.Value,
                 2,
                 false,
                 "skills/" + name
