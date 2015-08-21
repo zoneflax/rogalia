@@ -846,6 +846,13 @@ Character.prototype = {
 
         if (drawHp) {
             var w = 64;
+            var arena = ("Arena" in this.Effects) && ("Arena" in game.player.Effects);
+            if (arena && this.Citizenship.Faction != game.player.Citizenship.Faction) {
+                //full red rect
+                game.ctx.fillStyle = '#000';
+                var pad = 2;
+                game.ctx.fillRect(p.x - w/2 - pad, y - pad, w + 2*pad, dy + 2*pad); //wtf
+            }
             //full red rect
             game.ctx.fillStyle = '#c33';
             game.ctx.fillRect(p.x - w/2, y, w, dy); //wtf

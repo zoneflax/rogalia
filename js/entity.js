@@ -101,6 +101,8 @@ Entity.prototype = {
             var cap = this.Props.Capacity;
             suffix = sprintf("[%d/%d]", cap.Current,  cap.Max);
             break;
+        case "arena-flag-base":
+            return TS(this.Name) + " | " + T("Score") + ":" + this.Score;
         default:
             if (this.Name)
                 title = this.Name;
@@ -424,7 +426,6 @@ Entity.prototype = {
     disassemble: function() {
         game.network.send("disassemble", {Id: this.Id});
     },
-
     split: function() {
         var args = {Id: this.Id};
         if (this.Group == "currency") {
@@ -437,11 +438,9 @@ Entity.prototype = {
             game.network.send("Split", args);
         }
     },
-
     bugreport: function() {
         window.open("http://rogalik.tatrix.org/forum/posting.php?mode=reply&f=2&t=11", "_blank");
     },
-
     sync: function(data) {
         for(var prop in data) {
             this[prop] = data[prop];
