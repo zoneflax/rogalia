@@ -27,7 +27,15 @@ function Fight() {
     //     panel.show();
     // }
 
+    var gcd = Date.now();
     function apply(action) {
+        var now = Date.now();
+        if (now - gcd < 600) {
+            game.controller.showWarning(T("Cooldown"));
+            return;
+        }
+        gcd = now;
+
         if (locked) {
             game.controller.showWarning("Action is blocked");
             return;
