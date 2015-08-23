@@ -793,7 +793,7 @@ Character.prototype = {
             return;
 
         var name = this.Name;
-        if (this.IsNpc) {
+        if (this.IsNpc && name) {
             switch (name) {
                 default:
                 name = name.replace(/-\d+$/, "");
