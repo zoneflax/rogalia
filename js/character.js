@@ -148,12 +148,36 @@ Character.prototype = {
         this.sync(data, true);
         this.loadSprite();
     },
+    isSimpleSprite: function() { //for migration; get rid of this shit
+        switch (this.Type) {
+        case "horse":
+        case "cow":
+        case "small-spider":
+        case "spider":
+        case "wolf":
+        case "wolf-fatty":
+        case "wolf-hungry":
+        case "wolf-undead":
+        case "wolf-demonic":
+        case "chicken":
+        case "rabbit":
+        case "preved-medved":
+        case "medved":
+        case "sheep":
+            return false;
+        default:
+            return this.IsNpc;
+        }
+    },
     initSprite: function() {
         this.sprite.speed = 14000;
         this.sprite.offset = this.Radius;
         this.sprite.angle = Math.PI/4;
         switch (this.Type) {
-        case "kitty":
+        case "kitty-pahan":
+        case "kitty-cutthroat":
+        case "kitty-robber":
+        case "kitty-junkie":
             this.sprite.width = 64;
             this.sprite.height = 64;
             this.sprite.frames = {
@@ -162,12 +186,14 @@ Character.prototype = {
             };
             break;
         case "chicken":
-            this.sprite.width = 30;
-            this.sprite.height = 29;
-            this.sprite.frames = {
-                "idle": 1,
-                "run": [0, 3],
-            };
+            this.sprite.width = 40;
+            this.sprite.height = 40;
+            this.sprite.speed = 7000;
+            break;
+        case "rabbit":
+            this.sprite.width = 40;
+            this.sprite.height = 40;
+            this.sprite.speed = 7000;
             break;
         case "butterfly":
             this.sprite.width = 32;
@@ -176,14 +202,6 @@ Character.prototype = {
             this.sprite.frames = {
                 "idle": 1,
                 "run": [0, 3],
-            };
-            break;
-        case "rabbit":
-            this.sprite.width = 23;
-            this.sprite.height = 37;
-            this.sprite.frames = {
-                "idle": 1,
-                "run": [0, 2],
             };
             break;
         case "jesus":
@@ -351,11 +369,20 @@ Character.prototype = {
             break;
         case "cow":
         case "wolf":
-        case "warg":
+        case "wolf-undead":
+        case "wolf-demonic":
         case "sheep":
             this.sprite.width = 100;
             this.sprite.height = 100;
             this.sprite.offset = 45;
+            break;
+        case "wolf-fatty":
+            this.sprite.width = 120;
+            this.sprite.height = 120;
+            break;
+        case "wolf-hungry":
+            this.sprite.width = 80;
+            this.sprite.height = 80;
             break;
         default:
             this.sprite.nameOffset = 72;
@@ -431,19 +458,11 @@ Character.prototype = {
             type = "shot";
             break;
         default:
-            switch (this.Type) {
-            case "small-spider":
-            case "spider":
-            case "horse":
-            case "cow":
-            case "wolf":
-            case "medved":
-            case "preved-medved":
-            case "warg":
-            case "sheep":
+            if (!this.isSimpleSprite()) {
                 this._loadNpcSprites();
                 return;
-            case "vendor":
+            }
+            if (this.Type == "Vendor") {
                 type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
                     return hash + c.charCodeAt(0);
                 }, 0) % 3 + 1);
@@ -874,19 +893,7 @@ Character.prototype = {
         return this.Dx == 0 && this.Dy == 0 && this.Action.Name == "";
     },
     animate: function() {
-        var simpleSprite = this.IsNpc;
-        switch (this.Type) {
-        case "horse":
-        case "cow":
-        case "small-spider":
-        case "spider":
-        case "wolf":
-        case "preved-medved":
-        case "medved":
-        case "warg":
-        case "sheep":
-            simpleSprite = false;
-        }
+        var simpleSprite = this.isSimpleSprite();
         var animation = "idle";
         var self = (this.mount) ? this.mount : this;
         var position = self.sprite.position;
