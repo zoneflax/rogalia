@@ -2,7 +2,7 @@
 function Info(message, character) {
     this.data = message.Data;
     this.character = character;
-    this.text = TT(message.Text);
+    this.text = null;
     this.type = message.Type;
     this.time = Date.now();
     this.x = 0;
@@ -86,24 +86,26 @@ function Info(message, character) {
         break;
     case "item-gain":
     case "craft-success":
-        game.controller.highlight("inventory");
-        var item = Entity.get(this.data);
-        if (!item) {
-            game.sendErrorf("(Info.js) Cannot find item %d", this.data);
-            return;
+        if (this.character.isPlayer) {
+            game.controller.highlight("inventory");
+            var item = Entity.get(this.data.Id);
+            if (!item) {
+                game.sendErrorf("(Info.js) Cannot find item %d", this.data.Id);
+                return;
+            }
+            // it's possible when we replace item e.g. in onCraft
+            var container = game.containers[item.Container];
+            if (!container) {
+                game.sendErrorf("(Info.js) Cannot find container %d for item %d", item.Container, item.Id);
+                return;
+            }
+            container.reload();
+            var slot = container.slots[container.contents.indexOf(item.Id)];
+            if (!slot)
+                console.trace(container, item);
+            else
+                slot.classList.add("new");
         }
-        // it's possible when we replace item e.g. in onCraft
-        var container = game.containers[item.Container];
-        if (!container) {
-            game.sendErrorf("(Info.js) Cannot find container %d for item %d", item.Container, item.Id);
-            return;
-        }
-        container.reload();
-        var slot = container.slots[container.contents.indexOf(item.Id)];
-        if (!slot)
-            console.trace(container, item);
-        else
-            slot.classList.add("new");
         break;
     case "build-open":
         var blank = Entity.get(this.data);
@@ -115,6 +117,8 @@ function Info(message, character) {
     var formatter = this.formatters[this.type];
     if (formatter)
         this.text = formatter.call(this);
+    else if (message.Text)
+        this.text = TT(message.Text);
 
     if (!this.text)
         return;
@@ -271,6 +275,39 @@ Info.prototype = {
                 return TT("{name} got {value} XP and LP", {
                     name: this.character.Name,
                     value: this.value,
+                });
+            }
+        },
+        "currency-gain": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("You've got {currency}", {currency: this.data});
+            default:
+                return TT("{name} got {currency}", {
+                    name: this.character.Name,
+                    currency: this.data,
+                });
+            }
+        },
+        "item-gain": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("You've got {item}", {item: this.data.Name});
+            default:
+                return TT("{name} got {item}", {
+                    name: this.character.Name,
+                    item: this.data.Name,
+                });
+            }
+        },
+        "craft-success": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("You've crafterd {item}", {item: this.data.Name});
+            default:
+                return TT("{name} crafted {item}", {
+                    name: this.character.Name,
+                    item: this.data.Name,
                 });
             }
         },
