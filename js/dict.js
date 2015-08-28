@@ -4,6 +4,8 @@ dict.init = function() {
     // example 1: TT("Unlocks {lvl} lvl of the {skill} skill", {lvl: next.Name, skill: name});
     // example 2: TT("You need {need=Stoneworking} skill to craft {craft=Stone axe});
     window.TT = function(text, args) {
+        if (!text)
+            return "";
         args = args || {};
         var substs = {};
         text = text.replace(/{(.*?)(?:=(.*?))?}/g, function(_, name, value) {
