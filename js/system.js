@@ -12,15 +12,10 @@ function System() {
     this.users = new Users();
     this.help = new Help();
     this.settings = new Settings();
-    this.news = new News();
 
     var users = document.createElement("button");
     users.textContent = T("Users");
     users.onclick = this.users.panel.toggle.bind(this.users.panel);
-
-    var news = document.createElement("button");
-    news.textContent = T("News");
-    news.onclick = this.news.panel.toggle.bind(this.news.panel);
 
     var help = document.createElement("button");
     help.textContent = T("Help");
@@ -44,7 +39,6 @@ function System() {
             this.ping,
             util.hr(),
             settings,
-            news,
             help,
             users,
             util.hr(),
