@@ -33,6 +33,10 @@ function Controller(game) {
         y: 0,
         cursor: null,
         actionProgress: document.getElementById("action-progress"),
+        actionHotbar: document.getElementById("action-hotbar"),
+        target: {
+            container: document.getElementById("target-container"),
+        },
         actionButton: {
             handler: null,
             action: null,
@@ -329,7 +333,7 @@ Controller.prototype = {
                     if (Panel.top) {
                         Panel.top.hide();
                     }
-                    game.player.target = null;
+                    game.player.setTarget(null);
                 }
             },
             32: { //space
@@ -692,7 +696,7 @@ Controller.prototype = {
                 //     x: x,
                 //     y: y,
                 // }
-                game.player.target = null;
+                game.player.setTarget(null);
                 if (this.world.hovered == game.player) {
                     return this.world.hovered.defaultAction();
                 } else if (this.world.hovered && this.targetInWorld()) {

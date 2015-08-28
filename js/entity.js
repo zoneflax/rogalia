@@ -530,6 +530,7 @@ Entity.prototype = {
             this.sprite.animate();
 
         var p = this.getDrawPoint();
+
         if (this.Id && this.Id == game.player.Burden) {
             p.y -= game.player.sprite.height/2;
         }

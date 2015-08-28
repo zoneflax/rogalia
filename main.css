@@ -816,11 +816,11 @@ hr {
     background: transparent;
 }
 .messages, #new-message {
-    pointer-events: auto;
     display: block;
     padding: 0;
 }
 #new-message {
+    pointer-events: auto;
     width: 95%;
     margin-left: 2%;
 }
@@ -1415,6 +1415,20 @@ big {
     background: linear-gradient(to bottom,  #155783 0%, #4690bc 100%);
 }
 
+#target-container {
+    position: absolute;
+    background-image: url("assets/bg/rhombus-small.png");
+    width: 103px;
+    height: 60px;
+    left: 170px;
+}
+#target-container > canvas {
+    margin-top: 10px;
+    max-height: 40px;
+    max-width: 40px;
+}
+
+
 #minimap-container {
     right: 0;
 }
@@ -1820,6 +1834,10 @@ big {
 
 #action-hotbar > .button {
     display: inline-block;
+}
+
+#action-hotbar.cooldown {
+    opacity: 0.5;
 }
 
 #action-hotbar > .button > img {

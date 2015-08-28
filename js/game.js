@@ -142,7 +142,7 @@ function Game() {
 
     this.panels = {};
     this.epsilon = 0;
-    this.camera = new Camera();
+    this.camera = new Point();
 
     this.drawStrokedText = function(text, x, y, strokeStyle) {
         if (game.config.ui.simpleFonts) {

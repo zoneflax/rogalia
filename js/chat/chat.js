@@ -228,15 +228,20 @@ function Chat() {
     var activeTab = {
         elem: this.tabs.firstChild,
         name: tabs[0],
-    }
-
+    };
 
     //TODO: get rid of checkbox
     var alwaysVisible = util.dom.createCheckBox();
     alwaysVisible.id = "chat-always-visible";
     alwaysVisible.label.id = "chat-always-visible-label";
     alwaysVisible.label.title = T("Always visible");
-    alwaysVisible.checked = localStorage.getItem("chat.alwaysVisible") == "true";
+
+    var savedValue = localStorage.getItem("chat.alwaysVisible");
+    if (savedValue == null)
+        alwaysVisible.checked = true;
+    else
+        alwaysVisible.checked = (savedValue == "true");
+
     alwaysVisible.onclick = function() {
         semi.always = !semi.always;
         localStorage.setItem("chat.alwaysVisible", semi.always);
@@ -311,13 +316,15 @@ function Chat() {
         semi.focus = true;
         semishow();
     };
-    this.newMessageElement.onblur = function() {
-        semi.focus = false;
-        semihide();
+    this.newMessageElement.onblur = function(e) {
+        // this hack allows onclick events for settings button and chat links
+        setTimeout(function() {
+            semi.focus = false;
+            semihide();
+        }, 500);
     };
     this.newMessageElement.onmouseenter = semishow;
-    this.newMessageElement.onmouseleave = semihide;
-
+    tabContents.onmouseleave = semihide;
 
     this.names = {
         server: "[server]",

@@ -87,7 +87,7 @@ function Map() {
                     y: h,
                     id: id,
                     corners: new Array(4),
-                    transition: false,
+                    transition: new Array(4),
                     biom: biom,
                 });
             }
@@ -121,7 +121,7 @@ function Map() {
                                 offset |= 1 << i;
                             }
                             if (other !== id)
-                                this.data[y][x].transition = true;
+                                this.data[y][x].transition[4-c] = true;
                         }
                         this.data[y][x].corners[c] = offset;
                     }
@@ -215,8 +215,8 @@ function Map() {
         ];
 
         cell.corners.forEach(function(offset, i) {
-            //don't draw the same tile again
-            if (x != 0 && y != 0 && !cell.transition) {
+            if (x != 0 && y != 0 && !cell.transition[i]) {
+                // breaks ARE required
                 switch(offset) {
                 case  3: if (i != 2) return; break;
                 case  5: if (i != 1) return; break;
@@ -248,38 +248,68 @@ function Map() {
         }.bind(this));
     };
 
-    // var k = 0.2;
-    // game.ctx.scale(k, k);
-    // game.ctx.translate(k*10000, k*10000);
-
     this.draw = function() {
+        var layers = this.makeLayers();
+
         var scr = game.screen;
         var cam = game.camera;
-        var sx = Math.floor(cam.x / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE;
-        var sy = Math.floor(cam.y / (CHUNK_SIZE/2)) * (CHUNK_SIZE/2) - CHUNK_SIZE/2;
-        var ex = Math.ceil((cam.x+scr.width) / CHUNK_SIZE) * CHUNK_SIZE + CHUNK_SIZE;
-        var ey = Math.ceil((cam.y+scr.height) / (CHUNK_SIZE/2)) * (CHUNK_SIZE/2) - CHUNK_SIZE/2;
-        var i = 0;
-        var layers = this.makeLayers();
-        for (var cy = sy; cy <= ey; cy += CHUNK_SIZE/2) {
-            for (var cx = sx; cx <= ex; cx += 2*CHUNK_SIZE) {
-                var p = new Point((i % 2) ? cx-CHUNK_SIZE : cx , cy).toWorld();
-                var key = p.x+"."+p.y;
+
+        var leftTop = cam
+                .clone()
+                .toWorld()
+                .div(CHUNK_SIZE)
+                .floor();
+        var rightTop = cam
+                .clone()
+                .add(new Point(scr.width, 0))
+                .toWorld()
+                .div(CHUNK_SIZE)
+                .floor();
+        var leftBottom = cam
+                .clone()
+                .add(new Point(0, scr.height))
+                .toWorld()
+                .div(CHUNK_SIZE)
+                .ceil();
+        var rightBottom = cam
+                .clone()
+                .add(new Point(scr.width, scr.height))
+                .toWorld()
+                .div(CHUNK_SIZE)
+                .ceil();
+
+        for (var x = leftTop.x; x < rightBottom.x; x++) {
+            for (var y = rightTop.y; y < leftBottom.y; y++) {
+                var c = new Point(x * CHUNK_SIZE, y * CHUNK_SIZE);
+                var p = c.clone().toScreen();
+
+                if (p.x + CHUNK_SIZE < cam.x)
+                    continue;
+                if (p.y + CHUNK_SIZE < cam.y)
+                    continue;
+                if (p.x - CHUNK_SIZE > cam.x + scr.width)
+                    continue;
+                if (p.y > cam.y + scr.height)
+                    continue;
+
+                var key = x + "." + y;
                 var chunk = this.chunks[key];
                 if (!chunk) {
-                    chunk = this.makeChunk(p);
+                    chunk = this.makeChunk(p, c);
                     this.chunks[key] = chunk;
                 }
                 chunk.layers.forEach(function(tile) {
                     layers[tile.layer].push(tile);
                 });
             }
-            i++;
         }
 
         layers.forEach(function(layer) {
             layer.forEach(function(tile) {
                 game.ctx.drawImage(tile.canvas, tile.p.x, tile.p.y);
+                // var p = tile.p.clone().add({x: CHUNK_SIZE, y: 0}).toWorld();
+                // game.ctx.strokeStyle = "#000";
+                // game.iso.strokeRect(p.x, p.y, CHUNK_SIZE, CHUNK_SIZE);
             });
         });
 
@@ -303,10 +333,9 @@ function Map() {
         });
     };
 
-    this.makeChunk = function(c) {
-        var chunk = {layers:[]};
-        var p = c.clone().toScreen();
+    this.makeChunk = function(p, c) {
         p.x -= CHUNK_SIZE;
+        var chunk = {layers:[]};
         this.layers.forEach(function(layer, lvl) {
             var canvas = null;
             var ctx = null;

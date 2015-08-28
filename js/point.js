@@ -71,7 +71,7 @@ Point.prototype = {
     },
     toWorld: function() {
         var x = this.x;
-        this.x = (x / 2 + this.y);
+        this.x = (this.y + x / 2);
         this.y = (this.y - x / 2);
         return this;
     },
@@ -109,6 +109,16 @@ Point.prototype = {
         } else {
             this.x *= p;
             this.y *= p;
+        }
+        return this;
+    },
+    div: function(p) {
+        if (p instanceof Point) {
+            this.x /= p.x;
+            this.y /= p.y;
+        } else {
+            this.x /= p;
+            this.y /= p;
         }
         return this;
     },

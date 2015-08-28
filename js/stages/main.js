@@ -49,14 +49,28 @@ function mainStage(data) {
         game.controller.update();
     };
 
+    var scr = game.screen;
+    var cam = game.camera;
+    function isVisible(t) {
+        var p = t.getDrawPoint();
+
+        return util.rectIntersects(
+            p.x, p.y, t.sprite.width, t.sprite.height,
+            cam.x, cam.y, scr.width, scr.height
+        );
+    }
+
     function drawObject(t) {
-        t.draw();
+        if (isVisible(t))
+            t.draw();
     }
     function drawUI(t) {
-        t.drawUI();
+        if (isVisible(t))
+            t.drawUI();
     }
     function drawAura(t) {
-        t.drawAura();
+        if (isVisible(t))
+            t.drawAura();
     }
     function drawClaim(t) {
         t.drawClaim();
@@ -97,11 +111,9 @@ function mainStage(data) {
     };
 
     this.debug = function() {
-        // TODO: debug-remove
-        // game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-        // game.ctx.fillRect(game.camera.x, game.camera.y, game.screen.width, game.screen.height);
+        game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+        game.ctx.fillRect(game.camera.x, game.camera.y, game.screen.width, game.screen.height);
 
-        // TODO: debug-remove
         // if (game.network.astar) {
         //     game.network.astar.forEach(function(node) {
         //         if (node.Unpassable)

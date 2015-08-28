@@ -1,47 +1,31 @@
 "use strict";
 function Fight() {
     var target = null;
-    var locked = false;
 
-    //TODO: use for claim?
-    // function tenkai() {
-    //     var div = document.createElement("div");
-    //     var dirs = {
-    //         "⇖": 5, "⇑": 4, "⇗": 3,
-    //         "⇐": 6, "X": null, "⇒": 2,
-    //         "⇙": 7, "⇓": 0, "⇘": 1,
-    //     };
-    //     for (var name in dirs) {
-    //         var button = document.createElement("button");
-    //         button.textContent = name;
-    //         var dir = dirs[name];
-    //         if (dir === null)
-    //             dir = (game.player.sprite.position+4)%8;
-    //         button.onclick = function(dir) {
-    //             game.network.send("waza", {Name: "Tenkai", Dir: dir, Id: game.player.target.Id});
-    //             panel.hide();
-    //         }.bind(this, dir);
-    //         div.appendChild(button);
-    //     }
-    //     var panel =  new Panel("tenkai", "Tenkai", [div]);
-    //     panel.show();
-    // }
+    var GCD = 500;
+    var lastSend = Date.now();
 
-    var gcd = Date.now();
+    var actions = ["tsuki", "shomen", "irimi", "tenkan", "kaiten"];
+    var buttons = actions.map(function(action) {
+        var button = document.getElementById(action + "-button");
+        button.onclick = function() {
+            apply(action);
+        };
+        return button;
+    });
+
+    var hotbar = game.controller.iface.actionHotbar;
+
     function apply(action) {
         var now = Date.now();
-        if (now - gcd < 600) {
+        if (now - lastSend < GCD) {
             game.controller.showWarning(T("Cooldown"));
             return;
         }
-        gcd = now;
+        lastSend = now;
 
-        if (locked) {
-            game.controller.showWarning("Action is blocked");
-            return;
-        }
         if (!game.controller.iface.mouseIsValid)
-            return false;
+            return;
 
         switch (action) {
         case "irimi":
@@ -65,7 +49,16 @@ function Fight() {
         args.X = game.controller.world.x;
         args.Y = game.controller.world.y;
 
-        game.network.send("waza", args);
+        game.network.send("waza", args, function(data) {
+            if (data.Warning) {
+                game.controller.showWarning(T(data.Warning));
+            }
+        });
+
+        hotbar.classList.add("cooldown");
+        setTimeout(function() {
+            hotbar.classList.remove("cooldown");
+        }, GCD);
     }
 
     this.update = function() {
@@ -74,13 +67,6 @@ function Fight() {
         }
     };
 
-    var actions = ["tsuki", "shomen", "irimi", "tenkan", "kaiten"];
-    actions.forEach(function(action) {
-        var button = document.getElementById(action + "-button");
-        button.onclick = function() {
-            apply(action);
-        };
-    });
     this.hotkey = function(key) {
         var action = actions[key-1];
         apply(action);

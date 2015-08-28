@@ -157,6 +157,7 @@ Info.prototype = {
             return;
 
         var big = 20;
+        var bigger = 30;
         var huge = 50;
         switch(this.type) {
         case "heal":
@@ -183,8 +184,8 @@ Info.prototype = {
             this.drawValue(
                 this.type,
                 {
-                    self: ["#aaf", big],
-                    target: ["#fff", big],
+                    self: ["#c33", big],
+                    target: ["#aac", bigger],
                     other: ["#ccc"],
                 }
             );
@@ -204,7 +205,7 @@ Info.prototype = {
                 this.value,
                 {
                     self: ["#f33", big],
-                    target: ["#aaf", big],
+                    target: ["#aaf", bigger],
                     other: ["#ccc"],
                 }
             );

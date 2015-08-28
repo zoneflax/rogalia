@@ -60,7 +60,8 @@ function Character(id, name) {
         last: 0,
     };
 
-    this.speed = 1;
+    this.speedFactor = 1; // biom's coef
+
     this.sprites = {};
     Character.animations.forEach(function(animation) {
         var s = new Sprite();
@@ -241,6 +242,15 @@ Character.prototype = {
                 "run": 3,
             };
             break;
+        case "senior-mocherator":
+            this.sprite.width = 80;
+            this.sprite.height = 80;
+            this.sprite.angle = Math.PI/2;
+            this.sprite.frames = {
+                "idle": 1,
+                "run": 3,
+            };
+            break;
         case "mocherator":
             this.sprite.width = 40;
             this.sprite.height = 40;
@@ -253,16 +263,25 @@ Character.prototype = {
         case "omsk-overlord":
             this.sprite.width = 128;
             this.sprite.height = 128;
-            this.sprite.angle = Math.PI*2;
+            this.sprite.angle = 0;
             this.sprite.frames = {
                 "idle": 0,
                 "run": 0,
             };
             break;
         case "omsk":
+            this.sprite.width = 60;
+            this.sprite.height = 60;
+            this.sprite.angle = 0;
+            this.sprite.frames = {
+                "idle": 0,
+                "run": 0,
+            };
+            break;
+        case "omsk-minion":
             this.sprite.width = 40;
             this.sprite.height = 40;
-            this.sprite.angle = Math.PI*2;
+            this.sprite.angle = 0;
             this.sprite.frames = {
                 "idle": 0,
                 "run": 0,
@@ -284,7 +303,7 @@ Character.prototype = {
                 "idle": 4,
                 "run": 4,
             };
-            this.speed = 20000;
+            this.sprite.speed = 20000;
             break;
         case "imp":
             this.sprite.width = 107;
@@ -293,7 +312,7 @@ Character.prototype = {
                 "idle": 3,
                 "run": 4,
             };
-            this.speed = 20000;
+            this.sprite.speed = 20000;
             break;
         case "lesser-daemon":
             this.sprite.width = 160;
@@ -302,7 +321,16 @@ Character.prototype = {
                 "idle": 3,
                 "run": 4,
             };
-            this.speed = 20000;
+            this.sprite.speed = 40000;
+            break;
+        case "higher-daemon":
+            this.sprite.width = 160;
+            this.sprite.height = 102;
+            this.sprite.frames = {
+                "idle": 3,
+                "run": 4,
+            };
+            this.sprite.speed = 50000;
             break;
         case "daemon":
             this.sprite.width = 214;
@@ -311,7 +339,7 @@ Character.prototype = {
                 "idle": 3,
                 "run": 4,
             };
-            this.speed = 20000;
+            this.sprite.speed = 50000;
             break;
         case "naked-ass":
             this.sprite.width = 64;
@@ -353,7 +381,7 @@ Character.prototype = {
             this.sprite.width = 128;
             this.sprite.height = 128;
             this.sprite.offset = 45;
-            this.sprite.speed = 21000;
+            this.sprite.speed = 31000;
             break;
         case "horse":
         case "medved":
@@ -366,6 +394,7 @@ Character.prototype = {
             this.sprite.height = 210;
             this.sprite.offset = 44;
             this.sprite.nameOffset = 150;
+            this.sprite.speed = 20000;
             break;
         case "cow":
         case "wolf":
@@ -520,9 +549,7 @@ Character.prototype = {
         }
 
         var common = {
-                Select:  function() {
-                    game.player.target = this;
-                }.bind(this)
+            Select: game.player.setTarget(game.player, this)
         };
         if (this.isInteractive()) {
             common.Interact =  this.interact;
@@ -538,7 +565,7 @@ Character.prototype = {
             if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.active())
                 game.controller.iface.actionButton.activate();
             else if (this != game.player || config.allowSelfSelection)
-                game.player.target = this;
+                game.player.setTarget(this);
         }
     },
     drawAction: function() {
@@ -629,6 +656,7 @@ Character.prototype = {
 
         if (!this.sprite.ready)
             return;
+
         var p = this.getDrawPoint();
         var s = this.screen();
         var up = this.animation && this.animation.up;
@@ -807,17 +835,14 @@ Character.prototype = {
         // game.ctx.arc(p.x, p.y, 2, 0, 2 * Math.PI);
         // game.ctx.fill();
     },
-    drawName: function(drawHp, drawName) {
-        if (this.Invisible)
-            return;
-
+    getName: function() {
         var name = this.Name;
         if (this.IsNpc && name) {
             switch (name) {
-                default:
+            default:
                 name = name.replace(/-\d+$/, "");
             }
-            name = T(name);
+            name = TS(name);
         }
 
         if (this.Name == "Benedict")
@@ -826,6 +851,13 @@ Character.prototype = {
         if (this.Fame == 10000) {
             name = "Lord " + name;
         }
+
+        return name;
+    },
+    drawName: function(drawHp, drawName) {
+        if (this.Invisible)
+            return;
+        var name = this.getName();
 
         if ("Citizenship" in this && this.Citizenship.Faction) {
             name += " {" + this.Citizenship.Faction[0] + "}";
@@ -902,7 +934,9 @@ Character.prototype = {
             position = (position / 2)<<0;
         }
 
-        if (self.Dx || self.Dy) {
+        if (this.sprite.angle == 0) {
+            position = 0; //omsk hack
+        } else if (self.Dx || self.Dy) {
             animation = "run";
             var sector = self.sprite.angle;
             var sectors = 2*Math.PI / sector;
@@ -959,9 +993,8 @@ Character.prototype = {
         var now = Date.now();
         var speed = (this.Speed && this.Speed.Current || 100);
 
-
         if (animation == "run")
-            speed *= this.speed;
+            speed *= this.speedFactor;
 
         if(now - this.sprite.lastUpdate > (this.sprite.speed / speed)) {
             this.sprite.frame++;
@@ -1050,9 +1083,10 @@ Character.prototype = {
             this.updatePosition(k);
         }
 
-        if(this.isPlayer) {
+        if (this.isPlayer) {
+            // clear target if one is disappeared
             if (this.target && !game.entities.has(this.target.Id))
-                this.target = null;
+                this.setTarget(null);
 
             this.updateBuilding();
             this.updateCamera();
@@ -1308,9 +1342,9 @@ Character.prototype = {
                 this.stop();
                 return;
             }
-            this.speed = cell.biom.Speed;
-            dx *= this.speed;
-            dy *= this.speed;
+            this.speedFactor = cell.biom.Speed;
+            dx *= this.speedFactor;
+            dy *= this.speedFactor;
             new_x = x + dx;
             new_y = y + dy;
         }
@@ -1695,7 +1729,28 @@ Character.prototype = {
             return a.distanceTo(self) - b.distanceTo(self);
         });
         if (list.length > 0)
-            this.target = list[0];
+            this.setTarget(list[0]);
+    },
+    setTarget: function(target) {
+        this.target = target;
+        var cnt = game.controller.iface.target.container;
+        if (!target) {
+            util.dom.hide(cnt);
+            return;
+        }
+
+        if (cnt.dataset.targetId == target.Id)
+            return;
+
+        var name = document.createElement("div");
+        name.id = "target-name";
+        name.textContent = target.getName();
+
+        cnt.dataset.targetId = target.Id;
+        cnt.innerHTML = "";
+        cnt.appendChild(target.sprite.icon());
+        cnt.appendChild(name);
+        util.dom.show(cnt);
     },
     getAvailableQuests: function() {
         return game.player.AvailableQuests[this.Name] || [];
