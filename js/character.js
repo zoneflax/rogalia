@@ -549,7 +549,7 @@ Character.prototype = {
         }
 
         var common = {
-            Select: game.player.setTarget(game.player, this)
+            Select: game.player.setTarget.bind(game.player, this)
         };
         if (this.isInteractive()) {
             common.Interact =  this.interact;
