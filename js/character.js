@@ -324,8 +324,8 @@ Character.prototype = {
             this.sprite.speed = 40000;
             break;
         case "higher-daemon":
-            this.sprite.width = 160;
-            this.sprite.height = 102;
+            this.sprite.width = 214;
+            this.sprite.height = 136;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
@@ -333,8 +333,8 @@ Character.prototype = {
             this.sprite.speed = 50000;
             break;
         case "daemon":
-            this.sprite.width = 214;
-            this.sprite.height = 136;
+            this.sprite.width = 160;
+            this.sprite.height = 102;
             this.sprite.frames = {
                 "idle": 3,
                 "run": 4,
