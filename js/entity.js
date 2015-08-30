@@ -840,7 +840,13 @@ Entity.prototype = {
         game.controller.lastCreatingRotation++;
     },
     cast: function() {
-        game.controller.creatingCursor(new Entity(this.Id, this.Spell), "cast");
+        switch (this.Type) {
+        case "scroll-of-town-portal":
+            game.network.send({"Command": "cast", Id: this.Id});
+            break;
+        default:
+            game.controller.creatingCursor(new Entity(this.Id, this.Spell), "cast");
+        }
     },
     showClaimPanel: function() {
         if (this.Creator != game.player.Id)
