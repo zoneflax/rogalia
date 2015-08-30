@@ -94,6 +94,7 @@ var dict = {
     "Overeat": "Переедание",
     "Sitting": "Сидим",
     "Plowing": "Пашем",
+    "Plague": "Чума",
     "Tool": "Инструмент",
     "Equipment": "Оборудование",
     "You must be near equipment": "Вы должны быть рядом с оборудованием",

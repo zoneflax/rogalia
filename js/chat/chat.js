@@ -248,6 +248,14 @@ function Chat() {
         this.panel.contents.classList.toggle("semi-hidden");
     }.bind(this);
 
+    var channelPrefix = "channel-group-";
+    var channelGroups = ["system", "server", "players", "npc"];
+    channelGroups.forEach(function(name) {
+        var fullname = channelPrefix + name;
+        if (localStorage.getItem(fullname) == "false")
+            self.messagesElement.classList.add(fullname);
+    });
+
     var settingsIcon = new Image();
     settingsIcon.src = "assets/icons/chat/settings.png";
     settingsIcon.id = "chat-settings-icon";
@@ -255,16 +263,19 @@ function Chat() {
         var name = document.createElement("div");
         name.textContent = activeTab.name;
         var checkboxes = document.createElement("div");
-        ["system", "server", "players", "npc"].map(function(name) {
+        channelGroups.map(function(name) {
+            var fullname = channelPrefix + name;
             var label = document.createElement("label");
             label.style.display = "block";
             var channelGroup = document.createElement("input");
             channelGroup.type = "checkbox";
-            channelGroup.checked = true;
+            channelGroup.checked = localStorage.getItem(fullname) == "true";
             channelGroup.addEventListener("change", function(e) {
-                self.messagesElement.classList[
-                    (this.checked) ? "remove" : "add"
-                ]("channel-group-" + name);
+                localStorage.setItem(fullname, this.checked);
+                if (this.checked)
+                    self.messagesElement.classList.remove(fullname);
+                else
+                    self.messagesElement.classList.add(fullname);
             });
             label.appendChild(channelGroup);
             label.appendChild(document.createTextNode(T(name)));
