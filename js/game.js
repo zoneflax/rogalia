@@ -360,7 +360,7 @@ function Game() {
             vkLogo.src = "//vk.com/favicon.ico";
             vk.appendChild(vkLogo);
             vk.appendChild(document.createTextNode(T("Group")));
-            vk.onclick = openLink("//vk.com/rogalik_mmo");
+            vk.onclick = openLink("//vk.com/rogalia");
             return vk;
         },
         twitter: function() {

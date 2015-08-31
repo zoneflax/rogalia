@@ -27,7 +27,7 @@ function Info(message, character) {
 
     switch(this.type) {
     case "lvl-up":
-        this.character.drawAnimation({
+        this.character.playAnimation({
             up: {
                 name: "lvl-up",
                 width: 100,
@@ -42,7 +42,7 @@ function Info(message, character) {
         game.sound.playSound("lvl-up");
         break;
     case "attack":
-        this.target.drawAnimation({
+        this.target.playAnimation({
             up: {
                 name: "damage",
                 width: 64,
@@ -67,7 +67,7 @@ function Info(message, character) {
     case "heal":
         this.value = this.data;
         if (this.value > this.character.Hp.Max/10) {
-            this.character.drawAnimation({
+            this.character.playAnimation({
                 up: {
                     name: "heal",
                     width: 96,
@@ -266,6 +266,17 @@ Info.prototype = {
                 return  T("Lvl up") + ": " + this.character.Lvl + "!";
             default:
                 return TT("{name} got a new lvl", {name: this.character.Name});
+            }
+        },
+        "cast": function() {
+            switch (this.targetType) {
+            case "self":
+                return  TT("Casting {spell}", {spell: this.data});
+            default:
+                return  TT("{name} is casting {spell}", {
+                    name: this.character.Name,
+                    spell: this.data,
+                });
             }
         },
         "exp-gain": function() {

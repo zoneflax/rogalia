@@ -1915,6 +1915,11 @@ big {
     margin-right: 0.5em;
 }
 
+.quest-wiki-link {
+    float: right;
+    margin-left: 5px;
+}
+
 #version {
     display: inline-block;
     padding: 2px;

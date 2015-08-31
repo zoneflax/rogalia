@@ -39,7 +39,7 @@ var config = {
         "fullscreen": false,
     },
     system: {
-        quitConfirm: true,
+        quitConfirm: false,
     },
     cursor: {
         dontHide: false,

@@ -842,7 +842,7 @@ Entity.prototype = {
     cast: function() {
         switch (this.Type) {
         case "scroll-of-town-portal":
-            game.network.send({"Command": "cast", Id: this.Id});
+            game.network.send("cast", {Id: this.Id});
             break;
         default:
             game.controller.creatingCursor(new Entity(this.Id, this.Spell), "cast");

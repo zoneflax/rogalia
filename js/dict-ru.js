@@ -947,7 +947,7 @@ var dict = {
     "Finish": "Закончить",
     "Rewards": "Награда",
     "Soup": "Суп",
-    "Who": "Кто",
+    "Quest ender": "Кому сдавать",
     "You need to have these items": "Вам нужно получить следующие предметы",
     "You need to bring these items": "Вам нужно принести следующие предметы",
     "You need to": "Вам нужно",
@@ -959,4 +959,6 @@ var dict = {
     "Block": "Блок",
     "axe": "топор",
     "Tripwire": "Растяжка",
+    "Scroll of town portal": "Свиток городского портала",
+    "Cast": "Колдовать",
 };

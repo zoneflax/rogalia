@@ -66,7 +66,7 @@ Quest.prototype = {
         var goal = document.createElement("div");
 
         var end = document.createElement("div");
-        end.textContent = T("Who") + ": " + this.End;
+        end.textContent = T("Quest ender") + ": " + this.End;
         goal.appendChild(end);
 
         if (this.Goal.HaveItems) {
@@ -82,8 +82,19 @@ Quest.prototype = {
         }
 
         if (this.data.tip) {
-            var tip = " (" + this.data.tip[game.lang] + ")";
+            var tip = this.data.tip[game.lang];
             goal.appendChild(document.createTextNode(tip));
+        }
+        if ("wiki" in this.data) {
+            var links = this.data.wiki[game.lang] || [];
+            links.forEach(function(name) {
+                var link = document.createElement("a");
+                link.className = "quest-wiki-link";
+                link.target = "_blank";
+                link.href = "/wiki/" + name;
+                link.textContent = name;
+                goal.appendChild(link);
+            });
         }
 
         return goal;

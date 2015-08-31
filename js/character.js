@@ -62,6 +62,8 @@ function Character(id, name) {
 
     this.speedFactor = 1; // biom's coef
 
+    this.animation = {up: null, down: null};
+
     this.sprites = {};
     Character.animations.forEach(function(animation) {
         var s = new Sprite();
@@ -365,6 +367,7 @@ Character.prototype = {
         case "bertran":
         case "bruno":
         case "scrooge":
+        case "ahper":
             this.sprite.nameOffset = 70;
             this.sprite.frames = {
                 "idle": 1,
@@ -659,8 +662,8 @@ Character.prototype = {
 
         var p = this.getDrawPoint();
         var s = this.screen();
-        var up = this.animation && this.animation.up;
-        var down = this.animation && this.animation.down;
+        var up = this.animation.up;
+        var down = this.animation.down;
         if (down) {
             var downPoint = new Point(
                 s.x - down.width/2,
@@ -983,7 +986,6 @@ Character.prototype = {
             animation = "sit";
         this.sprite = this.sprites[animation];
         this.sprite.position = position;
-        this._animation = animation;
 
         if (!this.sprite.ready) {
             this.loadSprite();
@@ -1049,6 +1051,7 @@ Character.prototype = {
     update: function(k) {
         this.animate();
         if (this.Action) {
+            this.updateActionAnimation();
             if (this.Action.Started != this.action.last) {
                 this.action.progress = 0;
                 this.action.last = this.Action.Started;
@@ -1595,9 +1598,8 @@ Character.prototype = {
             // TODO: omfg rename me
             var info = self.getTalks();
 
-            if ("Quest" in info.actions && self.getQuests().length == 0) {
-                delete info.actions["Quest"];
-            }
+            if (self.getQuests().length > 0)
+                info.actions["Quest"] = T("Quest");
 
             info.talks.forEach(function(text) {
                 var p = document.createElement("p");
@@ -1658,6 +1660,7 @@ Character.prototype = {
         case "Bertran":
         case "Boris":
         case "Diego":
+        case "Ahper":
         case "Scrooge":
             type = this.Name.toLowerCase();
             break;
@@ -1682,6 +1685,7 @@ Character.prototype = {
         case "Bertran":
         case "Boris":
         case "Charles":
+        case "Ahper":
         case "Scrooge":
             return true;
         default:
@@ -1699,23 +1703,38 @@ Character.prototype = {
             return this.isNear(e);
         }
     },
-    drawAnimation: function(anims) {
-        var animation = {};
-        for (var type in anims) {
-            var anim = anims[type];
-            var sprt = new Sprite(
-                "animations/" + anim.name + "-" + type + ".png",
-                anim.width,
-                anim.height,
-                80
-            );
-            if (anim.dy)
-                sprt.dy = anim.dy;
-            animation[type] = sprt;
+    updateActionAnimation: function() {
+        switch (this.Action.Name) {
+        case "cast":
+            this.playAnimation({
+                down: {
+                    name: "cast",
+                    width: 100,
+                    height: 60,
+                }
+            });
+            break;
         }
+    },
+    // available anims: {up: {...}, down: {...}}
+    playAnimation: function(anims) {
+        for (var type in anims) {
+            if (this.animation[type] == null)
+                this.loadAnimation(type, anims[type]);
+        }
+    },
+    loadAnimation: function(type, anim) {
+        var sprt = new Sprite(
+            "animations/" + anim.name + "-" + type + ".png",
+            anim.width,
+            anim.height,
+            (anim.speed || 80)
+        );
+        if (anim.dy)
+            sprt.dy = anim.dy;
 
         loader.ready(function() {
-            this.animation = animation;
+            this.animation[type] = sprt;
         }.bind(this));
     },
     distanceTo: function(e) {
