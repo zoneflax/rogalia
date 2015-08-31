@@ -212,7 +212,7 @@ Container.prototype = {
             var entity = Entity.get(item.id);
             if (!entity) {
                 console.log("dwim:", item.id, " not found");
-                return;
+                return false;
             }
             var slots = game.controller.craft.slots;
             for(var i = 0, l = slots.length; i < l; i++) {
@@ -239,7 +239,15 @@ Container.prototype = {
         var entity = Entity.get(item.id);
         var top = this.getTopExcept(entity.Container);
         if (top) {
-            Container.moveItem(entity.Id, game.containers[entity.Container], top);
+            if (game.controller.modifier.ctrl && game.controller.modifier.shift) {
+                game.network.send("move-all", {
+                    From: entity.Container,
+                    To: top.id,
+                    Type: entity.Type,
+                });
+            } else {
+                Container.moveItem(entity.Id, game.containers[entity.Container], top);
+            }
             return;
         }
 
@@ -261,15 +269,21 @@ Container.prototype = {
             return;
 
         item.slot.classList.remove("new");
-        if (game.controller.modifier.shift) {
+
+        var mods = game.controller.modifier;
+
+        if (mods.shift && !mods.ctrl) {
             game.chat.linkEntity(Entity.get(item.id));
-            return false;
+            return;
         }
 
-        if (e.ctrlKey) {
+        if (mods.ctrl) {
             this.dwim(item);
             return;
         }
+
+
+
 
 
         e.stopPropagation();

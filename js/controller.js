@@ -303,6 +303,12 @@ Controller.prototype = {
             C: {
                 callback: toggle(game.panels.stats)
             },
+            F: {
+                callback: toggle(game.panels.craft)
+            },
+            S: {
+                callback: toggle(game.panels.skills)
+            },
             M: {
                 callback: toggle(game.panels.map)
             },
@@ -669,7 +675,7 @@ Controller.prototype = {
             case 0:
                 if (this.targetInWorld(e.target)) {
                     if(this.world.hovered) {
-                        if (this.modifier.shift) {
+                        if (this.modifier.shift && !this.modifier.ctrl) {
                             game.chat.linkEntity(this.world.hovered);
                             return false;
                         }

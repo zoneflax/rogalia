@@ -35,7 +35,10 @@ function Craft() {
         this.clickListener.bind(this)
     );
     this.panel.hooks.hide = this.cleanUp.bind(this);
-    this.panel.hooks.show = this.update.bind(this);
+    this.panel.hooks.show = function() {
+        this.searchInput.focus();
+        this.update();
+    }.bind(this);
 
     this.blank = {
         type: null,
