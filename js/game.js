@@ -447,9 +447,7 @@ function Game() {
     };
 
     this.error = function() {
-        console.error.apply(console, arguments);
-        console.trace();
-        game.sendError("Game error:|" + [].join.call(arguments, "|"));
+        game.sendErrorf(arguments);
         game.exit();
         throw "Fatal error";
     };

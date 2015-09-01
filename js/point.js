@@ -13,7 +13,7 @@ function Point(x, y) {
             this.x = x.X;
             this.y = x.Y;
         } else {
-            game.error("No x or y in %o", x);
+            game.error("No x or y in %j", x);
         }
         break;
     case 2:

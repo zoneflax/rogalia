@@ -249,7 +249,7 @@ Entity.prototype = {
         }
 
         if (!path) {
-            game.error("Entity %o has no sprite", this);
+            game.error("Entity %j has no sprite", this);
         }
         if (this.sprite && this.sprite.ready && path == this._path) {
             return;

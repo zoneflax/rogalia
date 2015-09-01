@@ -101,7 +101,7 @@ BinarySearchTree.prototype = {
             } else {
                 var i = this.findIndex(current.values, value)
                 if (i != -1)
-                    game.sendError("Duplicate in binary tree: %s", JSON.stringify(value));
+                    game.sendErrorf("Duplicate in binary tree: %j", value);
                 current.values.push(value);
                 return;
             }

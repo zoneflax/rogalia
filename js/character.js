@@ -742,7 +742,9 @@ Character.prototype = {
         if (!game.player.see(this))
             return;
 
-        this.drawQuestMarker();
+        var marker = this.getQuestMarker();
+        if (marker)
+            this.drawQuestMarker(marker);
 
         if (game.debug.player.box || game.controller.hideStatic()) {
             this.drawBox();
@@ -750,7 +752,7 @@ Character.prototype = {
 
         //else drawn in controller
         if (this != game.controller.world.hovered && this != game.player.target) {
-            this.drawName();
+            this.drawName(undefined, !!marker);
         }
 
         this.info.forEach(function(info) {
@@ -766,11 +768,7 @@ Character.prototype = {
 
         this.drawCorpsePointer();
     },
-    drawQuestMarker: function() {
-        var marker = this.getQuestMarker();
-        if (!marker)
-            return;
-
+    drawQuestMarker: function(marker) {
         var p = this.screen();
         p.x -= marker.width / 2;
         p.y -= this.sprite.nameOffset + marker.height;
@@ -1539,7 +1537,7 @@ Character.prototype = {
                 continue;
             var entity = Entity.get(eid);
             if (!entity) {
-                game.sendError("hasItems: cannot find %d", eid);
+                game.sendErrorf("hasItems: cannot find %d", eid);
                 continue;
             }
             if (items[entity.Group]) {

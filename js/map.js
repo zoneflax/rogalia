@@ -299,6 +299,14 @@ function Map() {
                     this.chunks[key] = chunk;
                 }
                 chunk.layers.forEach(function(tile) {
+                    if (!layers[tile.layer]) {
+                        game.sendErrorf(
+                            "layers[tile.layer] is null; layers: %j; tile.layer: %j",
+                            layers,
+                            tile.layer
+                        );
+                        layers[tile.layer] = [];
+                    }
                     layers[tile.layer].push(tile);
                 });
             }
