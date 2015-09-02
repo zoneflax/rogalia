@@ -477,7 +477,7 @@ Entity.prototype = {
             break;
         case "currency":
             if (this.Amount)
-                this.Name = this.Amount + " " + this.Name;
+                this.Name = this.Amount + " " + this.Type;
             break;
         case "tanning-tub":
             this._canUse = true;
