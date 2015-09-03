@@ -211,13 +211,22 @@ function Game() {
         };
     };
 
+    this.save = function() {
+        // on exit stage all panels are hidden
+        // so they have nulled coordinates
+        // and thus we shouldn't save them
+        if (game.stage.name == "exit")
+            return;
+        Panel.save();
+        Container.save();
+        if (game.help)
+            game.help.save();
+    };
+
     this.addEventListeners = function() {
         window.addEventListener("resize", game.screen.update.bind(game.screen));
         window.addEventListener("beforeunload", function(e) {
-            Panel.save();
-            Container.save();
-            if (game.help)
-                game.help.save();
+            game.save();
             if (config.system.quitConfirm && game.stage.name != "exit") {
                 e.preventDefault();
                 return T("Quit?");
@@ -329,6 +338,7 @@ function Game() {
     };
 
     this.exit = function(message) {
+        this.save();
         this.setStage("exit", message);
     };
 
