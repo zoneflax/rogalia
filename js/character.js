@@ -416,6 +416,10 @@ Character.prototype = {
             this.sprite.width = 80;
             this.sprite.height = 80;
             break;
+        case "tractor":
+            this.sprite.width = 128;
+            this.sprite.height = 108;
+            break;
         default:
             this.sprite.nameOffset = 72;
             this.sprite.offset = 2*this.Radius;

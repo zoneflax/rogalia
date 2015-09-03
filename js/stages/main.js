@@ -1,5 +1,8 @@
 "use strict";
 function mainStage(data) {
+    setTimeout(function() {
+        game.network.send("logon");
+    }, 200);
     game.controller.interfaceInit(data.Chat);
     game.controller.system.users.sync(data.PlayersOnline);
     game.controller.minimap.sync(data.PlayersOnline);
