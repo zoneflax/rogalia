@@ -590,7 +590,7 @@ function Chat() {
 
         var notification = new Notification(subject, config);
         notification.onclick = function() {
-            if (!config.ui.chatAttached)
+            if ("ui" in config && !config.ui.chatAttached)
                 this.panel.show();
             notification.close();
         }.bind(this);
