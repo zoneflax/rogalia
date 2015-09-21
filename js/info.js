@@ -93,10 +93,9 @@ function Info(message, character) {
                 game.sendErrorf("(Info.js) Cannot find item %d", this.data.Id);
                 return;
             }
-            // it's possible when we replace item e.g. in onCraft
             var container = game.containers[item.Container];
+            // continaer was not oppened or not available for current player
             if (!container) {
-                game.sendErrorf("(Info.js) Cannot find container %d for item %d", item.Container, item.Id);
                 return;
             }
             container.reload();

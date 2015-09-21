@@ -29,7 +29,7 @@ Container.open = function(id) {
     if (!container)
         container = new Container(id);
     return container;
-}
+};
 
 Container.moveItem = function(id, from, to, slot) {
     if (!to)

@@ -8,6 +8,8 @@ function Character(id, name) {
     this.Hp = null;
     this.Invisible = false;
 
+
+    this.Title = "";
     //used to show animation of varius type, like damage deal or exp gain
     this.info = [];
     this.Messages = null;
@@ -850,11 +852,11 @@ Character.prototype = {
             name = TS(name);
         }
 
-        if (this.Name == "Benedict")
-            name = "Benedict the Fallen Priest";
+        if (this.Title)
+            name = TT(this.Title, {name: name});
 
         if (this.Fame == 10000) {
-            name = "Lord " + name;
+            name = T("Lord") + " " + name;
         }
 
         return name;

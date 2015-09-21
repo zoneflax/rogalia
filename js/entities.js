@@ -26,14 +26,14 @@ Entity.sync = function(data, remove) {
     for (var id in data) {
         var edata = data[id];
         var entity = game.entities.get(id);
-        if(!entity) {
+        if (!entity) {
             entity = new Entity(id, edata.Type);
             game.addEntity(entity);
         }
         entity.sync(edata);
         entity.initSprite();
 
-        if(game.containers[entity.Id]) {
+        if (game.containers[entity.Id]) {
             containers.push(game.containers[entity.Id]);
         }
     }

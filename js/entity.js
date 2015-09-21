@@ -892,6 +892,7 @@ Entity.prototype = {
                 return {
                     "Set quality": prepare("set-quality"),
                     "Set creator": prepare("set-creator"),
+                    "Set comment": prepare("set-comment"),
                     "Finish building": send("finish-building"),
                     "$prompt": function() {
                         var cmd = prompt("cmd?", "set-quality");
