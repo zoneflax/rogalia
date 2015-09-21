@@ -876,10 +876,29 @@ Entity.prototype = {
         panel.show();
     },
     applyAdminCmd: function() {
-        var cmd = prompt("cmd?", "set-quality");
-        if (!cmd)
-            return;
-        game.chat.append("*" + cmd + " " + this.Id);
-        game.chat.panel.show();
+        var id = this.Id;
+        var prepare = function(cmd) {
+            return function() {
+                game.chat.append("*" + cmd + " " + id);
+            };
+        };
+        var send = function(cmd) {
+            return function() {
+                game.chat.send("*" + cmd + " " + id);
+            };
+        };
+        game.menu.show({
+            getActions: function() {
+                return {
+                    "Set quality": prepare("set-quality"),
+                    "Set creator": prepare("set-creator"),
+                    "Finish building": send("finish-building"),
+                    "$prompt": function() {
+                        var cmd = prompt("cmd?", "set-quality");
+                        game.chat.append("*" + cmd + " " + id);
+                    },
+                };
+            }
+        });
     }
 };
