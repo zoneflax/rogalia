@@ -570,6 +570,11 @@ Character.prototype = {
         var common = {
             Select: game.player.setTarget.bind(game.player, this)
         };
+        if (game.player.IsAdmin) {
+            common.Kill = function() {
+                game.chat.send("*kill " + this.Name);
+            };
+        }
         if (this.isInteractive()) {
             common.Interact =  this.interact;
         }
