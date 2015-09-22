@@ -201,6 +201,7 @@ Character.prototype = {
             this.sprite.speed = 7000;
             break;
         case "butterfly":
+        case "zombie":
             this.sprite.width = 32;
             this.sprite.height = 32;
             this.sprite.angle = Math.PI/2;
@@ -1054,6 +1055,17 @@ Character.prototype = {
     },
     update: function(k) {
         this.animate();
+        if ("Plague" in this.Effects) {
+            this.playAnimation({
+                up: {
+                    name: "plague",
+                    width: 64,
+                    height: 64,
+                    dy: -16,
+                    speed: 177,
+                }
+            });
+        }
         if (this.Action) {
             this.updateActionAnimation();
             if (this.Action.Started != this.action.last) {

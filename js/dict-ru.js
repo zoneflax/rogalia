@@ -106,6 +106,7 @@ var dict = {
     "Bung": "Пробка",
     "Flower essence": "Цветочная эссенция",
     "Anti plague potion": "Противочумное зелье",
+    "Strengthening potion": "Укрепляющее зелье",
     "Vial": "Флакон",
     "Requirements": "Требования",
     "Ingredients": "Ингредиенты",
