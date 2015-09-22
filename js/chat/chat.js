@@ -59,7 +59,14 @@ function Chat() {
     this.linkEntity = function(entity) {
         if (!entity)
             return;
-        var text = entity.name || entity.Name;
+
+        //TODO: encapsulate
+        var text = "";
+        if ("getName" in entity)
+            text = entity.getName();
+        else
+             text = entity.name || entity.Name;
+
         this.send("${" + text + "}", true);
         if (game.player.IsAdmin || entity.Group == "portal") {
             this.addMessage("id: " + entity.Id);
