@@ -210,6 +210,15 @@ Character.prototype = {
                 "run": [0, 3],
             };
             break;
+        case "ultra-zombie":
+            this.sprite.width = 96;
+            this.sprite.height = 96;
+            this.sprite.angle = Math.PI/2;
+            this.sprite.frames = {
+                "idle": 1,
+                "run": [0, 3],
+            };
+            break;
         case "jesus":
             this.sprite.width = 64;
             this.sprite.height = 96;
@@ -600,7 +609,7 @@ Character.prototype = {
         return util.distanceLessThan(len_x, len_y, Math.hypot(game.screen.width, game.screen.height));
     },
     setDst: function(x, y) {
-        if (this.Disabled)
+        if (this.Speed.Current <= 0 || this.Disabled)
             return;
         var leftBorder, rightBorder, topBorder, bottomBorder;
         leftBorder = this.Radius;
