@@ -437,9 +437,15 @@ function Chat() {
                 return complexHandlers[prefix](data);
             }
         }
-        var text = match.substr(startIndex, len);
+        var text = T(match.substr(startIndex, len));
         var common = document.createElement("code");
-        common.textContent = T(text);
+        var maxLen = 40;
+        if (text.length > maxLen) {
+            common.title = text;
+            text = text.substr(0, maxLen) + "...";
+        }
+        common.textContent = text;
+
         return common;
     }
 
