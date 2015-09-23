@@ -539,14 +539,10 @@ Entity.prototype = {
         }
         if ((this.MoveType == Entity.MT_STATIC || this.CanCollide) &&
             game.controller.hideStatic()) {
-            this.drawBox();
+            this.drawBox(this.getDrawBoxColor());
         } else if (this.shouldBeAutoHidden())
         {
-            var color = "";
-            if (this.Group == "gate" || this.Type.indexOf("-arc") != -1) {
-                color = (this.CanCollide) ? "violet" : "magenta";
-            }
-            this.drawBox(color);
+            this.drawBox(this.getDrawBoxColor());
         } else {
             if (this.Type == "blank") {
                 game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
@@ -611,6 +607,12 @@ Entity.prototype = {
             game.iso.fillStrokedRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
         }
         game.ctx.restore();
+    },
+    getDrawBoxColor: function() {
+        if (this.Group == "gate" || this.Type.indexOf("-arc") != -1) {
+            return (this.CanCollide) ? "violet" : "magenta";
+        }
+        return ""; //default
     },
     drawCenter: function() {
         var p = this.screen();

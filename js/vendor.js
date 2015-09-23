@@ -240,10 +240,7 @@ Vendor.buy = function(data) {
                 lot.innerHTML = "";
                 lot.appendChild(e.icon());
                 name.textContent = e.name;
-                //TODO: fixme and make the same for craft
-                setTimeout(function(){
-                    lot.onclick = sellCleanUp;
-                }, 200);
+                lot.onmousedown = sellCleanUp;
                 return true;
             };
         }
@@ -310,10 +307,7 @@ Vendor.sell = function(data) {
                 util.dom.show(button);
                 slot.firstChild.classList.remove("item-preview");
                 slot.item = item;
-                setTimeout(function(){
-                    slot.onclick = cleanUp;
-                }, 100);
-
+                slot.onmousedown = cleanUp;
                 return true;
             };
 
@@ -380,13 +374,10 @@ Vendor.sell = function(data) {
             lot.innerHTML = "";
             lot.appendChild(e.icon());
             name.textContent = TS(e.Type);
-            //TODO: fixme and make the same for craft
-            setTimeout(function(){
-                lot.onclick = sellCleanUp;
-            }, 100);
+            lot.onmousedown = sellCleanUp;
             return true;
-        }
-        var name = document.createElement("div")
+        };
+        var name = document.createElement("div");
         name.className = "lot-name";
 
         var quantity = document.createElement("input");

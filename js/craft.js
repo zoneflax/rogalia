@@ -217,7 +217,7 @@ Craft.prototype = {
         this.slots[index].unblock = from.unblock;
         to.innerHTML = "";
         to.appendChild(ingredient);
-        to.onclick = this.cancel.bind(this, from, to);
+        to.onmousedown = this.cancel.bind(this, from, to);
         return true;
     },
     cleanUp: function() {
@@ -345,8 +345,13 @@ Craft.prototype = {
         var input = e.target;
         this.search(e.target.value);
     },
-    makeSearch: function(pattern) {
-        return this.search.bind(this, pattern, true);
+    makeSearch: function(slot) {
+        return function() {
+            // if there is an ingredint in this slot, skip search
+            if (slot.firstChild.id)
+                return;
+            this.search(slot.group, true);
+        }.bind(this);
     },
     search: function(pattern, selectMatching) {
         this.panel.show();
@@ -447,7 +452,7 @@ Craft.prototype = {
             for(var j = 0; j < required; j++) {
                 var slot = document.createElement("div");
                 slot.className = "slot";
-                slot.onclick = game.controller.craft.makeSearch(group);
+                slot.onclick = game.controller.craft.makeSearch(slot);
                 var image = Entity.getPreview(group);
 
                 image.title = groupTitle;
