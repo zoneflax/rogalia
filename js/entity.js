@@ -543,7 +543,7 @@ Entity.prototype = {
         } else if (this.shouldBeAutoHidden())
         {
             var color = "";
-            if (this.Group == "gate") {
+            if (this.Group == "gate" || this.Type.indexOf("-arc") != -1) {
                 color = (this.CanCollide) ? "violet" : "magenta";
             }
             this.drawBox(color);

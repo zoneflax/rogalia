@@ -19,7 +19,7 @@ function Chat() {
 
     this.messagesElement = document.createElement("ul");
     this.messagesElement.className = "messages no-drag";
-
+    this.messagesElement.innerHTML = localStorage["chat"];
 
     //TODO: encapsulate
     var scrollIndicator = document.createElement("div");
@@ -521,6 +521,8 @@ function Chat() {
     };
 
     this.addMessage = function(message) {
+        this.cleanUp();
+
         if (typeof message == 'string') {
             message = {
                 From: null,
@@ -609,6 +611,14 @@ function Chat() {
         }.bind(this);
     };
 
+    var maxMessages = 256;
+    this.cleanUp = function() {
+        var len = this.messagesElement.children.length;
+        while (len-- >= maxMessages) {
+            util.dom.remove(this.messagesElement.firstChild);
+        }
+    };
+
     this.sync = function(data) {
         var needAlert = false;
         for(var i = 0, l = data.length; i < l; i++) {
@@ -680,5 +690,9 @@ function Chat() {
             this.newMessageElement.focus();
         else
             this.panel.show();
+    };
+
+    this.save = function() {
+        localStorage["chat"] = this.messagesElement.innerHTML;
     };
 }

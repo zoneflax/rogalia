@@ -694,6 +694,11 @@ Controller.prototype = {
 
                 break;
             case 1:
+                if (this.targetInWorld(e.target)) {
+                    e.preventDefault();
+                    game.player.setDst(this.world.x, this.world.y);
+                    return false;
+                }
                 break;
             case 2:
                 // It was used when use could grab world with mouse and drag it.
@@ -833,6 +838,14 @@ Controller.prototype = {
                         }
                     };
                 });
+                // var interval = setInterval(function() {
+                //     if (items.length > 0) {
+                //         var item = items.pop();
+                //         game.chat.send("*set-quality " + item.Id + " 50");
+                //     } else {
+                //         clearInterval(interval);
+                //     }
+                // }, 500);
                 return actions;
             }
         });
