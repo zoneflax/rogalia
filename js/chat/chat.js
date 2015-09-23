@@ -47,6 +47,15 @@ function Chat() {
         return false;
     }.bind(this);
 
+    var scrollToTheEnd = function() {
+        /* var height = this.messagesElement.scrollTop + this.messagesElement.clientHeight;
+           var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 10;
+           if (scroll)
+           this.messagesElement.scrollTop = this.messagesElement.scrollHeight; */
+        this.messagesElement.scrollTop = 999999;
+        updateScroll({deltaY: 99999});
+    }.bind(this);
+
     this.messagesElement.addEventListener("wheel", updateScroll);
 
     this.newMessageElement = document.createElement("input");
@@ -505,13 +514,8 @@ function Chat() {
             messageElement.appendChild(element);
         });
 
-        var height = this.messagesElement.scrollTop + this.messagesElement.clientHeight;
-        var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 10;
         this.messagesElement.appendChild(messageElement);
-        if (scroll)
-            this.messagesElement.scrollTop = this.messagesElement.scrollHeight;
-        updateScroll({deltaY: 99999});
-
+        scrollToTheEnd();
         return messageElement;
     }.bind(this);
 
@@ -690,6 +694,7 @@ function Chat() {
             this.newMessageElement.focus();
         else
             this.panel.show();
+        scrollToTheEnd();
     };
 
     this.save = function() {
