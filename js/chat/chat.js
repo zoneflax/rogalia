@@ -48,11 +48,7 @@ function Chat() {
     }.bind(this);
 
     var scrollToTheEnd = function() {
-        /* var height = this.messagesElement.scrollTop + this.messagesElement.clientHeight;
-           var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 10;
-           if (scroll)
-           this.messagesElement.scrollTop = this.messagesElement.scrollHeight; */
-        this.messagesElement.scrollTop = 999999;
+        this.messagesElement.scrollTop = this.messagesElement.scrollHeight;
         updateScroll({deltaY: 99999});
     }.bind(this);
 
@@ -515,7 +511,11 @@ function Chat() {
         });
 
         this.messagesElement.appendChild(messageElement);
-        scrollToTheEnd();
+
+        var height = this.messagesElement.scrollTop + this.messagesElement.clientHeight;
+        var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 20;
+        if (scroll)
+            scrollToTheEnd();
         return messageElement;
     }.bind(this);
 
