@@ -54,45 +54,60 @@ function loginStage() {
     // }
     // VK.Auth.getLoginStatus(authInfo);
 
-    function onWarning(warning) {
-        if (registering) {
-            alert(warning);
-        } else {
-            localStorage.removeItem("password");
-            if (!autoLogin)
-                alert(warning);
-            else
-                util.dom.show(form);
-            autoLogin = false;
-        }
-    }
-    function saveLogin() {
-        localStorage.setItem("login", game.login);
-    }
-
-    function auth(cmd, password) {
+    function register(password) {
         saveLogin();
         game.network.send(
-            cmd,
+            "register",
             {
                 Login: game.login,
                 Password: password,
                 Captcha: captcha,
                 Invite: invite,
+                Referrer: document.referrer,
+                UA: navigator.userAgent,
             },
             function(data) {
                 if ("Warning" in data) {
-                    onWarning(data.Warning);
+                    alert(data.Warning);
                 } else {
-                    document.getElementById("version").textContent = data.Version;
-                    game.setStage("lobby", data);
+                    enterLobby(data);
                 }
             }
         );
     };
 
-    var login = auth.bind(this, "login");
-    var register = auth.bind(this, "register");
+    function enterLobby(data) {
+        document.getElementById("version").textContent = data.Version;
+        game.setStage("lobby", data);
+    }
+
+    function saveLogin() {
+        localStorage.setItem("login", game.login);
+    }
+
+    function login(password) {
+        saveLogin();
+        game.network.send(
+            "login",
+            {
+                Login: game.login,
+                Password: password,
+                Captcha: captcha,
+            },
+            function(data) {
+                if ("Warning" in data) {
+                    localStorage.removeItem("password");
+                    if (!autoLogin)
+                        alert(data.Warning);
+                    else
+                        util.dom.show(form);
+                    autoLogin = false;
+                } else {
+                    enterLobby(data);
+                }
+            }
+        );
+    };
 
     game.login = localStorage.getItem("login");
     if (game.login == "-")

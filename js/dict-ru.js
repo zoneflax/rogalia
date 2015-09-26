@@ -351,7 +351,7 @@ var dict = {
     "Cost": "Стоимость",
     "You have {amount} LP": "У вас есть {amount} очка(ов) обучения",
     "You need {diff} additional LP to learn this skill": "Вам нужно дополнительно {diff} очка(ов), чтобы выучить этот навык",
-    'You must equip {tool} to do this': 'Чтобы сделать это, вам нужно взять в руки {tool}',
+    "You must equip {tool} to do this": "Чтобы сделать это, вам нужно взять в руки {tool}",
     "Drying frame": "Сушильная рама",
     "Respawn": "Респаун",
     "Roof": "Крыша",
