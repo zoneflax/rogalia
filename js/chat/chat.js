@@ -513,7 +513,7 @@ function Chat() {
         this.messagesElement.appendChild(messageElement);
 
         var height = this.messagesElement.scrollTop + this.messagesElement.clientHeight;
-        var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 20;
+        var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 2*this.messagesElement.clientHeight;
         if (scroll)
             scrollToTheEnd();
         return messageElement;
