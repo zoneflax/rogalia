@@ -172,8 +172,12 @@ Entity.prototype = {
         // case "apple-tree":
         //     return 240;
         // }
+
         if (this.Sprite.Dy)
             return this.Sprite.Dy;
+
+        if (this.Disposition == "roof")
+            return 136 - 8; // default wall sprite height - wall width / 2
 
         // fucking hate it
         var r = this.Radius;
