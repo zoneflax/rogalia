@@ -972,6 +972,7 @@ var dict = {
     "Kitty meat": "Кошатина",
     "Lavash": "Лаваш",
     "Big tat": "Биг-Тат",
+    "Raw big tat": "Сырой Биг-Тат",
     "Chudo yudo": "Чудо-юдо",
     "Roasted chudo yudo": "Жареное Чудо-Юдо",
     "Chudo yudo fillet": "Филе Чуды-Юды",
