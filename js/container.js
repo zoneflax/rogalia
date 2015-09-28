@@ -293,7 +293,10 @@ Container.prototype = {
         if (this.id > 0) {
             this.container = Entity.get(this.id);
             if(!this.container) {
-                game.error("Cannot find container with id %d", this.id);
+                game.sendErrorf("Cannot find container with id %d", this.id);
+                this.panel && this.panel.close();
+                delete game.containers[this.id];
+                return;
             }
             // this.valid = this.validate(this.container.Props.Slots);
             this.contents = this.container.Props.Slots || [];

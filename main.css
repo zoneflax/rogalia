@@ -223,6 +223,9 @@ hr {
 .slot.new {
     background-image: url("assets/bg/slot-new.png");
 }
+.slot.plus {
+    background-image: url("assets/bg/plus.png"), url("assets/bg/slot.png");
+}
 .slot.item {
     display: table;
     white-space: normal;

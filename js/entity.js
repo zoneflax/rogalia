@@ -66,7 +66,12 @@ Entity.prototype = {
             game.sortedEntities.add(this);
     },
     get name() {
-        var name = TS(this.Name);
+        var name = "";
+        if (this.Type.contains("-corpse") || this.Type == "head")
+            name = this.Name;
+        else
+            name = TS(this.Name);
+
         if (this.Props.Capacity) {
             name += ' [' +
                 util.toFixed(this.Props.Capacity.Current) +
@@ -176,7 +181,7 @@ Entity.prototype = {
         if (this.Sprite.Dy)
             return this.Sprite.Dy;
 
-        if (this.Disposition == "roof")
+        if (this.Disposition == "roof" && this.Location != Entity.LOCATION_BURDEN)
             return 136 - 8; // default wall sprite height - wall width / 2
 
         // fucking hate it

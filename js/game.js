@@ -219,7 +219,7 @@ function Game() {
             return;
         Panel.save();
         Container.save();
-        game.chat.save();
+        game.chat && game.chat.save();
         if (game.help)
             game.help.save();
     };

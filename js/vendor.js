@@ -457,6 +457,8 @@ function Bank() {
         game.network.send("withdraw", {"Cost": price.cost()}, callback);
     };
 
+    var vault = document.createElement("div");
+
     var contents = [
         balance,
         tax,
@@ -464,13 +466,15 @@ function Bank() {
         price,
         deposit,
         withdraw,
-    ]
+        vault,
+    ];
     var panel = new Panel("bank", "Bank", contents);
     panel.hide();
 
     game.network.send("get-bank-info", {}, callback);
 
     function callback(data) {
+        console.log(data);
         if (data.Warning)
             return;
         if (!data.Done)
@@ -480,11 +484,37 @@ function Bank() {
         balance.appendChild(Vendor.createPrice(data.Balance));
 
         tax.innerHTML = T("Tax") + ": ";
-        tax.appendChild(Vendor.createPrice(data.Tax))
+        tax.appendChild(Vendor.createPrice(data.Tax));
 
         info.innerHTML = T("Next payment") + ":<br>" + (data.NextPayment || T("never"));
+
+        vault.innerHTML = "";
+        data.Vault.forEach(function(vaultSlot, i) {
+            var slot = document.createElement("div");
+            slot.className = "slot";
+            if (vaultSlot.Unlocked) {
+                var item = Entity.get(vaultSlot.Id);
+                slot.appendChild(item.icon());
+                slot.onclick = function() {
+                    Container.open(item.Id).panel.show();
+                };
+            } else {
+                slot.classList.add("plus");
+                slot.onclick = function() {
+                    var cost = Math.pow(100, i);
+                    if (confirm(TT("Buy slot {cost} gold?", {cost: cost}))) {
+                        game.network.send("buy-bank-vault-slot", {}, callback);
+                    };
+                };
+            }
+            vault.appendChild(slot);
+
+        });
+        // //TODO: remove items on panel close?
+
+
         panel.show();
-    }
+    };
 }
 
 function Exchange() {
