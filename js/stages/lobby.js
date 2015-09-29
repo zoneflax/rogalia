@@ -52,6 +52,7 @@ function lobbyStage(data) {
     var quit = document.createElement("button");
     quit.textContent = T("Quit");
     quit.onclick = function() {
+        lobbyStage.characters = [];
         game.clearCredentials();
         game.setStage("login");
     };

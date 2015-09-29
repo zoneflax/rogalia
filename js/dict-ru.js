@@ -134,6 +134,7 @@ var dict = {
     "Oven": "Печь",
     "Wicker basket": "Плетеная корзина",
     "Wooden bed": "Деревянная кровать",
+    "Wooden trough": "Деревянное корыто",
     "Wooden throne": "Деревянный трон",
     "Wooden armor": "Деревянный доспех",
     "Wooden helmet": "Деревянный шлем",

@@ -792,7 +792,7 @@ Character.prototype = {
     drawQuestMarker: function(marker) {
         var p = this.screen();
         p.x -= marker.width / 2;
-        p.y -= this.sprite.nameOffset + marker.height;
+        p.y -= this.sprite.nameOffset + marker.height + FONT_SIZE;
 
         game.ctx.drawImage(marker, p.x, p.y);
     },
@@ -891,7 +891,7 @@ Character.prototype = {
 
         var p = this.screen();
         var y = p.y - this.sprite.nameOffset;
-        var dy = FONT_SIZE * 0.8;
+        var dy = FONT_SIZE * 0.5;
 
         drawHp = drawHp || ((!this.IsNpc || game.config.ui.npc) && game.config.ui.hp);
         drawName = drawName || ((!this.IsNpc || game.config.ui.npc) && game.config.ui.name);
