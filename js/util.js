@@ -389,6 +389,15 @@ var util = new function() {
                 }
             }
     };
+
+    this.date = {
+        iso: function(date) {
+            return date.toISOString().slice(0, 10);
+        },
+        format: function(format, date) {
+            throw "not imlemented"; //TODO: implement date.format
+        },
+    };
 };
 
 if (!Math.hypot) {

@@ -440,9 +440,6 @@ Vendor.sell = function(data) {
 
 function Bank() {
     var balance = document.createElement("label");
-    var tax = document.createElement("label");
-    var info = document.createElement("div");
-
     var price = Vendor.createPriceInput();
 
     var deposit = document.createElement("button");
@@ -457,15 +454,35 @@ function Bank() {
         game.network.send("withdraw", {"Cost": price.cost()}, callback);
     };
 
+    var claimRent = document.createElement("label");
+    var claimPaidTill = document.createElement("label");
+    var claimLastPaid = document.createElement("label");
+    var claimPay = document.createElement("button");
+    claimPay.textContent = T("Pay");
+    claimPay.onclick = function() {
+        if (confirm(T("Confirm?"))) {
+            game.network.send("pay-for-claim", {}, callback);
+        }
+    };
+
+    var claim = document.createElement("div");
+    claim.appendChild(document.createTextNode(T("Claim")));
+    claim.appendChild(claimRent);
+    claim.appendChild(claimPaidTill);
+    claim.appendChild(claimLastPaid);
+    claim.appendChild(claimPay);
+
     var vault = document.createElement("div");
 
     var contents = [
         balance,
-        tax,
-        info,
+        util.hr(),
         price,
         deposit,
         withdraw,
+        util.hr(),
+        claim,
+        util.hr(),
         vault,
     ];
     var panel = new Panel("bank", "Bank", contents);
@@ -473,23 +490,34 @@ function Bank() {
 
     game.network.send("get-bank-info", {}, callback);
 
+    function date(unixtime) {
+        var span = document.createElement("span");
+        span.textContent = util.date.iso(new Date(unixtime * 1000));
+        return span;
+    }
+
     function callback(data) {
-        console.log(data);
         if (data.Warning)
             return;
         if (!data.Done)
             return callback;
         //TODO: add price.set()
         balance.innerHTML = T("Balance") + ": ";
-        balance.appendChild(Vendor.createPrice(data.Balance));
+        balance.appendChild(Vendor.createPrice(data.Bank.Balance));
 
-        tax.innerHTML = T("Tax") + ": ";
-        tax.appendChild(Vendor.createPrice(data.Tax));
+        var claim = data.Bank.Claim;
+        claimRent.innerHTML = T("Rent") + ": ";
+        claimRent.appendChild(Vendor.createPrice(claim.Cost));
 
-        info.innerHTML = T("Next payment") + ":<br>" + (data.NextPayment || T("never"));
+
+        claimPaidTill.innerHTML = T("Paid till") + ": ";
+        claimPaidTill.appendChild(date(claim.PaidTill));
+
+        claimLastPaid.innerHTML = T("Last paid") + ": ";
+        claimLastPaid.appendChild(date(claim.LastPaid));
 
         vault.innerHTML = "";
-        data.Vault.forEach(function(vaultSlot, i) {
+        data.Bank.Vault.forEach(function(vaultSlot, i) {
             var slot = document.createElement("div");
             slot.className = "slot";
             if (vaultSlot.Unlocked) {

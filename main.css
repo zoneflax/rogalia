@@ -714,11 +714,6 @@ hr {
     position: relative;
     top: 22px;
 }
-.build-auto, .build-button {
-    margin-top: 5px;
-    width: 100%;
-    padding: 0.5em;
-}
 #blank-panel .slot {
     float: none;
     margin: 10px auto;
@@ -1636,19 +1631,26 @@ big {
     width: 900px;
     height: 600px;
 }
+
+#bank > .contents {
+    text-align: right;
+}
 #bank label {
+    text-align: left;
     display: block;
 }
-#bank label > .price {
-    position: absolute;
-    right: 5px;
+#bank label > span {
+    float: right;
+    margin-left: 5px;
 }
 
 #bank .lot-price {
     display: block;
     margin: 5px auto;
 }
-
+#bank button+button {
+    clear: none;
+}
 
 #action-progress-value {
     background: #ac7637;
