@@ -348,7 +348,7 @@ Craft.prototype = {
     makeSearch: function(slot) {
         return function() {
             // if there is an ingredint in this slot, skip search
-            if (slot.firstChild.id)
+            if (slot.firstChild && slot.firstChild.id)
                 return;
             this.search(slot.group, true);
         }.bind(this);
