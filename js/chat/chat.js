@@ -20,6 +20,13 @@ function Chat() {
     this.messagesElement = document.createElement("ul");
     this.messagesElement.className = "messages no-drag";
     this.messagesElement.innerHTML = localStorage["chat"];
+    this.messagesElement.onclick = function(e) {
+        if (e.target.classList.contains("from")) {
+            self.append(e.target.textContent + ", ");
+            self.activate();
+        }
+    };
+
 
     //TODO: encapsulate
     var scrollIndicator = document.createElement("div");
@@ -574,10 +581,11 @@ function Chat() {
             if (message.From) {
                 if (color)
                     fromElement.style.color = color;
-                fromElement.textContent = message.From + ": ";
+                fromElement.textContent = message.From;
                 var now = new Date();
                 fromElement.title = '[' + now.getHours() + ':' + now.getMinutes() + ']';
                 contents.push(fromElement);
+                contents.push(document.createTextNode(": "));
             }
         }
 

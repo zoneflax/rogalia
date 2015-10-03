@@ -46,7 +46,7 @@ function loadingStage(data) {
                 game.setStage("main", data);
             }, 100);
 
-            // if (!game.player.Settings.Premium) {
+            // if (!game.player.Premium) {
             //     game.ads.show();
             // }
         });
