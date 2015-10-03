@@ -388,6 +388,7 @@ hr {
 }
 
 .main-stage #canvas {
+    background: url("assets/bg/space.png") repeat;
     background-color: #333;
 }
 .main-stage #interface {

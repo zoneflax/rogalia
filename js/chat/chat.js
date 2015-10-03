@@ -196,6 +196,11 @@ function Chat() {
         game.controller.unhighlight("chat");
     },
 
+    this.init = function () {
+        //TODO: fix this hack
+        setTimeout(scrollToTheEnd, 100);
+    };
+
     this.attach = function() {
         var contents = this.panel.contents;
         contents.id = "attached-chat";

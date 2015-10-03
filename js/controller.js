@@ -465,6 +465,8 @@ Controller.prototype = {
         if (config.ui.chatAttached)
             this.chat.attach();
 
+        this.chat.init();
+
         Container.load();
 
         this.ready = true;
