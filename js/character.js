@@ -859,12 +859,8 @@ Character.prototype = {
     },
     getName: function() {
         var name = this.Name;
-        if (this.IsNpc && name && !this.Type == "vendor") {
-            switch (name) {
-            default:
-                name = name.replace(/-\d+$/, "");
-            }
-            name = TS(name);
+        if (this.IsNpc && name && this.Type != "vendor") {
+            name = TS(name.replace(/-\d+$/, ""));
         }
 
         if (this.Title)

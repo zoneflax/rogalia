@@ -308,7 +308,6 @@ Entity.prototype = {
             };
         }
         if (game.player.IsAdmin) {
-            actions[2]["Fix"] = this.fix;
             actions[2]["$cmd"] = this.applyAdminCmd;
         }
         actions[2]["Destroy"] =  this.destroy;
@@ -898,11 +897,17 @@ Entity.prototype = {
                 game.chat.send("*" + cmd + " " + id);
             };
         };
+        var self = this;
+        var bind = function(method) {
+            return method.bind(self);
+        };
         game.menu.show({
             getActions: function() {
                 return {
+                    "Fix": bind(self.fix),
                     "Set quality": prepare("set-quality"),
                     "Set creator": prepare("set-creator"),
+                    "Get creator": send("get-creator"),
                     "Set comment": prepare("set-comment"),
                     "Finish building": send("finish-building"),
                     "$prompt": function() {
