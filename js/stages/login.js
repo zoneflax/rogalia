@@ -236,5 +236,12 @@ function loginStage() {
     this.end = function() {
         panel.close();
     };
+    this.sync = function(data) {
+        if (data.Warning) {
+            panel.hide();
+            alert(data.Warning);
+        }
+    };
+
 }
 Stage.add(loginStage);

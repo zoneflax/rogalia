@@ -492,7 +492,10 @@ function Bank() {
 
     function date(unixtime) {
         var span = document.createElement("span");
-        span.textContent = util.date.iso(new Date(unixtime * 1000));
+        if (unixtime > 0)
+            span.textContent = util.date.iso(new Date(unixtime * 1000));
+        else
+            span.textContent = "-";
         return span;
     }
 

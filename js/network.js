@@ -26,7 +26,7 @@ function Network() {
     this.defaultCallback = null;
 
     this.run = function() {
-        this.socket = new WebSocket(proto + this.addr, "rogalik-protocol");
+        this.socket = new WebSocket(proto + this.addr);
         this.socket.binaryType = "arraybuffer";
         this.socket.onopen = function() {
             game.setStage("login");
@@ -75,7 +75,7 @@ function Network() {
         if (game.debug.network.data)
             console.dir(data);
 
-        if(data.Error) {
+        if (data.Error) {
             game.controller.showError(data.Error);
             return;
         }
