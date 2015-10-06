@@ -391,6 +391,9 @@ var util = new function() {
     };
 
     this.date = {
+        human: function(date) {
+            return date.toLocaleDateString("ru-RU");
+        },
         iso: function(date) {
             return date.toISOString().slice(0, 10);
         },
