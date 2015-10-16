@@ -1053,4 +1053,6 @@ var dict = {
     "Higher daemon": "Высший демон",
     "Small spider": "Паучок",
     "Spider": "Паук",
+
+    "You've got {item}":  "Вы получили: {item}",
 };
