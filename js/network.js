@@ -3,7 +3,6 @@ function Network() {
     var proto = "ws://";
     var host = "beta.rogalik.tatrix.org";
     var port = 49000;
-
     if (window.location.protocol == "https:") {
         proto = "wss://";
         port = 49443;
@@ -61,6 +60,7 @@ function Network() {
         var decompressed = util.decompress(message.data);
         var data = JSON.parse(decompressed);
         this.data = data;
+
         if(this.sendStart && data.Ack) {
             game.ping = Date.now() - this.sendStart;
             if (game.controller.system && game.controller.system.panel.visible) {

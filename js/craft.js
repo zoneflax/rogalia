@@ -44,32 +44,26 @@ function Craft() {
         type: null,
         panel: new Panel("blank-panel", "Build"),
         entity: null,
-        canUse: function(item) {
-            var e = Entity.get(item.id);
-            if (!e)
-                game.error("Build.use: cannot find item %d", item.id);
+        canUse: function(entity) {
             for (var group in this.entity.Props.Ingredients) {
-                if (e.is(group)) {
-                    return e;
+                if (entity.is(group)) {
+                    return true;
                 }
             }
-            return null;
+            return false;
         },
-        use: function(item) {
-            // if ingredint is correct one
-            // send network command
-            var e = this.canUse(item);
-            if (e) {
-                game.network.send("build-add", {blank: this.entity.Id, id: e.Id})
+        use: function(entity) {
+            if (this.canUse(entity)) {
+                game.network.send("build-add", {blank: this.entity.Id, id: entity.Id});
                 return true;
             }
-            // else do now allow using item
+            // do now allow using item
             return false;
         },
     };
 
     this.build = function(e) {
-        game.controller.creatingCursor(this.blank.type, "build");
+        game.controller.newCreatingCursor(this.blank.type, "build");
         this.panel.hide();
     }.bind(this);
 }
@@ -195,26 +189,30 @@ Craft.prototype = {
         this.blank.panel.show();
 
         if (burden) {
-            this.blank.use({id: burden});
+            this.blank.use(burden);
         }
     },
-    use: function(from, to) {
-        var e = Entity.get(from.id);
-        if (!e.is(to.group))
+    use: function(entity, to) {
+        if (!entity.is(to.group))
             return false;
+
+        var from = Container.get(entity.findContainer());
 
         if (this.slots.some(function(slot) {
             return slot.firstChild.id == from.id;
         })) {
             return false;
         }
-        from.block();
-        var ingredient = e.icon();
-        ingredient.id = e.Id;
-        ingredient.unblock = from.unblock;
+        var slot = from.findSlot(entity);
+
+        slot.lock();
+        var ingredient = entity.icon();
+        ingredient.id = entity.Id;
+        ingredient.unlock = slot.unlock.bind(slot);
+
         var index = this.slots.indexOf(to);
         this.slots[index].used = true;
-        this.slots[index].unblock = from.unblock;
+        this.slots[index].unlock = slot.unlock.bind(slot);
         to.innerHTML = "";
         to.appendChild(ingredient);
         to.onmousedown = this.cancel.bind(this, from, to);
@@ -225,8 +223,6 @@ Craft.prototype = {
             var slot = this.slots[i];
             this.cancel(slot.item, slot);
         }
-        // this.slots = [];
-        // this.requirements = null;
     },
     createList: function() {
         var list = document.createElement("ul");
@@ -405,7 +401,7 @@ Craft.prototype = {
             return;
         }
         if (game.player.IsAdmin && game.controller.modifier.ctrl) {
-            game.controller.creatingCursor(new Entity(0, e.target.type));
+            game.controller.newCreatingCursor(e.target.type);
             return;
         }
 
@@ -553,19 +549,19 @@ Craft.prototype = {
         this.recipeDetails.appendChild(create);
     },
     auto: function(callback) {
-        callback = callback || function(item, container) {
-            container.dwimCraft(item);
+        callback = callback || function(slot, container) {
+            container.dwimCraft(slot);
         };
-        for (var i in game.containers) {
-            var container = game.containers[i];
-            var entity = Entity.get(container.id);
-            if (entity && entity.belongsTo(game.player) || container.visible) {
-                container.items.forEach(function(item) {
-                    if (item)
-                        callback(item, container);
-                });
-            }
-        }
+        Container.forEach(function(container) {
+            var entity = container.entity;
+            if (!entity || (!entity.belongsTo(game.player) && !container.visible))
+                return;
+            container.forEach(function(slot) {
+                if (slot.entity) {
+                    callback(slot, container);
+                }
+            });
+        });
     },
     craftAll: function() {
         this.auto();
@@ -597,7 +593,7 @@ Craft.prototype = {
         var index = this.slots.indexOf(to);
         var slot = this.slots[index];
         slot.used = false;
-        slot.unblock && slot.unblock();
+        slot.unlock && slot.unlock();
         to.innerHTML = "";
         to.appendChild(to.image);
     },

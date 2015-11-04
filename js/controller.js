@@ -2,19 +2,53 @@
 function Controller(game) {
     var controller = this;
     this.ready = false;
-    this.adminBar = null;
-    this.terraBar = null;
-    this.stats = null;
-    this.containers = {};
-    this.callback = [null, null, null];
-    this.LEFT = 0;
-    this.MIDDLE = 1;
-    this.RIGHT = 2;
+
+    this.stats = null; // TODO: what is it?
+
     this.actionQueue = [];
+
+    this.LMB = 0;
+    this.MMB = 1;
+    this.RMB = 2;
+    this.callback = [null, null, null];
+
     this.mouse = {
+        // relative to window
         x: 0,
         y: 0,
+        // relative to world element
+        world: {
+            x: 0,
+            y: 0,
+        },
+        // can safely use mouse coordinates in game.network.send()
+        isValid: function() {
+            return controller.targetInWorld() &&
+                this.world.x > 0 && this.world.y > 0 &&
+                this.world.x < game.screen.width && this.world.y < game.screen.height;
+        }
     };
+
+    this.world = {
+        cursor: null,
+        hovered: null, // entity under cursor
+        menuHovered: null, //from X menu
+        _p: new Point(),
+        get point() {
+            this._p.set(
+                controller.mouse.world.x + game.camera.x,
+                controller.mouse.world.y + game.camera.y
+            ).toWorld();
+            return this._p;
+        },
+        get x() {
+            return this.point.x;
+        },
+        get y() {
+            return this.point.y;
+        },
+    };
+
     this.modifier = {
         ctrl: false,
         shift: false,
@@ -28,224 +62,200 @@ function Controller(game) {
     this.lastCreatingCommand = "";
     this.lastCreatingRotation = 0;
 
-    this.iface = {
-        x: 0,
-        y: 0,
-        cursor: null,
-        actionProgress: document.getElementById("action-progress"),
-        actionHotbar: document.getElementById("action-hotbar"),
-        target: {
-            container: document.getElementById("target-container"),
+    this.actionProgress = document.getElementById("action-progress");
+    this.actionHotbar = document.getElementById("action-hotbar");
+    this.controlsBar = document.getElementById("controls-bar");
+    this.targetContainer = document.getElementById("target-container");
+
+    this.hovered = null; // dom element under cursor
+
+    this.cursor = {
+        element: document.getElementById("cursor"),
+        entity: null,
+        isActive: function() {
+            return this.entity != null;
         },
-        actionButton: {
-            handler: null,
-            action: null,
-            icon: null,
-            inProgress: false,
-            element: document.getElementById("main-action-button"),
-            active: function() {
-                return this.handler && this.icon;
-            },
-            activate: function() {
-                this.handler();
-            },
-            startProgress: function() {
-                if (!this.inProgress && this.active()) {
-                    this.inProgress = true;
-                    this.loadIcon(this.action + "-active");
-                }
-            },
-            stopProgress: function() {
-                if (this.inProgress && this.active()) {
-                    this.inProgress = false;
-                    this.loadIcon(this.action);
-                }
-            },
-            setAction: function(action, handler) {
-                this.reset();
-                this.action = action;
-                this.handler = handler;
-                this.element.onclick = handler;
-                this.loadIcon(action);
-            },
-            reset: function() {
-                this.action = null;
-                this.handler = null;
-                this.element.onclick = null;
-                this.element.innerHTML = "";
-                this.icon = null;
-                this.inProgress = false;
-            },
-            loadIcon: function(action) {
-                this.element.innerHTML = "";
-                this.icon = loader.loadImage("icons/tools/" + action + ".png");
-                this.element.appendChild(this.icon);
-            },
+        clear: function() {
+            this.entity = null;
+            this.element.innerHTML = "";
         },
-        get mouseIsValid() {
-            return this.x > 0 && this.y > 0 && this.x < game.screen.width && this.y < game.screen.height;
-        },
-        element: null,
-        hovered: null,
-        setCursor: function(item, x, y, callback) {
-            var entity = Entity.get(item.id);
-            if (!entity) {
-                game.sendError("setCursor: entity not found: " + item.id);
-                return;
-            }
-            var canvas = document.createElement("canvas");
-            canvas.width = item.width;
-            canvas.height = item.height;
-            canvas.container = item.container;
-            canvas.getContext("2d").drawImage(item, 0, 0);
-            this.cursor.innerHTML = "";
-            this.cursor.appendChild(canvas);
-            this.cursor.style.display = "block";
-            this.cursor.style.left = x + "px";
-            this.cursor.style.top = y + "px";
-            this.cursor.style.marginLeft = -entity.getDrawDx() + "px";
-            this.cursor.style.marginTop = -entity.getDrawDy() + "px";
-            this.cursor.entity = entity;
-            this.updateHovered(x, y);
-            window.addEventListener('mousemove', this.moveListener);
-            controller.callback[controller.RIGHT] = function(e) {
-                callback(e);
+        set: function(entity, x, y, cleanup) {
+            var icon = entity.icon();
+            this.element.innerHTML = "";
+            this.element.appendChild(icon);
+            this.element.style.display = "block";
+            this.element.style.left = x + "px";
+            this.element.style.top = y + "px";
+            this.element.style.marginLeft = -entity.getDrawDx() + "px";
+            this.element.style.marginTop = -entity.getDrawDy() + "px";
+
+            this.entity = entity;
+            controller.callback[controller.RMB] = function(e) {
+                cleanup();
                 return true;
             };
-
-            controller.callback[controller.LEFT] = function(e) {
-                var hovered = controller.iface.hovered;
-                // if(!hovered && !controller.iface.mouseIsValid)
-                //     return false;
+            function callback(e) {
+                var hovered = controller.hovered;
                 if (hovered) {
-                    if (this.modifier.shift) {
-                        game.chat.linkEntity(item.entity);
+                    if (controller.modifier.shift) {
+                        game.chat.linkEntity(entity);
                         return true;
                     }
-                    if (hovered.check && !hovered.check(controller.iface.cursor))
+                    if (hovered.check && !hovered.check(controller.cursor))
                         return false;
 
-                    if (hovered.canUse && hovered.canUse(item.entity)) {
-                        return hovered.use(item.entity);
+                    if (hovered.canUse && hovered.canUse(entity)) {
+                        return hovered.use(entity);
                     }
-                    if (hovered.craft)
-                        return controller.craft.use(item, hovered);
+
+                    if (hovered.craft) {
+                        cleanup = function(){};
+                        return controller.craft.use(entity, hovered);
+                    }
 
                     if (hovered.build)
-                        return controller.craft.blank.use(item);
+                        return controller.craft.blank.use(entity);
 
                     if (hovered.vendor)
-                        return hovered.use(item, hovered);
+                        return hovered.use(entity, hovered);
 
-                    if (hovered.item == item)
-                        return true;
+                    if (hovered.slot) {
+                        var slot = hovered.slot;
+                        // dropped back to it's place
+                        if (slot.entity == entity)
+                            return true;
 
-                    Container.moveItem(
-                        item.id,
-                        item.container,
-                        hovered.container,
-                        hovered.index
-                    );
+                        Container.move(entity, slot.container, slot.index);
+                    }
                     return true;
                 }
 
-                var hovered = controller.world.hovered;
-                if (hovered) {
-                    var t = Entity.get(item.id);
-                    if (hovered instanceof Entity && hovered.canUse && hovered.canUse(t)) {
-                        return hovered.use(t);
+                hovered = controller.world.hovered;
+                if (hovered instanceof Entity) {
+                    if (hovered.canUse(entity)) {
+                        return hovered.use(entity);
                     }
-                } else {
-                    item.container.dropItem(item.id);
+                } else if (controller.mouse.isValid()) {
+                    entity.drop();
+                    return true;
                 }
-
-                return true;
+                return false;
+            }
+            controller.callback[controller.LMB] = function(e) {
+                if (callback(e)) {
+                    cleanup();
+                    return true;
+                }
+                return false;
             };
         },
-        updateHovered: function(x, y) {
-            util.dom.hide(this.cursor);
-            var hovered = document.elementFromPoint(x, y);
-            util.dom.show(this.cursor);
-            if (hovered.classList.contains("item-preview") || hovered.classList.contains("item"))
-                hovered = hovered.parentNode;
-            else if (!hovered.classList.contains("slot"))
-                hovered = null;
+        update: function() {
+            this.element.style.left = controller.mouse.x + "px";
+            this.element.style.top = controller.mouse.y + "px";
+        },
+        updateHovered: function() {
+            util.dom.hide(this.element);
+            var element = document.elementFromPoint(controller.mouse.x, controller.mouse.y);
+            util.dom.show(this.element);
 
-            var oldHovered = controller.iface.hovered;
-            if(oldHovered != hovered) {
-                if(oldHovered) {
+            var hovered = null;
+
+            if (element.slot)
+                hovered = element.slot.element; // slot.element not always == element
+            else if (element.classList.contains("item-preview"))
+                hovered = element.parentNode;
+            else if (element.classList.contains("slot"))
+                hovered = element;
+
+
+            var oldHovered = controller.hovered;
+            if (oldHovered != hovered) {
+                if (oldHovered) {
                     oldHovered.classList.remove("hovered");
                     oldHovered.classList.remove("invalid");
                 }
-                if(hovered){
+                if (hovered){
                     hovered.classList.add("hovered");
-                    if(hovered.check && !hovered.check(controller.iface.cursor))
+                    if (hovered.check && !hovered.check(controller.cursor))
                         hovered.classList.add("invalid");
                 }
             }
-            controller.iface.hovered = hovered;
-        },
-        moveListener: function(e) {
-            var x = e.pageX;
-            var y = e.pageY;
-            this.cursor.style.left = x + "px";
-            this.cursor.style.top = y + "px";
-            controller.iface.updateHovered(e.clientX, e.clientY);
-
-            if (controller.iface.hovered)
-                return;
+            controller.hovered = hovered;
         },
     };
-    this.world = {
-        cursor: null,
-        hovered: null,
-        menuHovered: null, //from X menu
-        _p: new Point(),
-        get point() {
-            this._p.set(
-                controller.iface.x + game.camera.x,
-                controller.iface.y + game.camera.y
-            ).toWorld();
-            return this._p;
-        },
-        get x() {
-            return this.point.x;
-        },
-        get y() {
-            return this.point.y;
-        },
-        scroll: false,
-    };
-}
 
-Controller.prototype = {
-    self: this,
-    get cursor() {
-        return this.world.cursor || this.iface.cursor.firstChild;
-    },
-    disableEvent: function(e) {
-        e.preventDefault();
-        return false;
-    },
-    bind: function(f){
-        var self = this;
-        return function(e) {
-            var x = e.pageX - game.offset.x + game.camera.x;
-            var y = e.pageY - game.offset.y + game.camera.y;
-            f.call(self, e, x, y);
-        };
-    },
-    highlight: function(name) {
-        if (this[name])
-            this[name].panel.button.classList.add("alert");
-    },
-    unhighlight: function(name) {
-        if (this[name])
-            this[name].panel.button.classList.remove("alert");
-    },
-    update: function() {
+    this.actionButton = {
+        handler: null,
+        action: null,
+        icon: null,
+        inProgress: false,
+        element: document.getElementById("main-action-button"),
+        active: function() {
+            return this.handler && this.icon;
+        },
+        activate: function() {
+            this.handler();
+        },
+        startProgress: function() {
+            if (!this.inProgress && this.active()) {
+                this.inProgress = true;
+                this.loadIcon(this.action + "-active");
+            }
+        },
+        stopProgress: function() {
+            if (this.inProgress && this.active()) {
+                this.inProgress = false;
+                this.loadIcon(this.action);
+            }
+        },
+        setAction: function(action, handler) {
+            this.reset();
+            this.action = action;
+            this.handler = handler;
+            this.element.onclick = handler;
+            this.loadIcon(action);
+        },
+        reset: function() {
+            this.action = null;
+            this.handler = null;
+            this.element.onclick = null;
+            this.element.innerHTML = "";
+            this.icon = null;
+            this.inProgress = false;
+        },
+        loadIcon: function(action) {
+            this.element.innerHTML = "";
+            this.icon = loader.loadImage("icons/tools/" + action + ".png");
+            this.element.appendChild(this.icon);
+        },
+    };
+
+    // TODO: was controller.cursor getter; check usage and remove
+    this.getCursor = function() {
+        return this.world.cursor || this.cursor.firstChild;
+    };
+
+    this.highlight = function(name, enable) {
+        if (!(name in this))
+            return;
+
+        var button = this[name].panel.button;
+        if (!button)
+            return;
+
+        if (enable)
+            button.classList.add("alert");
+        else
+            button.classList.remove("alert");
+    };
+
+    this.makeHighlightCallback = function(buttonName, off) {
+        return this.highlight.bind(this, buttonName, off);
+    };
+
+    this.update = function() {
         if (!game.config.cursor.dontHide) {
-            if (this.world.cursor || this.iface.cursor.entity)
+            if (this.world.cursor || this.cursor.entity)
                 document.body.classList.add("cursor-hidden");
             else
                 document.body.classList.remove("cursor-hidden");
@@ -259,24 +269,28 @@ Controller.prototype = {
                 this.world.hovered = null;
         }
         this.minimap.update();
-    },
-    toggleBag: function() {
-        var bag = game.player.bag();
-        if (!bag)
-            return;
-        var container = Container.open(bag.Id);
-        if (!container)
-            return;
-        container.panel.toggle();
-    },
-    initAvatar: function() {
+    };
+
+    this.toggleBag = function() {
+        var cnt = Container.bag();
+        controller.highlight("inventory", false);
+        if (cnt) {
+            cnt.panel.button = controller.inventory.panel.button;
+            cnt.panel.toggle();
+        } else {
+            controller.showWarning(T("You have no bag"));
+        }
+    };
+
+    this.initAvatar = function() {
         document.getElementById("avatar-container").onclick = function() {
             game.controller.stats.panel.toggle();
         };
         var avatar = document.getElementById("avatar");
         avatar.src = "assets/avatars/" + game.player.sex() + ".png";
-    },
-    initHotkeys: function() {
+    };
+
+    this.initHotkeys = function() {
         function toggle(panel) {
             return panel.toggle.bind(panel);
         }
@@ -284,7 +298,7 @@ Controller.prototype = {
             R: {
                 callback: function() {
                     if (this.lastCreatingType)
-                        this.creatingCursor(this.lastCreatingType, this.lastCreatingCommand);
+                        this.newCreatingCursor(this.lastCreatingType, this.lastCreatingCommand);
                 }
             },
             Z: {
@@ -315,7 +329,7 @@ Controller.prototype = {
             X: {
                 button: "pick-up",
                 callback: function() {
-                        game.player.pickUp();
+                    game.player.pickUp();
                 },
             },
             "A": {
@@ -370,8 +384,9 @@ Controller.prototype = {
                 }
             };
         }.bind(this));
-    },
-    initHotbar: function() {
+    };
+
+    this.initHotbar = function() {
         //TODO: fixme
         util.dom.forEach("#action-hotbar > .button",  function() {
             var icon = new Image();
@@ -391,38 +406,36 @@ Controller.prototype = {
         document.getElementById("lift-button").onclick = function() {
             game.player.liftStart();
         };
-        // this.hotbar = {
-        //     panel: document.getElementById("hotbar"),
-        // };
-        // for (var key in this.hotkeys) {
-        //     var hotkey = this.hotkeys[key];
-        //     if (!hotkey.button)
-        //         continue;
-        //     this.hotbar[key] = document.getElementById(hotkey.button + "-button");
-        //     this.hotbar[key].addEventListener('click', hotkey.callback.bind(this));
-        // }
-    },
-    fpsStatsBegin: function() {
+    };
+
+    this.fpsStatsBegin = function() {
         if (this.fpsStats)
             this.fpsStats.begin();
-    },
-    fpsStatsEnd: function() {
+    };
+
+    this.fpsStatsEnd =  function() {
         if (this.fpsStats)
             this.fpsStats.end();
-    },
-    interfaceInit: function(chatData) {
+    };
+
+    this.initInterface = function() {
         game.map.minimapContainer.style.display = "block";
         game.timeElement.style.display = "block";
 
-        window.addEventListener('mousedown', this.bind(this.mousedown));
-        window.addEventListener('mouseup', this.bind(this.mouseup));
-        window.addEventListener('mousemove', this.bind(this.mousemove));
-        window.addEventListener('keydown', this.bind(this.keydown));
-        window.addEventListener('keyup', this.bind(this.keyup));
-        window.addEventListener('wheel', this.bind(this.wheel));
+        function disableEvent(e) {
+            e.preventDefault();
+            return false;
+        };
 
-        window.addEventListener('contextmenu', this.disableEvent);
-        window.addEventListener('dragstart', this.disableEvent);
+        window.addEventListener('mousedown', this.on.mousedown);
+        window.addEventListener('mouseup', this.on.mouseup);
+        window.addEventListener('mousemove', this.on.mousemove);
+        window.addEventListener('keydown', this.on.keydown);
+        window.addEventListener('keyup', this.on.keyup);
+        window.addEventListener('wheel', this.on.wheel);
+
+        window.addEventListener('contextmenu', disableEvent);
+        window.addEventListener('dragstart', disableEvent);
 
         this.fight = new Fight();
         this.skills = new Skills();
@@ -434,14 +447,7 @@ Controller.prototype = {
         this.system = new System();
         this.wiki = new Wiki();
         this.fpsStats = this.system.fps;
-        this.inventory = Container.open(game.player.Equip[0]); //0 - SLOT_BAG
-
-        game.help = this.system.help;
-
-        this.iface.cursor = document.getElementById("cursor");
-
-        this.iface.element = document.getElementById("controls-bar");
-        document.getElementById("effects").style.display = "inline-block";
+        this.inventory = {panel: {}};
 
         this.createButton(this.skills.panel, "skills");
         this.createButton(this.stats.panel, "stats");
@@ -460,46 +466,39 @@ Controller.prototype = {
         this.initHotkeys();
         this.initHotbar();
 
-        this.chat.sync(chatData || []);
-        this.chat.initNotifications();
-        if (config.ui.chatAttached)
-            this.chat.attach();
-
-        this.chat.init();
-
         Container.load();
 
+        game.help = this.system.help;
         this.ready = true;
 
         if (document.location.hash.indexOf("noui") != -1) {
             config.ui.world = false;
             util.dom.hide(game.world);
         }
-    },
-    createButton: function(object, buttonName) {
-        function makeToggle(button, object) {
+    };
+
+    this.createButton = function(panel, buttonName) {
+        function makeToggle(button, panel) {
             return function() {
-                game.controller.unhighlight(buttonName);
-                if (object.visible) {
-                    object.hide();
-                } else {
-                    object.show();
+                if (!panel.visible)
                     game.help.runHook({type: button.id});
-                }
+                panel.toggle();
             };
         };
-        buttonName = buttonName || object.name;
+        buttonName = buttonName || panel.name;
         var button = document.getElementById(buttonName + "-button");
         button.style.display = "block";
-        object.button = button;
-        button.onclick = makeToggle(button, object);
+        if (panel.visible)
+            button.classList.add("active");
+        panel.button = button;
+        button.onclick = makeToggle(button, panel);
 
         var icon = document.createElement("div");
         icon.className = "icon";
         button.appendChild(icon);
-        this.iface[name] = button;
-    },
-    terraCursor: function(tile) {
+    };
+
+    this.terraCursor = function(tile) {
         this.world.cursor = {
             scale: 1,
             id: tile.id,
@@ -546,7 +545,7 @@ Controller.prototype = {
                 );
             }
         };
-        this.callback[this.LEFT] = function() {
+        this.callback[this.LMB] = function() {
             var p = game.controller.world.point.clone();
             p.x /= CELL_SIZE;
             p.y /= CELL_SIZE;
@@ -558,18 +557,17 @@ Controller.prototype = {
                 Scale: this.world.cursor.scale,
             });
         };
-    },
-    creatingCursor: function(arg, command, callback) {
-        command = command || "entity-add";
-        var lastType = "";
+    };
 
-        if (arg instanceof Entity) {
-            lastType = arg.Type;
-            this.world.cursor = arg;
-        } else {
-            lastType = arg;
-            this.world.cursor = new Entity(0, arg);
-        }
+    this.newCreatingCursor = function(type, command, callback) {
+        var entity = new Entity(type);
+        entity.initSprite();
+        return this.creatingCursor(entity, command, callback);
+    };
+    this.creatingCursor = function(entity, command, callback) {
+        command = command || "entity-add";
+        var lastType = entity.Type;
+        this.world.cursor = entity;
 
         var rotate = 0;
         if (this.lastCreatingType == lastType)
@@ -585,11 +583,8 @@ Controller.prototype = {
         this.lastCreatingType = lastType;
         this.lastCreatingCommand = command;
 
-        this.callback[this.LEFT] = function() {
-            if (!game.controller.iface.mouseIsValid)
-                return false;
-            var entity = this.world.cursor;
-            if (!entity)
+        this.callback[this.LMB] = function() {
+            if (!controller.mouse.isValid())
                 return false;
             var p = entity.point;
             var data = entity.alignedData(p);
@@ -602,8 +597,8 @@ Controller.prototype = {
                 x: p.x,
                 y: p.y,
             };
-            if (arg.Id)
-                args.Id = arg.Id;
+            if (entity.Id)
+                args.Id = entity.Id;
             if (entity.Orientation)
                 args.Orientation = entity.Orientation;
 
@@ -624,8 +619,9 @@ Controller.prototype = {
             this.clearCursors();
             return true;
         };
-    },
-    processActionQueue: function process(data) {
+    };
+
+    this.processActionQueue = function process(data) {
         if (!data.Done)
             return process;
         var action = game.controller.actionQueue.shift();
@@ -633,158 +629,209 @@ Controller.prototype = {
             return null;
         game.network.send(action.command, action.args);
         return process;
-    },
-    resetAction: function(data) {
+    };
+
+    this.resetAction = function(data) {
         if (!data.Ack)
             return;
         game.network.defaultCallback = null;
         this.clearActionQueue();
         this.hideUnnecessaryPanels();
-    },
-    clearActionQueue: function(data) {
+    };
+
+    this.clearActionQueue = function(data) {
         game.controller.actionQueue = [];
-    },
-    hideUnnecessaryPanels: function() {
+    };
+    this.hideUnnecessaryPanels = function() {
         ["fishing"].forEach(function(name) {
             var panel = game.panels[name];
             panel && panel.hide();
         });
-    },
-    clearCursors: function() {
-        this.world.scroll = false;
+    };
 
+    this.clearCursors = function() {
         // clicking on player launches action, so don't cancel it
         if (this.world.hovered != game.player)
             this.world.cursor = null;
 
         this.world.hovered = null;
+        this.hovered = null;
+        this.cursor.clear();
+    };
 
-        this.iface.hovered = null;
-        this.iface.cursor.innerHTML = "";
-        this.iface.cursor.entity = null;
-    },
-    targetInWorld: function(target) {
+    this.targetInWorld = function(target) {
         target = target || this.currentTarget;
         return target == game.canvas || target == game.interface;
-    },
-    mousedown: function(e, x, y) {
-        if(this.callback[e.button] != null) { // if callback for button is set
-            if(!this.callback[e.button].call(this, e)) //if callback didn't handled click
-                return false; //skip this click
-            this.clearCursors();
-        } else {
-            switch(e.button) {
-            case 0:
-                if (this.targetInWorld(e.target)) {
-                    if(this.world.hovered) {
-                        if (this.modifier.shift && !this.modifier.ctrl) {
-                            game.chat.linkEntity(this.world.hovered);
-                            return false;
-                        }
-                        if (game.player.IsAdmin && game.debug.entity.logOnClick) {
-                            console.log(this.world.hovered);
-                        }
-                        return this.world.hovered.defaultAction(true);
-                    } else if (this.modifier.alt && game.player.IsAdmin) {
-                        game.network.send("teleport", {X: this.world.x, Y: this.world.y});
-                    } else if(!this.world.cursor) {
-                        game.player.setDst(this.world.x, this.world.y);
-                    }
-                }
-                if (!e.target.classList.contains("action"))
-                    game.menu.hide();
+    };
 
-                break;
-            case 1:
-                if (this.targetInWorld(e.target)) {
-                    e.preventDefault();
-                    game.player.setDst(this.world.x, this.world.y);
-                    return false;
-                }
-                break;
-            case 2:
-                // It was used when use could grab world with mouse and drag it.
-                // It hides rmb menu, so disabled
-                // this.world.scroll = {
-                //     x: x,
-                //     y: y,
-                // }
-                game.player.setTarget(null);
-                if (this.world.hovered == game.player) {
-                    return this.world.hovered.defaultAction();
-                } else if (this.world.hovered && this.targetInWorld()) {
-                    if (!game.menu.show(this.world.hovered)) {
+    // this. is bound to controller
+    this.on = {
+        mousedown: function(e) {
+            var x = e.pageX - game.offset.x + game.camera.x;
+            var y = e.pageY - game.offset.y + game.camera.y;
+
+            if (this.callback[e.button] != null) { // if callback for button is set
+                if(!this.callback[e.button].call(this, e)) //if callback didn't handled click
+                    return false; //skip this click
+                this.clearCursors();
+            } else {
+                switch(e.button) {
+                case this.LMB:
+                    if (this.targetInWorld(e.target)) {
+                        if(this.world.hovered) {
+                            if (this.modifier.shift && !this.modifier.ctrl) {
+                                game.chat.linkEntity(this.world.hovered);
+                                return false;
+                            }
+                            if (game.player.IsAdmin && game.debug.entity.logOnClick) {
+                                console.log(this.world.hovered);
+                            }
+                            return this.world.hovered.defaultAction(true);
+                        } else if (this.modifier.alt && game.player.IsAdmin) {
+                            game.network.send("teleport", {X: this.world.x, Y: this.world.y});
+                        } else if(!this.world.cursor) {
+                            game.player.setDst(this.world.x, this.world.y);
+                        }
+                    }
+                    // close context menu when click is not on the menu item
+                    if (!e.target.classList.contains("action"))
+                        game.menu.hide();
+                    break;
+                case this.MMB:
+                    if (this.targetInWorld(e.target)) {
+                        e.preventDefault();
+                        game.player.setDst(this.world.x, this.world.y);
+                        return false;
+                    }
+                    break;
+                case this.RMB:
+                    game.player.setTarget(null);
+                    if (this.world.hovered == game.player) {
+                        return this.world.hovered.defaultAction();
+                    } else if (this.world.hovered && this.targetInWorld()) {
+                        if (!game.menu.show(this.world.hovered)) {
+                            game.menu.hide();
+                        }
+                    } else if(!e.target.classList.contains("item") && !e.target.classList.contains("slot")){
                         game.menu.hide();
                     }
-                } else if(!e.target.classList.contains("item") && !e.target.classList.contains("slot")){
-                    game.menu.hide();
+                    break;
                 }
+            }
+
+            for(var i = this.LMB; i <= this.RMB; i++) {
+                this.callback[i] = null;
+            }
+
+            util.dom.removeClass(".hovered", "hovered");
+            util.dom.removeClass(".invalid", "invalid");
+            return false;
+        },
+        mouseup: function(e) {
+            switch(e.button) {
+            case 2:
+                this.clearCursors();
                 break;
             }
-        }
-        for(var i = 0; i < 3; i++) {
-            this.callback[i] = null;
-        }
-        window.removeEventListener('mousemove', this.iface.moveListener);
+        },
+        mousemove: function(e) {
+            this.currentTarget = e.target;
+            this.mouse.world.x = e.pageX - game.offset.x;
+            this.mouse.world.y = e.pageY - game.offset.y;
+            this.mouse.x = e.pageX;
+            this.mouse.y = e.pageY;
+            this.cursor.update();
+            this.updateHovered();
+        },
+        wheel: function(e) {
+            this.rotate(e.deltaY);
+        },
+        keydown: function(e) {
+            //on double keydown kill xneur
+            this.modifier.ctrl = e.ctrlKey;
+            this.modifier.shift = e.shiftKey;
+            this.modifier.alt = e.altKey;
+            var c = String.fromCharCode(e.keyCode);
 
-        util.dom.removeClass(".hovered", "hovered");
-        util.dom.removeClass(".invalid", "invalid");
-        return false;
-    },
-    mouseup: function(e) {
-        switch(e.button) {
-        case 2:
-            this.clearCursors();
-            break;
-        }
-    },
-    mousemove: function(e) {
-        this.currentTarget = e.target;
-        if (this.world.scroll) {
-            game.menu.hide();
-        }
-        this.iface.x = e.pageX - game.offset.x;
-        this.iface.y = e.pageY - game.offset.y;
-        this.mouse.x = e.pageX;
-        this.mouse.y = e.pageY;
-        this.updateCamera();
-        this.updateHovered();
-    },
-    rotate: function(delta) {
+            if (e.ctrlKey) {
+                switch (e.keyCode) {
+                case 67:
+                    return true; // ctrl+c
+                }
+            }
+
+            var esc = e.keyCode == 27;
+            if (!esc) {
+                if(e.target.id == "new-message") {
+                    return this.chat.keydown(e);
+                }
+                if (e.target.nodeName == "INPUT")
+                    return true;
+                if (e.target.nodeName == "TEXTAREA")
+                    return true;
+            }
+
+
+            this.keys[c] = true;
+
+            var hotkey = this.hotkeys[e.keyCode] || this.hotkeys[c];
+            if (hotkey) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                for (var mod in this.modifier) {
+                    if (!this.modifier[mod])
+                        continue;
+                    if (!hotkey.allowedModifiers || hotkey.allowedModifiers.indexOf(mod) == -1)
+                        return false;
+                }
+                hotkey.callback.call(this, e);
+            }
+            return false;
+        },
+        keyup: function(e) {
+            this.modifier.ctrl = e.ctrlKey;
+            this.modifier.shift = e.shiftKey;
+            this.modifier.alt = e.altKey;
+            var c = String.fromCharCode(e.keyCode);
+            this.keys[c] = false;
+            return true;
+        },
+    };
+
+    for (var eventName in this.on) {
+        this.on[eventName] = this.on[eventName].bind(this);
+    }
+
+    this.rotate = function(delta) {
         var cursor = this.world.cursor;
         if (!cursor)
             return;
         cursor.rotate(delta);
-    },
-    wheel: function(e) {
-        this.rotate(e.deltaY);
-    },
-    updateCamera: function() {
-        if(this.world.scroll) {
-            game.camera.x = this.world.scroll.x - this.iface.x;
-            game.camera.y = this.world.scroll.y - this.iface.y;
+    };
 
-            if (game.menu.visible) {
-                game.menu.show();
-            }
-        }
-    },
-    updateHovered: function() {
+
+    this.updateHovered = function() {
         if (this.world.menuHovered)
             return;
+        if (this.cursor.isActive()) {
+            this.cursor.updateHovered();
+        }
         var p = this.world.point;
         this.world.hovered = game.sortedEntities.findReverse(function(entity) {
             return entity.intersects(p.x, p.y);
         });
-    },
-    drawAlign: function(entity, p) {
+    };
+
+    this.drawAlign = function(entity, p) {
         var data = entity.alignedData(p);
         if (data) {
             game.ctx.strokeStyle = "#00ffff";
             game.iso.strokeRect(data.x, data.y, data.w, data.h);
         }
-    },
-    draw: function() {
+    };
+
+    this.draw = function() {
         if (this.world.menuHovered) {
             this.world.menuHovered.drawHovered();
             return;
@@ -804,23 +851,23 @@ Controller.prototype = {
             cursor.setPoint(this.world.point);
             cursor.draw();
             this.drawAlign(cursor, this.world.point);
-        } else if(hovered) {
-            var iface = this.iface;
+        } else if (hovered) {
             // If non-interface element (like menu) is over
             // and item is not outside of the visible area
-            if (!iface.hovered && iface.mouseIsValid && this.targetInWorld()) {
+            if (!this.hovered && this.mouse.isValid()) {
                 hovered.drawHovered();
             }
         }
-        var entity = this.iface.cursor.entity;
+        var entity = this.cursor.entity;
         if (entity)
             this.drawAlign(entity, this.world.point);
         Character.drawActions();
         if (this.modifier.ctrl && this.keys.X && !game.menu.visible) {
             this.drawItemsMenu();
         }
-    },
-    drawItemsMenu: function() {
+    };
+
+    this.drawItemsMenu = function() {
         var items = game.findItemsNear(this.world.x, this.world.y);
         items.push.apply(items, game.findCharsNear(this.world.x, this.world.y));
         if (items.length == 0)
@@ -851,60 +898,10 @@ Controller.prototype = {
                 return actions;
             }
         });
-    },
-    keydown: function(e) {
-        //on double keydown kill xneur
-        this.modifier.ctrl = e.ctrlKey;
-        this.modifier.shift = e.shiftKey;
-        this.modifier.alt = e.altKey;
-        var c = String.fromCharCode(e.keyCode);
+    };
 
-        if (e.ctrlKey) {
-            switch (e.keyCode) {
-            case 67:
-                return true; // ctrl+c
-            }
-        }
-
-        var esc = e.keyCode == 27;
-        if (!esc) {
-            if(e.target.id == "new-message") {
-                return this.chat.keydown(e);
-            }
-            if (e.target.nodeName == "INPUT")
-                return true;
-            if (e.target.nodeName == "TEXTAREA")
-                return true;
-        }
-
-
-        this.keys[c] = true;
-
-        var hotkey = this.hotkeys[e.keyCode] || this.hotkeys[c];
-        if (hotkey) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            for (var mod in this.modifier) {
-                if (!this.modifier[mod])
-                    continue;
-                if (!hotkey.allowedModifiers || hotkey.allowedModifiers.indexOf(mod) == -1)
-                    return false;
-            }
-            hotkey.callback.call(this, e);
-        }
-        return false;
-    },
-    keyup: function(e) {
-        this.modifier.ctrl = e.ctrlKey;
-        this.modifier.shift = e.shiftKey;
-        this.modifier.alt = e.altKey;
-        var c = String.fromCharCode(e.keyCode);
-        this.keys[c] = false;
-        return true;
-    },
     // TODO: refactor names
-    showMessage: function(message, cls) {
+    this.showMessage = function(message, cls) {
         var warn = document.getElementById("warning");
         warn.textContent = TT(message);
         if(warn.timeout)
@@ -920,14 +917,17 @@ Controller.prototype = {
         if (game.chat)
             game.chat.addMessage(warn.textContent);
 
-    },
-    showError: function(message) {
+    };
+
+    this.showError = function(message) {
         this.showMessage(message, "error");
-    },
-    showWarning: function(message) {
+    };
+
+    this.showWarning = function(message) {
         this.showMessage(message, "warning");
-    },
-    showAnouncement: function(message) {
+    };
+
+    this.showAnouncement = function(message) {
         var anouncement = document.getElementById("anouncement");
         anouncement.textContent = message;
         if(anouncement.timeout)
@@ -940,16 +940,18 @@ Controller.prototype = {
             clearTimeout(anouncement.timeout);
             anouncement.timeout = null;
         }, 5000);
-    },
-    hideStatic: function() {
+    };
+
+    this.hideStatic = function() {
         if (this._hideStatic)
             return !this.keys.Z;
         else
             return this.keys.Z;
-    },
-    reset: function() {
+    };
+
+    this.reset = function() {
         localStorage.clear();
         game.panels = {}; //dont save positions;
         game.reload();
-    },
+    };
 };

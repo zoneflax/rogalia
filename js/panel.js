@@ -15,8 +15,6 @@ function Panel(name, title, elements, listener, hooks) {
     this.lsKey = "panels." + this.name;
     var config = JSON.parse(localStorage.getItem(this.lsKey)) || {};
 
-
-
     this.element = document.createElement("div");
     this.element.id = name;
     this.element.className = "panel";
@@ -38,6 +36,8 @@ function Panel(name, title, elements, listener, hooks) {
     this._closeButton.panel = this;
     this._closeButton.onclick = this.hide.bind(this);
     this._titleBar.appendChild(this._closeButton);
+
+    this.button = null;
 
     this.element.appendChild(this._titleBar);
 
@@ -70,9 +70,7 @@ function Panel(name, title, elements, listener, hooks) {
     }
 
     this.element.addEventListener('mousedown', this.toTop.bind(this));
-    this.element.addEventListener('mousedown', function() {
-        game.controller.unhighlight(name);
-    });
+    this.element.addEventListener('mousedown', game.controller.makeHighlightCallback(name, false));
     this.element.id = name;
     util.dom.insert(this.element);
 
@@ -167,9 +165,10 @@ Panel.prototype = {
     },
     setContents: function(elements) {
         this.contents.innerHTML = "";
-        for(var i = 0, l = elements.length; i < l; i++) {
-            this.contents.appendChild(elements[i]);
-        }
+        elements.forEach(function(elem) {
+            if (elem)
+                this.contents.appendChild(elem);
+        }.bind(this));
     },
     makeBackButton: function() {
         var back = document.createElement("button");

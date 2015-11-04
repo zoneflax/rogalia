@@ -110,7 +110,7 @@ Vendor.buy = function(data) {
     }
 
     items.sort(byType).forEach(function(item) {
-        var e = new Entity(item.Id, item.Type);
+        var e = new Entity(item.Type, item.Id);
         e.sync(item);
         e.initSprite();
         game.sortedEntities.remove(e);
@@ -139,7 +139,7 @@ Vendor.buy = function(data) {
         info.onclick = function() {
             e.showInfo();
             if (e.Props.Slots)
-                Container.open(item.Id).panel.show();
+                Container.show(e);
         };
 
         var buy = document.createElement("button");
@@ -524,10 +524,10 @@ function Bank() {
             var slot = document.createElement("div");
             slot.className = "slot";
             if (vaultSlot.Unlocked) {
-                var item = Entity.get(vaultSlot.Id);
-                slot.appendChild(item.icon());
+                var entity = Entity.get(vaultSlot.Id);
+                slot.appendChild(entity.icon());
                 slot.onclick = function() {
-                    Container.open(item.Id).panel.show();
+                    Container.show(entity);
                 };
             } else {
                 slot.classList.add("plus");

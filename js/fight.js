@@ -14,7 +14,7 @@ function Fight() {
         return button;
     });
 
-    var hotbar = game.controller.iface.actionHotbar;
+    var hotbar = game.controller.actionHotbar;
 
     function apply(action) {
         var now = Date.now();
@@ -24,7 +24,7 @@ function Fight() {
         }
         lastSend = now;
 
-        if (!game.controller.iface.mouseIsValid)
+        if (!game.controller.mouse.valid)
             return;
 
         switch (action) {

@@ -87,23 +87,23 @@ function Info(message, character) {
     case "item-gain":
     case "craft-success":
         if (this.character.isPlayer) {
-            game.controller.highlight("inventory");
-            var item = Entity.get(this.data.Id);
-            if (!item) {
+            game.controller.highlight("inventory", true);
+            var entity = Entity.get(this.data.Id);
+            if (!entity) {
                 game.sendErrorf("(Info.js) Cannot find item %d", this.data.Id);
                 return;
             }
-            var container = game.containers[item.Container];
-            // continaer was not oppened or not available for current player
-            if (!container) {
+            var cnt = entity.findContainer();
+            // container is not available for current player
+            if (!cnt) {
                 return;
             }
-            container.reload();
-            var slot = container.slots[container.contents.indexOf(item.Id)];
-            if (!slot)
-                console.trace(container, item);
-            else
-                slot.classList.add("new");
+            var container = Container.get(cnt);
+            // container was not oppened
+            if (!container)
+                return;
+            container.update();
+            container.findSlot(entity).markAsUnseen();
         }
         break;
     case "build-open":

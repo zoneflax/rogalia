@@ -8,52 +8,6 @@ function loginStage() {
     var form = null;
     var invite = null;
 
-    // document.location = "https://oauth.vk.com/authorize?" + [
-    //     "client_id=4538094",
-    //     "scope=0",
-    //     "redirect_uri=http://rogalik.tatrix.org",
-    //     "display=page",
-    //     "response_type=token"
-    // ].join("&");
-    // VK.init(function() {
-    //     console.log(VK.callMethod("showInviteBox"));
-    //     // API initialization succeeded
-    //     // Your code here
-    // }, function() {
-    //     alert("vk init Failure");
-    //     // API initialization failed
-    //     // Can reload page here
-    // }, '5.34');
-    // VK.init({apiId: 5002676})
-    // function authInfo(response) {
-    //     if (response.session) {
-    //         var sid = document.cookie.match(/vk_app_5002676=([^;]*)/)[0]
-    //         console.log(response.session);
-    //         util.ajax("test.php", function(data) {
-    //             console.log("ajax", data);
-    //         })
-    //     } else {
-    //         var vkButton = document.createElement("div");
-    //         vkButton.id = "vk-button";
-    //         util.dom.insert(vkButton);
-    //         VK.UI.button("vk-button");
-    //         vkButton.onclick = function() {
-    //             VK.Auth.login(function(response) {
-    //                 console.log(response);
-    //                 if (response.session) {
-    //                     /* Пользователь успешно авторизовался */
-    //                     if (response.settings) {
-    //                         /* Выбранные настройки доступа пользователя, если они были запрошены */
-    //                     }
-    //                 } else {
-    //                     /* Пользователь нажал кнопку Отмена в окне авторизации */
-    //                 }
-    //             });
-    //         }
-    //     }
-    // }
-    // VK.Auth.getLoginStatus(authInfo);
-
     function register(password) {
         saveLogin();
         game.network.send(
@@ -99,8 +53,8 @@ function loginStage() {
                     localStorage.removeItem("password");
                     if (!autoLogin)
                         alert(data.Warning);
-                    else
-                        util.dom.show(form);
+                    //!!!TODO: fixme
+                    panel.show();
                     autoLogin = false;
                 } else {
                     enterLobby(data);
@@ -224,24 +178,39 @@ function loginStage() {
     panel.hideCloseButton();
     panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
 
-    if (autoLogin)
-        panel.hide();
-
     if (game.login)
         passwordInput.focus();
     else
         loginInput.focus();
 
+    function inVK() {
+        return (window.name.indexOf('fXD') == 0);
+    }
+
+    if (inVK()) {
+        panel.hide();
+        var el = document.createElement("script");
+        el.type = "text/javascript";
+        el.src = "//vk.com/js/api/xd_connection.js?2";
+        document.body.appendChild(el);
+        el.onload = function() {
+            VK.init(function() {
+                var match = document.location.search.match(/access_token=(\w+)/);
+                var token = match && match[1];
+                if (token) {
+                    panel.hide();
+                    game.network.send("oauth", {Token: token}, enterLobby);
+                } else {
+                    panel.show();
+                }
+            }, function() {
+                panel.show();
+            }, '5.37');
+        };
+    }
 
     this.end = function() {
         panel.close();
     };
-    this.sync = function(data) {
-        if (data.Warning) {
-            panel.hide();
-            alert(data.Warning);
-        }
-    };
-
 }
 Stage.add(loginStage);

@@ -67,6 +67,29 @@ var util = new function() {
     };
 
     this.dom = {
+        tag: function(tag, className, cfg) {
+            var elem = document.createElement(tag);
+            if (className)
+                elem.className = className;
+            if (cfg) {
+                if ("text" in cfg)
+                    elem.textContent = cfg.text;
+            }
+
+            return elem;
+        },
+        div: function(className) {
+            return this.tag("div", className);
+        },
+        slot: function() {
+            return this.div("slot");
+        },
+        span: function(text, className) {
+            return this.tag("span", className, {text: text});
+        },
+        button: function(text, className) {
+            return this.tag("button", className, {text: text});
+        },
         insert: function(element) {
             document.body.insertBefore(element, document.body.firstChild);
         },
@@ -402,6 +425,8 @@ var util = new function() {
         },
     };
 };
+
+var dom = util.dom;
 
 if (!Math.hypot) {
     Math.hypot = function hypot() {

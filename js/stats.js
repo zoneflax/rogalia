@@ -1,40 +1,15 @@
 "use strict";
 function Stats() {
-    this.equipContainer = Container.open(0);
-    this.update();
+    this.equipContainer = new ContainerEquip();
 
-    this.toggleStats = document.createElement("button");
-    this.toggleStats.textContent = T("Stats");
-    this.toggleStats.onclick = function() {
-        util.dom.toggle(this.social);
-        util.dom.toggle(this.statistics);
-    }.bind(this);
-
-    this.social.classList.add("hidden");
-    this.statistics.classList.add("hidden");
+    var contents = this.initSections();
 
     this.panel = new Panel(
         "stats",
         "Stats",
-        [
-            this.summary,
-            this.doll,
-            this.equip,
-            util.hr(),
-            this.vital,
-            util.hr(),
-            this.main,
-            util.hr(),
-            this.params,
-            util.hr(),
-            this.exp,
-            util.hr(),
-            this.social,
-            this.statistics,
-            this.toggleStats,
-        ],
+        contents,
         {
-            mousedown: this.equipContainer.clickListener.bind(this.equipContainer),
+            mousedown: this.equipContainer.onmousedown.bind(this.equipContainer),
         }
     );
 }
@@ -113,131 +88,207 @@ Stats.prototype = {
     },
     update: function() {
         this.updateExp();
-
-        this.equipContainer.update();
-        this.createSection("summary");
-
-        var player = game.player;
-
-        var name = document.createElement("span");
-        name.textContent = player.Name;
-        this.summary.appendChild(name);
-
-        var lvl = document.createElement("span");
-        lvl.textContent = " " + T("level") + " " + player.Lvl;
-        this.summary.appendChild(lvl);
-
-        // var faction = player.Citizenship.Faction;
-        // if (faction) {
-        //     this.summary.appendChild(util.br());
-
-        //     var citizenship = document.createElement("span");
-        //     citizenship.style.marginTop = "10px";
-        //     citizenship.textContent = T(faction);
-        //     this.summary.appendChild(citizenship);
-
-        //     var rank = document.createElement("span");
-        //     rank.textContent = " " + T("rank") + ": " + player.Citizenship.Rank;
-        //     this.summary.appendChild(rank);
-        // }
-
-        this.createSection("equip");
-        for(var i = 0, l = this.equipContainer.slots.length; i < l; i++) {
-            var slot = this.equipContainer.slots[i];
-            this.equip.appendChild(slot);
-        }
-
-        this.createSection("doll");
-        var sex = player.sex();
-        this.doll.classList.add(sex);
-        var worn =  ["feet", "legs", "body", "head"].filter(function(name) {
-            return !!player.equipSlot(name);
-        });
-        worn.push("naked");
-        var dollStyle = worn.map(function(name) {
-            return "url('assets/bg/doll/" + sex + "/" + name + ".png')";
-        }).join(",");
-        this.doll.style.backgroundImage = dollStyle;
-
-        this.createSection("vital");
-        ["Hp", "Fullness", "Stamina"].forEach(function(param) {
-            this.vital.appendChild(this.createParam(
-                param,
-                player[param],
-                0,
-                true,
-                "stats/" + param
-            ));
-        }.bind(this));
-
-        this.createSection("main");
-
-        var attributes = document.createElement("div");
-        attributes.className = "attributes";
-        var attrs = ["Strength", "Vitality", "Dexterity", "Intellect", "Perception", "Wisdom"];
-        attrs.forEach(function(attr) {
-            var elem = this.createValue(attr, player.Attr[attr], 2);
-            elem.classList.add(attr.toLowerCase());
-            attributes.appendChild(elem);
-        }.bind(this));
-
-        var health = document.createElement("div");
-        health.className = "health";
-        Character.vitamins.forEach(function(vitamin) {
-            var elem = this.createValue(vitamin, player.Health[vitamin], 2);
-            elem.classList.add(vitamin.toLowerCase());
-            health.appendChild(elem);
-        }.bind(this));
-
-        this.main.appendChild(attributes);
-        this.main.appendChild(util.vr());
-        this.main.appendChild(health);
-
-        this.createSection("params");
-        ["Speed", "Armor", "Defence", "Accuracy"].forEach(function(name) {
-            var param = player[name];
-            //TODO: actually now some of these is not params but simple ints
-            if (!(param instanceof Object))
-                param = {Max: param, Current: param};
-
-            this.params.appendChild(this.createParam(
-                name,
-                param,
-                0,
-                true,
-                "stats/" + name
-            ));
-        }.bind(this));
-
-        this.createSection("exp");
-        this.exp.appendChild(this.createParam("Exp", player.Exp, 0, false, "stats/xp"));
-        this.exp.appendChild(this.createValue("Learning points", player.LP));
-
-        this.createSection("social");
-        this.social.appendChild(this.createValue("Karma", player.Karma));
-        this.social.appendChild(this.createValue("Fame", player.Fame));
-        this.social.appendChild(util.hr());
-
-        this.createSection("statistics");
-        this.statistics.appendChild(this.createValue("Kills", player.Statistics.Kills));
-        this.statistics.appendChild(this.createValue("Players killed", player.Statistics.PlayersKilled));
-        this.statistics.appendChild(this.createValue("Death", player.Statistics.Death));
-        var sp = {Current: player.Citizenship.StatusPoints, Max: Math.pow(10, player.Citizenship.Rank)};
-        this.statistics.appendChild(this.createParam("Status points", sp));
-        this.statistics.appendChild(util.hr());
+        this.updateSections();
     },
-    createSection: function(name) {
-        if (!this[name]) {
-            this[name] = document.createElement("div");
-            this[name].className = name;
-        } else {
-            this[name].innerHTML = "";
+    // this in sections is bound to section's element
+    sections: [
+        {
+            name: "summary",
+            update: function(self, player) {
+                var name = dom.span(player.Name);
+                var lvl = dom.span(" " + T("level") + " " + player.Lvl);
+                var factionWrapper = util.dom.div("faction");
+                var faction = player.Citizenship.Faction;
+                if (faction) {
+                    var citizenship = dom.span(T(faction));
+                    citizenship.style.marginTop = "10px";
+                    factionWrapper.appendChild(citizenship);
+
+                    var rank = dom.span(" " + T("rank") + ": " + player.Citizenship.Rank);
+                    factionWrapper.appendChild(rank);
+                }
+                return [name, lvl, factionWrapper];
+            },
+        },
+        {
+            name: "doll",
+            update: function(self, player) {
+                var sex = player.sex();
+                this.classList.add(sex);
+                var worn =  ["feet", "legs", "body", "head"].filter(function(name) {
+                    return !!player.equipSlot(name);
+                });
+                worn.push("naked");
+                var dollStyle = worn.map(function(name) {
+                    return "url('assets/bg/doll/" + sex + "/" + name + ".png')";
+                }).join(",");
+                this.style.backgroundImage = dollStyle;
+            },
+        },
+        {
+            name: "equip",
+            update: function(self, player) {
+                self.equipContainer.update();
+                return self.equipContainer.slots.map(function(slot, i) {
+                    var title = Character.equipSlots[i];
+                    slot.onclear = function() {
+                        slot.setTitle(TS(title));
+                    };
+                    slot.element.classList.add("equip-" + title);
+                    return slot.element;
+                });
+            },
+        },
+        "---",
+        {
+            name: "vital",
+            update: function(self, player) {
+                return ["Hp", "Fullness", "Stamina"].map(function(param) {
+                    return self.createParam(
+                        param,
+                        player[param],
+                        0,
+                        true,
+                        "stats/" + param
+                    );
+                });
+            },
+        },
+        "---",
+        {
+            name: "main",
+            update: function(self, player) {
+                var attributes = dom.div("attributes");
+                var attrs = Object.keys(player.Attr);
+                attrs.forEach(function(attr) {
+                    var elem = self.createValue(attr, player.Attr[attr], 2);
+                    elem.classList.add(attr.toLowerCase());
+                    attributes.appendChild(elem);
+                });
+
+                var health = dom.div("health");
+                Character.vitamins.forEach(function(vitamin) {
+                    var elem = self.createValue(vitamin, player.Health[vitamin], 2);
+                    elem.classList.add(vitamin.toLowerCase());
+                    health.appendChild(elem);
+                });
+                return [
+                    attributes,
+                    util.vr(),
+                    health,
+                ];
+            },
+        },
+        "---",
+        {
+            name: "params",
+            update: function(self, player) {
+                return ["Speed", "Armor", "Defence", "Accuracy"].map(function(name) {
+                    var param = player[name];
+                    //TODO: actually now some of these is not params but simple ints
+                    if (!(param instanceof Object))
+                        param = {Max: param, Current: param};
+
+                    return self.createParam(
+                        name,
+                        param,
+                        0,
+                        true,
+                        "stats/" + name
+                    );
+                });
+            },
+        },
+        "---",
+        {
+            name: "exp",
+            update: function(self, player) {
+                return [
+                    self.createParam("Exp", player.Exp, 0, false, "stats/xp"),
+                    self.createValue("Learning points", player.LP),
+                ];
+            },
+        },
+        "---",
+        {
+            name: "social",
+            hidden: true,
+            update: function(self, player) {
+                return [
+                    self.createValue("Karma", player.Karma),
+                    self.createValue("Fame", player.Fame),
+                    util.hr(),
+                ];
+            },
+        },
+        {
+            name: "statistics",
+            hidden: true,
+            update: function(self, player) {
+                var sp = {
+                    Current: player.Citizenship.StatusPoints,
+                    Max: Math.pow(10, player.Citizenship.Rank),
+                };
+                return [
+                    self.createValue("Kills", player.Statistics.Kills),
+                    self.createValue("Players killed", player.Statistics.PlayersKilled),
+                    self.createValue("Death", player.Statistics.Death),
+                    self.createParam("Status points", sp),
+                    util.hr(),
+                ];
+            },
         }
+    ],
+    initSections: function() {
+        var sections = [];
+        var hidden = [];
+        var contents = this.sections.map(function(section) {
+            if (section == "---") {
+                return util.hr();
+            }
+            var elem = dom.div(section.name);
+            if (section.hidden) {
+                dom.hide(elem);
+                hidden.push(elem);
+            }
+            section.elem = elem;
+            sections.push(section);
+            section.hash = "";
+            return elem;
+        });
+        this.sections = sections;
+        this.update();
+
+
+        var toggleStats = dom.button(T("Stats"));
+        toggleStats.onclick = function() {
+            hidden.forEach(dom.toggle.bind(dom));
+        };
+        contents.push(toggleStats);
+
+        return contents;
+    },
+    updateSections: function() {
+        this.sections.forEach(this.updateSection.bind(this));
+    },
+    updateSection: function(section) {
+        var contents = section.update.call(section.elem, this, game.player);
+        if (!contents)
+            return;
+        var hash = contents.map(function(elem) { return elem.innerHTML; }).join("");
+        if (section.hash == hash)
+            return;
+        section.hash = hash;
+        var fragment = document.createDocumentFragment();
+        contents.forEach(fragment.appendChild.bind(fragment));
+        section.elem.innerHTML = "";
+        section.elem.appendChild(fragment);
     },
     updateExp: function() {
         var xp = document.getElementById("xp-progress");
         var exp = game.player.Exp;
         var width = exp.Current/exp.Max * 100;
-        xp.style.width = width + "%";
+        if (+xp.style.width != width)
+            xp.style.width = width + "%";
     },
-}
+};

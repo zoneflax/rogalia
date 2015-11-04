@@ -1,13 +1,20 @@
 "use strict";
 function Minimap() {
-    var defaultScale = 0.25;
-    var SCALE = defaultScale;
+    var width = {
+        default: 300,
+        original: 0,
+        current: 0,
+    };
+    var scale = function() {
+        return width.current / width.original;
+    };
+
     var loader = new Loader(window.location.protocol + "//" + game.network.addr);
     this.mapImage = loader.loadImage("/map");
-    var width = 1;
     loader.ready(function() {
-        width = this.mapImage.width;
-        this.mapImage.width = width * SCALE;
+        width.original = this.mapImage.width;
+        width.current = width.default;
+        this.mapImage.width = width.default;
     }.bind(this));
     this.points = {};
     this.characters = {};
@@ -22,17 +29,19 @@ function Minimap() {
     zoom.onclick = function() {
         switch (lvl++) {
         case 0:
-            SCALE *= 2; break;
+            width.current *= 2;
+            break;
         case 1:
             wrapper.classList.add("zoom");
-            SCALE = 1; break;
+            width.current = width.original;
+            break;
         case 2:
-            SCALE = defaultScale;
+            width.current = width.default;
             wrapper.classList.remove("zoom");
             lvl = 0;
             break;
         }
-        this.mapImage.width = width * SCALE;
+        this.mapImage.width = width.current;
     }.bind(this);
 
     this.mapImage.onclick = function(e) {
@@ -43,7 +52,7 @@ function Minimap() {
         var y = e.pageY - rect.top;
         game.network.send(
             "teleport",
-            {"x": x / SCALE * CELL_SIZE, "y": y / SCALE * CELL_SIZE}
+            {"x": x / scale() * CELL_SIZE, "y": y / scale() * CELL_SIZE}
         );
     };
 
@@ -87,8 +96,8 @@ function Minimap() {
 
                 wrapper.appendChild(this.points[name]);
             }
-            this.points[name].style.left = SCALE * x + "px";
-            this.points[name].style.top = SCALE * y + "px";
+            this.points[name].style.left = scale() * x + "px";
+            this.points[name].style.top = scale() * y + "px";
         }
     };
 
