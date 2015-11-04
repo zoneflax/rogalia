@@ -21,7 +21,7 @@ function Help() {
                 addMessage("${hr}Вы только что получили опыт (+" + data.value + "xp)");
             addMessage("${hr}Получая опыт вы получаете эквивалентное количество ${LP} — очков обучения.");
             addMessage("На них вы можете покупать новые навыки (${Skills})");
-            game.controller.highlight("skills");
+            game.controller.highlight("skills", true);
         },
     };
 
@@ -408,10 +408,10 @@ Help.prototype = {
             break;
         default:
             step.highlight && step.highlight.forEach(function(what) {
-                game.controller.highlight(what);
+                game.controller.highlight(what, true);
             });
 
-            this.addStepText(step)
+            this.addStepText(step);
             this.showHelp();
             if (step.check) {
                 step.state = "check";

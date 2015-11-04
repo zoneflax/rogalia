@@ -19,7 +19,7 @@ function Chat() {
 
     this.messagesElement = document.createElement("ul");
     this.messagesElement.className = "messages no-drag";
-    this.messagesElement.innerHTML = localStorage["chat"];
+    this.messagesElement.innerHTML = localStorage["chat"] || "";
     this.messagesElement.onclick = function(e) {
         if (e.target.classList.contains("from")) {
             self.append(e.target.textContent + ", ");
@@ -138,7 +138,7 @@ function Chat() {
                 break;
             case "add":
                 if (Entity.templates[arg]) {
-                    game.controller.creatingCursor(new Entity(0, arg));
+                    game.controller.newCreatingCursor(arg);
                     e.target.blur();
                     break;
                 }
@@ -199,11 +199,12 @@ function Chat() {
         this.panel.contents.classList.remove("semi-hidden");
     }.bind(this);
 
-    this.removeAlert = function() {
-        game.controller.unhighlight("chat");
-    },
+    this.init = function (data) {
+        this.sync(data || []);
+        this.initNotifications();
+        if (config.ui.chatAttached)
+            this.attach();
 
-    this.init = function () {
         //TODO: fix this hack
         setTimeout(scrollToTheEnd, 100);
     };
@@ -335,6 +336,8 @@ function Chat() {
         "Chat",
         [this.tabs, tabContents]
     );
+
+    this.removeAlert = game.controller.makeHighlightCallback("chat", false);
 
     // hide on load
     if (!alwaysVisible.checked)
@@ -646,7 +649,7 @@ function Chat() {
             }
         }
         if (needAlert)
-            game.controller.highlight("chat");
+            game.controller.highlight("chat", false);
     };
 
 

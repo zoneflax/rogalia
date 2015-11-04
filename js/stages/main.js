@@ -3,7 +3,9 @@ function mainStage(data) {
     setTimeout(function() {
         game.network.send("logon");
     }, 200);
-    game.controller.interfaceInit(data.Chat);
+    game.controller.initInterface();
+
+    game.controller.chat.init(data.Chat);
     game.controller.system.users.sync(data.PlayersOnline);
     game.controller.minimap.sync(data.PlayersOnline);
 
@@ -97,6 +99,7 @@ function mainStage(data) {
             game.map.drawDarkness();
         game.characters.forEach(drawUI);
         game.controller.draw();
+        // game.iso.fillRect(game.player.Location.X)
         // this.debug();
         game.ctx.restore();
     };

@@ -27,7 +27,7 @@ Entity.sync = function(data, remove) {
         var edata = data[id];
         var entity = game.entities.get(id);
         if (!entity) {
-            entity = new Entity(id, edata.Type);
+            entity = new Entity(edata.Type, id);
             game.addEntity(entity);
         }
         entity.sync(edata);
@@ -40,7 +40,10 @@ Entity.sync = function(data, remove) {
     remove && remove.forEach(game.removeEntityById);
 
     containers.forEach(function(container) {
-        container.update();
+        if (container.panel.visible)
+            container.update();
+        else
+            container.syncReq();
     });
 },
 

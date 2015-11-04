@@ -226,11 +226,10 @@ hr {
 .slot.plus {
     background-image: url("assets/bg/plus.png"), url("assets/bg/slot.png");
 }
-.slot.item {
-    display: table;
+.slot.has-item {
     white-space: normal;
 }
-.slot.item span {
+.slot.has-item span {
     display: table-cell;
     vertical-align: middle;
     line-height: 1;
@@ -255,18 +254,15 @@ hr {
     background: url("assets/bg/quantity.png")
 }
 .slot:hover, .slot.hovered {
-    -webkit-filter: brightness(115%);
-    filter: brightness(115%);
+    -webkit-filter: brightness(120%);
+    filter: brightness(120%);
 }
-.slot.selected {
-    background: #ddd;
-}
-.slot.blocked {
-    background: url("assets/bg/slot-blocked.png");
+.slot.locked {
+    background: url("assets/bg/slot-locked.png");
 }
 .slot > img, .slot > canvas {
-    max-width: 64px;
-    max-height: 64px;
+    max-width: 45px;
+    max-height: 40px;
     vertical-align: middle;
     position: relative;
     z-index: 99;
@@ -497,6 +493,7 @@ hr {
     top: 4px;
     left: 125px;
     position: absolute;
+    display: inline-block;
 }
 .effect {
     margin-left: 3px;
@@ -535,17 +532,19 @@ hr {
     margin: -1px -9px;
 }
 
-.locked, .locked .button {
-    opacity: 0.9;
-    color: #000;
-}
 .button-icon {
     font-size: x-large;
 }
-.button.alert {
-    color: #0ff;
-    border-radius: 5px;
-    text-shadow: 0 0 6px;
+.button.alert:before {
+    position: absolute;
+    background-color: #563a11;
+    box-shadow: 0 0 1px 1px #fee70f;
+    border-radius: 50%;
+    height: 6px;
+    width: 6px;
+    content: "";
+    display: block;
+    top: 20px;
 }
 
 .button-bar i, .button i {
@@ -888,6 +887,9 @@ hr {
     text-decoration: underline;
 }
 
+#map {
+    max-width: none;
+}
 #map .wrapper {
     position: relative;
     overflow: hidden;
@@ -1024,7 +1026,10 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     content: url("assets/bg/strip/right.png");
     right: -60px;
 }
-
+#stats .faction {
+    margin-top: -7px;
+    margin-bottom: -7px;
+}
 #stats .main {
     position: relative;
     display: flex;

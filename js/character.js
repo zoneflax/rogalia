@@ -165,6 +165,7 @@ Character.prototype = {
         case "wolf-undead":
         case "wolf-demonic":
         case "chicken":
+        case "goose":
         case "rabbit":
         case "preved-medved":
         case "medved":
@@ -190,14 +191,19 @@ Character.prototype = {
                 "run": 4,
             };
             break;
-        case "chicken":
             this.sprite.width = 40;
             this.sprite.height = 40;
             this.sprite.speed = 7000;
             break;
+        case "goose":
+            this.sprite.width = 70;
+            this.sprite.height = 70;
+            this.sprite.speed = 7000;
+            break;
+        case "chicken":
         case "rabbit":
-            this.sprite.width = 40;
-            this.sprite.height = 40;
+            this.sprite.width = 50;
+            this.sprite.height = 50;
             this.sprite.speed = 7000;
             break;
         case "butterfly":
@@ -531,7 +537,7 @@ Character.prototype = {
             actions = {
                 "Tell me the rules": function() {
                     game.chat.addMessage({From: name, Body: game.talks.rules.presents, Channel: 9});
-                    game.controller.highlight("chat");
+                    game.controller.highlight("chat", true);
                 },
                 "Gimme a present!": function() {
                     if (confirm("I'll take your atoms. Okay?"))
@@ -586,8 +592,8 @@ Character.prototype = {
             this.interact();
         } else {
             // call actionButton on space
-            if (!targetOnly && this.isPlayer && game.controller.iface.actionButton.active())
-                game.controller.iface.actionButton.activate();
+            if (!targetOnly && this.isPlayer && game.controller.actionButton.active())
+                game.controller.actionButton.activate();
             else if (this != game.player || config.allowSelfSelection)
                 game.player.setTarget(this);
         }
@@ -595,7 +601,7 @@ Character.prototype = {
     drawAction: function() {
         if(this.Action.Duration) {
             if (this.isPlayer) {
-                var ap = game.controller.iface.actionProgress.firstChild;
+                var ap = game.controller.actionProgress.firstChild;
                 ap.style.width = this.action.progress / (2*Math.PI) * 100  + "%";
             } else {
                 game.ctx.strokeStyle = "orange";
@@ -1083,16 +1089,16 @@ Character.prototype = {
                 this.action.last = this.Action.Started;
                 this.toggleActionSound();
                 if (this.isPlayer) {
-                    util.dom.show(game.controller.iface.actionProgress);
-                    game.controller.iface.actionButton.startProgress();
+                    util.dom.show(game.controller.actionProgress);
+                    game.controller.actionButton.startProgress();
                 }
             }
             if (this.Action.Duration) {
                 this.action.progress += (Math.PI * 2 / this.Action.Duration * 1000 * k);
             } else {
                 if (this.isPlayer) {
-                    util.dom.hide(game.controller.iface.actionProgress);
-                    game.controller.iface.actionButton.stopProgress();
+                    util.dom.hide(game.controller.actionProgress);
+                    game.controller.actionButton.stopProgress();
                 }
                 this.action.progress = 0;
             }
@@ -1171,7 +1177,7 @@ Character.prototype = {
                 action = tool.Group;
         }
 
-        var button = game.controller.iface.actionButton;
+        var button = game.controller.actionButton;
         if (button.action == action)
             return;
 
@@ -1185,13 +1191,17 @@ Character.prototype = {
         case "pickaxe":
         case "tool":
         case "taming":
+        case "dildo":
         case "fishing-rod":
             callback = function() {
                 var done = null;
                 var cmd = "dig";
-                var cursor = new Entity(0, tool.Type);
+                var cursor = new Entity(tool.Type);
                 cursor.initSprite();
                 switch (action) {
+                case "dildo":
+                    game.controller.selectionCursor(cursor, "fuck");
+                    return;
                 case "taming":
                     cmd = "tame";
                     break;
@@ -1479,7 +1489,7 @@ Character.prototype = {
     },
     liftStop: function() {
         if (this.burden)
-            game.controller.creatingCursor(this.burden.Type, "lift-stop");
+            game.controller.newCreatingCursor(this.burden.Type, "lift-stop");
     },
 
     updateCamera: function() {
@@ -1541,7 +1551,7 @@ Character.prototype = {
         return this.sprite.outline != null && (config.ui.allowSelfSelection || this != game.player);
     },
     bag: function() {
-        return  Entity.get(this.Equip[0]);
+        return Entity.get(this.Equip[0]);
     },
     hasItems: function(items) {
         var found = {};
@@ -1769,7 +1779,7 @@ Character.prototype = {
     selectNextTarget: function() {
         var self = this;
         var list = game.findCharsNear(this.X, this.Y, 5*CELL_SIZE).filter(function(c) {
-            return c != self && c != self.target;
+            return c != self && c != self.target && c.IsNpc;
         }).sort(function(a, b) {
             return a.distanceTo(self) - b.distanceTo(self);
         });
@@ -1778,7 +1788,7 @@ Character.prototype = {
     },
     setTarget: function(target) {
         this.target = target;
-        var cnt = game.controller.iface.target.container;
+        var cnt = game.controller.targetContainer;
         if (!target) {
             util.dom.hide(cnt);
             return;

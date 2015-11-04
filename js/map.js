@@ -283,14 +283,14 @@ function Map() {
                 var c = new Point(x * CHUNK_SIZE, y * CHUNK_SIZE);
                 var p = c.clone().toScreen();
 
-                if (p.x + CHUNK_SIZE < cam.x)
-                    continue;
-                if (p.y + CHUNK_SIZE < cam.y)
-                    continue;
-                if (p.x - CHUNK_SIZE > cam.x + scr.width)
-                    continue;
-                if (p.y > cam.y + scr.height)
-                    continue;
+                // if (p.x + CHUNK_SIZE < cam.x)
+                //     continue;
+                // if (p.y + CHUNK_SIZE < cam.y)
+                //     continue;
+                // if (p.x - CHUNK_SIZE > cam.x + scr.width)
+                //     continue;
+                // if (p.y > cam.y + scr.height)
+                //     continue;
 
                 var key = x + "." + y;
                 var chunk = this.chunks[key];

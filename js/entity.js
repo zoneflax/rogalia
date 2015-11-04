@@ -1,5 +1,5 @@
 "use strict";
-function Entity(id, type) {
+function Entity(type, id) {
     var e = this;
     if (type) {
         e = Object.create(Entity.templates[type]);
@@ -279,7 +279,7 @@ Entity.prototype = {
         }
     },
     add: function() {
-        game.controller.creatingCursor(this.Type);
+        game.controller.newCreatingCursor(this.Type);
     },
     is: function(type) {
         if (this.Type == type || this.Group == type) {
@@ -420,8 +420,7 @@ Entity.prototype = {
     //used by container
     open: function(data) {
         if (game.player.canUse(this)) {
-            var container = Container.open(this.Id);
-            container.panel.show();
+            Container.show(this);
             return null;
         }
         if (!data) {
@@ -751,7 +750,39 @@ Entity.prototype = {
         return Math.hypot(this.X - e.X, this.Y - e.Y);
     },
     drop: function() {
-        game.network.send("entity-drop", {id: this.Id});
+        var x = game.controller.world.x;
+        var y = game.controller.world.y;
+        var biom = game.map.biomAt(x, y);
+        if (!biom) {
+            game.sendErrorf("Biom (%d %d) not found", x, y);
+            return;
+        }
+
+        var cmd = "entity-drop";
+        var align = false;
+        if ((biom.Name == "plowed-soil" || biom.Name == "soil") && this.is("seed")) {
+            cmd = "plant";
+            align = true;
+        } else if ((biom.Name == "plowed-soil" || biom.Name == "shallow-water") && this.is("soil")) {
+            cmd = "swamp";
+            align = true;
+        }
+        if (align) {
+            var p = new Point(x, y);
+            var data = this.alignedData(p);
+            if (data) {
+                p.x = data.x + data.w/2;
+                p.y = data.y + data.h/2;
+            }
+
+            x = p.x;
+            y = p.y;
+        }
+        game.network.send(cmd, {
+            Id: +this.Id,
+            X: x,
+            Y: y,
+        });
     },
     dwim: function() {
         game.network.send("dwim", {id: this.Id});
@@ -855,7 +886,7 @@ Entity.prototype = {
             game.network.send("cast", {Id: this.Id});
             break;
         default:
-            game.controller.creatingCursor(new Entity(this.Id, this.Spell), "cast");
+            game.controller.creatingCursor(new Entity(this.Spell, this.Id), "cast");
         }
     },
     showClaimPanel: function() {
