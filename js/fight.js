@@ -24,7 +24,7 @@ function Fight() {
         }
         lastSend = now;
 
-        if (!game.controller.mouse.valid)
+        if (!game.controller.mouse.isValid())
             return;
 
         switch (action) {
