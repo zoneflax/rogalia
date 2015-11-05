@@ -151,6 +151,7 @@ Container.prototype = {
         });
     },
     onmousedown: function(e) {
+        e.stopPropagation();
         var slot = e.target.slot;
 
         if (!slot || slot.locked)
@@ -185,7 +186,6 @@ Container.prototype = {
             return;
         }
 
-        e.stopPropagation();
         game.controller.cursor.set(entity, e.pageX, e.pageY, slot.unlock.bind(slot));
     },
     dwimCraft: function(slot) {
@@ -286,7 +286,7 @@ Container.prototype = {
 
         // fast route; update current value
         if (this.fuel) {
-            this.fuel.dataset.update(fuel);
+            this.fuel.update(fuel);
             return;
         }
 
@@ -303,8 +303,8 @@ Container.prototype = {
         var update = function(fuel) {
             current.style.width = (fuel.Current/fuel.Max)*100 + "%";
         };
-        update();
-        this.fuel.dataset.update = update;
+        update(fuel);
+        this.fuel.update = update;
 
         this.fuel.appendChild(current);
         this.fuel.appendChild(max);

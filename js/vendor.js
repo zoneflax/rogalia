@@ -282,7 +282,7 @@ Vendor.sell = function(data) {
             button.textContent = T("Sell");
             button.onclick = function() {
                 cleanUp();
-                game.network.send("sell", {Vendor: vendor.Id, Id: icon.item.entity.Id}, open);
+                game.network.send("sell", {Vendor: vendor.Id, Id: icon.entity.Id}, open);
             };
 
             var icon = document.createElement("div");
@@ -294,20 +294,21 @@ Vendor.sell = function(data) {
             icon.type = e.Type;
             icon.check = function(cursor) {
                 return cursor.entity.Type == this.type;
-            }
+            };
             icon.vendor = true;
-            icon.use = function(item, slot) {
+            icon.use = function(entity, to) {
+                var slot = Container.get(entity.findContainer()).findSlot(entity);
                 cleanUp = function() {
-                    item.unblock();
+                    slot.unlock();
                     util.dom.hide(button);
-                    slot.firstChild.classList.add("item-preview");
-                    slot.onclick = null;
+                    to.firstChild.classList.add("item-preview");
+                    to.onclick = null;
                 };
-                item.block();
+                slot.lock();
                 util.dom.show(button);
-                slot.firstChild.classList.remove("item-preview");
-                slot.item = item;
-                slot.onmousedown = cleanUp;
+                to.firstChild.classList.remove("item-preview");
+                to.entity = entity;
+                to.onmousedown = cleanUp;
                 return true;
             };
 
@@ -358,22 +359,21 @@ Vendor.sell = function(data) {
             util.dom.hide(price);
             util.dom.hide(quantityLabel);
             util.dom.hide(total);
-        }
+        };
         var price = Vendor.createPriceInput(true);
         var lot = document.createElement("div");
         lot.className = "slot lot-icon";
         lot.vendor = vendor;
 
-        lot.use = function(item, slot) {
-            var e = Entity.get(item.id);
+        lot.use = function(entity, _) {
             util.dom.show(button);
             util.dom.show(price);
             util.dom.show(quantityLabel);
             util.dom.show(total);
-            lot.type = e.Type;
+            lot.type = entity.Type;
             lot.innerHTML = "";
-            lot.appendChild(e.icon());
-            name.textContent = TS(e.Type);
+            lot.appendChild(entity.icon());
+            name.textContent = TS(entity.Type);
             lot.onmousedown = sellCleanUp;
             return true;
         };
