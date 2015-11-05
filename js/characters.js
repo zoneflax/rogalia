@@ -10,6 +10,7 @@ Character.equipSlots =  [
     "feet",
 ];
 
+Character.attrs = ["Strength", "Vitality", "Dexterity", "Intellect", "Perception", "Wisdom"];
 Character.vitamins = ["Protein", "Fat", "Carbohydrate", "Phosphorus", "Calcium", "Magnesium"];
 
 Character.copy = function copy(to, from) {

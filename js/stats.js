@@ -159,8 +159,7 @@ Stats.prototype = {
             name: "main",
             update: function(self, player) {
                 var attributes = dom.div("attributes");
-                var attrs = Object.keys(player.Attr);
-                attrs.forEach(function(attr) {
+                Character.attrs.forEach(function(attr) {
                     var elem = self.createValue(attr, player.Attr[attr], 2);
                     elem.classList.add(attr.toLowerCase());
                     attributes.appendChild(elem);
