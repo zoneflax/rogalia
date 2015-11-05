@@ -151,7 +151,6 @@ Container.prototype = {
         });
     },
     onmousedown: function(e) {
-        e.stopPropagation();
         var slot = e.target.slot;
 
         if (!slot || slot.locked)
@@ -181,10 +180,12 @@ Container.prototype = {
             return;
         }
 
+
         if (mods.ctrl) {
             this.dwim(slot);
             return;
         }
+        e.stopPropagation();
 
         game.controller.cursor.set(entity, e.pageX, e.pageY, slot.unlock.bind(slot));
     },
@@ -214,6 +215,7 @@ Container.prototype = {
 
         if (this.dwimCraft(slot))
             return;
+        slot.unlock();
 
         var blank = game.controller.craft.blank;
         if (blank.panel && blank.panel.visible) {

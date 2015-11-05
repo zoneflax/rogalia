@@ -53,7 +53,6 @@ function loginStage() {
                     localStorage.removeItem("password");
                     if (!autoLogin)
                         alert(data.Warning);
-                    //!!!TODO: fixme
                     panel.show();
                     autoLogin = false;
                 } else {
