@@ -1199,8 +1199,8 @@ Character.prototype = {
                 var cursor = new Entity(tool.Type);
                 cursor.initSprite();
                 switch (action) {
-                case "dildo":
-                    game.controller.selectionCursor(cursor, "fuck");
+                case "dildo": alert("Фу-фу-фу");
+                    // game.controller.selectionCursor(cursor, "fuck");
                     return;
                 case "taming":
                     cmd = "tame";
