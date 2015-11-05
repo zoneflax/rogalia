@@ -297,8 +297,8 @@ Container.prototype = {
         var current = util.dom.div("fuel-current");
         var max = util.dom.div("fuel-max");
         var slot = util.dom.slot();
-        slot.canUse = this.container.canUse.bind(this.entity);
-        slot.use = this.container.use.bind(this.entity);
+        slot.canUse = this.entity.canUse.bind(this.entity);
+        slot.use = this.entity.use.bind(this.entity);
 
         var update = function(fuel) {
             current.style.width = (fuel.Current/fuel.Max)*100 + "%";
