@@ -38,6 +38,7 @@ ContainerSlot.prototype = {
     },
     clear: function() {
         this.entity = null;
+        this.sub = null;
         this.element.innerHTML = "";
         this.element.classList.remove("has-item");
         this.markAsSeen();
@@ -46,7 +47,7 @@ ContainerSlot.prototype = {
     },
     set: function(entity) {
         if (this.entity == entity) {
-            this.updateProgress();
+            this.update();
             return;
         }
         this.clear();
@@ -67,12 +68,7 @@ ContainerSlot.prototype = {
         this.element.appendChild(icon);
         this.element.appendChild(quality);
 
-         if (entity.Group == "atom") {
-            this.setSub(entity.Type);
-        } else if ("Amount" in entity) {
-            this.setSub(entity.Amount);
-        }
-        this.updateProgress();
+        this.update();
     },
     setSub: function(text) {
         if (this.sub == null) {
@@ -80,6 +76,10 @@ ContainerSlot.prototype = {
             this.element.appendChild(this.sub);
         }
         this.sub.textContent = text;
+    },
+    update: function() {
+        this.updateProgress();
+        this.updateCustom();
     },
     updateProgress: function() {
         //TODO: make generic `progress' @server-side
@@ -90,6 +90,13 @@ ContainerSlot.prototype = {
         var diff = Date.now() - added;
         if (diff < duration) {
             this.setSub(util.toFixed(100*diff / duration) + "%");
+        }
+    },
+    updateCustom: function() {
+        if (this.entity.Group == "atom") {
+            this.setSub(this.entity.Type);
+        } else if ("Amount" in this.entity) {
+            this.setSub(this.entity.Amount);
         }
     },
 };
