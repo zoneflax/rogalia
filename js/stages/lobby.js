@@ -67,7 +67,9 @@ function lobbyStage(data) {
     panel.hideCloseButton();
     panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
 
-    function fastenter() {
+    function fastenter(e) {
+        if (e.keyCode != 13) // enter
+            return;
         var avatars = document.getElementsByClassName("avatar");
         if (avatars.length > 0)
             avatars[0].click();

@@ -1330,6 +1330,7 @@ ol li a:hover {
 #bugreport-text {
     width: 99%;
     height: 100px;
+    color: #000;
 }
 
 #settings label {
