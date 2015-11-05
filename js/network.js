@@ -1,7 +1,7 @@
 "use strict";
 function Network() {
     var proto = "ws://";
-    var host = "beta.rogalik.tatrix.org";
+    var host = "rogalik.tatrix.org";
     var port = 49000;
     if (window.location.protocol == "https:") {
         proto = "wss://";
