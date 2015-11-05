@@ -479,7 +479,7 @@ Entity.prototype = {
             break;
         case "blank":
             this.defaultActionSuccess = function() {
-                game.controller.craft.open(this, game.player.Burden);
+                game.controller.craft.open(this, game.player.burden);
             }.bind(this);
             break;
         case "currency":
