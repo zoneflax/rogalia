@@ -63,7 +63,7 @@ var dict = {
     "Take revenue": "Забрать выручку",
     "Take sold items": "Забрать выкупленные предметы",
     "Sell": "Продать",
-    "Donate": "Поддержать проект",
+    "Donate": "Пожертвования",
     "Catch": "Поймать",
     "Release": "Отпустить",
     "Balance": "Баланс",
@@ -1065,4 +1065,6 @@ var dict = {
     "Please enter login": "Пожалуйста, введите логин",
     "Please enter password": "Пожалуйста, введите пароль",
     "Please enter email": "Пожалуйста, введите email",
+    "Links": "Ссылки",
+    "Bugs": "Баги",
 };

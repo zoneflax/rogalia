@@ -22,7 +22,7 @@ function System() {
     help.onclick = this.help.panel.toggle.bind(this.help.panel);
 
     var donate = document.createElement("button");
-    donate.textContent = T("Donate");
+    donate.textContent = "$ " + T("Donate") + " $";
     donate.onclick = function() {
         new Donate();
     };
@@ -30,6 +30,17 @@ function System() {
     var settings = document.createElement("button");
     settings.textContent = T("Settings");
     settings.onclick = this.settings.panel.toggle.bind(this.settings.panel);
+
+    var social = dom.button(T("Links"));
+    social.onclick = function() {
+        new Panel("social", "", [
+            game.button.forum(),
+            game.button.blog(),
+            game.button.vk(),
+            game.button.twitter(),
+            game.button.authors(),
+        ]).show();
+    };
 
     this.panel = new Panel(
         "system",
@@ -39,16 +50,13 @@ function System() {
             this.ping,
             dom.hr(),
             settings,
-            help,
+            // help,
             users,
             dom.hr(),
-            game.button.bugtracker(),
             game.button.wiki(),
-            game.button.forum(),
-            game.button.blog(),
-            game.button.vk(),
-            game.button.twitter(),
-            game.button.authors(),
+            game.button.bugtracker(),
+            dom.hr(),
+            social,
             donate,
             dom.hr(),
             game.button.lobby(),

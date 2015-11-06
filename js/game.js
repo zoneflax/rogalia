@@ -422,8 +422,9 @@ function Game() {
         },
         bugtracker: function() {
             var bugtracker = document.createElement("button");
-            bugtracker.textContent = T("Bugtracker");
-            bugtracker.onclick = openLink("http://github.com/TatriX/rogalik/issues");
+            bugtracker.textContent = T("Bugs");
+            // bugtracker.onclick = openLink("http://github.com/TatriX/rogalik/issues");
+            bugtracker.onclick = openLink("https://docs.google.com/document/d/1d7_odTtimjbG9sgGHj_B7aZBmgGR_CBSS330D0qvw68/edit");
             return bugtracker;
         },
         lobby: function() {

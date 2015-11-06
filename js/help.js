@@ -285,7 +285,6 @@ function Help() {
     });
 
     var resetHelp = document.createElement("button");
-    resetHelp.className = "hidden";
     resetHelp.textContent = T("Reset help");
     resetHelp.onclick = function() {
         if (!confirm("This will reset tutorial, interface help and reload client. Continue?"))
@@ -297,12 +296,10 @@ function Help() {
     }.bind(this);
 
     var disableHelp = document.createElement("button");
-    disableHelp.className = "hidden";
     disableHelp.textContent = T("Disable help");
     disableHelp.onclick = this.disableHelp.bind(this);
 
     var toggleTopics = document.createElement("button");
-    toggleTopics.className = "hidden";
         toggleTopics.textContent = T("Topics");
     toggleTopics.onclick = function() {
         dom.toggle(list);

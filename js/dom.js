@@ -40,6 +40,14 @@ var dom = {
     span: function(text, classOrId) {
         return this.tag("span", classOrId, {text: text});
     },
+    link: function(url, text) {
+        var link = document.createElement("a");
+        link.target = "_blank";
+        link.href = url;
+        if (text)
+            link.textContent = text;
+        return link;
+    },
     button: function(text, classOrId) {
         return this.tag("button", classOrId, {text: text});
     },
