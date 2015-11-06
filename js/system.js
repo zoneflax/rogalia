@@ -37,11 +37,11 @@ function System() {
         [
             fps,
             this.ping,
-            util.hr(),
+            dom.hr(),
             settings,
             help,
             users,
-            util.hr(),
+            dom.hr(),
             game.button.bugtracker(),
             game.button.wiki(),
             game.button.forum(),
@@ -50,7 +50,7 @@ function System() {
             game.button.twitter(),
             game.button.authors(),
             donate,
-            util.hr(),
+            dom.hr(),
             game.button.lobby(),
             game.button.logout(),
         ]

@@ -50,9 +50,9 @@ Quest.prototype = {
     getDescContents: function(ready) {
         return [
             this.makeDesc(ready),
-            util.hr(),
+            dom.hr(),
             this.makeGoal(),
-            util.hr(),
+            dom.hr(),
             this.makeReward(),
         ];
     },
@@ -150,7 +150,7 @@ Quest.prototype = {
         }
 
         return this.getDescContents(canEnd).concat(
-            util.hr(),
+            dom.hr(),
             button
         );
     },

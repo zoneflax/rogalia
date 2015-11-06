@@ -2,7 +2,7 @@
 function exitStage(message) {
     message = message || T("Refresh page...");
     game.ctx.fillStyle = "#fff";
-    game.ctx.fillText(
+    game.forceDrawStrokedText(
         T(message),
         CELL_SIZE,
         CELL_SIZE

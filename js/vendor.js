@@ -201,14 +201,14 @@ Vendor.buy = function(data) {
         sell.appendChild(price);
         sell.appendChild(button);
 
-        elements.push(util.hr());
+        elements.push(dom.hr());
         elements.push(sell);
 
         var cleanUp = function() {
             lot.innerHTML = "";
             name.textContent = "";
-            util.dom.hide(button);
-            util.dom.hide(price);
+            dom.hide(button);
+            dom.hide(price);
         };
 
         if (game.player.burden) {
@@ -216,8 +216,8 @@ Vendor.buy = function(data) {
             lot.use =  function(){};
             lot.id = burden.Id;
             lot.appendChild(burden.icon());
-            util.dom.show(button);
-            util.dom.show(price);
+            dom.show(button);
+            dom.show(price);
             name.textContent = burden.name;
             sellCleanUp = function() {
                 cleanUp();
@@ -235,8 +235,8 @@ Vendor.buy = function(data) {
                 var e = Entity.get(item.id);
                 lot.id = e.Id;
                 lot.item = item;
-                util.dom.show(button);
-                util.dom.show(price);
+                dom.show(button);
+                dom.show(price);
                 lot.innerHTML = "";
                 lot.appendChild(e.icon());
                 name.textContent = e.name;
@@ -300,12 +300,12 @@ Vendor.sell = function(data) {
                 var slot = Container.get(entity.findContainer()).findSlot(entity);
                 cleanUp = function() {
                     slot.unlock();
-                    util.dom.hide(button);
+                    dom.hide(button);
                     to.firstChild.classList.add("item-preview");
                     to.onclick = null;
                 };
                 slot.lock();
-                util.dom.show(button);
+                dom.show(button);
                 to.firstChild.classList.remove("item-preview");
                 to.entity = entity;
                 to.onmousedown = cleanUp;
@@ -355,10 +355,10 @@ Vendor.sell = function(data) {
         sellCleanUp = function() {
             lot.innerHTML = "";
             name.textContent = "";
-            util.dom.hide(button);
-            util.dom.hide(price);
-            util.dom.hide(quantityLabel);
-            util.dom.hide(total);
+            dom.hide(button);
+            dom.hide(price);
+            dom.hide(quantityLabel);
+            dom.hide(total);
         };
         var price = Vendor.createPriceInput(true);
         var lot = document.createElement("div");
@@ -366,10 +366,10 @@ Vendor.sell = function(data) {
         lot.vendor = vendor;
 
         lot.use = function(entity, _) {
-            util.dom.show(button);
-            util.dom.show(price);
-            util.dom.show(quantityLabel);
-            util.dom.show(total);
+            dom.show(button);
+            dom.show(price);
+            dom.show(quantityLabel);
+            dom.show(total);
             lot.type = entity.Type;
             lot.innerHTML = "";
             lot.appendChild(entity.icon());
@@ -419,7 +419,7 @@ Vendor.sell = function(data) {
         sell.appendChild(quantityLabel);
         sell.appendChild(total);
 
-        elements.push(util.hr());
+        elements.push(dom.hr());
         elements.push(sell);
     }
 
@@ -476,13 +476,13 @@ function Bank() {
 
     var contents = [
         balance,
-        util.hr(),
+        dom.hr(),
         price,
         deposit,
         withdraw,
-        util.hr(),
+        dom.hr(),
         claim,
-        util.hr(),
+        dom.hr(),
         vault,
     ];
     var panel = new Panel("bank", "Bank", contents);

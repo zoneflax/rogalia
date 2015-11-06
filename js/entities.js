@@ -96,7 +96,7 @@ Entity.makeDescription = function(type) {
     descr.className = "item-descr";
     var info = Items[type];
     if (info) {
-        descr.appendChild(util.hr());
+        descr.appendChild(dom.hr());
         descr.appendChild(document.createTextNode(info.desc.ru));
     }
     return descr;

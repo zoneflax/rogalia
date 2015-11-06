@@ -51,7 +51,7 @@ function lobbyStage(data) {
 
     var contents = [
         account,
-        util.hr(),
+        dom.hr(),
         avatars,
     ];
 
@@ -63,7 +63,7 @@ function lobbyStage(data) {
             game.clearCredentials();
             game.setStage("login");
         };
-        contents.push(util.hr());
+        contents.push(dom.hr());
         contents.push(quit);
     }
 

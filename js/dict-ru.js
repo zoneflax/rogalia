@@ -1056,8 +1056,13 @@ var dict = {
 
     "Connecting": "Подключаемся",
 
+    "You've got {item}":  "Вы получили: {item}",
     "Please enter name": "Пожалуйста, введите имя",
     "Please select profession": "Пожалуйста, выберите проффессию",
+    "Name can contain only letters": "Имя может содержать только буквы",
 
-    "You've got {item}":  "Вы получили: {item}",
+    "Login not found": "Логин не найден",
+    "Please enter login": "Пожалуйста, введите логин",
+    "Please enter password": "Пожалуйста, введите пароль",
+    "Please enter email": "Пожалуйста, введите email",
 };

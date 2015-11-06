@@ -305,15 +305,15 @@ function Help() {
     toggleTopics.className = "hidden";
         toggleTopics.textContent = T("Topics");
     toggleTopics.onclick = function() {
-        util.dom.toggle(list);
+        dom.toggle(list);
     };
 
     var options = document.createElement("button");
     options.textContent = "⚙";
     options.onclick = function() {
-        util.dom.toggle(resetHelp);
-        util.dom.toggle(disableHelp);
-        util.dom.toggle(toggleTopics);
+        dom.toggle(resetHelp);
+        dom.toggle(disableHelp);
+        dom.toggle(toggleTopics);
     };
 
     this.panel = new Panel(

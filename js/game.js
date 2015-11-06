@@ -50,14 +50,14 @@ function Game() {
         if (!warn) {
             return;
         }
-        util.dom.show(document.getElementById("build-warning"));
+        dom.show(document.getElementById("build-warning"));
 
         var panel = new Panel("build-warning-panel", "");
         panel.contents.innerHTML = warn;
 
         var title = document.getElementById("build-warning-title");
         var buildWarning = document.getElementById("build-warning");
-        util.dom.replace(buildWarning, title);
+        dom.replace(buildWarning, title);
         title.id = "build-warning";
         panel.setTitle(title.textContent);
 
@@ -106,7 +106,6 @@ function Game() {
 
     this.talks = new Talks();
     this.sound = new Sound();
-    // this.ads = new Ads();
 
     this.offset = {
         get x() { return game.world.offsetLeft; },
@@ -267,8 +266,25 @@ function Game() {
         document.location.reload();
     };
 
+    this.loadLogin = function() {
+        return localStorage.getItem("login");
+    };
+
+    this.setLogin = function(login) {
+        localStorage.setItem("login", login);
+        game.login = login;
+    };
+
     this.clearLogin = function() {
-        localStorage.setItem("login", "-");
+        localStorage.removeItem("login");
+    };
+
+    this.loadPassword = function() {
+        return localStorage.getItem("password");
+    };
+
+    this.setPassword = function(password) {
+        localStorage.setItem("password", password);
     };
 
     this.clearPassword = function() {
@@ -343,6 +359,8 @@ function Game() {
         this.setStage("exit", message);
     };
 
+    this.alert = new Alert();
+
     this.sendError = function(msg) {
         game.network.send("error", {msg: msg});
     };
@@ -355,7 +373,10 @@ function Game() {
         return (window.name.indexOf('fXD') == 0);
     };
 
+    var siteUrl = "http://rogalia.ru";
     function openLink(link) {
+        if (link.charAt(0) == "$")
+            link = siteUrl + link.substring(1);
         return function() {
             window.open(link, "_blank");
             return false;
@@ -366,43 +387,43 @@ function Game() {
         blog: function() {
             var link = document.createElement("button");
             link.textContent = T("Blog");
-            link.onclick = openLink("//tatrix.org");
+            link.onclick = openLink("http://tatrix.org");
             return link;
         },
         vk: function() {
             var vk = document.createElement("button");
             var vkLogo = document.createElement("img");
-            vkLogo.src = "//vk.com/favicon.ico";
+            vkLogo.src = "http://vk.com/favicon.ico";
             vk.appendChild(vkLogo);
             vk.appendChild(document.createTextNode(T("Group")));
-            vk.onclick = openLink("//vk.com/rogalia");
+            vk.onclick = openLink("http://vk.com/rogalia");
             return vk;
         },
         twitter: function() {
             var twitter = document.createElement("button");
             var twitterLogo = document.createElement("img");
-            twitterLogo.src = "//twitter.com/favicon.ico";
+            twitterLogo.src = "http://twitter.com/favicon.ico";
             twitter.appendChild(twitterLogo);
             twitter.appendChild(document.createTextNode(T("Twitter")));
-            twitter.onclick = openLink("//twitter.com/Tatrics");
+            twitter.onclick = openLink("http://twitter.com/Tatrics");
             return twitter;
         },
         wiki: function() {
             var wiki = document.createElement("button");
             wiki.textContent = T("Wiki / FAQ");
-            wiki.onclick = openLink("wiki/");
+            wiki.onclick = openLink("$/wiki/");
             return wiki;
         },
         forum: function() {
             var forum = document.createElement("button");
             forum.textContent = T("Forum");
-            forum.onclick = openLink("forum/");
+            forum.onclick = openLink("$/forum/");
             return forum;
         },
         bugtracker: function() {
             var bugtracker = document.createElement("button");
             bugtracker.textContent = T("Bugtracker");
-            bugtracker.onclick = openLink("//github.com/TatriX/rogalik/issues");
+            bugtracker.onclick = openLink("http://github.com/TatriX/rogalik/issues");
             return bugtracker;
         },
         lobby: function() {

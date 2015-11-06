@@ -15,18 +15,6 @@ if ( !window.requestAnimationFrame ) {
 function Util() {}
 
 var util = new function() {
-    this.hr = function() {
-        return document.createElement("hr");
-    };
-    this.vr = function() {
-        var vr = document.createElement("div");
-        vr.className = "vr";
-        return vr;
-    };
-    this.br = function() {
-        return document.createElement("br");
-    };
-
     this.ajax = function(url, callback){
 	var oReq = new XMLHttpRequest();
 	oReq.open("GET", url, true);
@@ -64,90 +52,6 @@ var util = new function() {
 
     this.rand = function(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
-    };
-
-    this.dom = {
-        tag: function(tag, className, cfg) {
-            var elem = document.createElement(tag);
-            if (className)
-                elem.className = className;
-            if (cfg) {
-                if ("text" in cfg)
-                    elem.textContent = cfg.text;
-            }
-
-            return elem;
-        },
-        div: function(className) {
-            return this.tag("div", className);
-        },
-        slot: function() {
-            return this.div("slot");
-        },
-        span: function(text, className) {
-            return this.tag("span", className, {text: text});
-        },
-        button: function(text, className) {
-            return this.tag("button", className, {text: text});
-        },
-        insert: function(element) {
-            document.body.insertBefore(element, document.body.firstChild);
-        },
-        remove: function(element) {
-            element.parentNode.removeChild(element);
-        },
-        hide: function(element) {
-            element.classList.add("hidden");
-        },
-        show: function(element) {
-            element.classList.remove("hidden");
-        },
-        toggle: function(element) {
-            if(element.classList.contains("hidden"))
-                this.show(element);
-            else
-                this.hide(element);
-        },
-        replace: function(old, New) {
-            if (!old.parentNode)
-                console.trace();
-            old.parentNode.insertBefore(New, old);
-            old.parentNode.removeChild(old);
-        },
-        forEach: function(selector, callback) {
-            [].forEach.call(document.querySelectorAll(selector), function(elem) {
-                callback.call(elem);
-            });
-        },
-        addClass: function(selector, name) {
-            this.forEach(selector, function() {
-                this.classList.add(name);
-            });
-        },
-        removeClass: function(selector, name) {
-            this.forEach(selector, function() {
-                this.classList.remove(name);
-            });
-        },
-        createInput: function(text, name, type) {
-            var input = document.createElement("input");
-            input.type = type || "text" ;
-            if (name)
-                input.name = name;
-            var label = document.createElement("label");
-            if (text)
-                label.appendChild(document.createTextNode(text));
-            label.appendChild(input);
-            input.label = label;
-
-            return input;
-        },
-        createRadioButton: function(text, name) {
-            return this.createInput(text, name, "radio");
-        },
-        createCheckBox: function(text, name) {
-            return this.createInput(text, name, "checkbox");
-        },
     };
 
     this.ucfirst = function(string) {
@@ -204,6 +108,15 @@ var util = new function() {
 
     this.distanceLessThan = function (len1, len2, r) {
         return (len1 * len1 + len2 * len2 < r * r);
+    };
+
+    this.validateInput = function(input, predicate, message) {
+        if (predicate)
+            return true;
+        game.alert(message, function() {
+            input.focus();
+        });
+        return false;
     };
 
     this.hash = function(string) {
@@ -425,8 +338,6 @@ var util = new function() {
         },
     };
 };
-
-var dom = util.dom;
 
 if (!Math.hypot) {
     Math.hypot = function hypot() {

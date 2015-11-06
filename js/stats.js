@@ -97,7 +97,7 @@ Stats.prototype = {
             update: function(self, player) {
                 var name = dom.span(player.Name);
                 var lvl = dom.span(" " + T("level") + " " + player.Lvl);
-                var factionWrapper = util.dom.div("faction");
+                var factionWrapper = dom.div("faction");
                 var faction = player.Citizenship.Faction;
                 if (faction) {
                     var citizenship = dom.span(T(faction));
@@ -173,7 +173,7 @@ Stats.prototype = {
                 });
                 return [
                     attributes,
-                    util.vr(),
+                    dom.vr(),
                     health,
                 ];
             },
@@ -216,7 +216,7 @@ Stats.prototype = {
                 return [
                     self.createValue("Karma", player.Karma),
                     self.createValue("Fame", player.Fame),
-                    util.hr(),
+                    dom.hr(),
                 ];
             },
         },
@@ -233,7 +233,7 @@ Stats.prototype = {
                     self.createValue("Players killed", player.Statistics.PlayersKilled),
                     self.createValue("Death", player.Statistics.Death),
                     self.createParam("Status points", sp),
-                    util.hr(),
+                    dom.hr(),
                 ];
             },
         }
@@ -243,7 +243,7 @@ Stats.prototype = {
         var hidden = [];
         var contents = this.sections.map(function(section) {
             if (section == "---") {
-                return util.hr();
+                return dom.hr();
             }
             var elem = dom.div(section.name);
             if (section.hidden) {

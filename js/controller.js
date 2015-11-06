@@ -154,9 +154,9 @@ function Controller(game) {
             this.element.style.top = controller.mouse.y + "px";
         },
         updateHovered: function() {
-            util.dom.hide(this.element);
+            dom.hide(this.element);
             var element = document.elementFromPoint(controller.mouse.x, controller.mouse.y);
-            util.dom.show(this.element);
+            dom.show(this.element);
 
             var hovered = null;
 
@@ -388,7 +388,7 @@ function Controller(game) {
 
     this.initHotbar = function() {
         //TODO: fixme
-        util.dom.forEach("#action-hotbar > .button",  function() {
+        dom.forEach("#action-hotbar > .button",  function() {
             var icon = new Image();
             var base = "assets/icons/actions/" + this.id.replace("-button", "");
             icon.src = base + ".png";
@@ -473,7 +473,7 @@ function Controller(game) {
 
         if (document.location.hash.indexOf("noui") != -1) {
             config.ui.world = false;
-            util.dom.hide(game.world);
+            dom.hide(game.world);
         }
     };
 
@@ -723,8 +723,8 @@ function Controller(game) {
                 this.callback[i] = null;
             }
 
-            util.dom.removeClass(".hovered", "hovered");
-            util.dom.removeClass(".invalid", "invalid");
+            dom.removeClass(".hovered", "hovered");
+            dom.removeClass(".invalid", "invalid");
             return false;
         },
         mouseup: function(e) {

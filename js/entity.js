@@ -130,7 +130,7 @@ Entity.prototype = {
         elements.push(Stats.prototype.createParam("Durability", this.Durability));
 
         if (this.Group == "food") {
-            elements.push(util.hr());
+            elements.push(dom.hr());
             var k = Math.sqrt(this.Quality);
             Character.vitamins.forEach(function(vitamin) {
                 var value = this.Props[vitamin] * k;
@@ -912,7 +912,7 @@ Entity.prototype = {
 
         var enlarge = document.createElement("div");
         var shrink = document.createElement("div");
-        var panel = new Panel("claim", "Claim", [makeButtons("Extend"), util.hr(), makeButtons("Shrink")]);
+        var panel = new Panel("claim", "Claim", [makeButtons("Extend"), dom.hr(), makeButtons("Shrink")]);
         panel.temporary = true;
         panel.show();
     },

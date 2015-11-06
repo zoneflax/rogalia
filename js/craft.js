@@ -17,7 +17,7 @@ function Craft() {
     this.listWrapper = document.createElement("div");;
     this.listWrapper.id = "recipe-list-wrapper";
     this.listWrapper.appendChild(this.createSearchField());
-    this.listWrapper.appendChild(util.hr());
+    this.listWrapper.appendChild(dom.hr());
     this.listWrapper.appendChild(this.createFilters());
     this.listWrapper.appendChild(this.list);
 
@@ -31,8 +31,10 @@ function Craft() {
     this.panel = new Panel(
         "craft",
         "Craft",
-        [this.listWrapper, util.vr(), this.recipeDetails],
-        this.clickListener.bind(this)
+        [this.listWrapper, dom.vr(), this.recipeDetails],
+        {
+            click: this.clickListener.bind(this),
+        }
     );
     this.panel.hooks.hide = this.cleanUp.bind(this);
     this.panel.hooks.show = function() {
@@ -107,7 +109,7 @@ Craft.prototype = {
         //TODO: this is ugly; refactor
         var list = this.createList();
         var st = this.list.scrollTop;
-        util.dom.replace(this.list, list);
+        dom.replace(this.list, list);
         this.list = list;
         this.list.scrollTop = st;
         if (this.current.recipe) {
@@ -176,10 +178,10 @@ Craft.prototype = {
 
         this.blank.panel.setContents([
             this.titleElement,
-            util.hr(),
+            dom.hr(),
             slotHelp,
             this.slot,
-            util.hr(),
+            dom.hr(),
             this.ingredientsList,
             auto,
             buildButton,
@@ -277,7 +279,7 @@ Craft.prototype = {
             groupToggle.textContent = T(group);
             groupToggle.subtree = subtree;
             groupToggle.onclick = function() {
-                util.dom.toggle(this);
+                dom.toggle(this);
                 visibleGroups[this.group] = !this.classList.contains("hidden");
             }.bind(subtree);
 
@@ -353,7 +355,7 @@ Craft.prototype = {
         this.panel.show();
         //TODO: fast solution; make another one
         var id = "#" + this.panel.name + " ";
-        util.dom.removeClass(id + ".recipe-list .found", "found");
+        dom.removeClass(id + ".recipe-list .found", "found");
         if (!pattern) {
             this.list.classList.remove("searching");;
             return;
@@ -364,7 +366,7 @@ Craft.prototype = {
         try {
             var selector = id + ".recipe[type*='" + pattern + "']," +
                     id + ".recipe[data-search*='" + pattern + "']";
-            util.dom.addClass(selector, "found");
+            dom.addClass(selector, "found");
         } catch(e) {
             return;
         }
@@ -372,7 +374,7 @@ Craft.prototype = {
         this.searchInput.value = (selectMatching) ? TS(pattern) : pattern;
 
         var matching = null;
-        util.dom.forEach(id + ".recipe.found", function() {
+        dom.forEach(id + ".recipe.found", function() {
             if (selectMatching && (this.type == pattern || this.dataset.search == pattern)) {
                 selectMatching = false;
                 matching = this;
@@ -497,7 +499,7 @@ Craft.prototype = {
         buttons.appendChild(create);
 
         var hr = function() {
-            this.recipeDetails.appendChild(util.hr());
+            this.recipeDetails.appendChild(dom.hr());
         }.bind(this);
 
         this.recipeDetails.appendChild(this.makePreview(this.current.type));
@@ -532,7 +534,7 @@ Craft.prototype = {
             ingredients.appendChild(ingredient);
         }
         var hr = function() {
-            this.recipeDetails.appendChild(util.hr());
+            this.recipeDetails.appendChild(dom.hr());
         }.bind(this);
         var create = document.createElement("button");
         create.className = "recipe-create";
@@ -552,9 +554,13 @@ Craft.prototype = {
         callback = callback || function(slot, container) {
             container.dwimCraft(slot);
         };
+
+        // prepare player's inventory
+        // because we want to check it contents even if it's closed
+        Container.bag();
+
         Container.forEach(function(container) {
-            var entity = container.entity;
-            if (!entity || (!entity.belongsTo(game.player) && !container.visible))
+            if (!container.visible && !container.entity.belongsTo(game.player))
                 return;
             container.forEach(function(slot) {
                 if (slot.entity) {
@@ -649,7 +655,7 @@ Craft.prototype = {
         requirements.appendChild(deps);
 
         if (this.requirements)
-            util.dom.replace(this.requirements, requirements);
+            dom.replace(this.requirements, requirements);
         else
             this.recipeDetails.appendChild(requirements);
 

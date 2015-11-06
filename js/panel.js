@@ -1,6 +1,6 @@
 "use strict";
 //TODO: make panels linked via back button
-function Panel(name, title, elements, listener, hooks) {
+function Panel(name, title, elements, listeners, hooks) {
     if (name in game.panels) {
         game.panels[name].temporary = true; //dont save position
         game.panels[name].close();
@@ -15,15 +15,12 @@ function Panel(name, title, elements, listener, hooks) {
     this.lsKey = "panels." + this.name;
     var config = JSON.parse(localStorage.getItem(this.lsKey)) || {};
 
-    this.element = document.createElement("div");
+    this.element = dom.div("panel");
     this.element.id = name;
-    this.element.className = "panel";
 
-    this.contents = document.createElement("div");
-    this.contents.className = "contents";
+    this.contents = dom.div("contents");
 
-    this._title = document.createElement("div");
-    this._title.className = "title-text";
+    this._title = dom.div("title-text");
     this.setTitle(title);
 
 
@@ -61,18 +58,16 @@ function Panel(name, title, elements, listener, hooks) {
 
     util.draggable(this.element);
 
-    if(listener instanceof Function) {
-        this.element.addEventListener('click', listener.bind(this));
-    } else if (listener instanceof Object) {
-        for(var type in listener) {
-            this.element.addEventListener(type, listener[type]);
+    if (listeners) {
+        for(var type in listeners) {
+            this.element.addEventListener(type, listeners[type]);
         }
     }
 
     this.element.addEventListener('mousedown', this.toTop.bind(this));
     this.element.addEventListener('mousedown', game.controller.makeHighlightCallback(name, false));
     this.element.id = name;
-    util.dom.insert(this.element);
+    dom.insert(this.element);
 
     if ("visible" in config && config.visible) {
         this.show();
@@ -147,15 +142,15 @@ Panel.prototype = {
             Panel.top = next;
     },
     hideCloseButton: function() {
-        util.dom.hide(this._closeButton);
+        dom.hide(this._closeButton);
     },
     hideTitle: function() {
-        util.dom.hide(this._titleBar);
+        dom.hide(this._titleBar);
     },
     close: function() {
         this.hide();
         if (this.element && this.element.parentNode)
-            util.dom.remove(this.element);
+            dom.remove(this.element);
 
         delete game.panels[this.name];
     },
@@ -164,11 +159,8 @@ Panel.prototype = {
         this._title.textContent = T(text);
     },
     setContents: function(elements) {
-        this.contents.innerHTML = "";
-        elements.forEach(function(elem) {
-            if (elem)
-                this.contents.appendChild(elem);
-        }.bind(this));
+        dom.clear(this.contents);
+        dom.append(this.contents, elements);
     },
     makeBackButton: function() {
         var back = document.createElement("button");
@@ -217,6 +209,10 @@ Panel.prototype = {
             visible: this.visible,
         };
         localStorage.setItem(this.lsKey, JSON.stringify(config));
+    },
+    center: function() {
+        this.x = game.world.offsetWidth/2 - this.element.offsetWidth/2;
+        this.y = game.world.offsetHeight/2 - this.element.offsetHeight/2;
     },
     setWidth: function(w) {
         var pad = 20;

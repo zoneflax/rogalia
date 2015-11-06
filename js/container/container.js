@@ -92,7 +92,7 @@ Container.prototype = {
         this.slots.forEach(callback);
     },
     createContainerPanel: function() {
-        var slots = util.dom.div("slots-wrapper");
+        var slots = dom.div("slots-wrapper");
         this._slots.forEach(function(id, i) {
             var slot = new ContainerSlot(this, i);
             this.slots.push(slot);
@@ -125,7 +125,7 @@ Container.prototype = {
         this.panel = new Panel(
             "container-" + this.id,
             this.name,
-            [slots, this.fuel, util.hr(), moveAll, sort],
+            [slots, this.fuel, dom.hr(), moveAll, sort],
             {
                 mousedown: function(e) {
                     game.controller.highlight("inventory", false);
@@ -296,9 +296,9 @@ Container.prototype = {
         this.fuel.title = T("Fuel");
         this.fuel.className = "fuel-wrapper";
 
-        var current = util.dom.div("fuel-current");
-        var max = util.dom.div("fuel-max");
-        var slot = util.dom.slot();
+        var current = dom.div("fuel-current");
+        var max = dom.div("fuel-max");
+        var slot = dom.slot();
         slot.canUse = this.entity.canUse.bind(this.entity);
         slot.use = this.entity.use.bind(this.entity);
 

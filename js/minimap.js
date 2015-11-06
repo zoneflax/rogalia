@@ -74,7 +74,7 @@ function Minimap() {
         var characters = this.characters;
         for(var name in this.points) {
             if (!characters[name]) {
-                util.dom.remove(this.points[name]);
+                dom.remove(this.points[name]);
                 delete this.points[name];
             }
         }

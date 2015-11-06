@@ -63,6 +63,7 @@ function Chat() {
 
     this.newMessageElement = document.createElement("input");
     this.newMessageElement.id = "new-message";
+    this.newMessageElement.type = "text";
 
     this.send = function(message) {
         game.network.send("chat-message", {message: message});
@@ -162,10 +163,12 @@ function Chat() {
                     "terra-bar",
                     "Terraforming",
                     bioms,
-                    function(e) {
-                        if(!e.target.id)
-                            return;
-                        game.controller.terraCursor(e.target);
+                    {
+                        click: function(e) {
+                            if(!e.target.id)
+                                return;
+                            game.controller.terraCursor(e.target);
+                        }
                     }
                 ).show();
                 break;
@@ -212,9 +215,9 @@ function Chat() {
     this.attach = function() {
         var contents = this.panel.contents;
         contents.id = "attached-chat";
-        util.dom.remove(contents);
+        dom.remove(contents);
         game.interface.appendChild(contents);
-        util.dom.hide(this.panel.button);
+        dom.hide(this.panel.button);
         this.panel.hide();
         semihide();
     };
@@ -222,9 +225,9 @@ function Chat() {
     this.detach = function() {
         var contents = this.panel.contents;
         contents.id = "";
-        util.dom.remove(contents);
+        dom.remove(contents);
         this.panel.element.appendChild(contents);
-        util.dom.show(this.panel.button);
+        dom.show(this.panel.button);
     };
 
     this.tabs = document.createElement("div");
@@ -256,7 +259,7 @@ function Chat() {
     };
 
     //TODO: get rid of checkbox
-    var alwaysVisible = util.dom.createCheckBox();
+    var alwaysVisible = dom.checkBox();
     alwaysVisible.id = "chat-always-visible";
     alwaysVisible.label.id = "chat-always-visible-label";
     alwaysVisible.label.title = T("Always visible");
@@ -314,9 +317,9 @@ function Chat() {
         };
         var panel = new Panel("chat-settings", "Tab settings", [
             name,
-            util.hr(),
+            dom.hr(),
             checkboxes,
-            util.hr(),
+            dom.hr(),
             save
         ]);
         panel.show();
@@ -635,7 +638,7 @@ function Chat() {
     this.cleanUp = function() {
         var len = this.messagesElement.children.length;
         while (len-- >= maxMessages) {
-            util.dom.remove(this.messagesElement.firstChild);
+            dom.remove(this.messagesElement.firstChild);
         }
     };
 
@@ -681,7 +684,7 @@ function Chat() {
             text += '...';
         ballon.textContent = text;
 
-        util.dom.insert(ballon);
+        dom.insert(ballon);
         var padding = (character.sprite.width - ballon.offsetWidth) / 2;
 
         ballon.update = function() {

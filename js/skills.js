@@ -19,9 +19,9 @@ function Skills() {
         "Skills",
         [
             this.skills,
-            util.hr(),
+            dom.hr(),
             this.description,
-            util.hr(),
+            dom.hr(),
             this.learnButton,
         ]
     );

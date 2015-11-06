@@ -177,6 +177,6 @@ Character.npcActions = {
         game.network.send("buy-sex", {Id: this.Id});
     },
     "Buy indulgence": function() {
-        alert("Пока не реализовано :-(");
+        game.alert("Пока не реализовано :-(");
     }
 };

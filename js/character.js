@@ -795,12 +795,27 @@ Character.prototype = {
 
         this.drawCorpsePointer();
     },
+    _qm: {
+        x: 1, //quest marker current scale
+        dx: 0.0033,
+    },
     drawQuestMarker: function(marker) {
-        var p = this.screen();
-        p.x -= marker.width / 2;
-        p.y -= this.sprite.nameOffset + marker.height + FONT_SIZE;
+        this._qm.x += this._qm.dx;
 
-        game.ctx.drawImage(marker, p.x, p.y);
+        if (this._qm.x >= 1.1 || this._qm.x < 0.90) {
+            this._qm.dx = -this._qm.dx;
+        }
+        // fix wrench
+        if (this._qm.x == 1)
+            this._qm.x += this._qm.dx;
+
+        var width = marker.width * this._qm.x;
+        var height = width * marker.height / marker.width;
+        var p = this.screen();
+        p.x -= width / 2;
+        p.y -= this.sprite.nameOffset + height + FONT_SIZE;
+
+        game.ctx.drawImage(marker, p.x, p.y, width, height);
     },
     getQuestMarker: function() {
         // has owner -> vendor -> no quests
@@ -1089,7 +1104,7 @@ Character.prototype = {
                 this.action.last = this.Action.Started;
                 this.toggleActionSound();
                 if (this.isPlayer) {
-                    util.dom.show(game.controller.actionProgress);
+                    dom.show(game.controller.actionProgress);
                     game.controller.actionButton.startProgress();
                 }
             }
@@ -1097,7 +1112,7 @@ Character.prototype = {
                 this.action.progress += (Math.PI * 2 / this.Action.Duration * 1000 * k);
             } else {
                 if (this.isPlayer) {
-                    util.dom.hide(game.controller.actionProgress);
+                    dom.hide(game.controller.actionProgress);
                     game.controller.actionButton.stopProgress();
                 }
                 this.action.progress = 0;
@@ -1199,7 +1214,7 @@ Character.prototype = {
                 var cursor = new Entity(tool.Type);
                 cursor.initSprite();
                 switch (action) {
-                case "dildo": alert("Фу-фу-фу");
+                case "dildo": game.alert("Фу-фу-фу");
                     // game.controller.selectionCursor(cursor, "fuck");
                     return;
                 case "taming":
@@ -1250,7 +1265,7 @@ Character.prototype = {
                 button.disabled = true;
                 button.onclick = function() {
                     game.network.send("fishing-move", {move: this.move}, repeat);
-                    util.dom.forEach("#fishing-buttons > button", function() {
+                    dom.forEach("#fishing-buttons > button", function() {
                         this.disabled = true;
                     });
                 };
@@ -1278,12 +1293,12 @@ Character.prototype = {
             panel.rating.textContent = T(data.Rating);
         }
         if (data.Ack == "fishing" || data.Done) {
-            util.dom.forEach("#fishing-buttons > button", function() {
+            dom.forEach("#fishing-buttons > button", function() {
                 this.disabled = false;
             });
         }
         if (data.Done || data.Warning) {
-            util.dom.forEach("#fishing-buttons > button", function() {
+            dom.forEach("#fishing-buttons > button", function() {
                 this.disabled = true;
             });
             panel && panel.hide();
@@ -1348,7 +1363,7 @@ Character.prototype = {
         this.shownEffects[name] = efdiv;
     },
     removeEffect: function(name) {
-        util.dom.remove(this.shownEffects[name]);
+        dom.remove(this.shownEffects[name]);
         delete this.shownEffects[name];
     },
     updateEffects: function() {
@@ -1790,7 +1805,7 @@ Character.prototype = {
         this.target = target;
         var cnt = game.controller.targetContainer;
         if (!target) {
-            util.dom.hide(cnt);
+            dom.hide(cnt);
             return;
         }
 
@@ -1805,7 +1820,7 @@ Character.prototype = {
         cnt.innerHTML = "";
         cnt.appendChild(target.sprite.icon());
         cnt.appendChild(name);
-        util.dom.show(cnt);
+        dom.show(cnt);
     },
     getAvailableQuests: function() {
         return game.player.AvailableQuests[this.Name] || [];

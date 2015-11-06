@@ -6,7 +6,7 @@ function Journal() {
     this.view.id = "quest-desc";
     this.panel = new Panel("journal", "Journal", [
         this.list,
-        util.vr(),
+        dom.vr(),
         this.view,
     ]);
     this.update();
@@ -42,7 +42,7 @@ Journal.prototype = {
 
             name.textContent = quest.getName();
             name.onclick = function() {
-                util.dom.removeClass(".quest", "selected");
+                dom.removeClass(".quest", "selected");
                 this.selected = id;
                 name.classList.add("selected");
                 this.view.innerHTML = "";
@@ -61,7 +61,7 @@ Journal.prototype = {
                 start.textContent = quest.Start + ":";
 
                 this.view.appendChild(title);
-                this.view.appendChild(util.hr());
+                this.view.appendChild(dom.hr());
                 this.view.appendChild(start);
 
 

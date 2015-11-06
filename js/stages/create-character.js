@@ -8,20 +8,18 @@ function createCharacterStage() {
     name.placeholder = T("Name");
 
 
-    var male = util.dom.createRadioButton("", "sex");
+    var male = dom.radioButton("", "sex");
     male.label.className = "new-sex checked";
     male.label.id = "new-male";
-    male.sex = 0;
     male.checked = true;
     male.onclick = function() {
         male.label.classList.add("checked");
         female.label.classList.remove("checked");
     };
 
-    var female = util.dom.createRadioButton("", "sex");
+    var female = dom.radioButton("", "sex");
     female.label.className = "new-sex";
     female.label.id = "new-female";
-    female.sex = 1;
     female.checked = false;
     female.onclick = function() {
         female.label.classList.add("checked");
@@ -96,8 +94,8 @@ function createCharacterStage() {
         var desc = document.createElement("p");
         desc.className = "profession-desc";
         desc.appendChild(document.createTextNode(T(prof.desc || "No description")));
-        desc.appendChild(util.br());
-        desc.appendChild(util.br());
+        desc.appendChild(dom.br());
+        desc.appendChild(dom.br());
         desc.appendChild(document.createTextNode(T("Main skills") + ":"));
         for (var skill in prof.skills) {
             var sli = document.createElement("li");
@@ -118,11 +116,11 @@ function createCharacterStage() {
 
         icon.onclick = function() {
             selectedProf = prof;
-            util.dom.removeClass(".profession-tab", "active");
+            dom.removeClass(".profession-tab", "active");
             icon.classList.add("active");
 
-            util.dom.addClass(".profession", "hidden");
-            util.dom.show(li);
+            dom.addClass(".profession", "hidden");
+            dom.show(li);
         };
     });
     // activate default profession
@@ -132,11 +130,11 @@ function createCharacterStage() {
     submit.textContent = T("Create");
     submit.onclick = function() {
         if (!name.value) {
-            alert(T("Please enter name"));
+            game.alert(T("Please enter name"));
             return false;
         }
         if (!selectedProf) {
-            alert(T("Please select profession"));
+            game.alert(T("Please select profession"));
             return false;
         }
         game.player.Name = name.value;
@@ -145,7 +143,7 @@ function createCharacterStage() {
             {
                 Name: name.value,
                 Skills: selectedProf.skills,
-                Sex: document.querySelector('input[name="sex"]:checked').sex,
+                Sex: (female.checked) ? 1 : 0,
             }
         );
         return false;
@@ -157,27 +155,29 @@ function createCharacterStage() {
         game.setStage("lobby");
     };
 
-    var panel = new Panel("create-character", "Create character", [
+    var form = dom.tag("form");
+    dom.append(form, [
         account,
-        util.hr(),
+        dom.hr(),
         male.label,
         female.label,
-        util.hr(),
+        dom.hr(),
         name,
-        util.hr(),
+        dom.hr(),
         tabs,
         professions,
-        util.hr(),
+        dom.hr(),
         submit,
         back,
     ]);
+    var panel = new Panel("create-character", "Create character", [form]);
     panel.hideCloseButton();
     panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
     name.focus();
 
     this.sync = function(data) {
         if ("Warning" in data)
-            alert(data.Warning);
+            game.alert(data.Warning);
         else
             game.setStage("loading", data);
     };

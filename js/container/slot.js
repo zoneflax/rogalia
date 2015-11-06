@@ -7,7 +7,7 @@ function ContainerSlot(container, index) {
     this.entity = null;
     this.locked = false;
 
-    this.element = util.dom.slot();
+    this.element = dom.slot();
     this.element.maxWidth = Container.SLOT_SIZE + "px";
     this.element.maxHeight = Container.SLOT_SIZE + "px";
     this.element.slot = this;
