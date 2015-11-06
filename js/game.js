@@ -267,7 +267,8 @@ function Game() {
     };
 
     this.loadLogin = function() {
-        return localStorage.getItem("login");
+        game.login = localStorage.getItem("login");
+        return game.login;
     };
 
     this.setLogin = function(login) {

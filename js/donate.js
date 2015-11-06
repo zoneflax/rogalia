@@ -1,7 +1,7 @@
 "use strict";
 function Donate() {
     var status = document.createElement("p");
-    status.innerHTML = "Собрано 240,27";
+    status.innerHTML = "Собрано 240,27 из 854";
     var iframe = document.createElement("iframe");
     iframe.frameBorder = 0;
     iframe.allowtransparency = true;
