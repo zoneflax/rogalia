@@ -153,6 +153,7 @@ function createCharacterStage() {
     back.textContent = T("Back");
     back.onclick = function() {
         game.setStage("lobby");
+        return false;
     };
 
     var form = dom.tag("form");
