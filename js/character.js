@@ -1182,19 +1182,22 @@ Character.prototype = {
             strip.lastChild.style.width = Math.max(0, value - 100) + '%';
         }.bind(this));
 
-
+        if (!this.updateActionButton("right-hand") && !this.updateActionButton("left-hand"))
+            game.controller.actionButton.reset();
+    },
+    updateActionButton: function(equipSlotName) {
         var action = "";
         if (this.burden) {
             action = "drop";
         } else {
-            var tool = Entity.get(this.equipSlot("right-hand"));
+            var tool = Entity.get(this.equipSlot(equipSlotName));
             if (tool)
                 action = tool.Group;
         }
 
         var button = game.controller.actionButton;
         if (button.action == action)
-            return;
+            return true;
 
         var callback = null;
 
@@ -1242,11 +1245,11 @@ Character.prototype = {
             }.bind(this);
             break;
         default:
-            button.reset();
-            return;
+            return false;
         }
 
         button.setAction(action, callback);
+        return true;
     },
     fish: function fish(data) {
         var repeat = fish.bind(this);
