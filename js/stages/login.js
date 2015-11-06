@@ -185,9 +185,7 @@ function loginStage() {
 
     if (game.inVK()) {
         panel.hide();
-        game.ctx.clear();
-        game.ctx.fillText(T("Connecting..."), CELL_SIZE, CELL_SIZE);
-
+        this.draw = Stage.makeEllipsisDrawer();
         var el = document.createElement("script");
         el.type = "text/javascript";
         el.src = "//vk.com/js/api/xd_connection.js?2";
