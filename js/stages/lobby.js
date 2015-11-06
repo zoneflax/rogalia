@@ -6,38 +6,19 @@ function lobbyStage(data) {
 
     var characters = (data && data.Characters) || lobbyStage.characters || [];
     var maxChars = 4;
-    while (characters.length < maxChars) {
-        characters.push("+");
-    }
     // we need to save it because we may return to this stage after
     // createCharacter stage (back button)
     lobbyStage.characters = characters;
 
     var avatars = document.createElement("div");
 
-    characters.forEach(function(name) {
+    function add(name, icon, callback) {
         var avatarContainer = document.createElement("div");
         avatarContainer.className = "avatar-container";
-        //TODO: use character sex or avatar from server
+
         var avatar = document.createElement("div");
         avatar.className = "avatar";
-
-        if (name == "+") {
-            var create = loader.loadImage("avatars/new.png").cloneNode();
-            create.className = "create";
-            avatar.appendChild(create);
-            avatarContainer.onclick = function() {
-                game.setStage("createCharacter");
-            };
-        } else {
-            var sex = "male";
-            avatar.appendChild(loader.loadImage("avatars/" + sex + ".png").cloneNode());
-            avatarContainer.onclick = function() {
-                game.player.Name = name;
-                game.network.send("enter", {Name: name, Version: game.version});
-            };
-        }
-
+        avatar.appendChild(icon);
 
         var nameElem = document.createElement("div");
         nameElem.className = "avatar-name";
@@ -45,9 +26,26 @@ function lobbyStage(data) {
 
         avatarContainer.appendChild(avatar);
         avatarContainer.appendChild(nameElem);
+        avatarContainer.onclick = callback;
 
         avatars.appendChild(avatarContainer);
+    }
+
+    characters.forEach(function(info) {
+        var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png").cloneNode();
+        add(info.Name, icon, function() {
+            game.player.Name = info.Name;
+            game.network.send("enter", {Name: info.Name, Version: game.version});
+        });
     });
+
+    for (var i = maxChars - characters.length; i != 0; i--) {
+        var create = loader.loadImage("avatars/new.png").cloneNode();
+        create.className = "create";
+        add(T("Create"), create, function() {
+            game.setStage("createCharacter");
+        });
+    };
 
     var contents = [
         account,

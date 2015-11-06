@@ -1728,7 +1728,7 @@ Character.prototype = {
         return game.talks.get(type, faction, sex);
     },
     sex: function() {
-        return ["male", "female"][this.Sex];
+        return Character.sex(this.Sex);
     },
     isInteractive: function() {
         switch (this.Name) {

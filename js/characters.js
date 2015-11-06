@@ -87,6 +87,9 @@ Character.initSprites = function() {
     Character.skull = new Sprite("skull.png");
 };
 
+Character.sex = function(sex) {
+    return ["male", "female"][sex];
+};
 
 Character.npcActions = {
     "Set citizenship": function() {
