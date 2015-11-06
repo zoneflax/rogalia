@@ -23,7 +23,7 @@ var config = {
         hp: false,
         name: false,
         npc: false,
-        simpleFonts: true,
+        simpleFonts: false,
         minimapObjects: false,
         allowSelfSelection: true,
         fillClaim: false,

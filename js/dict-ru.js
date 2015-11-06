@@ -1054,5 +1054,10 @@ var dict = {
     "Small spider": "Паучок",
     "Spider": "Паук",
 
+    "Connecting": "Подключаемся",
+
+    "Please enter name": "Пожалуйста, введите имя",
+    "Please select profession": "Пожалуйста, выберите проффессию",
+
     "You've got {item}":  "Вы получили: {item}",
 };
