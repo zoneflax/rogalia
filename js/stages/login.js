@@ -66,7 +66,7 @@ function loginStage() {
     if (game.login == "-")
         game.login = "";
     var password = localStorage.getItem("password");
-    if(game.login && password) {
+    if(game.login && password && !game.inVK()) {
         autoLogin = true;
         login(password);
     }
@@ -182,11 +182,8 @@ function loginStage() {
     else
         loginInput.focus();
 
-    function inVK() {
-        return (window.name.indexOf('fXD') == 0);
-    }
 
-    if (inVK()) {
+    if (game.inVK()) {
         panel.hide();
         var el = document.createElement("script");
         el.type = "text/javascript";
@@ -194,17 +191,24 @@ function loginStage() {
         document.body.appendChild(el);
         el.onload = function() {
             VK.init(function() {
-                var match = document.location.search.match(/access_token=(\w+)/);
-                var token = match && match[1];
-                if (token) {
-                    panel.hide();
-                    game.network.send("oauth", {Token: token}, enterLobby);
-                } else {
-                    panel.show();
-                }
+                VK.callMethod("showInstallBox");
+                VK.addCallback("onApplicationAdded", function() {
+                    var match = document.location.search.match(/access_token=(\w+)/);
+                    var token = match && match[1];
+                    if (token) {
+                        panel.hide();
+                        game.network.send("oauth", {Token: token}, enterLobby);
+                    } else {
+                        panel.show();
+                    }
+                });
             }, function() {
                 panel.show();
             }, '5.37');
+        };
+        el.onerror = function() {
+            alert(T("Cannot connect to vk.com"));
+            panel.show();
         };
     }
 

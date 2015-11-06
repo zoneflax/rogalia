@@ -49,21 +49,25 @@ function lobbyStage(data) {
         avatars.appendChild(avatarContainer);
     });
 
-    var quit = document.createElement("button");
-    quit.textContent = T("Quit");
-    quit.onclick = function() {
-        lobbyStage.characters = [];
-        game.clearCredentials();
-        game.setStage("login");
-    };
-
-    var panel = new Panel("lobby", "", [
+    var contents = [
         account,
         util.hr(),
         avatars,
-        util.hr(),
-        quit,
-    ]);
+    ];
+
+    if (!game.inVK()) {
+        var quit = document.createElement("button");
+        quit.textContent = T("Quit");
+        quit.onclick = function() {
+            lobbyStage.characters = [];
+            game.clearCredentials();
+            game.setStage("login");
+        };
+        contents.push(util.hr());
+        contents.push(quit);
+    }
+
+    var panel = new Panel("lobby", "", contents);
     panel.hideCloseButton();
     panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
 

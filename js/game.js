@@ -351,6 +351,10 @@ function Game() {
         this.sendError(sprintf.apply(window, arguments));
     };
 
+    this.inVK = function() {
+        return (window.name.indexOf('fXD') == 0);
+    };
+
     function openLink(link) {
         return function() {
             window.open(link, "_blank");
