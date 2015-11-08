@@ -302,6 +302,7 @@ Vendor.sell = function(data) {
                 var quantity = dom.input(T("Quantity"), canBeSold.length, "number");
                 quantity.min = 1;
                 quantity.max = canBeSold.length;
+                quantity.style.width = "auto";
                 var sell = dom.button(T("Sell"));
                 sell.onclick = function() {
                     var list = canBeSold.slice(0, quantity.value).map(function(entity) {

@@ -171,7 +171,6 @@ Container.prototype = {
         if (game.controller.hovered) // swap
             return;
 
-
         var mods = game.controller.modifier;
 
         if (mods.shift && !mods.ctrl) {
@@ -180,7 +179,6 @@ Container.prototype = {
         }
 
         slot.lock();
-
 
         if (mods.ctrl) {
             this.dwim(slot);

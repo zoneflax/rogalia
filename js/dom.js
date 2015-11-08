@@ -22,8 +22,8 @@ var dom = {
 
         return elem;
     },
-    div: function(classOrId) {
-        return this.tag("div", classOrId);
+    div: function(classOrId, cfg) {
+        return this.tag("div", classOrId, cfg);
     },
     br: function() {
         return document.createElement("br");

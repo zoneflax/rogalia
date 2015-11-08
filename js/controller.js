@@ -757,6 +757,8 @@ function Controller(game) {
                 switch (e.keyCode) {
                 case 67:
                     return true; // ctrl+c
+                default:
+                    controller.updateHovered();
                 }
             }
 
