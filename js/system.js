@@ -31,9 +31,9 @@ function System() {
     settings.textContent = T("Settings");
     settings.onclick = this.settings.panel.toggle.bind(this.settings.panel);
 
-    var social = dom.button(T("Links"));
-    social.onclick = function() {
-        new Panel("social", "", [
+    var links = dom.button(T("Links"));
+    links.onclick = function() {
+        new Panel("links", "", [
             game.button.forum(),
             game.button.blog(),
             game.button.vk(),
@@ -56,7 +56,7 @@ function System() {
             game.button.wiki(),
             game.button.bugtracker(),
             dom.hr(),
-            social,
+            links,
             donate,
             dom.hr(),
             game.button.lobby(),

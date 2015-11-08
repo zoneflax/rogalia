@@ -210,7 +210,7 @@ Stats.prototype = {
         },
         "---",
         {
-            name: "social",
+            name: "karmic",
             hidden: true,
             update: function(self, player) {
                 return [

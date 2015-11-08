@@ -474,7 +474,7 @@ hr {
     background-image: url("assets/icons/controls/journal-active.png");
 }
 
-#system button, #social button {
+#system button, #links button {
     width: 99%;
     display: block;
     margin-bottom: 10px;
