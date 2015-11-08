@@ -33,7 +33,7 @@ Quest.prototype = {
             var slot = document.createElement("div");
             slot.classList.add("slot");
             slot.appendChild(Entity.getPreview(item));
-            slot.onclick = game.controller.craft.makeSearch(item);
+            slot.onclick = game.controller.craft.search.bind(game.controller.craft, item, true);
 
             var desc = document.createElement("div");
             var count = (items[item] instanceof Object) ? items[item].Count : items[item];

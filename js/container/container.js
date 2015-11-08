@@ -171,7 +171,6 @@ Container.prototype = {
         if (game.controller.hovered) // swap
             return;
 
-        slot.lock();
 
         var mods = game.controller.modifier;
 
@@ -179,6 +178,8 @@ Container.prototype = {
             game.chat.linkEntity(entity);
             return;
         }
+
+        slot.lock();
 
 
         if (mods.ctrl) {
