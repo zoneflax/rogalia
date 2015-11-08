@@ -135,7 +135,7 @@ Craft.prototype = {
 
         var auto = document.createElement("button");
         auto.className = "build-auto";
-        auto.textContent = "Auto";
+        auto.textContent = T("Auto");
         var self = this;
         var recipe = this.recipe(blank.Props.Type);
         auto.onclick = function() {

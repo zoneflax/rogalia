@@ -169,6 +169,15 @@ Info.prototype = {
                 }
             );
             break;
+        case "currency-gain":
+            this.drawValue(
+                "$" + this.data,
+                {
+                    self: ["#3c3", big],
+                    other: ["#3c3"],
+                }
+            );
+            break;
         case "exp-gain":
             this.drawValue(
                 "+" + this.value + "xp",

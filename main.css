@@ -41,7 +41,7 @@ label {
     outline: none;
 }
 
-input[type=text], input[type=password], input:not([type]) {
+input[type=text], input[type=number], input[type=password], input:not([type]) {
     border: 1px solid #a57031;
     padding: 0 1px;
     background: url("assets/bg/chat/send.png") no-repeat 99%, #99682e;
@@ -1447,7 +1447,7 @@ big {
     top: 0;
     left: 0;
 }
-.lot-quantity > input, .price > input {
+input[type=number], .lot-quantity > input, .price > input {
     width: 25px;
     background-image: none;
     text-align: right;
@@ -1481,6 +1481,7 @@ big {
 .lot {
     overflow: auto;
     padding: 0 5px;
+    position: relative;
     list-style-type: none;
 }
 .lot:after {

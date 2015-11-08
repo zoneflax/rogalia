@@ -92,7 +92,6 @@ Vendor.buy = function(data) {
 
     var lots = document.createElement("ul");
     lots.id = "lot-list";
-    lots.className = "no-drag";
     function byType(a, b) {
         if (a.Type != b.Type)
             return (a.Type > b.Type) ? +1 : -1;
@@ -270,7 +269,6 @@ Vendor.sell = function(data) {
     var prices = data.prices || {};
     var lots = document.createElement("ul");
     lots.id = "lot-list";
-    lots.className = "no-drag";
     var cleanUp = function() {};
     for (var type in prices) {
         (function(type) {
@@ -278,11 +276,41 @@ Vendor.sell = function(data) {
             var info = prices[type];
 
             var button = document.createElement("button");
-            button.className = "lot-sell hidden";
+            button.className = "lot-sell";
+
+            var canBeSold = [];
+            Container.forEach(function(container) {
+                if (!container.entity.belongsTo(game.player))
+                    return;
+                container.forEach(function(slot) {
+                    var entity = slot.entity;
+                    if (entity && entity.Type == type) {
+                        canBeSold.push(entity);
+                    }
+                });
+            });
+            if (canBeSold.length == 0)
+                dom.hide(button);
+
             button.textContent = T("Sell");
             button.onclick = function() {
-                cleanUp();
-                game.network.send("sell", {Vendor: vendor.Id, Id: icon.entity.Id}, open);
+                if (icon.entity) {
+                    cleanUp();
+                    game.network.send("sell", {Vendor: vendor.Id, Id: icon.entity.Id}, open);
+                    return;
+                }
+                var quantity = dom.input(T("Quantity"), canBeSold.length, "number");
+                quantity.min = 1;
+                quantity.max = canBeSold.length;
+                var sell = dom.button(T("Sell"));
+                sell.onclick = function() {
+                    var list = canBeSold.slice(0, quantity.value).map(function(entity) {
+                        return entity.Id;
+                    });
+                    game.network.send("sell", {Vendor: vendor.Id, List: list}, open);
+                };
+                var prompt = new Panel("prompt", T("Sell"), [quantity.label, sell]);
+                prompt.show();
             };
 
             var icon = document.createElement("div");
@@ -300,7 +328,8 @@ Vendor.sell = function(data) {
                 var slot = Container.get(entity.findContainer()).findSlot(entity);
                 cleanUp = function() {
                     slot.unlock();
-                    dom.hide(button);
+                    if (canBeSold.length == 0)
+                        dom.hide(button);
                     to.firstChild.classList.add("item-preview");
                     to.onclick = null;
                 };
@@ -358,7 +387,6 @@ Vendor.sell = function(data) {
             dom.hide(button);
             dom.hide(price);
             dom.hide(quantityLabel);
-            dom.hide(total);
         };
         var price = Vendor.createPriceInput(true);
         var lot = document.createElement("div");
@@ -369,7 +397,6 @@ Vendor.sell = function(data) {
             dom.show(button);
             dom.show(price);
             dom.show(quantityLabel);
-            dom.show(total);
             lot.type = entity.Type;
             lot.innerHTML = "";
             lot.appendChild(entity.icon());
@@ -386,10 +413,6 @@ Vendor.sell = function(data) {
         quantityLabel.appendChild(document.createTextNode(T("Quantity") + ": "));
         quantityLabel.appendChild(quantity);
         quantityLabel.className = "lot-quantity hidden";
-
-        var total = document.createElement("div");
-        total.className = "lot-total hidden";
-        total.textContent = T("Total") + ": 0";
 
         var button = document.createElement("button");
         button.className = "lot-sell hidden";
@@ -410,14 +433,13 @@ Vendor.sell = function(data) {
 
         var sell = document.createElement("div");
         var legend = document.createElement("div");
-        legend.textContent = T("Buy item");
+        legend.textContent = T("Buy up");
         sell.appendChild(legend);
         sell.appendChild(lot);
         sell.appendChild(name);
         sell.appendChild(price);
         sell.appendChild(button);
         sell.appendChild(quantityLabel);
-        sell.appendChild(total);
 
         elements.push(dom.hr());
         elements.push(sell);

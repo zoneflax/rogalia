@@ -1067,4 +1067,7 @@ var dict = {
     "Please enter email": "Пожалуйста, введите email",
     "Links": "Ссылки",
     "Bugs": "Баги",
+    "Quantity": "Количество",
+    "Auto": "Авто",
+    "Buy up": "Скупать",
 };
