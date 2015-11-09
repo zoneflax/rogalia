@@ -188,7 +188,7 @@ hr {
 #menu {
     text-align: left;
     position: absolute;
-    z-index: 800!important;
+    z-index: 9000!important;
 }
 #menu ul, #vendor ul, #interraction ul {
     margin: 0;
@@ -241,7 +241,7 @@ hr {
     position: absolute;
     width: 15px;
     height: 13px;
-    z-index: 100;
+    z-index: 3;
     line-height: 15px;
     font-size: 9px;
     letter-spacing: -1px;
@@ -267,7 +267,7 @@ hr {
     max-height: 40px;
     vertical-align: middle;
     position: relative;
-    z-index: 99;
+    z-index: 2;
 }
 
 .slots-wrapper {
@@ -1945,7 +1945,7 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 .alert-overlay {
-    z-index: 9000;
+    z-index: 100500;
     background: rgba(0, 0, 0, 0.7);
     position: fixed;
     top: 0;
