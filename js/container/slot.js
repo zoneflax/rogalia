@@ -55,7 +55,6 @@ ContainerSlot.prototype = {
         this.clear();
         this.entity = entity;
         this.element.classList.add("has-item");
-        this.element.title = entity.name;
 
         var quality = document.createElement("sup");
         quality.className = "quality";
@@ -82,6 +81,7 @@ ContainerSlot.prototype = {
     update: function() {
         this.updateProgress();
         this.updateCustom();
+        this.setTitle(this.entity.name);
     },
     updateProgress: function() {
         //TODO: make generic `progress' @server-side

@@ -454,7 +454,7 @@ Craft.prototype = {
                 if (group in this.help) {
                     var help = dom.span(this.help[group]);
                     slot.onclick = function() {
-                        var panel = new Panel("craft-help", groupTitle, [this]);
+                        var panel = new Panel("craft-help", T("Help"), [this]);
                         panel.show();
                     }.bind(help);
                 } else {
