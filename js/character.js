@@ -1351,14 +1351,17 @@ Character.prototype = {
             }, tick);
         }
 
-        var ename = document.createElement("div");
-        ename.className = "effect-name";
-        ename.textContent = TS(name);
+        var title = TS(name);
+        var ename = dom.div("effect-name", {text: title})
         if (effect.Stacks > 1)
             ename.textContent += " x" + effect.Stacks;
 
-        efdiv.className  = "effect";
+        efdiv.className  = "effect " + EffectDesc.className(name);
         efdiv.name = name;
+        efdiv.onclick = function() {
+            var panel = new Panel("effect-description", title, [new EffectDesc(name)]);
+            panel.show();
+        };
         efdiv.appendChild(ename);
 
         var effects = document.getElementById("effects");
@@ -1808,6 +1811,7 @@ Character.prototype = {
         this.target = target;
         var cnt = game.controller.targetContainer;
         if (!target) {
+            cnt.dataset.targetId = null;
             dom.hide(cnt);
             return;
         }

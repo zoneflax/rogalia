@@ -373,7 +373,7 @@ hr {
 }
 #cursor {
     position: absolute;
-    z-index: 1000;
+    z-index: 8999;
     pointer-events: none;
 }
 #cursor img {
@@ -510,6 +510,19 @@ hr {
 .effect-name {
     position: relative;
     z-index: 1;
+}
+.effect-bad {
+    color: #fd7279;
+}
+.effect-good {
+    color: #3c3;
+}
+.effect-desc, .effect-note {
+    font-size: 11px;
+    line-height: 12px;
+}
+.effect-note {
+    color: #d89f5b;
 }
 
 .effect-progress {
@@ -1424,7 +1437,8 @@ big {
     background-image: url("assets/bg/rhombus-small.png");
     width: 103px;
     height: 60px;
-    left: 170px;
+    left: 26px;
+    top: 80px;
 }
 #target-container > canvas {
     margin-top: 10px;
