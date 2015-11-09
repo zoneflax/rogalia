@@ -72,6 +72,7 @@ function Craft() {
 
 
 Craft.prototype = {
+    help: {}, // see craft-??.js
     visibleGroups: null,
     recipe: function(type) {
         return Entity.recipes[type];
@@ -450,7 +451,15 @@ Craft.prototype = {
             for(var j = 0; j < required; j++) {
                 var slot = document.createElement("div");
                 slot.className = "slot";
-                slot.onclick = game.controller.craft.makeSearch(slot);
+                if (group in this.help) {
+                    var help = dom.span(this.help[group]);
+                    slot.onclick = function() {
+                        var panel = new Panel("craft-help", groupTitle, [this]);
+                        panel.show();
+                    }.bind(help);
+                } else {
+                    slot.onclick = game.controller.craft.makeSearch(slot);
+                }
                 var image = Entity.getPreview(group);
 
                 image.title = groupTitle;
