@@ -6,6 +6,7 @@ function ContainerSlot(container, index) {
     this.icon = null;
     this.entity = null;
     this.locked = false;
+    this.spriteVersion = "";
 
     this.element = dom.slot();
     this.element.maxWidth = Container.SLOT_SIZE + "px";
@@ -46,10 +47,11 @@ ContainerSlot.prototype = {
         this.onclear();
     },
     set: function(entity) {
-        if (this.entity == entity) {
+        if (this.entity == entity && this.spriteVersion == entity.spriteVersion()) {
             this.update();
             return;
         }
+        this.spriteVersion = entity.spriteVersion();
         this.clear();
         this.entity = entity;
         this.element.classList.add("has-item");

@@ -216,6 +216,9 @@ Entity.prototype = {
         }
         return y;
     },
+    spriteVersion: function() {
+        return this._path;
+    },
     initSprite: function() {
         var path = (this.Sprite.Name)
             ? this.Sprite.Name
