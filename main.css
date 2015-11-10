@@ -1230,7 +1230,10 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     width: 105px;
     height: 67px;
 }
-
+.new-sex:hover {
+    -webkit-filter: brightness(110%);
+    filter: brightness(110%);
+}
 .new-sex.checked {
     -webkit-filter: brightness(150%);
     filter: brightness(150%);

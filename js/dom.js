@@ -88,11 +88,11 @@ var dom = {
 
         return input;
     },
-    radioButton: function(text, value, name) {
-        return this.input(text, name, "radio");
+    radioButton: function(text, name) {
+        return this.input(text, null, "radio", name);
     },
-    checkBox: function(text, value, name) {
-        return this.input(text, name, "checkbox");
+    checkBox: function(text, name) {
+        return this.input(text, null, "checkbox", name);
     },
     remove: function(element) {
         element.parentNode.removeChild(element);
