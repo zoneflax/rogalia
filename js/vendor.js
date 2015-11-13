@@ -223,22 +223,21 @@ Vendor.buy = function(data) {
                 game.player.burden = null;
             };
         } else {
-            sellCleanUp = function() {
-                if (lot.item)
-                    lot.item.unblock();
-                lot.onclick = null;
-                cleanUp();
-            };
-            lot.use = function(item, slot) {
-                item.block();
-                var e = Entity.get(item.id);
-                lot.id = e.Id;
-                lot.item = item;
+            lot.use = function(entity, to) {
+                var slot = Container.get(entity.findContainer()).findSlot(entity);
+                sellCleanUp = function() {
+                    slot.unlock();
+                    lot.onclick = null;
+                    cleanUp();
+                };
+
+                slot.lock();
+                lot.id = entity.Id;
                 dom.show(button);
                 dom.show(price);
                 lot.innerHTML = "";
-                lot.appendChild(e.icon());
-                name.textContent = e.name;
+                lot.appendChild(entity.icon());
+                name.textContent = entity.name;
                 lot.onmousedown = sellCleanUp;
                 return true;
             };

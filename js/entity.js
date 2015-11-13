@@ -35,10 +35,11 @@ Entity.prototype = {
     CanCollide: true,
     Actions: null,
     Durability: null,
+    Dye: "",
     sprite: null,
     _canUse: false,
     _icon: null,
-    _path: "",
+    _spriteVersion: "",
     x: 0,
     y: 0,
     get X() {
@@ -217,7 +218,7 @@ Entity.prototype = {
         return y;
     },
     spriteVersion: function() {
-        return this._path;
+        return this._spriteVersion;
     },
     initSprite: function() {
         var path = (this.Sprite.Name)
@@ -263,11 +264,12 @@ Entity.prototype = {
         if (!path) {
             game.error("Entity %j has no sprite", this);
         }
-        if (this.sprite && this.sprite.ready && path == this._path) {
+
+        var spriteVersion = path + this.Dye;
+
+        if (this.sprite && this.sprite.ready && spriteVersion == this._spriteVersion) {
             return;
         }
-        this._path = path;
-
 
         this.sprite = new Sprite(
             path + ".png",
@@ -275,6 +277,15 @@ Entity.prototype = {
             this.Sprite.Height,
             this.Sprite.Speed
         );
+
+        if (this.Dye) {
+            var dye = this.Dye.split("#");
+            var color = dye[1];
+            var opacity = dye[2];
+            this.sprite.image = ImageFilter.tint(this.sprite.image, color, opacity);
+        }
+
+        this._spriteVersion = spriteVersion;
 
         //TODO removeme
         if (this.Group == "shovel") {

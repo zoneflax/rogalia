@@ -99,6 +99,10 @@ Container.prototype = {
             slots.appendChild(slot.element);
         }.bind(this));
 
+        if (this.entity.Type == "poker-table") {
+            slots.classList.add("poker-table");
+        }
+
         this.updateFuel();
 
         var id = this.id;

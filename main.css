@@ -1970,3 +1970,26 @@ input[type=number], .lot-quantity > input, .price > input {
     width: 100%;
     height: 100%;
 }
+
+.poker-table > :nth-child(1),
+.poker-table > :nth-child(2) {
+    -webkit-filter: hue-rotate(338deg);
+    filter: hue-rotate(338deg);
+}
+.poker-table > :nth-child(7),
+.poker-table > :nth-child(8) {
+    -webkit-filter: hue-rotate(38deg);
+    filter: hue-rotate(38deg);
+}
+.poker-table > :nth-child(49),
+.poker-table > :nth-child(50) {
+    -webkit-filter: hue-rotate(273deg);
+    filter: hue-rotate(273deg);
+}
+.poker-table > :nth-child(55),
+.poker-table > :nth-child(56) {
+    -webkit-filter: hue-rotate(191deg);
+    filter: hue-rotate(191deg);
+}
+
+
