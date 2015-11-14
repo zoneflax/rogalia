@@ -953,20 +953,16 @@ Entity.prototype = {
             return method.bind(self);
         };
         game.menu.show({
-            getActions: function() {
-                return {
-                    "Fix": bind(self.fix),
-                    "Set quality": prepare("set-quality"),
-                    "Set creator": prepare("set-creator"),
-                    "Get creator": send("get-creator"),
-                    "Set comment": prepare("set-comment"),
-                    "Finish building": send("finish-building"),
-                    "$prompt": function() {
-                        var cmd = prompt("cmd?", "set-quality");
-                        game.chat.append("*" + cmd + " " + id);
-                    },
-                };
-            }
+            "Fix": bind(self.fix),
+            "Set quality": prepare("set-quality"),
+            "Set creator": prepare("set-creator"),
+            "Get creator": send("get-creator"),
+            "Set comment": prepare("set-comment"),
+            "Finish building": send("finish-building"),
+            "$prompt": function() {
+                var cmd = prompt("cmd?", "set-quality");
+                game.chat.append("*" + cmd + " " + id);
+            },
         });
     }
 };

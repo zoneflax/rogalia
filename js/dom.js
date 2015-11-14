@@ -140,7 +140,7 @@ var dom = {
         });
     },
     /* * * * * */
-    //
+    // dom.tabs([ { title: T("text"), contents: [elem, ...], update: function(){}  } , ...])
     tabs: function(cfg) {
         var titles = dom.div("tabs-titles");
         var contents = dom.div("tabs-contents");
@@ -150,7 +150,8 @@ var dom = {
             titles.appendChild(title);
 
             var content = dom.div("tab-content");
-            dom.append(content, tab.contents);
+            if (tab.contents)
+                dom.append(content, tab.contents);
             contents.appendChild(content);
 
             title.onclick = function() {
@@ -162,7 +163,12 @@ var dom = {
 
                 active.title = title;
                 active.content = content;
+
+                if (tab.update) {
+                    tab.update.call(content);
+                }
             };
+
         });
 
         var active = {

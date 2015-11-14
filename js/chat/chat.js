@@ -21,17 +21,54 @@ function Chat() {
         }
     };
 
+    var preparePrivate = function(name) {
+        self.newMessageElement.focus();
+        self.newMessageElement.value = "*to " + name + " ";
+    };
+
     this.messagesElement = document.createElement("ul");
     this.messagesElement.className = "messages no-drag";
     this.messagesElement.innerHTML = localStorage["chat"] || "";
-    this.messagesElement.onclick = function(e) {
-        if (e.target.classList.contains("from")) {
-            var name = e.target.textContent;
-            if (self.newMessageElement.value.length == 0)
-                name += ", ";
-            self.append(name);
-            self.activate();
+    this.messagesElement.onmousedown = function(e) {
+        e.stopPropagation();
+        if (!e.target.classList.contains("from"))
+            return false;
+
+        var name = e.target.textContent;
+         // hide [server] etc
+        if (name[0] == "[")
+            return false;
+
+        var privateIndex = name.indexOf(privateSymbol);
+        if (privateIndex != -1)
+            name = name.substring(0, privateIndex);
+
+        switch (e.button) {
+        case game.controller.LMB:
+            if (privateIndex != -1) {
+                preparePrivate(name);
+            } else {
+                if (self.newMessageElement.value.length == 0)
+                    name += ", ";
+                self.append(name);
+                self.activate();
+
+            }
+            break;
+        case game.controller.RMB:
+            game.menu.show([
+                {
+                    private: preparePrivate.bind(this, name)
+                },
+                {
+                    addToFriends: function() {
+                        game.network.send("friend-add", {Name: name});
+                    },
+                }
+            ]);
+            break;
         }
+        return false;
     };
 
     //TODO: encapsulate
@@ -548,6 +585,8 @@ function Chat() {
         this.newMessageElement.value += text;
     };
 
+    var privateSymbol = " → ";
+
     this.addMessage = function(message) {
         this.cleanUp();
 
@@ -575,9 +614,6 @@ function Chat() {
             fromElement.className = "from";
             var color = null;
             switch(message.From) {
-            case "Benedict":
-                color = "#922";
-                break;
             case "TatriX":
                 color = "#0cc";
                 break;
@@ -594,6 +630,10 @@ function Chat() {
                 if (color)
                     fromElement.style.color = color;
                 fromElement.textContent = message.From;
+
+                if (message.To)
+                    fromElement.textContent += privateSymbol + message.To;
+
                 var now = new Date();
                 fromElement.title = '[' + now.getHours() + ':' + now.getMinutes() + ']';
                 contents.push(fromElement);

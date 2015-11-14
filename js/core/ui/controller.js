@@ -872,32 +872,21 @@ function Controller(game) {
         items.push.apply(items, game.findCharsNear(this.world.x, this.world.y));
         if (items.length == 0)
             return;
-        game.menu.show({
-            getActions: function() {
-                var actions = {};
-                items.forEach(function(item) {
-                    var name = item.Name;
-                    while (name in actions) {
-                        name = name + " "; //TODO: (fixme)dirty hack for objects of the same type
-                    }
-                    actions[name] = {
-                        item: item,
-                        callback: function() {
-                            game.menu.show(item, 0, 0, false, true);
-                        }
-                    };
-                });
-                // var interval = setInterval(function() {
-                //     if (items.length > 0) {
-                //         var item = items.pop();
-                //         game.chat.send("*set-quality " + item.Id + " 50");
-                //     } else {
-                //         clearInterval(interval);
-                //     }
-                // }, 500);
-                return actions;
+
+        var actions = {};
+        items.forEach(function(item) {
+            var name = item.Name;
+            while (name in actions) {
+                name = name + " "; //TODO: (fixme)dirty hack for objects of the same type
             }
+            actions[name] = {
+                item: item,
+                callback: function() {
+                    game.menu.show(item, 0, 0, false, true);
+                }
+            };
         });
+        game.menu.show(actions);
     };
 
     // TODO: refactor names

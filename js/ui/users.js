@@ -2,13 +2,35 @@
 function Users() {
     this.characters = [];
     this.listElement = document.createElement("ul");
-    var usersLabel = document.createElement("div");
-    usersLabel.textContent = T("Users online:");
     var total = document.createElement("div");
+
+    var tabs = dom.tabs([
+        {
+            title: T("Users online"),
+            contents: [this.listElement, total]
+        },
+        {
+            title: T("Friends"),
+            update: function() {
+                var tabContent = this;
+                tabContent.innerHTML = "";
+                var list = dom.tag("ul");
+                tabContent.appendChild(list);
+                game.network.send("friend-list", {}, function(data) {
+                    if (!data.Friends)
+                        tabContent.textContent = T("No friends");
+                    else
+                        data.Friends.forEach(function(name) {
+                            list.appendChild(dom.tag("li", "friend", {text: name}));
+                        });
+                });
+            }
+        }
+    ]);
     this.panel = new Panel(
         "users",
         "Users",
-        [usersLabel, this.listElement, total]
+        [tabs]
     );
 
     this.playersList = {};

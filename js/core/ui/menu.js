@@ -18,7 +18,10 @@ Menu.prototype = {
             return false;
         if (!object)
             return false;
-        var actions = object.getActions();
+        var actions = object;
+
+        if ("getActions" in object)
+            actions = object.getActions();
 
         if (!actions)
             return false;

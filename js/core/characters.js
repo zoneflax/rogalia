@@ -100,13 +100,9 @@ Character.npcActions = {
             };
         };
         var citizenships = {
-            getActions: function() {
-                return {
-                    "I choose Empire": set("Empire"),
-                    "I choose Confederation": set("Confederation"),
-                    "I want to be free": set(""),
-                };
-            }
+            "I choose Empire": set("Empire"),
+            "I choose Confederation": set("Confederation"),
+            "I want to be free": set(""),
         };
         game.menu.show(citizenships);
     },
@@ -132,38 +128,28 @@ Character.npcActions = {
             return;
         }
         var id = this.Id;
-        var talks = {
-            getActions: function() {
-                var actions = {};
-                quests.forEach(function(q) {
-                    var quest = new Quest(q);
-                    var name = quest.getName() + " (" + quest.getStatusMarker() + ")";
-                    actions[name] = function() {
-                        var panel = new Panel("quest", "Quest", quest.getContents());
-                        panel.quest = quest;
-                        panel.show();
-                    };
-                });
-                return actions;
-            }
-        };
+        var talks = {};
+        quests.forEach(function(q) {
+            var quest = new Quest(q);
+            var name = quest.getName() + " (" + quest.getStatusMarker() + ")";
+            talks[name] = function() {
+                var panel = new Panel("quest", "Quest", quest.getContents());
+                panel.quest = quest;
+                panel.show();
+            };
+        });
         game.menu.show(talks);
     },
     "Talk": function() {
         var name = this.Name;
-        var talks = {
-            getActions: function() {
-                var actions = {};
-                for (var i in game.talks.stories) {
-                    actions[i] = function() {
-                        var p = document.createElement("p");
-                        p.textContent = this;
-                        var panel = new Panel("story", name, [p]);
-                        panel.show();
-                    }.bind(game.talks.stories[i]);
-                }
-                return actions;
-            }
+        var talks = {};
+        for (var i in game.talks.stories) {
+            talks[i] = function() {
+                var p = document.createElement("p");
+                p.textContent = this;
+                var panel = new Panel("story", name, [p]);
+                panel.show();
+            }.bind(game.talks.stories[i]);
         };
         game.menu.show(talks);
     },
