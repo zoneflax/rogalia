@@ -631,8 +631,10 @@ function Chat() {
                     fromElement.style.color = color;
                 fromElement.textContent = message.From;
 
-                if (message.To)
+                if (message.To) {
                     fromElement.textContent += privateSymbol + message.To;
+                    fromElement.style.color = "violet";
+                }
 
                 var now = new Date();
                 fromElement.title = '[' + now.getHours() + ':' + now.getMinutes() + ']';
