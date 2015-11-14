@@ -887,8 +887,12 @@ hr {
     text-decoration: underline;
     color: lightgreen;
 }
-#users .user {
+#users li {
     list-style-type: square;
+    cursor: pointer;
+}
+#users li:hover {
+    color: lightgreen;
 }
 #users a {
     cursor: pointer;

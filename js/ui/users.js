@@ -21,7 +21,11 @@ function Users() {
                         tabContent.textContent = T("No friends");
                     else
                         data.Friends.forEach(function(name) {
-                            list.appendChild(dom.tag("li", "friend", {text: name}));
+                            var friend = dom.tag("li", "friend", {text: name});
+                            friend.onmousedown = function(e) {
+                                return game.chat.nameMenu(e, name);
+                            };
+                            list.appendChild(friend);
                         });
                 });
             }
@@ -40,26 +44,11 @@ function Users() {
 
         if (!user) {
             user = document.createElement("li");;
-            user.className = "user";
             user.href = "javascript://";
             user.textContent = name;
-            if (game.player.IsAdmin) {
-                var teleport = document.createElement("a");
-                teleport.textContent = "[Teleport]";
-                teleport.addEventListener('click', function() {
-                    game.network.send('teleport', {name: name});
-                });
-                user.appendChild(teleport);
-
-                var summon = document.createElement("a");
-                summon.textContent = '[Summon]';
-                summon.onclick = function() {
-                    game.network.send('summon', {name: name});
-                    return false;
-                };
-                user.appendChild(summon);
-            }
-
+            user.onmousedown = function(e) {
+                return game.chat.nameMenu(e, name);
+            };
             this.listElement.appendChild(user);
             this.playersList[name] = user;
         }

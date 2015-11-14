@@ -685,6 +685,7 @@ var dict = {
     "Respown": "Респоун",
     "Set respawn": "Назначить место возрождения",
     "Teleport": "Телепортироваться",
+    "Summon": "Призвать",
     "Hop": "Хмель",
     "Castle cellar entrance": "Вход в подземелье замка",
     "Titanium hammer": "Титановый молот",
@@ -1091,4 +1092,5 @@ var dict = {
     "Select option": "Выберите настройку",
     "Private": "Личное сообщение",
     "Add to friends": "Добавить в друзья",
+    "Remove from friends": "Удалить из друзей",
 };

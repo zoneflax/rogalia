@@ -21,32 +21,31 @@ function Chat() {
         }
     };
 
-    var preparePrivate = function(name) {
-        self.newMessageElement.focus();
-        self.newMessageElement.value = "*to " + name + " ";
+    this.preparePrivate = function(name) {
+        this.newMessageElement.focus();
+        this.newMessageElement.value = "*to " + name + " ";
     };
 
     this.messagesElement = document.createElement("ul");
     this.messagesElement.className = "messages no-drag";
     this.messagesElement.innerHTML = localStorage["chat"] || "";
-    this.messagesElement.onmousedown = function(e) {
-        e.stopPropagation();
-        if (!e.target.classList.contains("from"))
-            return false;
 
-        var name = e.target.textContent;
-         // hide [server] etc
-        if (name[0] == "[")
-            return false;
+    this.nameMenu = function(e, name) {
+        e.stopPropagation();
 
         var privateIndex = name.indexOf(privateSymbol);
-        if (privateIndex != -1)
-            name = name.substring(0, privateIndex);
+        if (privateIndex != -1) {
+            var fromName = name.substring(0, privateIndex);;
+            if (fromName == game.player.Name)
+                name = name.substring(privateIndex + privateSymbol.length);
+            else
+                name = fromName;
+        }
 
         switch (e.button) {
         case game.controller.LMB:
             if (privateIndex != -1) {
-                preparePrivate(name);
+                self.preparePrivate(name);
             } else {
                 if (self.newMessageElement.value.length == 0)
                     name += ", ";
@@ -56,19 +55,47 @@ function Chat() {
             }
             break;
         case game.controller.RMB:
-            game.menu.show([
+            var actions = [
                 {
-                    private: preparePrivate.bind(this, name)
+                    private: self.preparePrivate.bind(self, name)
                 },
                 {
                     addToFriends: function() {
                         game.network.send("friend-add", {Name: name});
                     },
+                    removeFromFriends: function() {
+                        game.network.send("friend-remove", {Name: name});
+                    },
                 }
-            ]);
+            ];
+
+            if (game.player.IsAdmin) {
+                actions.push({
+                    teleport: function() {
+                        game.network.send('teleport', {name: name});
+                    },
+                    summon: function() {
+                        game.network.send('summon', {name: name});
+                    }
+                });
+            }
+
+            game.menu.show(actions);
             break;
         }
         return false;
+    };
+
+    this.messagesElement.onmousedown = function(e) {
+        if (!e.target.classList.contains("from"))
+            return false;
+
+        var name = e.target.textContent;
+        // hide [server] etc
+        if (name[0] == "[")
+            return false;
+
+        return self.nameMenu(e, name);
     };
 
     //TODO: encapsulate
