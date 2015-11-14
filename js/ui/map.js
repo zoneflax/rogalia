@@ -23,13 +23,6 @@ function Map() {
 
     this.tiles = [];
 
-    this.rotateMinimap = function() {
-        this.minimap.style.transform = (config.ui.rotateMinimap || true)
-            ? "scaleY(0.5) rotate(45deg) scale(1.5) translate(44px, 11px)"
-            : "";
-    };
-    this.rotateMinimap();
-
     this.parse = function(img) {
         this.minimapCanvas.width = 2*img.width;
         this.minimapCanvas.height = img.height;
@@ -95,41 +88,41 @@ function Map() {
 
         var loc = game.player.Location;
         this.location.set(loc.X, loc.Y);
-        this.layers = this.makeLayers();
 
-        //TODO: reuse valid chunks
-        this.chunks = {};
+        this.layers = this.makeLayers();
+        this.reset();
 
         for(var y = 0; y < this.cells_y; y++) {
             for(var x = 0; x < this.cells_x; x++) {
-                if (config.graphics.low) {
-                    var id = 0;
-                } else {
                 var id = this.data[y][x].id;
-                    for (var c = 0; c < 4; c++) {
-                        var offset = 0;
-                        var cx = 1 - (c & 0x1);
-                        var cy = 1 - ((c >> 1) & 0x1);
-                        for (var i = 0; i < 4; i++) {
-                            var dx = x + cx - (i & 0x1);
-                            var dy = y + cy - ((i >> 1) & 0x1);
-                            var other =
-                                    this.data[dy] &&
-                                    this.data[dy][dx] &&
-                                    this.data[dy][dx].id;
-                            if (other >= id) {
-                                offset |= 1 << i;
-                            }
-                            if (other !== id)
-                                this.data[y][x].transition[4-c] = true;
+                for (var c = 0; c < 4; c++) {
+                    var offset = 0;
+                    var cx = 1 - (c & 0x1);
+                    var cy = 1 - ((c >> 1) & 0x1);
+                    for (var i = 0; i < 4; i++) {
+                        var dx = x + cx - (i & 0x1);
+                        var dy = y + cy - ((i >> 1) & 0x1);
+                        var other =
+                                this.data[dy] &&
+                                this.data[dy][dx] &&
+                                this.data[dy][dx].id;
+                        if (other >= id) {
+                            offset |= 1 << i;
                         }
-                        this.data[y][x].corners[c] = offset;
+                        if (other !== id)
+                            this.data[y][x].transition[4-c] = true;
                     }
+                    this.data[y][x].corners[c] = offset;
                 }
                 this.layers[id].push(this.data[y][x]);
             }
         }
         this.ready = true;
+    };
+
+    this.reset = function() {
+        //TODO: reuse valid chunks
+        this.chunks = {};
     };
 
     this.drawGrid = function() {
@@ -189,24 +182,6 @@ function Map() {
             var ly = game.player.Location.Y / CELL_SIZE;
             variant = Math.floor(tile.width/(4*CELL_SIZE)*(1+Math.sin((lx+x)*(ly+y))));
         }
-        if (config.graphics.low) {
-            var offset = 15;
-            ctx.drawImage(
-                tile,
-
-                variant * 2*CELL_SIZE,
-                offset * CELL_SIZE,
-                CELL_SIZE * 2,
-                CELL_SIZE,
-
-                p.x,
-                p.y,
-                CELL_SIZE * 2,
-                CELL_SIZE
-            );
-            return;
-        }
-
         var d = [
             [0, CELL_SIZE/2],
             [-CELL_SIZE, 0],
@@ -321,7 +296,7 @@ function Map() {
             });
         });
 
-        if(game.debug.map.position && false) {
+        if (game.debug.map.position && false) {
             var text = "(" + (x + game.camera.x) + " " + (y + game.camera.y) + ")";
             game.ctx.fillStyle = "#fff";
 
@@ -334,8 +309,6 @@ function Map() {
     };
 
     this.makeLayers = function() {
-        if (config.graphics.low)
-            return [[]];
         return this.bioms.map(function() {
             return [];
         });
@@ -386,9 +359,9 @@ function Map() {
 
 
         //TODO: use same argument names everywhere!
-        var darkness = (game.config.map.simpleDarkness) ? this.simpleDarkness : this.darkness;
+        var darkness = (debug.map.simpleDarkness) ? this.simpleDarkness : this.darkness;
         this.each(function(w, h, p, x, y) {
-            if (game.config.map.simpleDarkness) {
+            if (debug.map.simpleDarkness) {
                 if(w % 2 == 1 || h % 2 == 1)
                     return;
                 p.x -= CELL_SIZE;

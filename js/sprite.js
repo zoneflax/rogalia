@@ -22,6 +22,8 @@ function Sprite(path, width, height, speed) {
 
     this.pending = [];
 
+    this.onload = null;
+
     if (path)
         this.load(path);
 }
@@ -46,7 +48,9 @@ Sprite.prototype = {
             while (canvas = this.pending.pop()) {
                 this.renderIcon(canvas);
             }
-
+            if (this.onload) {
+                this.onload();
+            }
         }.bind(this));
     },
     makeOutline: function() {

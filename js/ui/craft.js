@@ -72,7 +72,6 @@ function Craft() {
 
 
 Craft.prototype = {
-    help: {}, // see craft-??.js
     visibleGroups: null,
     recipe: function(type) {
         return Entity.recipes[type];
@@ -451,8 +450,8 @@ Craft.prototype = {
             for(var j = 0; j < required; j++) {
                 var slot = document.createElement("div");
                 slot.className = "slot";
-                if (group in this.help) {
-                    var help = dom.span(this.help[group]);
+                if (group in Craft.help) {
+                    var help = dom.span(Craft.help[group]);
                     slot.onclick = function() {
                         var panel = new Panel("craft-help", T("Help"), [this]);
                         panel.show();

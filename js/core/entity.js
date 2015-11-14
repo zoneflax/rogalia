@@ -282,7 +282,9 @@ Entity.prototype = {
             var dye = this.Dye.split("#");
             var color = dye[1];
             var opacity = dye[2];
-            this.sprite.image = ImageFilter.tint(this.sprite.image, color, opacity);
+            this.sprite.onload = function() {
+                this.image = ImageFilter.tint(this.image, color, opacity);
+            };
         }
 
         this._spriteVersion = spriteVersion;
@@ -701,8 +703,12 @@ Entity.prototype = {
 
         noignore = noignore || game.controller.modifier.ctrl;
 
-        if (config.cursor.autoHighlightDoors && this.Group == "gate")
-            return true;
+        switch (this.Group) {
+        case "gate":
+        case "portal":
+            if (config.graphics.autoHighlightDoors)
+                return true;
+        }
 
         return noignore || this.selectable();
     },

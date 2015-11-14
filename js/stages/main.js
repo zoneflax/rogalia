@@ -95,7 +95,7 @@ function mainStage(data) {
         game.characters.forEach(drawAura);
         game.claims.forEach(drawClaim);
         game.sortedEntities.traverse(drawObject);
-        if (config.map.darkness)
+        if (debug.map.darkness)
             game.map.drawDarkness();
         game.characters.forEach(drawUI);
         game.controller.draw();

@@ -102,12 +102,12 @@ function loginStage() {
 
     var en = dom.option("en");
     var ru = dom.option("ru");
-    if (config.language.Russian)
+    if (game.lang == "ru")
         ru.selected = true;
 
     var lang = dom.select([en, ru], "lang-selector");
     lang.onchange = function() {
-        localStorage.setItem("settings.language.Russian", (this.value == "ru"));
+        localStorage.setItem("lang", this.value);
         game.reload();
     };
 

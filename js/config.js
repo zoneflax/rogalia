@@ -7,43 +7,31 @@ var LOBBY_X = 85;
 var LOBBY_Y = 15;
 
 var config = {
-    map: {
-        darkness: false,
-        simpleDarkness: false,
-        ray: false,
-    },
-    language: {
-        Russian: true,
-    },
-    gameplay: {
+    character: {
         pathfinding: function() { return game.player.Settings.Pathfinding; },
         hideHelmet: function() { return game.player.Style.HideHelmet; },
     },
     ui: {
+        language: function() {
+            return game.lang;
+        },
         hp: false,
         name: false,
         npc: false,
         simpleFonts: false,
-        minimapObjects: false,
         allowSelfSelection: true,
-        fillClaim: false,
         showMeterValues: true,
-        strokeClaim: true,
-        rotateMinimap: false,
         chatAttached: true,
         chatBalloons: true,
         showAttackRadius: true,
+        fillClaim: false,
+        strokeClaim: true,
+        chatNotifications: false,
     },
     graphics: {
-        "low": false,
-        "fullscreen": false,
-    },
-    system: {
-        quitConfirm: false,
-    },
-    cursor: {
-        dontHide: false,
-        autoHighlightDoors: false,
+        // low: false,
+        fullscreen: false,
+        autoHighlightDoors: true,
     },
     sound: {
         playSounds: true,
@@ -51,8 +39,13 @@ var config = {
     },
 };
 var debug = {
-    ui: {
+    map: {
         world: true,
+        darkness: false,
+        simpleDarkness: false,
+        ray: false,
+        grid: false,
+        position: false,
     },
     player: {
         box: false,
@@ -63,10 +56,6 @@ var debug = {
         box: false,
         position: false,
         logOnClick: false,
-    },
-    map: {
-        grid: false,
-        position: false,
     },
     network: {
         length: false,

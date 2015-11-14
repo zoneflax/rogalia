@@ -594,7 +594,7 @@ Character.prototype = {
             // call actionButton on space
             if (!targetOnly && this.isPlayer && game.controller.actionButton.active())
                 game.controller.actionButton.activate();
-            else if (this != game.player || config.allowSelfSelection)
+            else if (this != game.player || config.ui.allowSelfSelection)
                 game.player.setTarget(this);
         }
     },

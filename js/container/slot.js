@@ -42,6 +42,7 @@ ContainerSlot.prototype = {
         this.sub = null;
         this.element.innerHTML = "";
         this.element.classList.remove("has-item");
+        this.setTitle("");
         this.markAsSeen();
         this.unlock();
         this.onclear();

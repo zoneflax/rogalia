@@ -1,14 +1,15 @@
 "use strict";
 function Settings() {
-    var sections = [this.makeSettingsSubTree(game.config, "Config")];
-
-    if (game.player.IsAdmin)
-        sections.push(this.makeSettingsSubTree(game.debug, "Debug"));
-
+    var tabs = this.makeSettingsTabs(game.config, "Config");
+    if (game.player.IsAdmin) {
+        this.makeSettingsTabs(game.debug, "Debug").forEach(function(tab) {
+            tabs.push(tab);
+        });
+    }
     this.panel = new Panel(
         "settings",
         "Settings",
-        sections
+        [dom.tabs(tabs)]
     );
 
     function setPlayerSettings() {
@@ -20,46 +21,32 @@ function Settings() {
     };
 
     this.triggers = {
-        "settings.character.bald": function() {
-            game.player.initSprite();
-        },
-        "settings.language.Russian": function() {
-            game.reload();
-        },
-        "settings.ui.minimapObjects": function() {
-            game.reload();
-        },
-        "settings.map.darkness": function() {
-
-        },
         "settings.sound.playMusic": function() {
             game.sound.toggleMusic();
         },
-        "settings.ui.world": function() {
+        "settings.map.world": function() {
             dom.toggle(game.world);
         },
-        "settings.ui.rotateMinimap": function() {
-            game.map.rotateMinimap();
+        "settings.ui.chatNotifications": function(attach) {
+            game.chat.initNotifications();
         },
         "settings.ui.chatAttached": function(attach) {
             if (attach)
                 game.chat.attach();
             else
                 game.chat.detach();
-
         },
         "settings.graphics.low": function() {
-            game.reload();
+            game.map.reset();
         },
         "settings.graphics.fullscreen": function() {
             game.screen.update();
         },
-
-        "settings.gameplay.pathfinding": function() {
+        "settings.character.pathfinding": function() {
             game.player.Settings.Pathfinding = !game.player.Settings.Pathfinding;
             setPlayerSettings();
         },
-        "settings.gameplay.hideHelmet": function() {
+        "settings.character.hideHelmet": function() {
             game.player.Style.HideHelmet = !game.player.Style.HideHelmet;
             setPlayerStyle();
             game.player.reloadSprite();
@@ -67,35 +54,26 @@ function Settings() {
     };
 }
 
-Settings.load = function() {
-    Settings.prototype.makeSettingsSubTree(game.config);
-    Settings.prototype.makeSettingsSubTree(game.debug);
-};
-
 Settings.prototype = {
     triggers: null,
-    makeSettingsSubTree: function(map, name) {
+    makeSettingsTabs: function(map, name) {
         var self = this;
-        var subtree  = document.createElement("div");
-        var title = document.createElement("big");
-        title.textContent = name;
-        subtree.appendChild(title);
+        var tabs = [];
         Object.keys(map).forEach(function(name) {
             var group = map[name];
+            var tab = {
+                title: T(name),
+                contents: [],
+            };
 
-            var fieldset = document.createElement("fieldset");
-            var legend = document.createElement("legend");
-            legend.textContent = name;
-            fieldset.appendChild(legend);
+            var optionDesc = dom.div("settings-option-desc");
+            optionDesc.placeholder = T("Select option");
+            optionDesc.textContent = optionDesc.placeholder;
 
             Object.keys(group).forEach(function(prop) {
-                var label = document.createElement("label");
-                var input = document.createElement("input");
-                input.type = "checkbox";
-
                 var key = ["settings", name, prop].join(".");
-
                 var value = group[prop];
+
                 if (value instanceof Function) {
                     if (game.player) // eval only when player is loaded
                         value = value();
@@ -109,19 +87,30 @@ Settings.prototype = {
                     }
                 }
 
-                input.checked = value;
-                label.appendChild(input);
-                label.appendChild(document.createTextNode(prop));
-                fieldset.appendChild(label);
+                var desc = Settings.descriptions[name] && Settings.descriptions[name][prop] || [prop, ""];
+                var title = desc[0];
+                var tip = desc[1];
 
-                label.addEventListener("change", function() {
+                var checkbox = dom.checkbox(title);
+                checkbox.checked = value;
+
+                var label = checkbox.label;
+                label.onmouseover = function() {
+                    optionDesc.textContent = tip;
+                };
+                label.onmouseout = function() {
+                    optionDesc.textContent = optionDesc.placeholder;
+                };
+                label.onchange = function() {
                     group[prop] = !group[prop];
                     localStorage.setItem(key, group[prop]);
                     self.triggers[key] && self.triggers[key](group[prop]);
-                });
+                };
+                tab.contents.push(label);
             });
-            subtree.appendChild(fieldset);
+            tab.contents.push(optionDesc);
+            tabs.push(tab);
         });
-        return subtree;
+        return tabs;
     },
 };

@@ -1132,8 +1132,13 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 }
 
 #lobby, #create-character {
-    width: 236px;
     text-align: center;
+}
+#lobby {
+    width: 452px;
+}
+#create-character {
+    width: 236px;
 }
 
 .lobby-account {
@@ -1348,12 +1353,6 @@ ol li a:hover {
     color: #000;
 }
 
-#settings label {
-    display: block;
-}
-#settings > .contents > div {
-    float: left;
-}
 big {
     font-size: 24px;
 }
@@ -1457,6 +1456,7 @@ big {
 #minimap {
     width: 154px;
     height: 90px;
+    transform: scaleY(0.5) rotate(45deg) scale(1.5) translate(44px, 11px);
 }
 
 #minimap-canvas, #minimap-objects-canvas {
@@ -1997,4 +1997,50 @@ input[type=number], .lot-quantity > input, .price > input {
     filter: hue-rotate(191deg);
 }
 
+.tab-title {
+    background: url("assets/bg/chat/tab.png") no-repeat;
+    width: 122px;
+    display: inline-block;
+    padding-left: 15px;
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+}
+.tabs > hr {
+    margin: -2px 2px 0 0;
+}
+.tab-title.active {
+    background: url("assets/bg/chat/tab-active.png") no-repeat;
+    color: #593815;
+}
+.tab-content {
+    display: none;
+    position: relative;
+}
+.tab-content.active {
+    display: block;
+}
 
+#settings {
+    max-width: none;
+    width: 508px;
+}
+#settings > .contents {
+    height: 350px;
+}
+#settings label {
+    display: block;
+    cursor: pointer;
+}
+#settings label:hover {
+    color: lightgreen;
+}
+.settings-option-desc {
+    border-left: 1px solid #593815;
+    padding: 4px 2px 2px 4px;
+    position: absolute;
+    top: -1px;
+    right: 0;
+    width: 300px;
+    height: 331px;
+}

@@ -189,6 +189,7 @@ Panel.prototype = {
             this.x = 0;
             this.y = 0;
         }
+
         this.hooks.show && this.hooks.show.call(this);
         window.scrollTo(0, 0);
     },

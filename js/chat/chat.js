@@ -4,6 +4,10 @@ function Chat() {
     this.useNotifications = false;
 
     this.initNotifications = function() {
+        if (!config.ui.chatNotifications) {
+            return;
+        }
+
         if (!("Notification" in window))
             return;
         switch(Notification.permission) {
@@ -22,11 +26,13 @@ function Chat() {
     this.messagesElement.innerHTML = localStorage["chat"] || "";
     this.messagesElement.onclick = function(e) {
         if (e.target.classList.contains("from")) {
-            self.append(e.target.textContent + ", ");
+            var name = e.target.textContent;
+            if (self.newMessageElement.value.length == 0)
+                name += ", ";
+            self.append(name);
             self.activate();
         }
     };
-
 
     //TODO: encapsulate
     var scrollIndicator = document.createElement("div");
@@ -54,10 +60,10 @@ function Chat() {
         return false;
     }.bind(this);
 
-    var scrollToTheEnd = function() {
+    this.scrollToTheEnd = function() {
         this.messagesElement.scrollTop = this.messagesElement.scrollHeight;
         updateScroll({deltaY: 99999});
-    }.bind(this);
+    };
 
     this.messagesElement.addEventListener("wheel", updateScroll);
 
@@ -209,7 +215,7 @@ function Chat() {
             this.attach();
 
         //TODO: fix this hack
-        setTimeout(scrollToTheEnd, 100);
+        setTimeout(this.scrollToTheEnd.bind(this), 100);
     };
 
     this.attach = function() {
@@ -259,7 +265,7 @@ function Chat() {
     };
 
     //TODO: get rid of checkbox
-    var alwaysVisible = dom.checkBox();
+    var alwaysVisible = dom.checkbox();
     alwaysVisible.id = "chat-always-visible";
     alwaysVisible.label.id = "chat-always-visible-label";
     alwaysVisible.label.title = T("Always visible");
@@ -533,7 +539,7 @@ function Chat() {
         var height = this.messagesElement.scrollTop + this.messagesElement.clientHeight;
         var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 2*this.messagesElement.clientHeight;
         if (scroll)
-            scrollToTheEnd();
+            this.scrollToTheEnd();
         return messageElement;
     }.bind(this);
 
@@ -713,7 +719,8 @@ function Chat() {
             this.newMessageElement.focus();
         else
             this.panel.show();
-        scrollToTheEnd();
+
+        this.scrollToTheEnd();
     };
 
     this.save = function() {

@@ -98,11 +98,10 @@ function Game() {
     this.debug = debug;
     this.config = config;
 
-    Settings.load();
+    //TODO:FIXME: remove bool flag and use select{lang1, lang2, ...}
+    this.lang = localStorage.getItem("lang") || "ru";
     dict.init();
 
-    //TODO:FIXME: remove bool flag and use select{lang1, lang2, ...}
-    this.lang = (config.language.Russian) ? "ru" : "en";
 
     this.talks = new Talks();
     this.sound = new Sound();
@@ -227,11 +226,6 @@ function Game() {
         window.addEventListener("resize", game.screen.update.bind(game.screen));
         window.addEventListener("beforeunload", function(e) {
             game.save();
-            if (config.system.quitConfirm && game.stage.name != "exit") {
-                e.preventDefault();
-                return T("Quit?");
-            }
-            return null;
         });
 
         window.addEventListener('focus', function() {

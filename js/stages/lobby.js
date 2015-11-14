@@ -31,6 +31,10 @@ function lobbyStage(data) {
         avatars.appendChild(avatarContainer);
     }
 
+    characters = characters.sort(function(a, b) {
+        return a.Name > b.Name;
+    });
+
     characters.forEach(function(info) {
         var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png").cloneNode();
         add(info.Name, icon, function() {

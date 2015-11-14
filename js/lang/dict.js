@@ -23,7 +23,7 @@ dict.init = function() {
         return T(text, true);
     };
 
-    if (!game.config.language.Russian) {
+    if (game.lang != "ru") {
         dict.update = function(){};
         window.T = function(text) {
             return text;
@@ -32,7 +32,7 @@ dict.init = function() {
         return;
     }
     window.T = function(text, symbol) {
-        if (game.config.language.Russian) {
+        if (game.lang == "ru") {
             var info = Items[text];
             if (info && info.name.ru)
                 return info.name.ru;

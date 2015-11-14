@@ -81,9 +81,9 @@ var dom = {
         if (value)
             input.value = value;
         var label = document.createElement("label");
+        label.appendChild(input);
         if (text)
             label.appendChild(document.createTextNode(text));
-        label.appendChild(input);
         input.label = label;
 
         return input;
@@ -91,9 +91,10 @@ var dom = {
     radioButton: function(text, name) {
         return this.input(text, null, "radio", name);
     },
-    checkBox: function(text, name) {
+    checkbox: function(text, name) {
         return this.input(text, null, "checkbox", name);
     },
+    /* * * * * */
     remove: function(element) {
         element.parentNode.removeChild(element);
     },
@@ -122,6 +123,7 @@ var dom = {
         this.remove(element);
         to.appendChild(element);
     },
+    /* * * * * */
     forEach: function(selector, callback) {
         [].forEach.call(document.querySelectorAll(selector), function(elem) {
             callback.call(elem);
@@ -137,4 +139,44 @@ var dom = {
             this.classList.remove(name);
         });
     },
+    /* * * * * */
+    //
+    tabs: function(cfg) {
+        var titles = dom.div("tabs-titles");
+        var contents = dom.div("tabs-contents");
+
+        cfg.forEach(function(tab) {
+            var title = dom.div("tab-title", {text: tab.title});
+            titles.appendChild(title);
+
+            var content = dom.div("tab-content");
+            dom.append(content, tab.contents);
+            contents.appendChild(content);
+
+            title.onclick = function() {
+                active.title.classList.remove("active");
+                active.content.classList.remove("active");
+
+                title.classList.add("active");
+                content.classList.add("active");
+
+                active.title = title;
+                active.content = content;
+            };
+        });
+
+        var active = {
+            title: titles.firstChild,
+            content: contents.firstChild,
+        };
+
+        titles.firstChild.classList.add("active");
+        contents.firstChild.classList.add("active");
+
+        var tabs = dom.div("tabs");
+        tabs.appendChild(titles);
+        tabs.appendChild(dom.hr());
+        tabs.appendChild(contents);
+        return tabs;
+    }
 };

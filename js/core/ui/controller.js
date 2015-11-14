@@ -254,12 +254,10 @@ function Controller(game) {
     };
 
     this.update = function() {
-        if (!game.config.cursor.dontHide) {
-            if (this.world.cursor || this.cursor.entity)
-                document.body.classList.add("cursor-hidden");
-            else
-                document.body.classList.remove("cursor-hidden");
-        }
+        if (this.world.cursor || this.cursor.entity)
+            document.body.classList.add("cursor-hidden");
+        else
+            document.body.classList.remove("cursor-hidden");
 
         if (this.world.hovered) {
             var e = Entity.get(this.world.hovered.Id);
@@ -472,7 +470,7 @@ function Controller(game) {
         this.ready = true;
 
         if (document.location.hash.indexOf("noui") != -1) {
-            config.ui.world = false;
+            config.map.world = false;
             dom.hide(game.world);
         }
     };
