@@ -61,8 +61,9 @@ var dom = {
     option: function(text) {
         return this.tag("option", null, {text: text});
     },
-    insert: function(element) {
-        document.body.insertBefore(element, document.body.firstChild);
+    insert: function(element, toElem) {
+        toElem = toElem || document.body;
+        toElem.insertBefore(element, toElem.firstChild);
     },
     clear: function(element) {
         element.innerHTML = "";

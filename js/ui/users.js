@@ -49,6 +49,7 @@ function Users() {
             user.onmousedown = function(e) {
                 return game.chat.nameMenu(e, name);
             };
+
             this.listElement.appendChild(user);
             this.playersList[name] = user;
         }

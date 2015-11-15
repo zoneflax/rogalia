@@ -30,6 +30,33 @@ function Chat() {
     this.messagesElement.className = "messages no-drag";
     this.messagesElement.innerHTML = localStorage["chat"] || "";
 
+    this.makeNameActions = function(name) {
+        var actions = [
+            {
+                private: self.preparePrivate.bind(self, name)
+            },
+            {
+                addToFriends: function() {
+                    game.network.send("friend-add", {Name: name});
+                },
+                removeFromFriends: function() {
+                    game.network.send("friend-remove", {Name: name});
+                },
+            }
+        ];
+        if (game.player.IsAdmin) {
+            actions.push({
+                teleport: function() {
+                    game.network.send('teleport', {name: name});
+                },
+                summon: function() {
+                    game.network.send('summon', {name: name});
+                }
+            });
+        }
+        return actions;
+    };
+
     this.nameMenu = function(e, name) {
         e.stopPropagation();
 
@@ -44,7 +71,17 @@ function Chat() {
 
         switch (e.button) {
         case game.controller.LMB:
-            if (privateIndex != -1) {
+            if (game.player.IsAdmin && e.altKey) {
+                game.network.send('teleport', {name: name});
+                return false;
+            }
+
+            if (e.shiftKey) {
+                self.send("${" + name + "}");
+                return false;
+            }
+
+            if (privateIndex != -1 || e.ctrlKey) {
                 self.preparePrivate(name);
             } else {
                 if (self.newMessageElement.value.length == 0)
@@ -55,32 +92,7 @@ function Chat() {
             }
             break;
         case game.controller.RMB:
-            var actions = [
-                {
-                    private: self.preparePrivate.bind(self, name)
-                },
-                {
-                    addToFriends: function() {
-                        game.network.send("friend-add", {Name: name});
-                    },
-                    removeFromFriends: function() {
-                        game.network.send("friend-remove", {Name: name});
-                    },
-                }
-            ];
-
-            if (game.player.IsAdmin) {
-                actions.push({
-                    teleport: function() {
-                        game.network.send('teleport', {name: name});
-                    },
-                    summon: function() {
-                        game.network.send('summon', {name: name});
-                    }
-                });
-            }
-
-            game.menu.show(actions);
+            game.menu.show(self.makeNameActions(name));
             break;
         }
         return false;

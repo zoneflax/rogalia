@@ -585,7 +585,7 @@ Character.prototype = {
             common.Interact =  this.interact;
         }
 
-        return [common, actions];
+        return [common, actions].concat(game.chat.makeNameActions(this.Name));
     },
     defaultAction: function(targetOnly) {
         if (this.isInteractive()) {
