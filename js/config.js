@@ -19,7 +19,7 @@ var config = {
         name: false,
         npc: false,
         simpleFonts: false,
-        allowSelfSelection: true,
+        allowSelfSelection: false,
         showMeterValues: true,
         chatAttached: true,
         chatBalloons: true,
