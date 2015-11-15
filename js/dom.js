@@ -22,6 +22,9 @@ var dom = {
 
         return elem;
     },
+    text: function(text) {
+        return document.createTextNode(text);
+    },
     div: function(classOrId, cfg) {
         return this.tag("div", classOrId, cfg);
     },
@@ -73,6 +76,9 @@ var dom = {
             if (child)
                 element.appendChild(child);
         });
+    },
+    appendText: function(element, text) {
+        element.appendChild(document.createTextNode(text));
     },
     input: function(text, value, type, name) {
         var input = document.createElement("input");
@@ -141,14 +147,31 @@ var dom = {
         });
     },
     /* * * * * */
-    // dom.tabs([ { title: T("text"), contents: [elem, ...], update: function(){}  } , ...])
+    // dom.tabs([
+    //     {
+    //         title: T("text"),
+    //         icon: new Image(), // *optional
+    //         contents: [elem, ...],
+    //         update: function(title, contents){}, // *optional
+    //         init: function(title, contents){}, // *optional
+    //     },
+    //         ...
+    // ]);
     tabs: function(cfg) {
+        var tabs = dom.div("tabs");
         var titles = dom.div("tabs-titles");
+        var hr = dom.hr();
         var contents = dom.div("tabs-contents");
 
         cfg.forEach(function(tab) {
-            var title = dom.div("tab-title", {text: tab.title});
+            var title = dom.div("tab-title");
+            if (tab.icon) {
+                tab.icon.classList.add("tab-icon");
+                title.appendChild(tab.icon);
+            }
+            dom.appendText(title, tab.title);
             titles.appendChild(title);
+
 
             var content = dom.div("tab-content");
             if (tab.contents)
@@ -166,24 +189,33 @@ var dom = {
                 active.content = content;
 
                 if (tab.update) {
-                    tab.update.call(content);
+                    tab.update.call(tabs, title, content);
                 }
             };
 
+            if (tab.init) {
+                tab.init.call(tabs, title, content);
+            }
         });
+
+        tabs.appendChild(titles);
+        tabs.appendChild(hr);
+        tabs.appendChild(contents);
+        tabs.titles = titles;
+        tabs.hr = hr;
+        tabs.contents = contents;
 
         var active = {
             title: titles.firstChild,
             content: contents.firstChild,
         };
 
-        titles.firstChild.classList.add("active");
-        contents.firstChild.classList.add("active");
+        active.title.classList.add("active");
+        active.content.classList.add("active");
+        if (cfg[0].update) {
+            cfg[0].update.call(tabs, active.title, active.content);
+        }
 
-        var tabs = dom.div("tabs");
-        tabs.appendChild(titles);
-        tabs.appendChild(dom.hr());
-        tabs.appendChild(contents);
         return tabs;
     }
 };

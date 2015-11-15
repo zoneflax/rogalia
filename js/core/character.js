@@ -585,7 +585,10 @@ Character.prototype = {
             common.Interact =  this.interact;
         }
 
-        return [common, actions].concat(game.chat.makeNameActions(this.Name));
+        var list = [common, actions];
+        if (this.IsNpc)
+            return list;
+        return list.concat(game.chat.makeNameActions(this.Name));
     },
     defaultAction: function(targetOnly) {
         if (this.isInteractive()) {

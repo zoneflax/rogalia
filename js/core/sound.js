@@ -1,6 +1,7 @@
 "use strict";
 //TODO: make playlist shuffle
 function Sound() {
+    var self = this;
     var soundDir = "assets/sound/";
     var musicDir = "assets/music/";
     var tracksNum = 14;
@@ -26,21 +27,41 @@ function Sound() {
     var sounds = ["beep", "chop", "lvl-up", "eat", "xp", "heal", "hit", "punch"];
     sounds.forEach(function(name) {
         var audio =  new Audio(soundDir + name + ".ogg");
-        this.sounds[name] = audio;
-    }.bind(this));
+        self.sounds[name] = audio;
+    });
+
+    var mute = document.getElementById("mute");
+    mute.onclick = function() {
+        Settings.toggle("settings.sound.playMusic");
+        if (!Settings.instance)
+            self.toggleMusic();
+    };
+
+    function updateMute() {
+        if (config.sound.playMusic) {
+            mute.classList.add("unmute");
+        } else {
+            mute.classList.remove("unmute");
+        }
+    }
 
     this.init = function() {
         trackId = loadLastTrack();
         if (document.location.hash.indexOf("mute") != -1) {
-            game.config.sound.playMusic = false;
-            game.config.sound.playSound = false;
-            return;
+            config.sound.playMusic = false;
+            config.sound.playSound = false;
+        } else {
+            //TODO: remove after settings update
+            config.sound.playMusic = localStorage.getItem("settings.sound.playMusic") == "true";
         }
+
+        updateMute();
+
         this.playMusic();
     };
 
     this.playMusic = function() {
-        if (!game.config.sound.playMusic)
+        if (!config.sound.playMusic)
             return;
         nextTrack = loadTrack(trackId);
         playNextTrack();
@@ -55,6 +76,13 @@ function Sound() {
         playTrack(currentTrack);
         loadNextTrack();
     }
+
+    // TODO: make user controls?
+    // for cli usage
+    this.playNextTrack = function() {
+        currentTrack.pause();
+        playNextTrack();
+    };
 
     function playTrack(track) {
         track.volume = volume;
@@ -81,21 +109,22 @@ function Sound() {
         nextTrack = loadTrack(trackId);
     }
 
-    this.musicIsPlaying = function() {
-        return !currentTrack.paused;
+    this.toggleMusic = function() {
+        updateMute();
+        if (!currentTrack) {
+            self.playMusic();
+            return;
+        }
+        if (currentTrack.paused) {
+            currentTrack.play();
+        } else {
+            currentTrack.pause();
+        }
     };
 
-    this.toggleMusic = function() {
-        if (!currentTrack)
-            return;
-        if (currentTrack.paused)
-            currentTrack.play();
-        else
-            currentTrack.pause();
-    };
 
     this.playSound = function(name, repeat) {
-        if (!game.config.sound.playSounds)
+        if (!config.sound.playSound)
             return;
         this.stopSound(name);
         var sound = this.sounds[name];

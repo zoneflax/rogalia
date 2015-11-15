@@ -11,14 +11,13 @@ function Users() {
         },
         {
             title: T("Friends"),
-            update: function() {
-                var tabContent = this;
-                tabContent.innerHTML = "";
+            update: function(title, content) {
+                content.innerHTML = "";
                 var list = dom.tag("ul");
-                tabContent.appendChild(list);
+                content.appendChild(list);
                 game.network.send("friend-list", {}, function(data) {
                     if (!data.Friends)
-                        tabContent.textContent = T("No friends");
+                        content.textContent = T("No friends");
                     else
                         data.Friends.forEach(function(name) {
                             var friend = dom.tag("li", "friend", {text: name});

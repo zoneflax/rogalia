@@ -44,7 +44,7 @@ label {
 input[type=text], input[type=number], input[type=password], input:not([type]) {
     border: 1px solid #a57031;
     padding: 0 1px;
-    background: url("assets/bg/chat/send.png") no-repeat 99%, #99682e;
+    background: url("assets/bg/tab/send.png") no-repeat 99%, #99682e;
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
@@ -762,7 +762,7 @@ hr {
 }
 #chat-always-visible-label {
     pointer-events: all;
-    background: url("assets/icons/chat/always-visible.png");
+    background: url("assets/icons/tab/always-visible.png");
 }
 #chat-always-visible-label:hover, #chat-settings-icon:hover {
     -webkit-filter: brightness(150%);
@@ -781,18 +781,47 @@ hr {
     text-align: left;
 }
 
+.tab-title {
+    background: url("assets/bg/tab/tab.png") no-repeat;
+    width: 122px;
+    display: inline-block;
+    padding-left: 15px;
+    box-sizing: border-box;
+    position: relative;
+    cursor: pointer;
+}
+.tabs > hr {
+    margin: -2px 2px 0 0;
+}
+.tab-title.active {
+    background: url("assets/bg/tab/tab-active.png") no-repeat;
+    color: #593815;
+}
+.tab-content {
+    display: none;
+    position: relative;
+}
+.tab-content.active {
+    display: block;
+}
+.tab-icon {
+    line-height: 16px;
+    position: relative;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
 #chat-tab-content {
     width: 30em;
     overflow: hidden;
     background:
-    url("assets/bg/chat/corner.png") no-repeat top right,
+    url("assets/bg/tab/corner.png") no-repeat top right,
     url("assets/bg/panel/border-top.png") repeat-x top,
     url("assets/bg/panel/border-right.png") repeat-y right,
     #7b5323;
     padding: 5px 0;
 }
 .chat-tab {
-    background: url("assets/bg/chat/tab.png") no-repeat;
     width: 122px;
     display: inline-block;
     padding-left: 15px;
@@ -800,17 +829,7 @@ hr {
     position: relative;
     top: 2px;
     margin-left: -7px;
-    color: #ccc;
     cursor: pointer;
-}
-.chat-tab.active {
-    background: url("assets/bg/chat/tab-active.png") no-repeat;
-}
-.chat-tab-icon {
-    line-height: 16px;
-    position: relative;
-    vertical-align: middle;
-    margin-right: 4px;
 }
 
 #attached-chat .messages {
@@ -845,7 +864,7 @@ hr {
 }
 
 .message {
-    display: block;
+    display: none;
     word-wrap: break-word;
     padding: 0 2em 0 0;
 }
@@ -1299,11 +1318,12 @@ ol li a:hover {
     color: orange;
 }
 
-.channel-group-server .channel-5,
-.channel-group-system .channel-7,
-.channel-group-npc .channel-9,
-.channel-group-players .channel-0 {
-    display: none;
+.chat-filter-server .channel-5,
+.chat-filter-system .channel-7,
+.chat-filter-npc .channel-9,
+.chat-filter-private .channel-private,
+.chat-filter-players .channel-0 {
+    display: block;
 }
 
 .message.channel-7 .body, .message.channel-5 .body {
@@ -1999,30 +2019,6 @@ input[type=number], .lot-quantity > input, .price > input {
 .poker-table > :nth-child(56) {
     -webkit-filter: hue-rotate(191deg);
     filter: hue-rotate(191deg);
-}
-
-.tab-title {
-    background: url("assets/bg/chat/tab.png") no-repeat;
-    width: 122px;
-    display: inline-block;
-    padding-left: 15px;
-    box-sizing: border-box;
-    position: relative;
-    cursor: pointer;
-}
-.tabs > hr {
-    margin: -2px 2px 0 0;
-}
-.tab-title.active {
-    background: url("assets/bg/chat/tab-active.png") no-repeat;
-    color: #593815;
-}
-.tab-content {
-    display: none;
-    position: relative;
-}
-.tab-content.active {
-    display: block;
 }
 
 #settings {

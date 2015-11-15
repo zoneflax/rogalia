@@ -490,14 +490,6 @@ function Game() {
         util.toggleFullscreen();
     };
 
-    var mute = document.getElementById("mute");
-    if (this.sound.musicIsPlaying)
-        mute.classList.add("unmute");
-    mute.onclick = function() {
-        game.sound.toggleMusic();
-        mute.classList.toggle("unmute");
-    };
-
     this.stage = new Stage();
     this.setStage("connecting");
 

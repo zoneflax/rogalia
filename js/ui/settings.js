@@ -1,5 +1,6 @@
 "use strict";
 function Settings() {
+    Settings.instance = this;
     var tabs = this.makeSettingsTabs(game.config, "Config");
     if (game.player.IsAdmin) {
         this.makeSettingsTabs(game.debug, "Debug").forEach(function(tab) {
@@ -13,11 +14,11 @@ function Settings() {
     );
 
     function setPlayerSettings() {
-            game.network.send("set-settings", {Settings: game.player.Settings});
+        game.network.send("set-settings", {Settings: game.player.Settings});
     };
 
     function setPlayerStyle() {
-            game.network.send("set-style", {Style: game.player.Style});
+        game.network.send("set-style", {Style: game.player.Style});
     };
 
     this.triggers = {
@@ -54,6 +55,23 @@ function Settings() {
     };
 }
 
+
+Settings.toggle = function(key) {
+    var path = key.split(".");
+    var section = path[1];
+    var option = path[2];
+    var value = !config[section][option];
+    config[section][option] = value;
+
+    var checkbox = document.getElementById(key);
+    if (checkbox)
+        checkbox.checked = value;
+
+    if (Settings.instance && Settings.instance.triggers[key])
+        Settings.instance.triggers[key](value);
+};
+
+//TODO: load config in separate function
 Settings.prototype = {
     triggers: null,
     makeSettingsTabs: function(map, name) {
@@ -93,6 +111,7 @@ Settings.prototype = {
 
                 var checkbox = dom.checkbox(title);
                 checkbox.checked = value;
+                checkbox.id = key;
 
                 var label = checkbox.label;
                 label.onmouseover = function() {

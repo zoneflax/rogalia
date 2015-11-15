@@ -34,7 +34,7 @@ var config = {
         autoHighlightDoors: true,
     },
     sound: {
-        playSounds: true,
+        playSound: true,
         playMusic: true
     },
 };

@@ -121,10 +121,10 @@ function Chat() {
     var scrollDy = parseInt(getComputedStyle(scrollbar).top);
     var scrollStep = 3;
     var updateScroll = function(e) {
-        var el = this.messagesElement;
+        var el = self.messagesElement;
         el.scrollTop += scrollStep * (e.deltaY / Math.abs(e.deltaY));
         if (el.scrollHeight <= el.offsetHeight)
-            return;
+            return true;
         scrollbar.style.display = "block";
         var height = el.offsetHeight;
         var sbh = height - scrollDy;
@@ -134,11 +134,13 @@ function Chat() {
         scrollIndicator.style.top = (sbh * el.scrollTop) / el.scrollHeight + "px";
 
         return false;
-    }.bind(this);
+    };
 
     this.scrollToTheEnd = function() {
-        this.messagesElement.scrollTop = this.messagesElement.scrollHeight;
-        updateScroll({deltaY: 99999});
+        setTimeout(function() {
+            self.messagesElement.scrollTop = self.messagesElement.scrollHeight;
+            updateScroll({deltaY: 99999});
+        }, 50);
     };
 
     this.messagesElement.addEventListener("wheel", updateScroll);
@@ -290,8 +292,7 @@ function Chat() {
         if (config.ui.chatAttached)
             this.attach();
 
-        //TODO: fix this hack
-        setTimeout(this.scrollToTheEnd.bind(this), 100);
+        this.scrollToTheEnd();
     };
 
     this.attach = function() {
@@ -312,35 +313,6 @@ function Chat() {
         dom.show(this.panel.button);
     };
 
-    this.tabs = document.createElement("div");
-    this.tabs.id = "chat-tabs";
-
-    var tabs = ["general", "friends", "system"];
-    tabs.forEach(function(name, i) {
-        var icon = new Image();
-        icon.src = "assets/icons/chat/tab-" + name + ".png";
-        icon.className = "chat-tab-icon";
-
-        var title = document.createElement("span");
-        title.textContent = T(name);
-
-        var tab = document.createElement("div");
-        tab.className = "chat-tab";
-        tab.id = "chat-tab-" + name;
-        tab.appendChild(icon);
-        tab.appendChild(title);
-        tab.style.zIndex = tabs.length - i;
-
-        this.tabs.appendChild(tab);
-    }.bind(this));
-    this.tabs.firstChild.classList.add("active");
-
-    var activeTab = {
-        elem: this.tabs.firstChild,
-        name: tabs[0],
-    };
-
-    //TODO: get rid of checkbox
     var alwaysVisible = dom.checkbox();
     alwaysVisible.id = "chat-always-visible";
     alwaysVisible.label.id = "chat-always-visible-label";
@@ -358,68 +330,116 @@ function Chat() {
         this.panel.contents.classList.toggle("semi-hidden");
     }.bind(this);
 
-    var channelPrefix = "channel-group-";
-    var channelGroups = ["system", "server", "players", "npc"];
-    channelGroups.forEach(function(name) {
-        var fullname = channelPrefix + name;
-        if (localStorage.getItem(fullname) == "false")
-            self.messagesElement.classList.add(fullname);
+
+    // channelGroups.forEach(function(name) {
+    //     var fullname = channelPrefix + name;
+    //     if (localStorage.getItem(fullname) == "false")
+    //         self.messagesElement.classList.add(fullname);
+    // });
+
+    // var settingsIcon = new Image();
+    // settingsIcon.src = "assets/icons/chat/settings.png";
+    // settingsIcon.id = "chat-settings-icon";
+    // settingsIcon.onclick = function() {
+    //     var name = document.createElement("div");
+    //     name.textContent = activeTab.name;
+    //     var checkboxes = document.createElement("div");
+    //     channelGroups.map(function(name) {
+    //         var fullname = channelPrefix + name;
+    //         var label = document.createElement("label");
+    //         label.style.display = "block";
+    //         var channelGroup = document.createElement("input");
+    //         channelGroup.type = "checkbox";
+    //         channelGroup.checked = localStorage.getItem(fullname) == "true";
+    //         channelGroup.addEventListener("change", function(e) {
+    //             localStorage.setItem(fullname, this.checked);
+    //             if (this.checked)
+    //                 self.messagesElement.classList.remove(fullname);
+    //             else
+    //                 self.messagesElement.classList.add(fullname);
+    //         });
+    //         label.appendChild(channelGroup);
+    //         label.appendChild(document.createTextNode(T(name)));
+    //         checkboxes.appendChild(label);
+    //     });
+    //     var save = document.createElement("button");
+    //     save.textContent = T("Save");
+    //     save.disabled = true;
+    //     //TODO: implement
+    //     save.onclick = function() {
+    //     };
+    //     var panel = new Panel("chat-settings", "Tab settings", [
+    //         name,
+    //         dom.hr(),
+    //         checkboxes,
+    //         dom.hr(),
+    //         save
+    //     ]);
+    //     panel.show();
+    // };
+
+    var filterPrefix = "chat-filter-";
+    var filters = ["system", "server", "players", "npc", "private"];
+
+    var tabs = [
+        {
+            name: "general",
+            filters: ["server", "players", "npc", "private"]
+        },
+        {
+            name: "private",
+            filters: ["private"]
+        },
+        {
+            name: "system",
+            filters: ["system"]
+        },
+    ].map(function(tab, i) {
+        var name = tab.name;
+        var icon = new Image();
+        icon.src = "assets/icons/chat/tab-" + name + ".png";
+        tab.icon = icon;
+        tab.title = T(name);
+        tab.init = function(title, contents) {
+            title.style.zIndex = tabs.length - i;
+            title.classList.add("chat-tab");
+            title.classList.add("chat-tab-" + name);
+        };
+        tab.update = function(title, content) {
+            content.classList.remove("active");
+            this.contents.firstChild.classList.add("active");
+            filters.forEach(function(filter) {
+                if (tab.filters.indexOf(filter) == -1)
+                    self.messagesElement.classList.remove(filterPrefix + filter);
+                else
+                    self.messagesElement.classList.add(filterPrefix + filter);
+            });
+            self.scrollToTheEnd();
+        };
+        return tab;
     });
 
-    var settingsIcon = new Image();
-    settingsIcon.src = "assets/icons/chat/settings.png";
-    settingsIcon.id = "chat-settings-icon";
-    settingsIcon.onclick = function() {
-        var name = document.createElement("div");
-        name.textContent = activeTab.name;
-        var checkboxes = document.createElement("div");
-        channelGroups.map(function(name) {
-            var fullname = channelPrefix + name;
-            var label = document.createElement("label");
-            label.style.display = "block";
-            var channelGroup = document.createElement("input");
-            channelGroup.type = "checkbox";
-            channelGroup.checked = localStorage.getItem(fullname) == "true";
-            channelGroup.addEventListener("change", function(e) {
-                localStorage.setItem(fullname, this.checked);
-                if (this.checked)
-                    self.messagesElement.classList.remove(fullname);
-                else
-                    self.messagesElement.classList.add(fullname);
-            });
-            label.appendChild(channelGroup);
-            label.appendChild(document.createTextNode(T(name)));
-            checkboxes.appendChild(label);
-        });
-        var save = document.createElement("button");
-        save.textContent = T("Save");
-        save.disabled = true;
-        //TODO: implement
-        save.onclick = function() {
-        };
-        var panel = new Panel("chat-settings", "Tab settings", [
-            name,
-            dom.hr(),
-            checkboxes,
-            dom.hr(),
-            save
-        ]);
-        panel.show();
-    };
+    tabs[0].contents = [
+        //TODO: write usable one
+        // scrollbar,
+        this.messagesElement,
+        this.newMessageElement,
+    ];
 
-
-    var tabContents = document.createElement("div");
+    var tabsElem = dom.tabs(tabs);
+    dom.remove(tabsElem.hr);
+    var tabContents = tabsElem.contents;
     tabContents.id = "chat-tab-content";
-    tabContents.appendChild(scrollbar);
-    tabContents.appendChild(this.messagesElement);
-    tabContents.appendChild(this.newMessageElement);
-    tabContents.appendChild(settingsIcon);
-    tabContents.appendChild(alwaysVisible.label);
 
     this.panel = new Panel(
         "chat",
         "Chat",
-        [this.tabs, tabContents]
+        [
+            tabsElem,
+            //TODO: restore settings
+            // settingsIcon,
+            alwaysVisible.label,
+        ]
     );
 
     this.removeAlert = game.controller.makeHighlightCallback("chat", false);
@@ -690,9 +710,9 @@ function Chat() {
             sendNotification = false;
         }
 
-        if (message.Channel)
-            messageElement.classList.add("channel-" + message.Channel);
-
+        messageElement.classList.add("channel-" + (message.Channel || 0));
+        if (message.To)
+            messageElement.classList.add("channel-private");
 
         if (!sendNotification)
             return;
