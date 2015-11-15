@@ -21,6 +21,7 @@ function Chat() {
         }
     };
 
+    var lastPrivate = "";
     this.preparePrivate = function(name) {
         this.newMessageElement.focus();
         this.newMessageElement.value = "*to " + name + " ";
@@ -149,7 +150,11 @@ function Chat() {
     this.newMessageElement.id = "new-message";
     this.newMessageElement.type = "text";
 
+    var privateRegexp = /^\*to (\S+) /;
     this.send = function(message) {
+        var match = privateRegexp.exec(message);
+        if (match)
+            lastPrivate = match[1];
         game.network.send("chat-message", {message: message});
     };
 
@@ -177,6 +182,12 @@ function Chat() {
     var myMessages = new ChatRing();
 
     this.keydown = function(e) {
+        if (e.ctrlKey && e.keyCode ==  82) {
+            self.preparePrivate(lastPrivate);
+            e.preventDefault();
+            return false;
+        }
+
         var message = e.target.value;
         switch (e.keyCode) {
         case 38: //up
@@ -397,7 +408,7 @@ function Chat() {
     ].map(function(tab, i) {
         var name = tab.name;
         var icon = new Image();
-        icon.src = "assets/icons/chat/tab-" + name + ".png";
+        icon.src = "assets/icons/tab/tab-" + name + ".png";
         tab.icon = icon;
         tab.title = T(name);
         tab.init = function(title, contents) {
