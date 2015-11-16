@@ -341,7 +341,7 @@ Craft.prototype = {
     },
     searchHandler: function(e) {
         var input = e.target;
-        this.search(e.target.value);
+        return this.search(e.target.value);
     },
     makeSearch: function(slot) {
         return function() {

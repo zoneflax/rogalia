@@ -74,12 +74,12 @@ function Chat() {
         case game.controller.LMB:
             if (game.player.IsAdmin && e.altKey) {
                 game.network.send('teleport', {name: name});
-                return false;
+                return true;
             }
 
             if (e.shiftKey) {
                 self.send("${" + name + "}");
-                return false;
+                return true;
             }
 
             if (privateIndex != -1 || e.ctrlKey) {
@@ -96,17 +96,17 @@ function Chat() {
             game.menu.show(self.makeNameActions(name));
             break;
         }
-        return false;
+        return true;
     };
 
     this.messagesElement.onmousedown = function(e) {
         if (!e.target.classList.contains("from"))
-            return false;
+            return true;
 
         var name = e.target.textContent;
         // hide [server] etc
         if (name[0] == "[")
-            return false;
+            return true;
 
         return self.nameMenu(e, name);
     };
