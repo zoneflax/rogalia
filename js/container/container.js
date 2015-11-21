@@ -193,6 +193,8 @@ Container.prototype = {
         game.controller.cursor.set(entity, e.pageX, e.pageY, slot.unlock.bind(slot));
     },
     dwimCraft: function(slot) {
+        if (slot.locked)
+            return false;
         if (!slot.entity) {
             console.log("dwimCraft: got empty slot");
             return false;
