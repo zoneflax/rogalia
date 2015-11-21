@@ -66,6 +66,11 @@ Character.nakedSprites = {};
 Character.weaponSprites = {};
 Character.effectSprites = {};
 
+Character.flags = {
+    Empire: null,
+    Confederation: null,
+};
+
 Character.initSprites = function() {
     Character.animations.forEach(function(animation) {
         var path = Character.spriteDir + "/man/" + animation + "/naked.png";
@@ -85,6 +90,9 @@ Character.initSprites = function() {
         Character.effectSprites[name] = sprite;
     });
     Character.skull = new Sprite("skull.png");
+
+    Character.flags.Empire = new Sprite("icons/flags/empire.png");
+    Character.flags.Confederation = new Sprite("icons/flags/confederation.png");
 };
 
 Character.sex = function(sex) {

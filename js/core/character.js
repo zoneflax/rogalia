@@ -901,9 +901,6 @@ Character.prototype = {
             return;
         var name = this.getName();
 
-        if ("Citizenship" in this && this.Citizenship.Faction) {
-            name += " {" + this.Citizenship.Faction[0] + "}";
-        }
         if (game.controller.modifier.shift) {
             name += " | " + T("Lvl") + ": " + this.Lvl;
             name += " | " + ["♂", "♀"][this.Sex];
@@ -961,6 +958,11 @@ Character.prototype = {
                 ? "#f00"
                 : ((this == game.player) ? "#ff0" : "#fff");
             game.drawStrokedText(name, x, y - dy / 2);
+            if (this.Citizenship) {
+                var flag = Character.flags[this.Citizenship.Faction];
+                if (flag)
+                    flag.draw({x: x - 20, y: y - dy/2  - 14});
+            }
         }
     },
     idle: function() {
