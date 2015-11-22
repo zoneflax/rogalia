@@ -4,16 +4,7 @@ var dom = {
 
 
         if (classOrId) {
-            switch (classOrId.charAt(0)) {
-            case "#":
-                elem.id = classOrId.substring(1);
-                break;
-            case ".":
-                elem.className = classOrId.substring(1);
-                break;
-            default:
-                elem.className = classOrId;
-            }
+            this.setClassOrId(elem, classOrId);
         }
         if (cfg) {
             if ("text" in cfg)
@@ -21,6 +12,18 @@ var dom = {
         }
 
         return elem;
+    },
+    setClassOrId: function(elem, classOrId) {
+        switch (classOrId.charAt(0)) {
+        case "#":
+            elem.id = classOrId.substring(1);
+            break;
+        case ".":
+            elem.className = classOrId.substring(1);
+            break;
+        default:
+            elem.className = classOrId;
+        }
     },
     text: function(text) {
         return document.createTextNode(text);
@@ -42,6 +45,12 @@ var dom = {
     },
     span: function(text, classOrId) {
         return this.tag("span", classOrId, {text: text});
+    },
+    img: function(src, classOrId) {
+        var img = new Image();
+        img.src = src;
+        this.setClassOrId(img, classOrId);
+        return img;
     },
     link: function(url, text) {
         var link = document.createElement("a");

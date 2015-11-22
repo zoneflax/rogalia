@@ -40,8 +40,8 @@ Character.sync = function(data, remove) {
         } else {
             to.sync(from);
         }
-    }
 
+    }
     game.player.updateEffects();
 };
 
@@ -98,6 +98,8 @@ Character.initSprites = function() {
 Character.sex = function(sex) {
     return ["male", "female"][sex];
 };
+
+Character.partyLoadQueue = {};
 
 Character.npcActions = {
     "Set citizenship": function() {

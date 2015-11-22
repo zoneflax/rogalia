@@ -23,19 +23,31 @@ function Chat() {
 
     var lastPrivate = "";
     this.preparePrivate = function(name) {
-        this.newMessageElement.focus();
         this.newMessageElement.value = "*to " + name + " ";
+        this.newMessageElement.focus();
     };
 
-    this.messagesElement = document.createElement("ul");
-    this.messagesElement.className = "messages no-drag";
-    this.messagesElement.innerHTML = localStorage["chat"] || "";
-
     this.makeNameActions = function(name) {
+        var partyActions = {};
+
+        var party = game.player.Party;
+        if (!party || party[0] == game.player.Name) {
+            if (!party || party.indexOf(name) == -1) {
+                partyActions.inviteToParty = function() {
+                    self.send("*invite " + name);
+                };
+            } else if (party[0] == game.player.Name) {
+                partyActions.kickFromParty = function() {
+                    self.send("*kick " + name);
+                };
+            }
+        }
+
         var actions = [
             {
                 private: self.preparePrivate.bind(self, name)
             },
+            partyActions,
             {
                 addToFriends: function() {
                     game.network.send("friend-add", {Name: name});
@@ -99,62 +111,41 @@ function Chat() {
         return true;
     };
 
-    this.messagesElement.onmousedown = function(e) {
+    function onmousedown(e) {
         if (!e.target.classList.contains("from"))
             return true;
 
         var name = e.target.textContent;
-        // hide [server] etc
+        // ignore [server] etc
         if (name[0] == "[")
             return true;
 
         return self.nameMenu(e, name);
-    };
+    }
 
-    //TODO: encapsulate
-    var scrollIndicator = document.createElement("div");
-    scrollIndicator.className = "scroll-indicator";
-
-    var scrollbar = document.createElement("div");
-    scrollbar.className = "scrollbar";
-    scrollbar.appendChild(scrollIndicator);
-
-    var scrollDy = parseInt(getComputedStyle(scrollbar).top);
-    var scrollStep = 3;
-    var updateScroll = function(e) {
-        var el = self.messagesElement;
-        el.scrollTop += scrollStep * (e.deltaY / Math.abs(e.deltaY));
-        if (el.scrollHeight <= el.offsetHeight)
-            return true;
-        scrollbar.style.display = "block";
-        var height = el.offsetHeight;
-        var sbh = height - scrollDy;
-        scrollbar.style.height = sbh + "px"; //TODO: make once
-
-        scrollIndicator.style.height = sbh * (height / el.scrollHeight) + "px";
-        scrollIndicator.style.top = (sbh * el.scrollTop) / el.scrollHeight + "px";
-
-        return false;
-    };
 
     this.scrollToTheEnd = function() {
         setTimeout(function() {
-            self.messagesElement.scrollTop = self.messagesElement.scrollHeight;
-            updateScroll({deltaY: 99999});
+            tabs.forEach(function(tab) {
+                tab.messagesElement.scrollTop = tab.messagesElement.scrollHeight;
+            });
         }, 50);
     };
-
-    this.messagesElement.addEventListener("wheel", updateScroll);
 
     this.newMessageElement = document.createElement("input");
     this.newMessageElement.id = "new-message";
     this.newMessageElement.type = "text";
 
+    var defaultPrefix = "";
     var privateRegexp = /^\*to (\S+) /;
     this.send = function(message) {
-        var match = privateRegexp.exec(message);
-        if (match)
-            lastPrivate = match[1];
+        if (message[0] != "*" && defaultPrefix) {
+            message = "*" + channels[defaultPrefix] + " " + message;
+        } else {
+            var match = privateRegexp.exec(message);
+            if (match)
+                lastPrivate = match[1];
+        }
         game.network.send("chat-message", {message: message});
     };
 
@@ -341,69 +332,34 @@ function Chat() {
         this.panel.contents.classList.toggle("semi-hidden");
     }.bind(this);
 
-
-    // channelGroups.forEach(function(name) {
-    //     var fullname = channelPrefix + name;
-    //     if (localStorage.getItem(fullname) == "false")
-    //         self.messagesElement.classList.add(fullname);
-    // });
-
-    // var settingsIcon = new Image();
-    // settingsIcon.src = "assets/icons/chat/settings.png";
-    // settingsIcon.id = "chat-settings-icon";
-    // settingsIcon.onclick = function() {
-    //     var name = document.createElement("div");
-    //     name.textContent = activeTab.name;
-    //     var checkboxes = document.createElement("div");
-    //     channelGroups.map(function(name) {
-    //         var fullname = channelPrefix + name;
-    //         var label = document.createElement("label");
-    //         label.style.display = "block";
-    //         var channelGroup = document.createElement("input");
-    //         channelGroup.type = "checkbox";
-    //         channelGroup.checked = localStorage.getItem(fullname) == "true";
-    //         channelGroup.addEventListener("change", function(e) {
-    //             localStorage.setItem(fullname, this.checked);
-    //             if (this.checked)
-    //                 self.messagesElement.classList.remove(fullname);
-    //             else
-    //                 self.messagesElement.classList.add(fullname);
-    //         });
-    //         label.appendChild(channelGroup);
-    //         label.appendChild(document.createTextNode(T(name)));
-    //         checkboxes.appendChild(label);
-    //     });
-    //     var save = document.createElement("button");
-    //     save.textContent = T("Save");
-    //     save.disabled = true;
-    //     //TODO: implement
-    //     save.onclick = function() {
-    //     };
-    //     var panel = new Panel("chat-settings", "Tab settings", [
-    //         name,
-    //         dom.hr(),
-    //         checkboxes,
-    //         dom.hr(),
-    //         save
-    //     ]);
-    //     panel.show();
-    // };
-
-    var filterPrefix = "chat-filter-";
-    var filters = ["system", "server", "players", "npc", "private"];
-
+    var channels = {
+        global       : 0,
+        local        : 1,
+        party        : 2,
+        server       : 5,
+        private      : 6,
+        system       : 7,
+        announcement : 8,
+        npc          : 9,
+    };
     var tabs = [
         {
             name: "general",
-            filters: ["server", "players", "npc", "private"]
+            channels: ["global", "local", "server", "private", "announcement", "npc"]
         },
         {
             name: "private",
-            filters: ["private"]
+            channels: ["private"]
         },
         {
             name: "system",
-            filters: ["system"]
+            channels: ["system"],
+        },
+        {
+            name: "party",
+            hidden: true,
+            defaultPrefix: "party",
+            channels: ["party", "private"]
         },
     ].map(function(tab, i) {
         var name = tab.name;
@@ -415,41 +371,54 @@ function Chat() {
             title.style.zIndex = tabs.length - i;
             title.classList.add("chat-tab");
             title.classList.add("chat-tab-" + name);
+            if (tab.hidden)
+                dom.hide(title);
+            tab.titleElement = title;
         };
         tab.update = function(title, content) {
-            content.classList.remove("active");
-            this.contents.firstChild.classList.add("active");
-            filters.forEach(function(filter) {
-                if (tab.filters.indexOf(filter) == -1)
-                    self.messagesElement.classList.remove(filterPrefix + filter);
-                else
-                    self.messagesElement.classList.add(filterPrefix + filter);
-            });
+            defaultPrefix = tab.defaultPrefix || "";
             self.scrollToTheEnd();
+            title.classList.remove("has-new-messages");
         };
+        var messagesElement = dom.div("messages no-drag");
+        messagesElement.innerHTML = localStorage["chat.log." + name] || "";
+
+        tab.contents = [messagesElement];
+        tab.messagesElement = messagesElement;
+
         return tab;
     });
 
-    tabs[0].contents = [
-        //TODO: write usable one
-        // scrollbar,
-        this.messagesElement,
-        this.newMessageElement,
-    ];
 
-    var tabsElem = dom.tabs(tabs);
-    dom.remove(tabsElem.hr);
-    var tabContents = tabsElem.contents;
-    tabContents.id = "chat-tab-content";
+    var tabElem = dom.tabs(tabs);
+    tabElem.contents.appendChild(this.newMessageElement);
+    tabElem.contents.id = "chat-wrapper";
+    tabElem.addEventListener("mousedown", onmousedown);
+
+    var chatSettingsIcon = dom.img("assets/icons/tab/settings.png", "#chat-settings-icon");
+    var chatSettingsActions = {};
+    var selectableTabTitle = tabElem.titles.children[2];
+    Array.prototype.slice.call(tabElem.titles.children, 2).forEach(function(title) {
+        chatSettingsActions[title.textContent] = function() {
+            dom.hide(selectableTabTitle);
+            dom.show(title);
+            selectableTabTitle = title;
+            title.onclick();
+        };
+    });
+    chatSettingsIcon.onclick = function() {
+        game.menu.show(chatSettingsActions);
+    };
 
     this.panel = new Panel(
         "chat",
         "Chat",
         [
-            tabsElem,
+            tabElem,
             //TODO: restore settings
             // settingsIcon,
             alwaysVisible.label,
+            chatSettingsIcon,
         ]
     );
 
@@ -478,7 +447,7 @@ function Chat() {
         }, 500);
     };
     this.newMessageElement.onmouseenter = semishow;
-    tabContents.onmouseleave = semihide;
+    tabElem.contents.onmouseleave = semihide;
 
     this.names = {
         server: "[server]",
@@ -632,23 +601,50 @@ function Chat() {
         return cnt;
     };
 
-    var appendMessage = function(contents) {
-        var messageElement = document.createElement("li");
+    function fromMe(message) {
+        return !message.From || message.From == game.player.Name;
+    }
 
-        messageElement.classList.add("message");
+    function appendMessage(message, contents) {
+        var channel = message.Channel || 0;
+        if (message.To)
+            channel = channels.private;
 
-        contents.map(function(element) {
-            messageElement.appendChild(element);
+        var channelName = Object.keys(channels).find(function(name) {
+            return channel == channels[name];
         });
 
-        this.messagesElement.appendChild(messageElement);
+        var elem = dom.div("message");
+        elem.classList.add("channel-" + channelName);
+        if (fromMe(message))
+            elem.classList.add("from-me");
 
-        var height = this.messagesElement.scrollTop + this.messagesElement.clientHeight;
-        var scroll = Math.abs(height - this.messagesElement.scrollHeight) < 2*this.messagesElement.clientHeight;
-        if (scroll)
-            this.scrollToTheEnd();
-        return messageElement;
-    }.bind(this);
+        dom.append(elem, contents);
+
+        tabs.forEach(function(tab) {
+            if (tab.channels.indexOf(channelName) == -1)
+                return;
+            if (!tab.titleElement.classList.contains("active"))
+                tab.titleElement.classList.add("has-new-messages");
+            var messagesElement = tab.messagesElement;
+            messagesElement.appendChild(elem.cloneNode(true));
+
+            var height = messagesElement.scrollTop + messagesElement.clientHeight;
+            var scroll = Math.abs(height - messagesElement.scrollHeight) < 2*messagesElement.clientHeight;
+            if (scroll)
+                self.scrollToTheEnd();
+
+            cleanUpTab(messagesElement);
+        });
+    }
+
+    var maxMessages = 128;
+    function cleanUpTab(messagesElement) {
+        var len = messagesElement.children.length;
+        while (len-- >= maxMessages) {
+            dom.remove(messagesElement.firstChild);
+        }
+    };
 
 
     this.append = function(text) {
@@ -658,8 +654,6 @@ function Chat() {
     var privateSymbol = " → ";
 
     this.addMessage = function(message) {
-        this.cleanUp();
-
         if (typeof message == 'string') {
             message = {
                 From: null,
@@ -715,17 +709,9 @@ function Chat() {
 
         contents.push(this.format(message.Body));
 
-        var messageElement = appendMessage(contents);
-        if (!message.From || message.From == game.player.Name) {
-            messageElement.classList.add("from-me");
-            sendNotification = false;
-        }
+        appendMessage(message, contents);
 
-        messageElement.classList.add("channel-" + (message.Channel || 0));
-        if (message.To)
-            messageElement.classList.add("channel-private");
-
-        if (!sendNotification)
+        if (fromMe(message) || !sendNotification)
             return;
 
         game.sound.playSound("beep");
@@ -750,14 +736,6 @@ function Chat() {
                 this.panel.show();
             notification.close();
         }.bind(this);
-    };
-
-    var maxMessages = 256;
-    this.cleanUp = function() {
-        var len = this.messagesElement.children.length;
-        while (len-- >= maxMessages) {
-            dom.remove(this.messagesElement.firstChild);
-        }
     };
 
     this.sync = function(data) {
@@ -836,6 +814,8 @@ function Chat() {
     };
 
     this.save = function() {
-        localStorage["chat"] = this.messagesElement.innerHTML;
+        tabs.forEach(function(tab) {
+            localStorage["chat.log." + tab.name] = tab.messagesElement.innerHTML;
+        });
     };
 }

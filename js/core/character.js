@@ -131,9 +131,37 @@ Character.prototype = {
             this.sprite.position = data.Dir;
         }
 
-        if ("AvailableQuests"in data) {
+        if ("AvailableQuests" in data) {
             this.updateActiveQuest();
         }
+        if ("Party" in data) {
+            this.updateParty(data.Party);
+        }
+    },
+    updateParty: function(members) {
+        var party = game.controller.party;
+        dom.clear(party);
+        if (!members)
+            return;
+        members.forEach(function(name, i) {
+            if (name == game.player.Name)
+                return;
+            var member = game.characters.get(name);
+            if (member) {
+                var avatar = member.sprite.icon();
+            } else {
+                avatar = dom.div();
+                Character.partyLoadQueue[name] = true;
+            }
+            var cnt = dom.div(".character-avatar-container");
+            cnt.appendChild(avatar);
+            var prefix = (i == 0 && party[0] != game.player.Name) ? "★" : "";
+            cnt.appendChild(dom.span(prefix + name, "party-member-name"));
+            cnt.onmousedown = function(e) {
+                return game.chat.nameMenu(e, name);
+            };
+            party.appendChild(cnt);
+        });
     },
     syncMessages: function(messages) {
         while(messages && messages.length > 0) {
@@ -476,6 +504,7 @@ Character.prototype = {
                 parts.push({image: weapon.image});
         }
 
+        var name = this.Name;
         loader.ready(function() {
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
@@ -497,6 +526,11 @@ Character.prototype = {
             sprite.makeOutline();
             sprite.ready = true;
             sprite.loading = false;
+
+            if (name in Character.partyLoadQueue) {
+                delete Character.partyLoadQueue.name;
+                game.player.updateParty(game.player.Party);
+            }
         });
     },
     loadNpcSprite: function() {
@@ -597,8 +631,11 @@ Character.prototype = {
             // call actionButton on space
             if (!targetOnly && this.isPlayer && game.controller.actionButton.active())
                 game.controller.actionButton.activate();
-            else if (this != game.player)
-                game.player.setTarget(this);
+            else if (this != game.player) {
+                var party = game.player.Party;
+                if (!party || party.indexOf(this.Name) == -1)
+                    game.player.setTarget(this)
+            }
         }
     },
     drawAction: function() {

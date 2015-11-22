@@ -106,9 +106,22 @@ function Info(message, character) {
             container.findSlot(entity).markAsUnseen();
         }
         break;
-    case "build-open":
-        var blank = Entity.get(this.data);
-        game.controller.craft.open(blank);
+    case ".invite":
+        var name = this.data;
+        var invite = dom.tag("p", "", {text: TT("{name} invites you to a party", {name: name})});
+        var accept = dom.button(T("Accept"));
+        accept.onclick = function() {
+            game.chat.send("*accept-invite " + name);
+            panel.close();
+        };
+        var deny = dom.button(T("Deny"));
+        deny.onclick = function() {
+            game.chat.send("*deny-invite " + name);
+            panel.close();
+        };
+
+        var panel = new Panel("invite", "Invite", [invite, accept, deny]);
+        panel.show();
         return;
     }
     this.value = util.toFixed(this.value, (this.value < 1) ? 2 : 0);

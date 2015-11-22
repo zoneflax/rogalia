@@ -66,6 +66,7 @@ function Controller(game) {
     this.actionHotbar = document.getElementById("action-hotbar");
     this.controlsBar = document.getElementById("controls-bar");
     this.targetContainer = document.getElementById("target-container");
+    this.party = document.getElementById("party");
 
     this.hovered = null; // dom element under cursor
 
@@ -281,9 +282,32 @@ function Controller(game) {
     };
 
     this.initAvatar = function() {
-        document.getElementById("avatar-container").onclick = function() {
-            game.controller.stats.panel.toggle();
+        var cnt = document.getElementById("avatar-container");
+        cnt.onmousedown = function(e) {
+            e.stopPropagation();
+            switch (e.button) {
+            case game.controller.LMB:
+                game.controller.stats.panel.toggle();
+                break;
+            case game.controller.RMB:
+                var actions = {};
+                if (game.player.Party) {
+                    actions.leaveParty = function() {
+                        game.chat.send("*part");
+                    };
+                }
+                actions.suicide = function() {
+                    game.chat.send("*suicide");
+                };
+                actions.unstuck = function() {
+                    game.chat.send("*unstuck");
+                };
+                game.menu.show(actions);
+                break;
+            }
+            return true;
         };
+
         var avatar = document.getElementById("avatar");
         avatar.src = "assets/avatars/" + game.player.sex() + ".png";
     };
