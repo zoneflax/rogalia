@@ -615,6 +615,9 @@ Character.prototype = {
             common.Kill = function() {
                 game.chat.send("*kill " + this.Name);
             };
+            common.ComeToMe = function() {
+                game.chat.send("*come-to-me " + this.Name);
+            };
         }
         if (this.isInteractive()) {
             common.Interact =  this.interact;
@@ -635,7 +638,7 @@ Character.prototype = {
             else if (this != game.player) {
                 var party = game.player.Party;
                 if (!party || party.indexOf(this.Name) == -1)
-                    game.player.setTarget(this)
+                    game.player.setTarget(this);
             }
         }
     },

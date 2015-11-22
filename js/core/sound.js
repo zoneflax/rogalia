@@ -52,7 +52,9 @@ function Sound() {
             config.sound.playSound = false;
         } else {
             //TODO: remove after settings update
-            config.sound.playMusic = localStorage.getItem("settings.sound.playMusic") == "true";
+            var enabled = localStorage.getItem("settings.sound.playMusic");
+            if (typeof enabled == "string")
+                config.sound.playMusic =  (enabled == "true");
         }
 
         updateMute();

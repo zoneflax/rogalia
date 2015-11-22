@@ -449,9 +449,7 @@ function Chat() {
     this.newMessageElement.onmouseenter = semishow;
     tabElem.contents.onmouseleave = semihide;
 
-    this.names = {
-        server: "[server]",
-    };
+    var SERVER = "[server]";
 
     this.format = function(body) {
         var matches = body.match(/\${[^}]+}|https?:\/\/\S+|#\S+|^>.*/g);
@@ -607,7 +605,7 @@ function Chat() {
 
     function appendMessage(message, contents) {
         var channel = message.Channel || 0;
-        if (message.To)
+        if (message.To && message.From != SERVER)
             channel = channels.private;
 
         var channelName = Object.keys(channels).find(function(name) {
@@ -668,7 +666,7 @@ function Chat() {
         this.addBallon(message);
         switch(message.Channel) {
         case 8:
-            message.From = this.names.server;
+            message.From = SERVER;
             game.controller.showAnouncement(message.Body);
             break;
         }
@@ -681,7 +679,7 @@ function Chat() {
             case "TatriX":
                 color = "#0cc";
                 break;
-            case this.names.server:
+            case SERVER:
                 color = "yellow";
                 break;
             default:
@@ -695,7 +693,7 @@ function Chat() {
                     fromElement.style.color = color;
                 fromElement.textContent = message.From;
 
-                if (message.To) {
+                if (message.To && message.From != SERVER) {
                     fromElement.textContent += privateSymbol + message.To;
                     fromElement.style.color = "violet";
                 }
@@ -720,7 +718,7 @@ function Chat() {
             icon : "assets/rogalik-64.png",
             tag: "chat-msg"
         };
-        if (message.From != this.names.server || message.Body.search(/.* logged in/) == -1) {
+        if (message.From != SERVER || message.Body.search(/.* logged in/) == -1) {
             var subject = message.From;
             config.body = message.Body;
         } else {
