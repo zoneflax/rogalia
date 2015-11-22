@@ -956,14 +956,17 @@ Character.prototype = {
             var diff = pvpExpires - Date.now();
             // blink when less then 3 sec
             if (diff > 0 && (diff > 3e3 || diff % 1000 < 500)) {
-                game.ctx.fillStyle = "red";
-                var x = p.x - game.ctx.measureText("pvp").width / 2;
-                var pdy = 0;
+                var pdy = Character.pvpFlag.height;
                 if (drawHp)
                     pdy += dy;
                 if (drawName)
                     pdy += dy;
-                game.drawStrokedText("pvp", x, y - pdy);
+
+                var pvpPoint = new Point(p.x, y);
+                pvpPoint.x -= Character.pvpFlag.width/2;
+                pvpPoint.y -= pdy*1.25;
+
+                Character.pvpFlag.draw(pvpPoint);
             }
         }
 

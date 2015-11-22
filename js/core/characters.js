@@ -93,6 +93,7 @@ Character.initSprites = function() {
 
     Character.flags.Empire = new Sprite("icons/flags/empire.png");
     Character.flags.Confederation = new Sprite("icons/flags/confederation.png");
+    Character.pvpFlag = new Sprite("icons/pvp.png");
 };
 
 Character.sex = function(sex) {
