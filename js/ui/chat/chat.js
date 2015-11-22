@@ -359,7 +359,7 @@ function Chat() {
             name: "party",
             hidden: true,
             defaultPrefix: "party",
-            channels: ["party", "private"]
+            channels: ["party"]
         },
     ].map(function(tab, i) {
         var name = tab.name;

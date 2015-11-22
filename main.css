@@ -758,6 +758,10 @@ hr {
 #chat-settings-icon {
     right: 28px;
 }
+#chat #chat-settings-icon {
+    right: 8px;
+    top: 22px;
+}
 #chat #chat-always-visible-label {
     display: none;
 }
@@ -816,7 +820,6 @@ hr {
 }
 
 #attached-chat #chat-wrapper {
-    width: 30em;
     background:
     url("assets/bg/tab/corner.png") no-repeat top right,
     url("assets/bg/panel/border-top.png") repeat-x top,
@@ -859,9 +862,10 @@ hr {
     overflow-y: auto;
 }
 .messages {
+    width: 30em;
+    height: 20em;
     overflow: hidden;
     position: relative;
-    height: 20em;
     padding: 5px;
     margin: 0;
 }

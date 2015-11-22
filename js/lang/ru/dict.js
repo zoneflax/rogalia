@@ -1090,4 +1090,5 @@ var dict = {
     "Unstuck": "Я застрял",
     "Invite": "Приглашение",
     "{name} invites you to a party": "{name} приглашает вас в группу",
+    "{name} denied invite request": "{name} не будет вступать в группу",
 };
