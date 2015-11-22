@@ -857,14 +857,15 @@ hr {
     margin-left: 5px;
     width: 95%;
 }
-
-#chat .messages, .messages:hover {
-    overflow-y: auto;
+#chat-wrapper {
+    width: 30em;
+    overflow: hidden;
 }
 .messages {
-    width: 30em;
+    width: 31em;
     height: 20em;
-    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: hidden;
     position: relative;
     padding: 5px;
     margin: 0;

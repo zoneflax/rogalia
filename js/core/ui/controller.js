@@ -151,8 +151,10 @@ function Controller(game) {
             };
         },
         update: function() {
-            this.element.style.left = controller.mouse.x + "px";
-            this.element.style.top = controller.mouse.y + "px";
+            if (this.entity) {
+                this.element.style.left = controller.mouse.x + "px";
+                this.element.style.top = controller.mouse.y + "px";
+            }
         },
         updateHovered: function() {
             dom.hide(this.element);
