@@ -150,7 +150,8 @@ Character.prototype = {
             if (member) {
                 var avatar = member.sprite.icon();
             } else {
-                avatar = dom.div();
+                avatar = dom.div(".character-avatar-not-available", {text: "?"});
+                avatar.title = T("Out of sight");
                 Character.partyLoadQueue[name] = true;
             }
             var cnt = dom.div(".character-avatar-container");

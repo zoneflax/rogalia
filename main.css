@@ -1466,6 +1466,11 @@ big {
     width: 103px;
     height: 60px;
 }
+.character-avatar-not-available {
+    line-height: 60px;
+    font-size: 19px;
+    cursor: help;
+}
 .character-avatar-container > canvas {
     margin-top: 10px;
     max-height: 40px;
@@ -1484,8 +1489,8 @@ big {
 }
 .party-member-name {
     position: absolute;
-    left: 83px;
-    background: #99682e;
+    left: 75px;
+    top: 41px;
     border-radius: 2px;
 }
 
