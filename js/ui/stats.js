@@ -252,7 +252,7 @@ Stats.prototype = {
             }
             section.elem = elem;
             sections.push(section);
-            section.hash = "";
+            section.hash = null;
             return elem;
         });
         this.sections = sections;
@@ -275,7 +275,7 @@ Stats.prototype = {
         if (!contents)
             return;
         var hash = contents.map(function(elem) { return elem.innerHTML; }).join("");
-        if (section.hash == hash)
+        if (section.hash === hash)
             return;
         section.hash = hash;
         var fragment = document.createDocumentFragment();
