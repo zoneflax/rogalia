@@ -112,6 +112,11 @@ function Chat() {
     };
 
     function onmousedown(e) {
+        if (e.target.classList.contains("recipe-link")) {
+            game.controller.craft.search(e.target.dataset.recipe, true);
+            return true;
+        }
+
         if (!e.target.classList.contains("from"))
             return true;
 
@@ -575,9 +580,7 @@ function Chat() {
         var link = document.createElement("a");
         link.textContent = T("Recipe") + ": " + TS(data);
         link.className = "recipe-link";
-        link.onclick = function() {
-            game.controller.craft.search(data, true);
-        };
+        link.dataset.recipe = data;
         return link;
     }
 
