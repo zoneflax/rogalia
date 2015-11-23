@@ -91,6 +91,9 @@ function Controller(game) {
             this.element.style.marginTop = -entity.getDrawDy() + "px";
 
             this.entity = entity;
+
+            cleanup = cleanup || function(){};
+
             controller.callback[controller.RMB] = function(e) {
                 cleanup();
                 return true;
@@ -132,7 +135,7 @@ function Controller(game) {
                 }
 
                 hovered = controller.world.hovered;
-                if (hovered instanceof Entity) {
+                if (hovered && hovered.canUse) {
                     if (hovered.canUse(entity)) {
                         return hovered.use(entity);
                     }

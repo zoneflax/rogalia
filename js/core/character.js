@@ -1266,8 +1266,12 @@ Character.prototype = {
                 var cursor = new Entity(tool.Type);
                 cursor.initSprite();
                 switch (action) {
-                case "dildo": game.alert("Фу-фу-фу");
-                    // game.controller.selectionCursor(cursor, "fuck");
+                case "dildo":
+                    game.controller.cursor.set(
+                        cursor,
+                        game.controller.mouse.x,
+                        game.controller.mouse.y
+                    );
                     return;
                 case "taming":
                     cmd = "tame";
@@ -1798,15 +1802,28 @@ Character.prototype = {
             return this.Type == "vendor";
         }
     },
-    canUse: function(e) {
-        switch (e.Location) {
+    use: function(entity) {
+        switch (entity.Group) {
+        case "dildo":
+            game.network.send("fuck", {Id: this.Id});
+            return true;
+        }
+        return false;
+    },
+    canUse: function(entity) {
+        switch (entity.Group) {
+        case "dildo":
+            return true;
+        }
+
+        switch (entity.Location) {
         case Entity.LOCATION_IN_CONTAINER:
-            var cnt = e.findRootContainer();
+            var cnt = entity.findRootContainer();
             return cnt && this.canUse(cnt);
         case Entity.LOCATION_EQUIPPED:
-            return this.Id == e.Owner;
+            return this.Id == entity.Owner;
         default:
-            return this.isNear(e);
+            return this.isNear(entity);
         }
     },
     updateActionAnimation: function() {
