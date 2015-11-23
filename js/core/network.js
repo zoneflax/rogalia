@@ -119,6 +119,8 @@ function Network() {
                 this.defaultCallback = callback;
         }
     };
+
+    //for debug
     this.sendRaw = function(cmd) {
         this.socket.send(JSON.stringify(cmd));
     };

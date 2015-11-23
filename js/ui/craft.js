@@ -570,6 +570,8 @@ Craft.prototype = {
         Container.forEach(function(container) {
             if (!container.visible && !container.entity.belongsTo(game.player))
                 return;
+            // force update
+            container.update();
             container.forEach(function(slot) {
                 if (slot.entity) {
                     callback(slot, container);
