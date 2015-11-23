@@ -43,7 +43,7 @@ function lobbyStage(data) {
         });
     });
 
-    for (var i = maxChars - characters.length; i != 0; i--) {
+    for (var i = maxChars - characters.length; i > 0; i--) {
         var create = loader.loadImage("avatars/new.png").cloneNode();
         create.className = "create";
         add(T("Create"), create, function() {
