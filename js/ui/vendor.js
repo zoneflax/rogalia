@@ -478,7 +478,7 @@ function Bank() {
 
     var claimRent = document.createElement("label");
     var claimPaidTill = document.createElement("label");
-    var claimLastPaid = document.createElement("label");
+    // var claimLastPaid = document.createElement("label");
     var claimPay = document.createElement("button");
     claimPay.textContent = T("Pay");
     claimPay.onclick = function() {
@@ -491,7 +491,7 @@ function Bank() {
     claim.appendChild(document.createTextNode(T("Claim")));
     claim.appendChild(claimRent);
     claim.appendChild(claimPaidTill);
-    claim.appendChild(claimLastPaid);
+    // claim.appendChild(claimLastPaid);
     claim.appendChild(claimPay);
 
     var vault = document.createElement("div");
@@ -538,8 +538,8 @@ function Bank() {
         claimPaidTill.innerHTML = T("Paid till") + ": ";
         claimPaidTill.appendChild(date(claim.PaidTill));
 
-        claimLastPaid.innerHTML = T("Last paid") + ": ";
-        claimLastPaid.appendChild(date(claim.LastPaid));
+        // claimLastPaid.innerHTML = T("Last paid") + ": ";
+        // claimLastPaid.appendChild(date(claim.LastPaid));
 
         vault.innerHTML = "";
         data.Bank.Vault.forEach(function(vaultSlot, i) {

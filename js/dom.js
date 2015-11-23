@@ -97,9 +97,9 @@ var dom = {
         if (value)
             input.value = value;
         var label = document.createElement("label");
-        label.appendChild(input);
         if (text)
             label.appendChild(document.createTextNode(text));
+        label.appendChild(input);
         input.label = label;
 
         return input;
