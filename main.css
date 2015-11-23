@@ -604,6 +604,9 @@ hr {
     background: rgba(33, 33, 33, 0.5);
     font-size: 32px;
     padding: 2em;
+    position: absolute;
+    left: 0;
+    right: 0;
 }
 #messages {
     display: flex;
