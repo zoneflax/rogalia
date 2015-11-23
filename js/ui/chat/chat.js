@@ -63,7 +63,9 @@ function Chat() {
                         game.controller.system.users.updateFriendsTab
                     );
                 },
-                addToBLacklist: function() {
+            },
+            {
+                addToBlacklist: function() {
                     game.network.send(
                         "blacklist-add",
                         {Name: name},

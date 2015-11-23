@@ -1093,4 +1093,8 @@ var dict = {
     "{name} denied invite request": "{name} не будет вступать в группу",
     "Out of sight": "Вне поля зрения",
     "No friends": "Нет друзей",
+    "Blacklist": "Черный список",
+    "Add to blacklist": "Добавить в черный список",
+    "Remove from blacklist": "Удалить из черного списка",
+    "Blacklist is empty": "Черный список пуст",
 };
