@@ -86,11 +86,6 @@ function Network() {
             var callback = (this.callback) ? this.callback(data) : this.defaultCallback;
             this.callback = (callback instanceof Function) ? callback : null;
         }
-
-        // TODO: remove
-        // if (data.astar) {
-        //     this.astar = data.astar;
-        // }
     }
 
     this.shutdown = function() {

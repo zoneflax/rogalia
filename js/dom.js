@@ -187,6 +187,9 @@ var dom = {
                 dom.append(content, tab.contents);
             contents.appendChild(content);
 
+            if (tab.update)
+                tab.update = tab.update.bind(tabs, title, content);
+
             title.onclick = function() {
                 active.title.classList.remove("active");
                 active.content.classList.remove("active");
@@ -198,7 +201,7 @@ var dom = {
                 active.content = content;
 
                 if (tab.update) {
-                    tab.update.call(tabs, title, content);
+                    tab.update();
                 }
             };
 
@@ -213,6 +216,7 @@ var dom = {
         tabs.titles = titles;
         tabs.hr = hr;
         tabs.contents = contents;
+        tabs.tabs = cfg;
 
         var active = {
             title: titles.firstChild,

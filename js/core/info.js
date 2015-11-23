@@ -142,11 +142,10 @@ function Info(message, character) {
         console.warn(this.text, "Chat is null");
 
     if (!this.data) {
-        var record = document.createElement("div");
-        record.textContent = this.text;
+        var record = dom.div("info-message", {text: this.text});
         document.getElementById("messages").appendChild(record);
         setTimeout(function() {
-            record.parentNode.removeChild(record);
+            dom.remove(record);
         }, this.duration);
     }
 };

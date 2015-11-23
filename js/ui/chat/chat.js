@@ -50,10 +50,32 @@ function Chat() {
             partyActions,
             {
                 addToFriends: function() {
-                    game.network.send("friend-add", {Name: name});
+                    game.network.send(
+                        "friend-add",
+                        {Name: name},
+                        game.controller.system.users.updateFriendsTab
+                    );
                 },
                 removeFromFriends: function() {
-                    game.network.send("friend-remove", {Name: name});
+                    game.network.send(
+                        "friend-remove",
+                        {Name: name},
+                        game.controller.system.users.updateFriendsTab
+                    );
+                },
+                addToBLacklist: function() {
+                    game.network.send(
+                        "blacklist-add",
+                        {Name: name},
+                        game.controller.system.users.updateBlacklistTab
+                    );
+                },
+                removeFromBlacklist: function() {
+                    game.network.send(
+                        "blacklist-remove",
+                        {Name: name},
+                        game.controller.system.users.updateBlacklistTab
+                    );
                 },
             }
         ];
@@ -216,17 +238,9 @@ function Chat() {
                 break;
             case "friend-add":
             case "friend-remove":
+            case "blacklist-add":
+            case "blacklist-remove":
                 game.network.send(cmd, {Name: arg});
-                break;
-            case "friend-list":
-                game.network.send("friend-list", {}, function(data) {
-                    if (!data.Friends)
-                        game.chat.addMessage("No friends");
-                    else
-                        data.Friends.forEach(function(name) {
-                            game.chat.addMessage(name);
-                        });
-                });
                 break;
             case "add":
                 if (Entity.templates[arg]) {
