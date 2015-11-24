@@ -335,6 +335,9 @@ Entity.prototype = {
         if (align && align.X) {
             var w = this.Width || 2*this.Radius;
             var h = this.Height || 2*this.Radius;
+            if (this.Group == "claim") {
+                w = h = 20 * CELL_SIZE;
+            }
             p.x -= w/2;
             p.y -= h/2;
             p.align(new Point(align));
