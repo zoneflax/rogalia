@@ -89,7 +89,7 @@ var dom = {
     appendText: function(element, text) {
         element.appendChild(document.createTextNode(text));
     },
-    input: function(text, value, type, name) {
+    input: function(text, value, type, name, textAfterInput) {
         var input = document.createElement("input");
         input.type = type || "text" ;
         if (name)
@@ -97,18 +97,22 @@ var dom = {
         if (value)
             input.value = value;
         var label = document.createElement("label");
-        if (text)
+        if (text && !textAfterInput)
             label.appendChild(document.createTextNode(text));
+
         label.appendChild(input);
+
+        if (text && textAfterInput)
+            label.appendChild(document.createTextNode(text));
         input.label = label;
 
         return input;
     },
     radioButton: function(text, name) {
-        return this.input(text, null, "radio", name);
+        return this.input(text, null, "radio", name, true);
     },
     checkbox: function(text, name) {
-        return this.input(text, null, "checkbox", name);
+        return this.input(text, null, "checkbox", name, true);
     },
     /* * * * * */
     remove: function(element) {
