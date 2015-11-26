@@ -840,7 +840,7 @@ hr {
     margin-left: -7px;
     top: 2px;
 }
-#attached-chat hr {
+#attached-chat .tab-titles > hr {
     display: none;
 }
 #attached-chat .messages {
