@@ -6,8 +6,6 @@ function mainStage(data) {
     game.controller.initInterface();
 
     game.controller.chat.init(data.Chat);
-    game.controller.system.users.sync(data.PlayersOnline);
-    game.controller.minimap.sync(data.PlayersOnline);
 
     this.sync = function (data) {
         if (data.Warning) {
@@ -25,11 +23,6 @@ function mainStage(data) {
         Character.sync(data.NPCs || [], data.RemoveNPCs || null);
 
         data.Location && game.map.sync(data.Location);
-
-        if (data.PlayersOnline) {
-            game.controller.system.users.sync(data.PlayersOnline);
-            game.controller.minimap.sync(data.PlayersOnline);
-        }
 
         game.controller.chat.sync(data.Chat || []);
         game.controller.skills.update();

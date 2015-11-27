@@ -1,25 +1,28 @@
 "use strict";
 function Users() {
-    this.characters = [];
-    this.listElement = document.createElement("ul");
-    var total = document.createElement("div");
+    function render(content, data, selector, empty) {
+        content.innerHTML = "";
+        var ul = dom.tag("ul");
+        content.appendChild(ul);
+        if (!data[selector]) {
+            content.textContent = T(empty);
+        } else {
+            data[selector].forEach(function(name) {
+                var li = dom.tag("li", "", {text: name});
+                li.onmousedown = function(e) {
+                    return game.chat.nameMenu(e, name);
+                };
+                ul.appendChild(li);
+            });
+            var total = dom.div("", {text: T("Total") + ":" + data[selector].length});
+            content.appendChild(total);
+        }
+    }
 
     function makeTabUpdate(cmd, selector, empty) {
         return function(title, content) {
-            content.innerHTML = "";
-            var list = dom.tag("ul");
-            content.appendChild(list);
             function update(data) {
-                if (!data[selector])
-                    content.textContent = T(empty);
-                else
-                    data[selector].forEach(function(name) {
-                        var li = dom.tag("li", selector.toLowerCase(), {text: name});
-                        li.onmousedown = function(e) {
-                            return game.chat.nameMenu(e, name);
-                        };
-                        list.appendChild(li);
-                    });
+                render(content, data, selector, empty);
             }
             game.network.send(cmd, {}, update);
             // when e.g. this.updateFriendsTab()  will be called from game.chat
@@ -31,8 +34,8 @@ function Users() {
 
     var tabs = dom.tabs([
         {
-            title: T("Users online"),
-            contents: [this.listElement, total]
+            title: T("Online players"),
+            update: makeTabUpdate("player-list", "OnlinePlayers", "")
         },
         {
             title: T("Friends"),
@@ -50,52 +53,15 @@ function Users() {
         [tabs]
     );
 
+    this.updateOnlinePlayersTab = tabs.tabs[0].update;
     this.updateFriendsTab = tabs.tabs[1].update;
     this.updateBlacklistTab = tabs.tabs[2].update;
 
-    this.playersList = {};
-
-    this.addCharacter = function(name) {
-        var user = this.playersList[name];
-
-        if (!user) {
-            user = document.createElement("li");;
-            user.href = "javascript://";
-            user.textContent = name;
-            user.onmousedown = function(e) {
-                return game.chat.nameMenu(e, name);
-            };
-
-            this.listElement.appendChild(user);
-            this.playersList[name] = user;
-        }
+    this.removePlayer = function(name) {
+        //TODO
     };
 
-    this.sync = function(data) {
-        if (!data)
-            return;
-        this.characters = data;
-        this.update();
+    this.addPlayer = function(name) {
+        //TODO
     };
-
-    this.update = function() {
-        if (!this.panel.visible)
-            return;
-
-        var count = 0;
-        for(var name in this.characters) {
-            count++;
-            this.addCharacter(name);
-        }
-
-        for(var name in this.playersList) {
-            if (!this.characters[name]) {
-                this.playersList[name].parentNode.removeChild(this.playersList[name]);
-                delete this.playersList[name];
-            }
-        }
-        total.textContent = T("Total") + ": " + count;
-    };
-
-    this.panel.hooks.show = this.update.bind(this);
 }

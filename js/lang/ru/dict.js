@@ -122,7 +122,7 @@ var dict = {
     "Опыт": "Опыт",
     "Reset help": "Сбросить помощь",
     "Users": "Игроки",
-    "Users online": "Игроки онлайн",
+    "Online players": "Игроки онлайн",
     "Friends": "Друзья",
     "Map": "Карта",
     "Chat": "Чат",
@@ -1097,4 +1097,5 @@ var dict = {
     "Add to blacklist": "Добавить в черный список",
     "Remove from blacklist": "Удалить из черного списка",
     "Blacklist is empty": "Черный список пуст",
+    "Total": "Итого",
 };

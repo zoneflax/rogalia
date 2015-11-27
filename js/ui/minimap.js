@@ -62,10 +62,8 @@ function Minimap() {
         [wrapper, zoom]
     );
 
-    this.sync = function(data) {
-        if (!data)
-            return;
-        this.characters = data;
+    this.sync = function(characters) {
+        this.characters = characters;
         this.update();
     };
 

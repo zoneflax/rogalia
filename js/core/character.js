@@ -143,6 +143,7 @@ Character.prototype = {
         dom.clear(party);
         if (!members)
             return;
+
         members.forEach(function(name, i) {
             if (name == game.player.Name)
                 return;
