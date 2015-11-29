@@ -163,8 +163,8 @@ Entity.prototype = {
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "apple-tree":
-        //     return 240;
+        // case "bookshelf":
+        //     return 80;
         // }
 
         if (this.Sprite.Dy)
