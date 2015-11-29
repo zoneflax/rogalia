@@ -972,4 +972,14 @@ function Controller(game) {
         game.panels = {}; //dont save positions;
         game.reload();
     };
+
+    this.addPlayer = function(name) {
+        if (controller.system)
+            controller.system.users.addPlayer(name);
+    };
+
+    this.removePlayer = function(name) {
+        if (controller.system)
+            controller.system.users.removePlayer(name);
+    };
 };
