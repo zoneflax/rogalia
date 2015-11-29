@@ -100,7 +100,11 @@ function Game() {
 
     //TODO:FIXME: remove bool flag and use select{lang1, lang2, ...}
     function defaultLang() {
-        return (document.location.search.indexOf("en") == -1) ? "ru" : "en";
+        if (document.location.search.indexOf("en") != -1)
+            return "en";
+        if (navigator.language.substring(0, 2) == "en")
+            return "en";
+        return "ru";
     }
     this.lang = localStorage.getItem("lang") || defaultLang();
     dict.init();
