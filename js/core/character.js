@@ -109,6 +109,16 @@ Character.prototype = {
     leftTopX: Entity.prototype.leftTopX,
     leftTopY: Entity.prototype.leftTopY,
     compare: Entity.prototype.compare,
+    setPoint: function(p) {
+        if (this.Id && this.inWorld())
+            game.sortedEntities.remove(this);
+
+        this.x = p.x;
+        this.y = p.y;
+
+        if (this.Id && this.inWorld())
+            game.sortedEntities.add(this);
+    },
     screen: function() {
         return new Point(this.X, this.Y).toScreen();
     },
@@ -1524,8 +1534,7 @@ Character.prototype = {
     },
     updateBurden: function() {
         if (this.burden) {
-            this.burden.X = this.X;
-            this.burden.Y = this.Y;
+            this.burden.setPoint(this);
         }
     },
     updatePlow: function() {
@@ -1536,8 +1545,7 @@ Character.prototype = {
         // y = 1 used to fix rendering order
         var offset = new Point(this.plow.Radius, 1).rotate(2*Math.PI - sector * Math.PI/4);
         p.add(offset);
-        this.plow.X = p.x;
-        this.plow.Y = p.y;
+        this.plow.setPoint(p);
         this.plow.sprite.position = this.sprite.position;
 
         if (this.Dx || this.Dy)

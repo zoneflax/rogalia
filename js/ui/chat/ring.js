@@ -1,7 +1,8 @@
 "use strict";
 function ChatRing() {
-    this.ring = [];
-    this.current =  0;
+    var saved = JSON.parse(localStorage["chat.ring"] || "[]");
+    this.ring =  saved || [];
+    this.current =  this.ring.length;
     this.backup = "";
 
     this.last = function() {
@@ -33,5 +34,9 @@ function ChatRing() {
 
         this.ring.push(message);
         this.current = this.ring.length;
+    };
+
+    this.saveToStorage = function() {
+        localStorage["chat.ring"] = JSON.stringify(this.ring);
     };
 }

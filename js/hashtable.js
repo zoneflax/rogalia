@@ -1,7 +1,7 @@
 "use strict";
 function HashTable(data) {
     this.hash = {};
-    this.table = [];
+    this.array = [];
     if (data) {
         for (var key in data) {
             this.set(key, data[key]);
@@ -11,9 +11,9 @@ function HashTable(data) {
 
 HashTable.prototype = {
     hash: null,
-    table: null,
+    array: null,
     get length() {
-        return this.table.length;
+        return this.array.length;
     },
     has: function(key) {
         return this.get(key) != undefined;
@@ -24,32 +24,32 @@ HashTable.prototype = {
     set: function(key, value) {
         this.remove(key);
         this.hash[key] = value;
-        this.table.push(value);
+        this.array.push(value);
     },
     remove: function(key) {
         var old = this.hash[key];
         if (old) {
-            var i = this.table.findIndex(function(item) {
+            var i = this.array.findIndex(function(item) {
                 return item === old;
             });
-            this.table.splice(i, 1);
+            this.array.splice(i, 1);
         }
         delete this.hash[key];
 
     },
     forEach: function(callback) {
-        this.table.forEach(callback);
+        this.array.forEach(callback);
     },
     every: function(predicate) {
-        return this.table.every(predicate);
+        return this.array.every(predicate);
     },
     some: function(predicate) {
-        return this.table.some(predicate);
+        return this.array.some(predicate);
     },
     filter: function(predicate) {
-        return this.table.filter(predicate);
+        return this.array.filter(predicate);
     },
     map: function(predicate) {
-        return this.table.map(predicate);
+        return this.array.map(predicate);
     },
-}
+};

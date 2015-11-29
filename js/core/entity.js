@@ -49,22 +49,10 @@ Entity.prototype = {
         return this.y;
     },
     set X(x) {
-        if (this.x == x)
-            return;
-        if (this.Id && this.inWorld())
-            game.sortedEntities.remove(this);
-        this.x = x;
-        if (this.Id && this.inWorld())
-            game.sortedEntities.add(this);
+        throw "not allowed";
     },
     set Y(y) {
-        if (this.y == y)
-            return;
-        if (this.Id && this.inWorld())
-            game.sortedEntities.remove(this);
-        this.y = y;
-        if (this.Id && this.inWorld())
-            game.sortedEntities.add(this);
+        throw "not allowed";
     },
     get name() {
         var name = "";
@@ -208,11 +196,17 @@ Entity.prototype = {
     compare: function(entity) {
         if (this == entity)
             return 0;
+        var z = this.getZ() - entity.getZ();
+        if (z != 0)
+            return z;
+        var a = this.X + this.Y;
+        var b = entity.X + entity.Y;
+        return (a > b) ? +1 : -1;
         var aMaxX = this.X + this.Width/2;
         var aMaxY = this.Y + this.Height/2;
         var bMinX = entity.X - entity.Width/2;
         var bMinY = entity.Y - entity.Height/2;
-        return (bMinX < aMaxX && bMinY < aMaxY && entity.getZ() <= this.getZ()) ? +1 : -1;
+        return (bMinX < aMaxX && bMinY < aMaxY) ? +1 : -1;
     },
     getZ: function() {
         switch (this.Disposition) {
@@ -475,9 +469,20 @@ Entity.prototype = {
         window.open("http://rogalik.tatrix.org/forum/posting.php?mode=reply&f=2&t=11", "_blank");
     },
     sync: function(data) {
+        var p = new Point(this.X, this.Y);
         for(var prop in data) {
-            this[prop] = data[prop];
+            switch (prop) {
+            case "X":
+                p.x = data.X;
+                break;
+            case "Y":
+                p.y = data.Y;
+                break;
+            default:
+                this[prop] = data[prop];
+            }
         }
+        this.setPoint(p);
 
         switch(this.Group) {
         case "portal":
@@ -597,7 +602,6 @@ Entity.prototype = {
             this.drawCenter();
         }
 
-
         if(game.debug.entity.position) {
             var text = "(" + (this.X) + " " + (this.Y) + ")";
             text += " id:" + this.Id;
@@ -653,8 +657,14 @@ Entity.prototype = {
         game.ctx.fillRect(p.x, p.y, 3, 3);
     },
     setPoint: function(p) {
-        this.X = p.x;
-        this.Y = p.y;
+        if (this.Id && this.inWorld())
+            game.sortedEntities.remove(this);
+
+        this.x = p.x;
+        this.y = p.y;
+
+        if (this.Id && this.inWorld())
+            game.sortedEntities.add(this);
     },
     drawHovered: function() {
         this.sprite.drawOutline(this.getDrawPoint());

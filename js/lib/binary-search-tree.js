@@ -63,7 +63,6 @@ BinarySearchTree.prototype = {
         //create a new item object, place data in
         var node = {
             value: value,
-            values: [value],
             left: null,
             right: null,
             parent: null,
@@ -96,19 +95,10 @@ BinarySearchTree.prototype = {
                 current = current.right;
                 //if the new value is equal to the current one, insert to list
             } else {
-                var i = this.findIndex(current.values, value);
-                if (i != -1)
-                    game.sendErrorf("Duplicate in binary tree: %j", value);
-                current.values.push(value);
+                game.sendErrorf("Duplicate in binary tree: %j", value);
                 return;
             }
         }
-    },
-    findIndex: function(values, value) {
-        var id = this.id(value);
-        return values.findIndex(function(e) {
-            return this.id(e) == id;
-        }, this);
     },
     /**
      * Determines if the given value is present in the tree.
@@ -129,7 +119,7 @@ BinarySearchTree.prototype = {
                 current = current.right;
                 //values are equal, found it!
             } else {
-                return this.findIndex(current.values, value) != -1;
+                return true;
             }
         }
         return false;
@@ -148,24 +138,20 @@ BinarySearchTree.prototype = {
             else if (compare > 0)
                 current = current.right;
             else {
-                var i = this.findIndex(current.values, value);
-                if (i != -1) {
-                    current.values.splice(i, 1);
-                    if (current.values.length == 0)
-                        break;
-                }
-                return;
+                break;
             }
         }
-        if (!current)
+        if (current == null) {
+            // console.log("notFound", value);
             return;
-        if (!current.right) {
-            this._replace(current, current.left);
-        } else if (!current.left)
-            this._replace(current, current.right);
-        else {
-            this._delete(current, current.left);
         }
+
+        if (current.right == null)
+            this._replace(current, current.left);
+        else if (current.left == null)
+            this._replace(current, current.right);
+        else
+            this._delete(current, current.left);
     },
     _replace: function(node, replace) {
         var parent = node.parent;
@@ -185,7 +171,6 @@ BinarySearchTree.prototype = {
             this._delete(base, node.right);
         } else {
             base.value = node.value;
-            base.values = node.values;
             this._replace(node, node.left);
         }
     },
@@ -235,7 +220,7 @@ BinarySearchTree.prototype = {
         if (node.left !== null) {
             this._inOrder(node.left, process);
         }
-        node.values.forEach(process);
+        process(node.value);
         if (node.right !== null){
             this._inOrder(node.right, process);
         }
@@ -253,9 +238,8 @@ BinarySearchTree.prototype = {
             if (found)
                 return found;
         }
-        found = node.values.find(predicate);
-        if (found)
-            return found;;
+        if (predicate(node.value))
+            return node.value;
         if (node.left !== null){
             return this._outOrder(node.left, predicate);
         }

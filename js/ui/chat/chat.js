@@ -834,5 +834,6 @@ function Chat() {
         tabs.forEach(function(tab) {
             localStorage["chat.log." + tab.name] = tab.messagesElement.innerHTML;
         });
+        myMessages.saveToStorage();
     };
 }

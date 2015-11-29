@@ -89,6 +89,8 @@ function mainStage(data) {
         game.characters.forEach(drawAura);
         game.claims.forEach(drawClaim);
         game.sortedEntities.traverse(drawObject);
+        // this.drawOrder();
+
         if (debug.map.darkness)
             game.map.drawDarkness();
         game.characters.forEach(drawUI);
@@ -96,6 +98,47 @@ function mainStage(data) {
         // game.iso.fillRect(game.player.Location.X)
         // this.debug();
         game.ctx.restore();
+    };
+
+    this.drawOrder = function() {
+        var i = 0;
+        game.sortedEntities.traverse(function(object)  {
+            object.draw();
+            var p = object.screen();
+            game.ctx.fillStyle = "#fff";
+            game.drawStrokedText(i++, p.x, p.y);
+
+        });
+    };
+
+    this.drawTopologic = function() {
+        game.entities.array.forEach(function(e) {
+            e.visited = false;
+            e.behind = game.entities.array.filter(function(t) {
+                var aMaxX = e.X + e.Width/2;
+                var aMaxY = e.Y + e.Height/2;
+                var bMinX = t.X - t.Width/2;
+                var bMinY = t.Y - t.Height/2;
+                return (bMinX < aMaxX && bMinY < aMaxY);
+            });
+        });
+
+        var depth = 0;
+        function visit(e) {
+            if (e.visited)
+                return;
+            e.visited = true;
+            e.behind.forEach(visit);
+            e.depth = depth++;
+        }
+
+        game.entities.array.forEach(function(e) {
+            visit(e);
+        });
+
+        util.msort(game.entities.array, function(a, b) {
+            return a.depth - b.depth;
+        }).forEach(drawObject);
     };
 
     var hueRotate = 0;
