@@ -103,11 +103,12 @@ Character.prototype = {
             game.sortedEntities.add(this);
         }
     },
+    getZ: function() {
+        return 0;
+    },
     leftTopX: Entity.prototype.leftTopX,
     leftTopY: Entity.prototype.leftTopY,
-    sortOrder: function() {
-        return  this.Y + this.X;
-    },
+    compare: Entity.prototype.compare,
     screen: function() {
         return new Point(this.X, this.Y).toScreen();
     },

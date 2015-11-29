@@ -55,23 +55,19 @@ BinarySearchTree.prototype = {
     id: function(value) {
         return value.Id;
     },
-    key: function(value) {
-        return value.sortOrder();
-    },
     add: function (value) {
         if (!value) {
             game.sendError("bst.add: value is null");
             return;
         }
         //create a new item object, place data in
-        var key = this.key(value);
         var node = {
-            key: key,
+            value: value,
             values: [value],
             left: null,
             right: null,
             parent: null,
-        }
+        };
         //special case: no items in the tree yet
         if (this._root === null) {
             this._root = node;
@@ -80,7 +76,8 @@ BinarySearchTree.prototype = {
         var current = this._root;
         while (true) {
             //if the new value is less than this node's value, go left
-            if (key < current.key){
+            var compare = value.compare(current.value);
+            if (compare < 0) {
                 //if there's no left, then the new node belongs there
                 if (current.left === null){
                     node.parent = current;
@@ -89,7 +86,7 @@ BinarySearchTree.prototype = {
                 }
                 current = current.left;
                 //if the new value is greater than this node's value, go right
-            } else if (key > current.key){
+            } else if (compare > 0) {
                 //if there's no right, then the new node belongs there
                 if (current.right === null){
                     node.parent = current;
@@ -99,7 +96,7 @@ BinarySearchTree.prototype = {
                 current = current.right;
                 //if the new value is equal to the current one, insert to list
             } else {
-                var i = this.findIndex(current.values, value)
+                var i = this.findIndex(current.values, value);
                 if (i != -1)
                     game.sendErrorf("Duplicate in binary tree: %j", value);
                 current.values.push(value);
@@ -108,7 +105,7 @@ BinarySearchTree.prototype = {
         }
     },
     findIndex: function(values, value) {
-        var id = this.id(value)
+        var id = this.id(value);
         return values.findIndex(function(e) {
             return this.id(e) == id;
         }, this);
@@ -122,13 +119,13 @@ BinarySearchTree.prototype = {
     contains: function(value){
         var current = this._root;
         //make sure there's a node to search
-        var key = this.key(value);
-        while(current){
+        while (current){
+            var compare = value.compare(current.value);
             //if the value is less than the current node's, go left
-            if (key < current.key){
+            if (compare < 0){
                 current = current.left;
                 //if the value is greater than the current node's, go right
-            } else if (key > current.key){
+            } else if (compare > 0){
                 current = current.right;
                 //values are equal, found it!
             } else {
@@ -139,16 +136,16 @@ BinarySearchTree.prototype = {
     },
     remove: function(value) {
         if (!value) {
-            game.sendError("bst.remove: value is null")
+            game.sendError("bst.remove: value is null");
             return;
         }
 
-        var key = this.key(value);
         var current = this._root;
         while (current) {
-            if (key < current.key)
+            var compare = value.compare(current.value);
+            if (compare < 0)
                 current = current.left;
-            else if (key > current.key)
+            else if (compare > 0)
                 current = current.right;
             else {
                 var i = this.findIndex(current.values, value);
@@ -187,7 +184,7 @@ BinarySearchTree.prototype = {
         if (node.right) {
             this._delete(base, node.right);
         } else {
-            base.key = node.key;
+            base.value = node.value;
             base.values = node.values;
             this._replace(node, node.left);
         }

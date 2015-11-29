@@ -55,7 +55,7 @@ Entity.prototype = {
             game.sortedEntities.remove(this);
         this.x = x;
         if (this.Id && this.inWorld())
-            game.sortedEntities.add(this, this.sortOrder());
+            game.sortedEntities.add(this);
     },
     set Y(y) {
         if (this.y == y)
@@ -205,17 +205,23 @@ Entity.prototype = {
         p.y -= this.getDrawDy();
         return p.round();
     },
-    sortOrder: function() {
-        var y = this.Y + this.X;
-
+    compare: function(entity) {
+        if (this == entity)
+            return 0;
+        var aMaxX = this.X + this.Width/2;
+        var aMaxY = this.Y + this.Height/2;
+        var bMinX = entity.X - entity.Width/2;
+        var bMinY = entity.Y - entity.Height/2;
+        return (bMinX < aMaxX && bMinY < aMaxY && entity.getZ() <= this.getZ()) ? +1 : -1;
+    },
+    getZ: function() {
         switch (this.Disposition) {
         case "roof":
-            y += game.map.full.height;
-            break;
+            return 1;
         case "floor":
-            y -= game.map.full.height;
+            return -1;
         }
-        return y;
+        return 0;
     },
     spriteVersion: function() {
         return this._spriteVersion;
@@ -309,6 +315,10 @@ Entity.prototype = {
     getActions: function() {
         var actions = [{}, {}, {}];
 
+        if (game.player.IsAdmin) {
+            actions[0]["$cmd"] = this.applyAdminCmd;
+        }
+
         if (this.MoveType == Entity.MT_PORTABLE && this.inWorld())
             actions[0]["Pick up"] = this.pickUp;
         else if (this.MoveType == Entity.MT_LIFTABLE)
@@ -322,9 +332,6 @@ Entity.prototype = {
             actions[2]["Rotate"] = function() {
                 game.network.send("rotate", {id: this.Id});
             };
-        }
-        if (game.player.IsAdmin) {
-            actions[2]["$cmd"] = this.applyAdminCmd;
         }
         actions[2]["Destroy"] =  this.destroy;
         actions[2]["Info"] = this.showInfo;
@@ -962,6 +969,25 @@ Entity.prototype = {
             "Get creator": send("get-creator"),
             "Set comment": prepare("set-comment"),
             "Finish building": send("finish-building"),
+            "100q": function() {
+                game.chat.send("*set-quality " + self.Id + " " + 100);
+            },
+            "Clone": function() {
+                var args = {
+                    Type: self.Type,
+                    X: game.player.X,
+                    Y: game.player.Y,
+                };
+                game.network.send("entity-add", args, function(data) {
+                    for (var id in data.Entities) {
+                        var entity = data.Entities[id];
+                        if (entity.Type == self.Type && entity.Creator == 0) {
+                            game.chat.send("*set-quality " + id + " " + self.Quality);
+                            return;
+                        }
+                    }
+                });
+            },
             "$prompt": function() {
                 var cmd = prompt("cmd?", "set-quality");
                 game.chat.append("*" + cmd + " " + id);
