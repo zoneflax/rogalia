@@ -199,9 +199,9 @@ Entity.prototype = {
         var z = this.getZ() - entity.getZ();
         if (z != 0)
             return z;
-        var a = this.X + this.Y;
-        var b = entity.X + entity.Y;
-        return (a > b) ? +1 : -1;
+        // var a = this.X + this.Y;
+        // var b = entity.X + entity.Y;
+        // return (a > b) ? +1 : -1;
         var aMaxX = this.X + this.Width/2;
         var aMaxY = this.Y + this.Height/2;
         var bMinX = entity.X - entity.Width/2;

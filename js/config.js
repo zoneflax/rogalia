@@ -13,7 +13,7 @@ var config = {
     },
     ui: {
         language: function() {
-            return game.lang;
+            return game.lang == "ru";
         },
         hp: false,
         name: false,

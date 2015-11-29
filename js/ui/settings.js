@@ -22,6 +22,10 @@ function Settings() {
     };
 
     this.triggers = {
+        "settings.ui.language": function() {
+            localStorage.setItem("lang", (game.lang == "ru") ? "en" : "ru");
+            game.reload();
+        },
         "settings.sound.playMusic": function() {
             game.sound.toggleMusic();
         },

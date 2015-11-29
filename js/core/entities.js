@@ -22,6 +22,8 @@ Entity.init = function(data) {
 
 
 Entity.sync = function(data, remove) {
+    remove && remove.forEach(game.removeEntityById);
+
     var containers = []; //to update
     for (var id in data) {
         var edata = data[id];
@@ -37,7 +39,6 @@ Entity.sync = function(data, remove) {
             containers.push(game.containers[entity.Id]);
         }
     }
-    remove && remove.forEach(game.removeEntityById);
 
     containers.forEach(function(container) {
         if (container.panel.visible)

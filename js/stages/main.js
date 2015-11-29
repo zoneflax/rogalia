@@ -88,8 +88,8 @@ function mainStage(data) {
         game.map.draw();
         game.characters.forEach(drawAura);
         game.claims.forEach(drawClaim);
-        game.sortedEntities.traverse(drawObject);
-        // this.drawOrder();
+        // game.sortedEntities.traverse(drawObject);
+        this.drawOrder();
 
         if (debug.map.darkness)
             game.map.drawDarkness();
