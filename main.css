@@ -259,7 +259,7 @@ hr {
     filter: brightness(120%);
 }
 .slot.locked {
-    background: url("assets/bg/slot-locked.png");
+    background-image: url("assets/bg/slot-locked.png")!important;
 }
 .slot > img, .slot > canvas {
     max-width: 45px;
@@ -1120,7 +1120,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 }
 
 .equip > .has-item {
-    background-image: url("assets/bg/slot.png")!important;
+    background-image: url("assets/bg/slot.png");
 }
 
 /* left column */

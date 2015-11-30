@@ -201,7 +201,7 @@ Entity.prototype = {
             return z;
         var a = this.X + this.Y;
         var b = entity.X + entity.Y;
-        return (a > b) ? +1 : -1;
+        return (a >= b) ? +1 : -1;
     },
     getZ: function() {
         switch (this.Disposition) {

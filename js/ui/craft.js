@@ -198,10 +198,15 @@ Craft.prototype = {
         if (!entity.is(to.group))
             return false;
 
-        var from = Container.get(entity.findContainer());
+        if (entity.Location == Entity.LOCATION_IN_CONTAINER)
+            var from = Container.get(entity.findContainer());
+        else if (entity.Location == Entity.LOCATION_EQUIPPED)
+            from = game.controller.stats.equipContainer;
+        else
+            return false;
 
         if (this.slots.some(function(slot) {
-            return slot.firstChild.id == from.id;
+            return slot.firstChild.id == entity.id;
         })) {
             return false;
         }
@@ -453,6 +458,8 @@ Craft.prototype = {
                 if (group in Craft.help) {
                     var help = dom.span(Craft.help[group]);
                     slot.onclick = function() {
+                        if (game.controller.cursor.isActive() || slot.firstChild.id)
+                            return;
                         var panel = new Panel("craft-help", T("Help"), [this]);
                         panel.show();
                     }.bind(help);
