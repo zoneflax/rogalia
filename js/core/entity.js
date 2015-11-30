@@ -516,8 +516,7 @@ Entity.prototype = {
             this._canUse = true;
             break;
         case "claim":
-            this.defaultActionSuccess = this.showClaimPanel.bind(this);
-            this.Actions.push("permissions");
+            this.Actions = ["claimControlls"];
             break;
         case "spell-scroll":
             this.Actions.push("cast");
@@ -529,10 +528,6 @@ Entity.prototype = {
 
         if ("Amount" in this && this.Amount > 1)
             this.Actions.push("split");
-    },
-    permissions: function() {
-        var permissions = prompt("New permissions?", this.Permissions);
-        game.network.send("set-claim-permissions", {Id: this.Id, Permissions: +permissions});
     },
     autoHideable: function() {
         if (this.Height <= 8 || this.Width <= 8)
@@ -924,7 +919,7 @@ Entity.prototype = {
             game.controller.creatingCursor(new Entity(this.Spell, this.Id), "cast");
         }
     },
-    showClaimPanel: function() {
+    claimControlls: function() {
         if (this.Creator != game.player.Id)
             return;
 

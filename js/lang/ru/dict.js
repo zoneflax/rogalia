@@ -1098,4 +1098,5 @@ var dict = {
     "Remove from blacklist": "Удалить из черного списка",
     "Blacklist is empty": "Черный список пуст",
     "Total": "Итого",
+    "Claim controlls": "Управление клеймом",
 };
