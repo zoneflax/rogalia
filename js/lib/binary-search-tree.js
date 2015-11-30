@@ -113,7 +113,7 @@ BinarySearchTree.prototype = {
     _find: function(value) {
         var current = this._root;
         //make sure there's a node to search
-        while (current){
+        while (current) {
             var compare = value.compare(current.value);
             //if the value is less than the current node's, go left
             if (compare < 0){
@@ -134,18 +134,20 @@ BinarySearchTree.prototype = {
             return;
         }
 
-        var current = this._find(value);
-        if (current == null) {
-            console.log("notFound", value);
+        var node = this._find(value);
+        if (node == null) {
+            // console.log("notFound", value);
             return;
         }
-
-        if (current.right == null)
-            this._replace(current, current.left);
-        else if (current.left == null)
-            this._replace(current, current.right);
+        this._removeNode(node);
+    },
+    _removeNode: function(node) {
+        if (node.right == null)
+            this._replace(node, node.left);
+        else if (node.left == null)
+            this._replace(node, node.right);
         else
-            this._delete(current, current.left);
+            this._delete(node);
     },
     _replace: function(node, replace) {
         var parent = node.parent;
@@ -160,12 +162,14 @@ BinarySearchTree.prototype = {
         if (replace)
             replace.parent = parent;
     },
-    _delete: function(base, node) {
-        if (node.right) {
-            this._delete(base, node.right);
-        } else {
-            this._replace(node, node.left);
-        }
+    _delete: function(node) {
+        var pred = node.left;
+        while (pred.right)
+            pred = pred.right;
+        var temp = pred.value;
+        pred.value = node.value;
+        node.value = temp;
+        this._removeNode(pred);
     },
     /**
      * Returns the number of items in the tree. To do this, a traversal
