@@ -202,11 +202,6 @@ Entity.prototype = {
         var a = this.X + this.Y;
         var b = entity.X + entity.Y;
         return (a > b) ? +1 : -1;
-        var aMaxX = this.X + this.Width/2;
-        var aMaxY = this.Y + this.Height/2;
-        var bMinX = entity.X - entity.Width/2;
-        var bMinY = entity.Y - entity.Height/2;
-        return (bMinX < aMaxX && bMinY < aMaxY) ? +1 : -1;
     },
     getZ: function() {
         switch (this.Disposition) {
