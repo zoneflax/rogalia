@@ -88,8 +88,12 @@ function mainStage(data) {
         game.map.draw();
         game.characters.forEach(drawAura);
         game.claims.forEach(drawClaim);
+
+
         game.sortedEntities.traverse(drawObject);
         // this.drawOrder();
+        // this.drawTopologic();
+        // this.drawAdaptive();
 
         if (debug.map.darkness)
             game.map.drawDarkness();
@@ -98,47 +102,6 @@ function mainStage(data) {
         // game.iso.fillRect(game.player.Location.X)
         // this.debug();
         game.ctx.restore();
-    };
-
-    this.drawOrder = function() {
-        var i = 0;
-        game.sortedEntities.traverse(function(object)  {
-            object.draw();
-            var p = object.screen();
-            game.ctx.fillStyle = "#fff";
-            game.drawStrokedText(i++, p.x, p.y);
-
-        });
-    };
-
-    this.drawTopologic = function() {
-        game.entities.array.forEach(function(e) {
-            e.visited = false;
-            e.behind = game.entities.array.filter(function(t) {
-                var aMaxX = e.X + e.Width/2;
-                var aMaxY = e.Y + e.Height/2;
-                var bMinX = t.X - t.Width/2;
-                var bMinY = t.Y - t.Height/2;
-                return (bMinX < aMaxX && bMinY < aMaxY);
-            });
-        });
-
-        var depth = 0;
-        function visit(e) {
-            if (e.visited)
-                return;
-            e.visited = true;
-            e.behind.forEach(visit);
-            e.depth = depth++;
-        }
-
-        game.entities.array.forEach(function(e) {
-            visit(e);
-        });
-
-        util.msort(game.entities.array, function(a, b) {
-            return a.depth - b.depth;
-        }).forEach(drawObject);
     };
 
     var hueRotate = 0;
@@ -153,23 +116,97 @@ function mainStage(data) {
         }
     };
 
+    this.end = function() {};
+
+    /* experimental and debug features */
+    var adaptiveRadius = 300;
+    var frames = 0;
+    this.drawAdaptive = function() {
+        frames++;
+
+        var started = Date.now();
+        var pl = game.player;
+
+        var list = this.getDrawableList().filter(function(e) {
+            return pl.distanceTo(e) < adaptiveRadius;
+        });
+
+        this.topologicalSort(list).forEach(drawObject);
+
+        var ellapsed = Date.now() - started;
+        var diff = (ellapsed > 15) ? -CELL_SIZE : +CELL_SIZE;
+        if (diff != 0 && frames > 24) {
+            frames = 0;
+            adaptiveRadius += diff;
+        }
+    };
+
+    this.drawOrder = function() {
+        var i = 0;
+        game.sortedEntities.traverse(function(object)  {
+            object.draw();
+            var p = object.screen();
+            game.ctx.fillStyle = "#fff";
+            game.drawStrokedText(i++, p.x, p.y);
+
+        });
+    };
+
+    this.drawTopologic = function() {
+        this.topologicalSort(this.getDrawableList()).forEach(drawObject);
+    };
+
+    this.getDrawableList = function() {
+        return game.entities.filter(function(e) {
+            return e instanceof Character || e.inWorld();
+        });
+    };
+
+    this.topologicalSort = function(list) {
+        list.forEach(function(e) {
+            e.visited = false;
+            e.behind = list.filter(function(t) {
+                if (e.getZ() != t.getZ())
+                    return false;
+                var aMaxX = e.X + e.Width/2;
+                var aMaxY = e.Y + e.Height/2;
+                var bMinX = t.X - t.Width/2;
+                var bMinY = t.Y - t.Height/2;
+                return (bMinX < aMaxX && bMinY < aMaxY);
+            });
+        });
+
+        // var tree = new BinarySearchTree();
+        var depth = 0;
+        function visit(e) {
+            if (e.visited)
+                return;
+            e.visited = true;
+            e.behind.forEach(visit);
+            e.depth = depth++;
+            // tree.add(e);
+        }
+
+        list.forEach(function(e) {
+            visit(e);
+        });
+
+        // list.forEach(tree.add.bind(tree));
+        // return tree;
+
+        return util.msort(list, function(a, b) {
+            var z = a.getZ() - b.getZ();
+            if (z != 0)
+                return z;
+
+            return (a.depth >= b.depth) ? +1 : -1;
+        });
+    };
+
     this.debug = function() {
         game.ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
         game.ctx.fillRect(game.camera.x, game.camera.y, game.screen.width, game.screen.height);
-
-        // if (game.network.astar) {
-        //     game.network.astar.forEach(function(node) {
-        //         if (node.Unpassable)
-        //             return;
-        //         game.ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
-        //         game.iso.fillRect(node.X, node.Y, node.Width, node.Height);
-        //             game.ctx.strokeStyle = "#333";
-        //         game.iso.strokeRect(node.X, node.Y, node.Width, node.Height);
-        //     });
-        // }
-
     };
-    this.end = function() {};
 }
 
 Stage.add(mainStage);

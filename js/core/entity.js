@@ -199,6 +199,10 @@ Entity.prototype = {
         var z = this.getZ() - entity.getZ();
         if (z != 0)
             return z;
+
+        // for topological sort test
+        // return (this.depth >= entity.depth) ? +1 : -1;
+
         var a = this.X + this.Y;
         var b = entity.X + entity.Y;
         return (a >= b) ? +1 : -1;
@@ -542,15 +546,19 @@ Entity.prototype = {
     almostBroken: function() {
         return this.Durability.Max > 0 && this.Durability.Current <= 0.1*this.Durability.Max;
     },
-    draw: function() {
+    drawable: function() {
         if (!this.inWorld())
-            return;
+            return false;
        if (game.player.inBuilding && this.Disposition == "roof")
-            return;
+            return false;
+        return true;
 
+    },
+    draw: function() {
+        if (!this.drawable())
+            return;
         if (!this.sprite || !this.sprite.ready) {
             this.drawBox();
-
             return;
         }
 

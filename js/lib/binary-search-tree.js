@@ -55,6 +55,9 @@ BinarySearchTree.prototype = {
     id: function(value) {
         return value.Id;
     },
+    get length () {
+        return this.size();
+    },
     add: function (value) {
         if (!value) {
             game.sendError("bst.add: value is null");
@@ -224,6 +227,9 @@ BinarySearchTree.prototype = {
     },
     traverse: function(process){
         this._inOrder(this._root, process);
+    },
+    forEach: function(process) {
+        return this.traverse(process);
     },
     _outOrder: function(node, predicate) {
         if (!node)
