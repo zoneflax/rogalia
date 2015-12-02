@@ -668,8 +668,23 @@ function Chat() {
         this.newMessageElement.value += text;
     };
 
-    var privateSymbol = " → ";
+    function processServerMessage(message) {
+        if (message.Body[0] == "{") {
+            var event = JSON.parse(message.Body);
+            switch (event.Event) {
+            case "logon":
+                game.controller.addPlayer(event.Name);
+                message.Body = TT("{name} logged in", {name: event.Name});
+                break;
+            case "logoff":
+                game.controller.removePlayer(event.Name);
+                message.Body = TT("{name} disconnected", {name: event.Name});
+                break;
+            }
+        }
+    }
 
+    var privateSymbol = " → ";
     this.addMessage = function(message) {
         if (typeof message == 'string') {
             message = {
@@ -700,6 +715,7 @@ function Chat() {
                 break;
             case SERVER:
                 color = "yellow";
+                processServerMessage(message);
                 break;
             default:
                 if (message.Channel == 9) {

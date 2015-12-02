@@ -306,8 +306,6 @@ function Game() {
     this.addCharacter = function(character) {
         this.characters.set(character.Name,  character);
         this.addEntity(character);
-        if (character.isPlayer)
-            game.controller.addPlayer(character.Name);
     };
 
     this.filter = function(type) {
@@ -338,9 +336,6 @@ function Game() {
         var c = game.entities.get(id);
         game.sortedEntities.remove(c);
         var name = c.Name;
-        game.controller.removePlayer(name);
-        if (c.isPlayer)
-            game.controller.removePlayer(name);
         game.entities.remove(id);
         game.characters.remove(name);
     };

@@ -1099,4 +1099,7 @@ var dict = {
     "Blacklist is empty": "Черный список пуст",
     "Total": "Итого",
     "Claim controlls": "Управление клеймом",
+    "Refresh": "Обновить",
+    "{name} logged in": "{name} в сети",
+    "{name} disconnected": "{name} офлайн",
 };
