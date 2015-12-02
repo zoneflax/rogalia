@@ -59,8 +59,13 @@ BinarySearchTree.prototype = {
         return this.size();
     },
     add: function (value) {
+        // console.log("add", value.Id);
         if (!value) {
             game.sendError("bst.add: value is null");
+            return;
+        }
+        if (value._bst) {
+            console.error(value.Id, value.Name, "is already in tree");
             return;
         }
         //create a new item object, place data in
@@ -70,7 +75,7 @@ BinarySearchTree.prototype = {
             right: null,
             parent: null,
         };
-
+        value._node = node;
         //special case: no items in the tree yet
         if (this._root === null) {
             this._root = node;
@@ -136,16 +141,28 @@ BinarySearchTree.prototype = {
             game.sendError("bst.remove: value is null");
             return;
         }
-
-        var node = this._find(value);
-        if (node == null) {
-            // console.log("notFound", value);
+        var node = value._node;
+        if (!node)
             return;
-        }
+        // console.log("remove", value.Id);
+        value._node = null;
         this._removeNode(node);
+
+        // I have no fucking idea why sometimes _find() cannot actually find node
+        // when it's really is in tree
+
+        // return;
+        // var node = this._find(value);
+        // if (node == null) {
+        //     console.log("not found", value.Id, value.Name, value._node);
+        //     return;
+        // }
+        // this._removeNode(node);
     },
     _removeNode: function(node) {
-        if (node.right == null)
+        if (node.left == null && node.right == null)
+            this._replace(node, null);
+        else if (node.right == null)
             this._replace(node, node.left);
         else if (node.left == null)
             this._replace(node, node.right);
@@ -172,6 +189,7 @@ BinarySearchTree.prototype = {
         var temp = pred.value;
         pred.value = node.value;
         node.value = temp;
+        temp._node = node;
         this._removeNode(pred);
     },
     /**

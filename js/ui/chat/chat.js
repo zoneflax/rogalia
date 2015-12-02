@@ -200,6 +200,7 @@ function Chat() {
     };
 
     var myMessages = new ChatRing();
+    myMessages.loadFromStorage();
 
     this.keydown = function(e) {
         if (e.ctrlKey && e.keyCode ==  82) {

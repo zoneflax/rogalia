@@ -1,7 +1,6 @@
 "use strict";
 function ChatRing() {
-    var saved = JSON.parse(localStorage.getItem("chat.ring"));
-    this.ring =  saved || [];
+    this.ring =  [];
     this.current =  this.ring.length;
     this.backup = "";
 
@@ -10,6 +9,7 @@ function ChatRing() {
             return null;
         return this.ring[this.ring.length-1];
     };
+
     this.prev = function() {
         this.current = Math.max(0, this.current-1);
         if (this.ring.length == 0)
@@ -17,6 +17,7 @@ function ChatRing() {
 
         return this.ring[this.current];
     };
+
     this.next = function() {
         this.current = Math.min(this.ring.length, this.current+1);
         if (this.current == this.ring.length)
@@ -24,15 +25,23 @@ function ChatRing() {
 
         return this.ring[this.current];
     };
+
     this.save = function(message) {
         if (this.current >= this.ring.length)
             this.backup = message;
     };
+
     this.push = function(message) {
         if (this.last() == message)
             return;
 
         this.ring.push(message);
+        this.current = this.ring.length;
+    };
+
+    this.loadFromStorage = function() {
+        var saved = JSON.parse(localStorage.getItem("chat.ring"));
+        this.ring = saved || [];
         this.current = this.ring.length;
     };
 

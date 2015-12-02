@@ -1,4 +1,4 @@
-define(["../../js/ui/chat/ring.js"], function () {
+define(["../../ui/chat/ring.js"], function () {
     var ring = new ChatRing();
 
     var message = "No one cares about this text";
