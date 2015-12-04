@@ -2033,6 +2033,22 @@ input[type=number], .lot-quantity > input, .price > input {
     -webkit-filter: hue-rotate(191deg);
     filter: hue-rotate(191deg);
 }
+.chess-table > .slot > sup {
+    display: none;
+}
+.chess-table > .slot {
+    background: #dbaf54;
+}
+.chess-table > :nth-child(-2n+8),
+.chess-table > :nth-child(8) ~ :nth-child(-2n+15),
+.chess-table > :nth-child(16) ~ :nth-child(-2n+24),
+.chess-table > :nth-child(24) ~ :nth-child(-2n+31),
+.chess-table > :nth-child(32) ~ :nth-child(-2n+40),
+.chess-table > :nth-child(40) ~ :nth-child(-2n+47),
+.chess-table > :nth-child(48) ~ :nth-child(-2n+56),
+.chess-table > :nth-child(56) ~ :nth-child(-2n+63) {
+    background: #602a0f;
+}
 
 #settings {
     max-width: none;

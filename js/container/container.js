@@ -99,8 +99,10 @@ Container.prototype = {
             slots.appendChild(slot.element);
         }.bind(this));
 
-        if (this.entity.Type == "poker-table") {
-            slots.classList.add("poker-table");
+        switch (this.entity.Type) {
+        case "poker-table":
+        case "chess-table":
+            slots.classList.add(this.entity.Type);
         }
 
         this.updateFuel();

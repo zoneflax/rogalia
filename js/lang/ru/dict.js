@@ -1102,4 +1102,7 @@ var dict = {
     "Refresh": "Обновить",
     "{name} logged in": "{name} в сети",
     "{name} disconnected": "{name} офлайн",
+    "Chess table": "Шахматный стол",
+    "White checker": "Белая шашка",
+    "Black checker": "Черная шашка",
 };
