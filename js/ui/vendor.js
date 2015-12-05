@@ -72,9 +72,9 @@ Vendor.createPriceInput = function(hidden) {
     price.appendChild(document.createTextNode("s"));
 
     price.cost = function() {
-        return parseInt(platinum.value) * 10000 +
-            parseInt(gold.value) * 100 +
-            parseInt(silver.value);
+        return parseInt(platinum.value || 0) * 10000 +
+            parseInt(gold.value || 0) * 100 +
+            parseInt(silver.value || 0);
     };
     return price;
 }
