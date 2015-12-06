@@ -1142,4 +1142,6 @@ var dict = {
     "Omich": "Омич",
     "Cactus pulp": "Мякоть кактуса",
     "Healing cream": "Лечебный крем",
+    "Coal bag": "Сумка под уголь",
+    "Mechanic plow": "Механический плуг",
 };
