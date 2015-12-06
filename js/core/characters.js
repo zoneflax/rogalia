@@ -40,9 +40,9 @@ Character.sync = function(data, remove) {
         } else {
             to.sync(from);
         }
-
     }
     game.player.updateEffects();
+    game.controller.syncMinimap();
 };
 
 Character.drawActions = function() {

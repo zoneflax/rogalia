@@ -17,7 +17,7 @@ function Minimap() {
         this.mapImage.width = width.default;
     }.bind(this));
     this.points = {};
-    this.characters = {};
+    this.characters = [];
 
     var wrapper = document.createElement("div");
     wrapper.className = "wrapper no-drag";
@@ -64,39 +64,41 @@ function Minimap() {
 
     this.sync = function(characters) {
         this.characters = characters;
-        this.update();
+        for (var id in this.points) {
+            var found = characters.find(function(character) {
+                return character.Id == id;
+            });
+            if (found)
+                continue;
+            dom.remove(this.points[id]);
+            delete this.points[id];
+        }
+
+        if (this.panel.visible)
+            this.update();
     };
 
-    var x, y;
     this.update = function() {
-        var characters = this.characters;
-        for(var name in this.points) {
-            if (!characters[name]) {
-                dom.remove(this.points[name]);
-                delete this.points[name];
-            }
-        }
-
         if (!this.panel.visible)
             return;
+        this.characters.forEach(function(character) {
+            var x = character.X / CELL_SIZE;
+            var y = character.Y / CELL_SIZE;
+            var point = this.points[character.Id];
+            if (!point) {
+                point = dom.div("point");
+                point.title = character.getName();
 
-        for (var name in characters) {
-            x = characters[name].X / CELL_SIZE;
-            y = characters[name].Y / CELL_SIZE;
 
-            if (!this.points[name]) {
-                this.points[name] = document.createElement("div");
-                this.points[name].className = "point";
-                this.points[name].title = name;
+                if (character.isPlayer)
+                    point.id = "player-point";
 
-                if (name == game.player.Name)
-                    this.points[name].id = "player-point";
-
-                wrapper.appendChild(this.points[name]);
+                this.points[character.Id] = point;
+                wrapper.appendChild(point);
             }
-            this.points[name].style.left = scale() * x + "px";
-            this.points[name].style.top = scale() * y + "px";
-        }
+            point.style.left = scale() * x + "px";
+            point.style.top = scale() * y + "px";
+        }.bind(this));
     };
 
     this.panel.hooks.show = this.update.bind(this);

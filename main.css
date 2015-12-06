@@ -953,14 +953,16 @@ hr {
     overflow: auto;
 }
 #map .point {
+    border-radius: 50%;
     position: absolute;
-    width: 3px;
-    height: 3px;
-    border: 2px solid #000;
-    background: #00f;
+    width: 8px;
+    height: 8px;
+    box-shadow: 0 0 1px 3px #000;
+    background: #0f0;
+    cursor: pointer;
 }
 #map #player-point {
-    background: #0f0;
+    background: #0ff;
     z-index: 1;
 }
 a.extern {
