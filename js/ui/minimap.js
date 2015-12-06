@@ -62,8 +62,14 @@ function Minimap() {
         [wrapper, zoom]
     );
 
-    this.sync = function(characters) {
-        this.characters = characters;
+    function getList() {
+        return game.characters.filter(function(character) {
+            return !character.IsNpc;
+        });
+    }
+
+    this.sync = function() {
+        var characters = getList();
         for (var id in this.points) {
             var found = characters.find(function(character) {
                 return character.Id == id;
@@ -81,7 +87,7 @@ function Minimap() {
     this.update = function() {
         if (!this.panel.visible)
             return;
-        this.characters.forEach(function(character) {
+        getList().forEach(function(character) {
             var x = character.X / CELL_SIZE;
             var y = character.Y / CELL_SIZE;
             var point = this.points[character.Id];
@@ -90,8 +96,12 @@ function Minimap() {
                 point.title = character.getName();
 
 
-                if (character.isPlayer)
+                if (character.isPlayer) {
                     point.id = "player-point";
+                } else if (character.Karma < 0) {
+                    point.classList.add("pk");
+                    point.title += " | " + T("Karma") + ": " + character.Karma;
+                }
 
                 this.points[character.Id] = point;
                 wrapper.appendChild(point);

@@ -670,6 +670,7 @@ Character.prototype = {
     see: function(character) {
         if (this == character)
             return true;
+        var p = this.getDrawPoint();
         var len_x = character.X - this.X;
         var len_y = character.Y - this.Y;
         return util.distanceLessThan(len_x, len_y, Math.hypot(game.screen.width, game.screen.height));

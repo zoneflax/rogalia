@@ -986,16 +986,6 @@ function Controller(game) {
     this.syncMinimap = function() {
         if (!this.minimap)
             return;
-        var list = [];
-        if (game.player.Party) {
-            game.player.Party.forEach(function(name) {
-                var character = game.characters.get(name);
-                if (character)
-                    list.push(character);
-            });
-        } else {
-            list.push(game.player);
-        }
-        this.minimap.sync(list);
+        this.minimap.sync();
     };
 };
