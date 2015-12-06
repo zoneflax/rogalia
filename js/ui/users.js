@@ -2,28 +2,34 @@
 function Users() {
     var lists = {};
 
-    function append(name, list) {
-        var li = dom.tag("li", "", {text: name});
-        li.onmousedown = function(e) {
-            return game.chat.nameMenu(e, name);
-        };
-        list.appendChild(li);
+    function renderList(content, list, empty) {
+        content.innerHTML = "";
+        if (list) {
+            var ul = dom.tag("ul");
+            list.sort().forEach(function(name) {
+                var li = dom.tag("li", "", {text: name});
+                li.onmousedown = function(e) {
+                    return game.chat.nameMenu(e, name);
+                };
+                ul.appendChild(li);
+            });
+            var total = dom.div("", {text: T("Total") + ": " + list.length});
+            content.appendChild(ul);
+            content.appendChild(total);
+        } else {
+            content.textContent = T(empty);
+        }
+
     }
 
     function render(content, data, selector, empty) {
-        content.innerHTML = "";
-        var ul = dom.tag("ul");
-        lists[selector] = ul;
-        content.appendChild(ul);
-        if (!data[selector]) {
-            content.textContent = T(empty);
-        } else {
-            data[selector].sort().forEach(function(name) {
-                append(name, ul);
-            });
-            var total = dom.div("", {text: T("Total") + ": " + data[selector].length});
-            content.appendChild(total);
-        }
+        var list = {
+            content: content,
+            data: data[selector],
+            empty: empty,
+        };
+        lists[selector] = list;
+        renderList(list.content, list.data, list.empty);
     }
 
     function makeTabUpdate(cmd, selector, empty) {
@@ -68,8 +74,10 @@ function Users() {
         if (name == game.player.Name)
             return;
         var list = lists.OnlinePlayers;
-        if (list)
-            append(name, list);
+        if (list) {
+            list.data.push(name);
+            renderList(list.content, list.data, list.empty);
+        }
     };
 
     this.removePlayer = function(name) {
@@ -77,12 +85,9 @@ function Users() {
             return;
         var list = lists.OnlinePlayers;
         if (list) {
-            var item = Array.prototype.find.call(list.children, function(node) {
-                return node.textContent == name;
-            });
-            // item must be always in the list, but just in case
-            if (item)
-                dom.remove(item);
+            var data = list.data;
+            data.splice(data.indexOf(name), 1);
+            renderList(list.content, list.data, list.empty);
         }
     };
 }
