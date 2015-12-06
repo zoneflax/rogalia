@@ -234,6 +234,7 @@ Entity.prototype = {
         case "wooden-trough":
         case "steel-pike":
         case "stack-of-wood":
+        case "stack-of-boards":
             if (!this.Props.Slots)
                 break;
             if (this.Props.Slots.some(function(id){ return id != 0 }))

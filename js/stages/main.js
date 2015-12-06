@@ -106,7 +106,7 @@ function mainStage(data) {
 
     var hueRotate = 0;
     this.drawGlobalEffects = function() {
-        if ("MushroomTrip" in game.player.Effects) {
+        if ("MushroomTrip" in game.player.Effects || "BadTrip" in game.player.Effects) {
             game.canvas.style.filter = "hue-rotate(" + (hueRotate % 360) +"deg)";
             game.canvas.style.webkitFilter = "hue-rotate(" + (hueRotate % 360) +"deg)";
             hueRotate += 20;

@@ -196,6 +196,8 @@ Character.prototype = {
     },
     isSimpleSprite: function() { //for migration; get rid of this shit
         switch (this.Type) {
+        case "cat":
+        case "dog":
         case "horse":
         case "cow":
         case "small-spider":
@@ -211,6 +213,8 @@ Character.prototype = {
         case "preved-medved":
         case "medved":
         case "sheep":
+        case "omsk":
+        case "omich":
             return false;
         default:
             return this.IsNpc;
@@ -221,6 +225,16 @@ Character.prototype = {
         this.sprite.offset = this.Radius;
         this.sprite.angle = Math.PI/4;
         switch (this.Type) {
+        case "cat":
+            this.sprite.width = 90;
+            this.sprite.height = 90;
+            this.sprite.offset = 30;
+            break;
+        case "dog":
+            this.sprite.width = 100;
+            this.sprite.height = 100;
+            this.sprite.offset = 35;
+            break;
         case "kitty-pahan":
         case "kitty-cutthroat":
         case "kitty-robber":
@@ -321,32 +335,17 @@ Character.prototype = {
                 "run": 3,
             };
             break;
-        case "omsk-overlord":
-            this.sprite.width = 128;
-            this.sprite.height = 128;
-            this.sprite.angle = 0;
-            this.sprite.frames = {
-                "idle": 0,
-                "run": 0,
-            };
+        case "omsk":
+            this.sprite.width = 170;
+            this.sprite.height = 170;
             break;
         case "omsk":
-            this.sprite.width = 60;
-            this.sprite.height = 60;
-            this.sprite.angle = 0;
-            this.sprite.frames = {
-                "idle": 0,
-                "run": 0,
-            };
+            this.sprite.width = 170;
+            this.sprite.height = 170;
             break;
-        case "omsk-minion":
-            this.sprite.width = 40;
-            this.sprite.height = 40;
-            this.sprite.angle = 0;
-            this.sprite.frames = {
-                "idle": 0,
-                "run": 0,
-            };
+        case "omich":
+            this.sprite.width = 130;
+            this.sprite.height = 130;
             break;
         case "ufo":
             this.sprite.width = 64;
@@ -1074,7 +1073,7 @@ Character.prototype = {
                     animation = "idle";
                     break;
                 default:
-                    animation = "craft";
+                    animation = (this.IsNpc) ? "attack" : "craft";
                 }
             }
         }
