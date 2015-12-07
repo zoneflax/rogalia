@@ -74,7 +74,7 @@ function Users() {
         if (name == game.player.Name)
             return;
         var list = lists.OnlinePlayers;
-        if (list) {
+        if (list && list.data.indexOf(name) == -1) {
             list.data.push(name);
             renderList(list.content, list.data, list.empty);
         }
