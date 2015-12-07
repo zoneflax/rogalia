@@ -86,10 +86,11 @@ ContainerSlot.prototype = {
     },
     updateProgress: function() {
         //TODO: make generic `progress' @server-side
-        if (!("HideAdded" in this.entity))
+        var cnt = this.container.entity;
+        if (!("HideAdded" in cnt))
             return;
-        var added = new Date(this.entity.HideAdded);
-        var duration = this.entity.HideDuration / 1e6;
+        var added = new Date(cnt.HideAdded);
+        var duration = cnt.HideDuration / 1e6;
         var diff = Date.now() - added;
         if (diff < duration) {
             this.setSub(util.toFixed(100*diff / duration) + "%");
