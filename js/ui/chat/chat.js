@@ -251,6 +251,12 @@ function Chat() {
                     e.target.blur();
                     break;
                 }
+            case "clear-equip-slot":
+                var args = message.split(" ");
+                args[2] = Character.equipSlots.indexOf(args[2]);
+                message = args.join(" ");
+                local = false;
+                break;
             case "list":
                 for (var i in Entity.templates) {
                     var t = Entity.templates[i];
