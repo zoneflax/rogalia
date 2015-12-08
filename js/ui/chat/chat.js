@@ -720,6 +720,9 @@ function Chat() {
             case "TatriX":
                 color = "#0cc";
                 break;
+            case "Nanalli":
+                color = "pink";
+                break;
             case SERVER:
                 color = "yellow";
                 processServerMessage(message);
