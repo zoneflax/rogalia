@@ -86,7 +86,6 @@ ContainerSlot.prototype = {
     },
     updateProgress: function() {
         if ("Readiness" in this.entity && "Fuel" in this.container.entity) {
-            console.log(this.entity.Name);
             var rd = this.entity.Readiness;
             this.setSub(util.toFixed(100*rd.Current / rd.Max) + "%");
             return;
