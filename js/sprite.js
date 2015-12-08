@@ -22,13 +22,18 @@ function Sprite(path, width, height, speed) {
 
     this.pending = [];
 
-    this.onload = null;
+    this._onload = null;
 
     if (path)
         this.load(path);
 }
 
 Sprite.prototype = {
+    set onload(callback) {
+        this._onload = callback;
+        if (this.ready)
+            this._onload();
+    },
     load: function(path) {
         if (this.loading)
             return;
@@ -48,8 +53,8 @@ Sprite.prototype = {
             while (canvas = this.pending.pop()) {
                 this.renderIcon(canvas);
             }
-            if (this.onload) {
-                this.onload();
+            if (this._onload) {
+                this._onload();
             }
         }.bind(this));
     },

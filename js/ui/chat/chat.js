@@ -718,7 +718,7 @@ function Chat() {
             var color = null;
             switch(message.From) {
             case "TatriX":
-                color = "##84ffff";
+                color = "#84ffff";
                 break;
             case "Nanalli":
                 color = "#f16980";
