@@ -983,9 +983,9 @@ function Controller(game) {
             controller.system.users.removePlayer(name);
     };
 
-    this.syncMinimap = function() {
+    this.syncMinimap = function(data) {
         if (!this.minimap)
             return;
-        this.minimap.sync();
+        this.minimap.sync(data);
     };
 };

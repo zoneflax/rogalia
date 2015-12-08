@@ -62,22 +62,17 @@ function Minimap() {
         [wrapper, zoom]
     );
 
-    function getList() {
-        return game.characters.filter(function(character) {
-            return !character.IsNpc;
-        });
-    }
-
-    this.sync = function() {
-        var characters = getList();
-        for (var id in this.points) {
-            var found = characters.find(function(character) {
-                return character.Id == id;
-            });
-            if (found)
-                continue;
-            dom.remove(this.points[id]);
-            delete this.points[id];
+    this.sync = function(data) {
+        data = data || [];
+        var pl = game.player;
+        data[pl.Name] = {X: pl.X, Y: pl.Y};
+        this.characters = data;
+        for (var name in this.points) {
+            if (name in data && data[name] == null) {
+                dom.remove(this.points[name]);
+                delete this.characters[name];
+                delete this.points[name];
+            }
         }
 
         if (this.panel.visible)
@@ -87,28 +82,29 @@ function Minimap() {
     this.update = function() {
         if (!this.panel.visible)
             return;
-        getList().forEach(function(character) {
+        for (var name in this.characters) {
+            var character = this.characters[name];
             var x = character.X / CELL_SIZE;
             var y = character.Y / CELL_SIZE;
-            var point = this.points[character.Id];
+            var point = this.points[name];
             if (!point) {
                 point = dom.div("point");
-                point.title = character.getName();
+                point.title = name;
 
 
-                if (character.isPlayer) {
+                if (name == game.player.Name) {
                     point.id = "player-point";
                 } else if (character.Karma < 0) {
                     point.classList.add("pk");
                     point.title += " | " + T("Karma") + ": " + character.Karma;
                 }
 
-                this.points[character.Id] = point;
+                this.points[name] = point;
                 wrapper.appendChild(point);
             }
             point.style.left = scale() * x + "px";
             point.style.top = scale() * y + "px";
-        }.bind(this));
+        }
     };
 
     this.panel.hooks.show = this.update.bind(this);
