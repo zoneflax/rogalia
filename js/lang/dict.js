@@ -1,7 +1,9 @@
 "use strict";
 dict.init = function() {
     // TT translates text with substitutions
+    // for client:
     // example 1: TT("Unlocks {lvl} lvl of the {skill} skill", {lvl: next.Name, skill: name});
+    // for server:
     // example 2: TT("You need {need=Stoneworking} skill to craft {craft=Stone axe});
     window.TT = function(text, args) {
         if (!text)
@@ -15,8 +17,18 @@ dict.init = function() {
             return "{" + name + "}";
         });
         text = T(text);
+
+        if (text instanceof Function)
+            return text(args);
+
         return text.replace(/{(.*?)}/g, function(_, name) {
-            return substs[name];
+            if (name in substs)
+                return substs[name];
+
+            var list = name.split(" ");
+            var atom = list.shift();
+            var index = args[atom];
+            return list[index];
         });
     };
     window.TS = function(text) {

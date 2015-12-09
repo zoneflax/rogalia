@@ -313,31 +313,33 @@ Info.prototype = {
         "currency-gain": function() {
             switch (this.targetType) {
             case "self":
-                return TT("You've got {currency}", {currency: this.data});
+                return TT("You've got {value}", {value: this.data});
             default:
-                return TT("{name} got {currency}", {
+                return TT("{name} have got {value}", {
                     name: this.character.Name,
-                    currency: this.data,
+                    value: this.data,
+                    sex: this.character.Sex,
                 });
             }
         },
         "item-gain": function() {
             switch (this.targetType) {
             case "self":
-                return TT("You've got {item}", {item: this.data.Name});
+                return TT("You've got {value}", {value: this.data.Name});
             default:
-                return TT("{name} got {item}", {
+                return TT("{name} have got {value}", {
                     name: this.character.Name,
-                    item: this.data.Name,
+                    value: this.data.Name,
+                    sex: this.character.Sex,
                 });
             }
         },
         "craft-success": function() {
             switch (this.targetType) {
             case "self":
-                return TT("You've crafterd {item}", {item: this.data.Name});
+                return TT("You've crafted {item}", {item: this.data.Name});
             default:
-                return TT("{name} crafted {item}", {
+                return TT("{name} have crafted {item}", {
                     name: this.character.Name,
                     item: this.data.Name,
                 });
@@ -346,9 +348,15 @@ Info.prototype = {
         "miss": function() {
             switch (this.targetType) {
             case "self":
-                return TT("You evaded from {name}'s attack", {name: this.character.Name});
+                return TT("You evaded from {name}'s attack", {
+                    name: this.character.Name,
+                    sex: this.character.Sex,
+                });
             case "target":
-                return TT("{name} evaded from your attack", {name: this.target.Name});
+                return TT("{name} evaded from your attack", {
+                    name: this.target.Name,
+                    sex: this.target.Sex,
+                });
             default:
                 return TT(
                     "{who} evaded from {which}'s attack",
