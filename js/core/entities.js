@@ -48,12 +48,6 @@ Entity.sync = function(data, remove) {
     });
 },
 
-Entity.collides = function(entity) {
-    return game.filter("Entity").some(function(e) {
-        return e.collides(entity.X, entity.Y, entity.Radius);
-    });
-};
-
 Entity.get = function(id) {
     return game.entities.get(parseInt(id));
 };

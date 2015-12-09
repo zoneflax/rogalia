@@ -1222,7 +1222,7 @@ Character.prototype = {
         var x = this.X;
         var y = this.Y;
 
-        game.filter("Entity").forEach(function(b) {
+        game.entities.forEach(function(b) {
             if (b.Group == "wall" || b.Group == "gate") {
                 n = n || (b.Y < y && Math.abs(b.X - x) < b.Width);
                 w = w || (b.X < x && Math.abs(b.Y - y) < b.Height);

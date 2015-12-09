@@ -224,7 +224,7 @@ Vendor.buy = function(data) {
             };
         } else {
             lot.use = function(entity, to) {
-                var slot = Container.get(entity.findContainer()).findSlot(entity);
+                var slot = Container.getEntityContainer(entity).findSlot(entity);
                 sellCleanUp = function() {
                     slot.unlock();
                     lot.onclick = null;
@@ -325,7 +325,7 @@ Vendor.sell = function(data) {
             };
             icon.vendor = true;
             icon.use = function(entity, to) {
-                var slot = Container.get(entity.findContainer()).findSlot(entity);
+                var slot = Container.getEntityContainer(entity).findSlot(entity);
                 cleanUp = function() {
                     slot.unlock();
                     if (canBeSold.length == 0)

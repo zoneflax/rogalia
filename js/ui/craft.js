@@ -198,12 +198,9 @@ Craft.prototype = {
         if (!entity.is(to.group))
             return false;
 
-        if (entity.Location == Entity.LOCATION_IN_CONTAINER)
-            var from = Container.get(entity.findContainer());
-        else if (entity.Location == Entity.LOCATION_EQUIPPED)
-            from = game.controller.stats.equipContainer;
-        else
-            return false;
+        var from = Container.getEntityContainer(entity);
+        if (!from)
+            return;
 
         if (this.slots.some(function(slot) {
             return slot.firstChild.id == entity.id;

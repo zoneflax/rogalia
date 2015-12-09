@@ -308,13 +308,6 @@ function Game() {
         this.addEntity(character);
     };
 
-    this.filter = function(type) {
-        var Class = window[type];
-        return this.entities.filter(function(e) {
-            return e instanceof Class;
-        });
-    };
-
     this.addEntity = function(entity) {
         this.entities.set(entity.Id, entity);
         if (entity.Group == "claim")

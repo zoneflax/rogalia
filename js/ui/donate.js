@@ -1,7 +1,5 @@
 "use strict";
 function Donate() {
-    var status = document.createElement("p");
-    status.innerHTML = "Собрано 240,27 из 854";
     var iframe = document.createElement("iframe");
     iframe.frameBorder = 0;
     iframe.allowtransparency = true;
@@ -12,6 +10,6 @@ function Donate() {
     iframe.height = 104;
 
     var site = dom.link("http://rogalia.ru/shop", "Магазин");
-    var panel = new Panel("donate", "Donate", [status, iframe, site]);
+    var panel = new Panel("donate", "Donate", [iframe, site]);
     panel.show();
 }

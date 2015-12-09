@@ -41,6 +41,15 @@ Container.get = function(entity) {
     return game.containers[entity.Id];
 };
 
+Container.getEntityContainer = function(entity) {
+    if (entity.Location == Entity.LOCATION_IN_CONTAINER)
+        return Container.get(entity.findContainer());
+    else if (entity.Location == Entity.LOCATION_EQUIPPED)
+        return game.controller.stats.equipContainer;
+    else
+        return null;
+};
+
 Container.move = function(entity, toContainer, slotIndex) {
     game.network.send("entity-move", {
         Id: +entity.Id,
