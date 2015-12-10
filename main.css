@@ -40,10 +40,13 @@ label {
     outline: none;
 }
 
-input[type=text], input[type=number], input[type=password], input:not([type]) {
+input[type=text], input[type=number], input[type=password], input:not([type]), textarea {
     border: 1px solid #a57031;
     padding: 0 1px;
     background: url("assets/bg/tab/send.png") no-repeat 99%, #99682e;
+}
+textarea {
+    background-image: none;
 }
 
 ::-webkit-input-placeholder { /* WebKit browsers */
@@ -1391,7 +1394,6 @@ ol li a:hover {
 #bugreport-text {
     width: 99%;
     height: 100px;
-    color: #000;
 }
 
 big {

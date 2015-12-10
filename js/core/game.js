@@ -64,8 +64,10 @@ function Game() {
         document.getElementById("bugreport-send").onclick = function() {
             var text = document.getElementById("bugreport-text");
             game.network.send("bugreport", {Text: text.value}, function(data) {
-                if (data.Ack)
+                if (data.Ack) {
                     text.value = "";
+                    game.alert(T("Message sent"));
+                }
             });
         };
 
@@ -379,6 +381,12 @@ function Game() {
     }
 
     this.button = {
+        donate: function() {
+            var link = document.createElement("button");
+            link.textContent = T("Donate");
+            link.onclick = openLink("http://rogalia.ru/shop/donate");
+            return link;
+        },
         blog: function() {
             var link = document.createElement("button");
             link.textContent = T("Blog");

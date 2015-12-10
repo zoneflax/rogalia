@@ -1248,4 +1248,5 @@ var dict = {
     "{who} did {value} damage to {whom} with {attack}": "{who} нанес {value} урона {whom} при помощи {attack}",
     "This is goverment property!": "Это государственная собственность!",
     "Vendor of {name}": "Торговец {name}",
+    "Message sent": "Сообщение отправлено",
 };

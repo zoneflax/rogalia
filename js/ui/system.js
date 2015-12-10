@@ -21,12 +21,6 @@ function System() {
     help.textContent = T("Help");
     help.onclick = this.help.panel.toggle.bind(this.help.panel);
 
-    var donate = document.createElement("button");
-    donate.textContent = "$ " + T("Donate") + " $";
-    donate.onclick = function() {
-        new Donate();
-    };
-
     var settings = document.createElement("button");
     settings.textContent = T("Settings");
     settings.onclick = this.settings.panel.toggle.bind(this.settings.panel);
@@ -34,7 +28,7 @@ function System() {
     var links = dom.button(T("Links"));
     links.onclick = function() {
         new Panel("links", "", [
-            game.button.forum(),
+            // game.button.forum(),
             game.button.blog(),
             game.button.vk(),
             game.button.twitter(),
@@ -57,7 +51,7 @@ function System() {
             game.button.bugtracker(),
             dom.hr(),
             links,
-            donate,
+            game.button.donate(),
             dom.hr(),
             game.button.lobby(),
             game.button.logout(),
