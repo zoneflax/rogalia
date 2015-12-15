@@ -72,6 +72,8 @@ Entity.prototype = {
             var title = Entity.books[this.Props.Text];
             if (title)
                 name += ": " + title;
+            else
+                return this.Props.Text;
         }
 
         if (!("Amount" in this))

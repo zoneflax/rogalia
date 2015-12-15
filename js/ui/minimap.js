@@ -84,6 +84,8 @@ function Minimap() {
             return;
         for (var name in this.characters) {
             var character = this.characters[name];
+            if (!character)
+                continue;
             var x = character.X / CELL_SIZE;
             var y = character.Y / CELL_SIZE;
             var point = this.points[name];
