@@ -5,7 +5,7 @@ function Minimap() {
         original: 0,
         current: 0,
     };
-    var scale = function() {
+    function scale() {
         return width.current / width.original;
     };
 
@@ -64,9 +64,9 @@ function Minimap() {
 
     this.sync = function(data) {
         data = data || {};
-        var pl = game.player;
-        data[pl.Name] = {X: pl.X, Y: pl.Y};
         this.characters = data;
+        var pl = game.player;
+        this.characters[pl.Name] = {X: pl.X, Y: pl.Y};
         for (var name in this.points) {
             if (name in data && data[name] == null) {
                 dom.remove(this.points[name]);
