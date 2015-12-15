@@ -1488,10 +1488,9 @@ big {
     font-size: 19px;
     cursor: help;
 }
-.character-avatar-container > canvas {
-    margin-top: 10px;
-    max-height: 40px;
-    max-width: 40px;
+.character-avatar-container > img {
+    margin-left: -30px;
+    width: 38px;
 }
 
 #target-container {
@@ -1509,6 +1508,7 @@ big {
     left: 75px;
     top: 41px;
     border-radius: 2px;
+    text-shadow: 0px 0px 3px #000;
 }
 
 #minimap-container {

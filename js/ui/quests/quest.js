@@ -66,8 +66,9 @@ Quest.prototype = {
         var goal = document.createElement("div");
 
         var end = document.createElement("div");
-        end.textContent = T("Quest ender") + ": " + this.End;
+        end.textContent = T("Quest ender") + ": " + T(this.End);
         goal.appendChild(end);
+        goal.appendChild(dom.hr());
 
         if (this.Goal.HaveItems) {
             goal.appendChild(document.createTextNode(T("You need to have these items") + ":"));

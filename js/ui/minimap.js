@@ -63,7 +63,7 @@ function Minimap() {
     );
 
     this.sync = function(data) {
-        data = data || [];
+        data = data || {};
         var pl = game.player;
         data[pl.Name] = {X: pl.X, Y: pl.Y};
         this.characters = data;

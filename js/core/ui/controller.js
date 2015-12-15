@@ -872,6 +872,7 @@ function Controller(game) {
                 if (this.modifier.shift && cursor.Sprite._align) {
                     cursor.Sprite.Align = cursor.Sprite._align;
                 } else if (!cursor.Sprite.Align.X) {
+                    cursor.Sprite = JSON.parse(JSON.stringify(cursor.Sprite));
                     cursor.Sprite._align = cursor.Sprite.Align;
                     cursor.Sprite.Align = {X: CELL_SIZE/2, Y: CELL_SIZE/2};
                 }
@@ -888,8 +889,10 @@ function Controller(game) {
             }
         }
         var entity = this.cursor.entity;
-        if (entity)
+        if (entity) {
             this.drawAlign(entity, this.world.point);
+        }
+
         Character.drawActions();
         if (this.modifier.ctrl && this.keys.X && !game.menu.visible) {
             this.drawItemsMenu();

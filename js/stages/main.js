@@ -35,6 +35,8 @@ function mainStage(data) {
         }
     };
 
+    var snow = new Snow();
+
     var startTime = 0;
     this.update = function(currentTime) {
         currentTime = currentTime || Date.now();
@@ -47,6 +49,7 @@ function mainStage(data) {
         });
         game.help.update();
         game.controller.update();
+        snow.update();
     };
 
     var scr = game.screen;
@@ -95,6 +98,7 @@ function mainStage(data) {
         // this.drawOrder();
         // this.drawTopologic();
         // this.drawAdaptive();
+        snow.draw();
 
         if (debug.map.darkness)
             game.map.drawDarkness();

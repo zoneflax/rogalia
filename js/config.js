@@ -32,6 +32,7 @@ var config = {
         // low: false,
         fullscreen: false,
         autoHighlightDoors: true,
+        snowflakes: true,
     },
     sound: {
         playSound: true,

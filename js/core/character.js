@@ -160,7 +160,7 @@ Character.prototype = {
                 return;
             var member = game.characters.get(name);
             if (member) {
-                var avatar = member.sprite.icon();
+                var avatar = loader.loadImage("avatars/" + member.sex() + ".png");
             } else {
                 avatar = dom.div(".character-avatar-not-available", {text: "?"});
                 avatar.title = T("Out of sight");
@@ -417,9 +417,12 @@ Character.prototype = {
                 "run": 3,
             };
             break;
+        case "snegurochka":
+        case "ded-moroz":
+            this.sprite.nameOffset = 100;
+            break;
         case "vendor":
         case "cirno":
-        case "snegurochka":
         case "moroz":
         case "boris":
         case "bertran":
@@ -427,10 +430,6 @@ Character.prototype = {
         case "scrooge":
         case "ahper":
             this.sprite.nameOffset = 70;
-            this.sprite.frames = {
-                "idle": 1,
-                "run": 1,
-            };
             break;
         case "small-spider":
             this.sprite.width = 64;
@@ -577,20 +576,6 @@ Character.prototype = {
     getActions: function() {
         var actions = {};
         switch (this.Type) {
-
-        case "moroz":
-        case "snegurochka":
-            actions = {
-                "Tell me the rules": function() {
-                    game.chat.addMessage({From: name, Body: game.talks.rules.presents, Channel: 9});
-                    game.controller.highlight("chat", true);
-                },
-                "Gimme a present!": function() {
-                    if (confirm("I'll take your atoms. Okay?"))
-                        game.network.send("ask-for-present", {Id: this.Id});
-                }
-            };
-            break;
         case "cow":
             actions = {
                 "Milk": function() {
@@ -941,7 +926,11 @@ Character.prototype = {
             return TT("Vendor of {name}", {name: name});
         }
         if (this.IsNpc && name && this.Type != "vendor") {
-            name = TS(name.replace(/-\d+$/, ""));
+            name = name.replace(/-\d+$/, "");
+            if (name != this.Name)
+                name = TS(name);
+            else
+                name = T(name);
         }
 
         if (this.Title)
@@ -950,7 +939,6 @@ Character.prototype = {
         if (this.Fame == 10000) {
             name = T("Lord") + " " + name;
         }
-
         return name;
     },
     drawName: function(drawHp, drawName) {
@@ -1256,8 +1244,9 @@ Character.prototype = {
             action = "drop";
         } else {
             var tool = Entity.get(this.equipSlot(equipSlotName));
-            if (tool)
+            if (tool) {
                 action = tool.Group;
+            }
         }
 
         var button = game.controller.actionButton;
@@ -1275,16 +1264,18 @@ Character.prototype = {
         case "tool":
         case "taming":
         case "dildo":
+        case "snowball":
+        case "shit":
         case "fishing-rod":
             callback = function() {
                 var done = null;
                 var cmd = "dig";
-                var cursor = new Entity(tool.Type);
-                cursor.initSprite();
                 switch (action) {
                 case "dildo":
+                case "snowball":
+                case "shit":
                     game.controller.cursor.set(
-                        cursor,
+                        tool,
                         game.controller.mouse.x,
                         game.controller.mouse.y
                     );
@@ -1300,8 +1291,10 @@ Character.prototype = {
                     done = this.fish.bind(this);
                     break;
                 default:
-                    cursor.Sprite.Align = {X: CELL_SIZE, Y: CELL_SIZE};
+                    var align = {X: CELL_SIZE, Y: CELL_SIZE};
                 }
+                var cursor = new Entity(tool.Type);
+                cursor.initSprite();
                 var icon = tool._icon || tool.icon();
                 cursor.Width = CELL_SIZE;
                 cursor.Height = CELL_SIZE;
@@ -1577,7 +1570,7 @@ Character.prototype = {
     },
     liftStop: function() {
         if (this.burden)
-            game.controller.newCreatingCursor(this.burden.Type, "lift-stop");
+            game.controller.creatingCursor(this.burden, "lift-stop");
     },
 
     updateCamera: function() {
@@ -1811,6 +1804,8 @@ Character.prototype = {
         case "Charles":
         case "Ahper":
         case "Scrooge":
+        case "Snegurochka":
+        case "Ded Moroz":
             return true;
         default:
             return this.Type == "vendor";
@@ -1818,6 +1813,10 @@ Character.prototype = {
     },
     use: function(entity) {
         switch (entity.Group) {
+        case "shit":
+        case "snowball":
+            game.network.send("throw", {Id: this.Id, Item: entity.Id});
+            return true;
         case "dildo":
             game.network.send("fuck", {Id: this.Id});
             return true;
@@ -1826,7 +1825,9 @@ Character.prototype = {
     },
     canUse: function(entity) {
         switch (entity.Group) {
+        case "shit":
         case "dildo":
+        case "snowball":
             return true;
         }
 
