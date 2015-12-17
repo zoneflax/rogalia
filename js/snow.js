@@ -40,6 +40,9 @@ function Snow(){
     this.update = function() {
         if (!config.graphics.snowflakes)
             return;
+        W = game.screen.width;
+        H = game.screen.height;
+
 	angle += 0.01;
         particles.forEach(function(p, i) {
 	    p.y += Math.cos(angle+p.d) + 1 + p.r/2;

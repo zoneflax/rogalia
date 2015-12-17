@@ -614,6 +614,11 @@ Character.prototype = {
             common.ComeToMe = function() {
                 game.chat.send("*come-to-me " + this.Name);
             };
+            if (this.Type == "vendor") {
+                common.RemoveVendor = function() {
+                    game.chat.send("*remove-vendor " + this.Name.replace("Vendor-", ""));
+                };
+            }
         }
         if (this.isInteractive()) {
             common.Interact =  this.interact;
@@ -923,7 +928,8 @@ Character.prototype = {
         var name = this.Name;
         if (this.Type == "vendor") {
             name = name.replace("Vendor-", "");
-            return TT("Vendor of {name}", {name: name});
+            return "💰 " + name;
+            // return TT("Vendor of {name}", {name: name});
         }
         if (this.IsNpc && name && this.Type != "vendor") {
             name = name.replace(/-\d+$/, "");
