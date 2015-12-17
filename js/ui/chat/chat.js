@@ -239,6 +239,9 @@ function Chat() {
             case "where":
                 game.chat.addMessage(sprintf("%d %d %d", game.player.X, game.player.Y, game.player.Z));
                 break;
+            case "help":
+                game.chat.addMessage("global: 0, local: 1");
+                break;
             case "friend-add":
             case "friend-remove":
             case "blacklist-add":
@@ -387,7 +390,7 @@ function Chat() {
             name: "party",
             hidden: true,
             defaultPrefix: "party",
-            channels: ["party"]
+            channels: ["party", "private"]
         },
     ].map(function(tab, i) {
         var name = tab.name;

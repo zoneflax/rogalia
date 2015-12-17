@@ -259,6 +259,8 @@ var dict = {
     "Add": "Добавить",
     "Terra": "Земля",
     "thirsty": "жажда",
+    "thirst": "жажда",
+    "starvation": "голод",
     "Fight": "Бой",
     "Space": "Пробел",
     "Punch": "Punch",
