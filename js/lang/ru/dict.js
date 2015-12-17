@@ -261,6 +261,7 @@ var dict = {
     "thirsty": "жажда",
     "thirst": "жажда",
     "starvation": "голод",
+    "fire": "огонь",
     "Fight": "Бой",
     "Space": "Пробел",
     "Punch": "Punch",
@@ -1054,6 +1055,7 @@ var dict = {
     "Sheep": "Овца",
     "Red hair": "Рыжетян",
     "Medved": "Медвед",
+    "Goose": "Гусь",
 
     "Kitty junkie": "Кот наркот",
     "Kitty robber": "Кот разбойник",

@@ -9,13 +9,15 @@ function Minimap() {
         return width.current / width.original;
     };
 
-    var loader = new Loader(window.location.protocol + "//" + game.network.addr);
-    this.mapImage = loader.loadImage("/map");
-    loader.ready(function() {
+    this.mapImage = new Image();
+    this.mapImage.onload = function() {
         width.original = this.mapImage.width;
         width.current = width.default;
         this.mapImage.width = width.default;
-    }.bind(this));
+    }.bind(this);
+
+    this.mapImage.src = window.location.protocol + "//" + game.network.addr + "/map";
+
     this.points = {};
     this.characters = [];
 

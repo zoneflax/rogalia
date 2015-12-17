@@ -19,7 +19,7 @@ Loader.prototype = {
     loadImage: function(name) {
         if(name == undefined || name.length == 0) {
             game.sendError("Trying to load undefined or empty image");
-            return;
+            return new Image();
         }
 
         var image = this.images[name];
