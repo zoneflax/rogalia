@@ -135,8 +135,12 @@ Character.prototype = {
             this.followPath();
         }
 
-        if (!init && JSON.stringify(this.getParts()) != this._parts)
+        if (this.Name == "Margo") {
             this.reloadSprite();
+        } else if (!init && JSON.stringify(this.getParts()) != this._parts) {
+            this.reloadSprite();
+        }
+
 
         if (data.Dir !== undefined) {
             this.sprite.position = data.Dir;
@@ -548,8 +552,9 @@ Character.prototype = {
         var type = this.Type;
         switch (this.Name) {
         case "Margo":
-            type = "margo";
-            break;
+            var name = (this.Owner == game.player.Id) ? "margo-" + util.rand(0, 1) : "margo";
+            this.sprite.load(Character.spriteDir + name + ".png");
+            return;
         case "Umi":
             type = "umi";
             break;

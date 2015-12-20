@@ -23,6 +23,7 @@ function Sprite(path, width, height, speed) {
     this.pending = [];
 
     this._onload = null;
+    this._path = null;
 
     if (path)
         this.load(path);
@@ -35,8 +36,9 @@ Sprite.prototype = {
             this._onload();
     },
     load: function(path) {
-        if (this.loading)
+        if (this.loading || this._path == path)
             return;
+        this._path = path;
         this.loading = true;
         this.image = loader.loadImage(path);
         loader.ready(function() {

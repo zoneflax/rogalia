@@ -1290,4 +1290,6 @@ var dict = {
     "You need {num} free slots": "Вам нужно {num} свободных слотов",
     "You need {skill} skill at least {lvl} lvl to build {name}": "Вам нужно знание навыка {skill} {lvl} уровня, чтобы построить {name}",
     "Vendor": "Торговец",
+    "Internal server error; Please try again later": "Внутреняя ошибка сервер; Пожалуйста, попробуйте позже",
+    "Poker table": "Покерный стол",
 };
