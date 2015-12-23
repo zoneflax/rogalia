@@ -1,6 +1,5 @@
 "use strict";
-
-function Snow(){
+function Snow() {
     var W = game.screen.width;
     var H = game.screen.height;
 
