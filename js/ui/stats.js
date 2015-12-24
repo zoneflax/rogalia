@@ -1,9 +1,7 @@
 "use strict";
 function Stats() {
     this.equipContainer = new ContainerEquip();
-
     var contents = this.initSections();
-
     this.panel = new Panel(
         "stats",
         "Stats",
@@ -202,16 +200,20 @@ Stats.prototype = {
         {
             name: "exp",
             update: function(self, player) {
+                var sp = {
+                    Current: player.Citizenship.StatusPoints,
+                    Max: Math.pow(10, player.Citizenship.Rank),
+                };
                 return [
                     self.createParam("Exp", player.Exp, 0, false, "stats/xp"),
                     self.createValue("Learning points", player.LP),
+                    self.createParam("Status points", sp),
                 ];
             },
         },
         "---",
         {
             name: "karmic",
-            hidden: true,
             update: function(self, player) {
                 return [
                     self.createValue("Karma", player.Karma),
@@ -220,36 +222,14 @@ Stats.prototype = {
                 ];
             },
         },
-        {
-            name: "statistics",
-            hidden: true,
-            update: function(self, player) {
-                var sp = {
-                    Current: player.Citizenship.StatusPoints,
-                    Max: Math.pow(10, player.Citizenship.Rank),
-                };
-                return [
-                    self.createValue("Kills", player.Statistics.Kills),
-                    self.createValue("Players killed", player.Statistics.PlayersKilled),
-                    self.createValue("Death", player.Statistics.Death),
-                    self.createParam("Status points", sp),
-                    dom.hr(),
-                ];
-            },
-        }
     ],
     initSections: function() {
         var sections = [];
-        var hidden = [];
         var contents = this.sections.map(function(section) {
             if (section == "---") {
                 return dom.hr();
             }
             var elem = dom.div(section.name);
-            if (section.hidden) {
-                dom.hide(elem);
-                hidden.push(elem);
-            }
             section.elem = elem;
             sections.push(section);
             section.hash = null;
@@ -259,11 +239,143 @@ Stats.prototype = {
         this.update();
 
 
-        var toggleStats = dom.button(T("Stats"));
+        var toggleStats = dom.button(T("Statistics"));
         toggleStats.onclick = function() {
-            hidden.forEach(dom.toggle.bind(dom));
+            game.network.send("get-stats", {}, function(data) {
+                function row(title, text) {
+                    var tr = dom.tag("tr");
+                    dom.append(tr, [
+                        dom.tag("td", "", {text: T(title)}),
+                        dom.tag("td", "", {text: T(text)}),
+                    ]);
+                    return tr;
+                }
+                function table(header, rows) {
+                    var table = dom.tag("table", "stats-table");
+                    if (header) {
+                        var th = dom.tag("th", "", {text: T(header)});
+                        th.colSpan = 2;
+                        table.appendChild(th);
+                    }
+                    for (var title in rows) {
+                        var value = rows[title];
+                        if (typeof value == "number")
+                            value = util.monetary(value);
+                        if (value < 0)
+                            value = -value;
+                        table.appendChild(row(title, value));
+                    }
+                    return table;
+                }
+                var stats = data.Stats;
+                var tabs = [
+                    {
+                        title: TT("general", {sex: 1}),
+                        contents: [
+                            table("", {
+                                "Registered": stats.Registered.replace("T", " ").substring(0, 16),
+                                "Online (hours)": util.toFixed(stats.Online / (60 * 60)),
+                                "Kills": stats.Kills,
+                                "Death": stats.Death,
+                            })
+                        ],
+                    },
+                    {
+                        title: T("PVE"),
+                        contents: [
+                            table("", {
+                                "Kills": stats.Pve.Kills,
+                                "Death": stats.Pve.Death,
+                            }),
+                            table("Lost", {
+                                "LP": stats.Pve.Lost.LP,
+                                "Protein": stats.Pve.Lost.Protein,
+                                "Fat": stats.Pve.Lost.Fat,
+                                "Carbohydrate": stats.Pve.Lost.Carbohydrate,
+                                "Phosphorus": stats.Pve.Lost.Phosphorus,
+                                "Calcium": stats.Pve.Lost.Calcium,
+                                "Magnesium": stats.Pve.Lost.Magnesium,
+                            })
+                        ],
+                    },
+                    {
+                        title: T("PVP"),
+                        contents: [
+                            table("Kills", {
+                                "PK": stats.Pvp.Kills.Pk,
+                                "APK": stats.Pvp.Kills.Apk,
+                                "PVP": stats.Pvp.Kills.Pvp,
+                                "Arena": stats.Pvp.Kills.Arena,
+                                "Total": stats.Pvp.Kills.Total,
+                            }),
+                            table("Death", {
+                                "PK": stats.Pvp.Death.Pk,
+                                "PVP": stats.Pvp.Death.Pvp,
+                                "Arena": stats.Pvp.Death.Arena,
+                                "Total": stats.Pvp.Death.Total,
+                            }),
+                            table("Lost", {
+                                "LP": stats.Pvp.Lost.LP,
+                                "Protein": stats.Pvp.Lost.Protein,
+                                "Fat": stats.Pvp.Lost.Fat,
+                                "Carbohydrate": stats.Pvp.Lost.Carbohydrate,
+                                "Phosphorus": stats.Pvp.Lost.Phosphorus,
+                                "Calcium": stats.Pvp.Lost.Calcium,
+                                "Magnesium": stats.Pvp.Lost.Magnesium,
+                            }),
+                            table("Destroyed", {
+                                "LP": stats.Pvp.Destoyed.LP,
+                                "Protein": stats.Pvp.Destoyed.Protein,
+                                "Fat": stats.Pvp.Destoyed.Fat,
+                                "Carbohydrate": stats.Pvp.Destoyed.Carbohydrate,
+                                "Phosphorus": stats.Pvp.Destoyed.Phosphorus,
+                                "Calcium": stats.Pvp.Destoyed.Calcium,
+                                "Magnesium": stats.Pvp.Destoyed.Magnesium,
+                            })
+                        ],
+                    },
+                ];
+                new Panel("statistics", "Statistics", [dom.tabs(tabs)]).show();
+            });
         };
         contents.push(toggleStats);
+
+        var ratings = dom.button(T("Ratings"));
+        ratings.onclick = function(data) {
+            function load(stat, limit) {
+                return function(title, contents) {
+                    contents.innerHTML = "";
+
+                    var src = "/stats/" + stat;
+                    if (limit > 0)
+                        src += "?limit=" + limit;
+
+                    var iframe = dom.iframe(src);
+                    iframe.onload = function() {
+                        var body = iframe.contentWindow.document.body;
+                        dict.update(body);
+                        iframe.width = 1+body.scrollWidth + "px";
+                        iframe.height = 1+body.scrollHeight + "px";
+                    };
+                    contents.appendChild(iframe);
+                };
+            }
+            new Panel("ratings", "Ratings", [dom.tabs([
+                {
+                    title: TT("general"),
+                    update: load("")
+                },
+                {
+                    title: T("PVE"),
+                    update: load("pve")
+                },
+                {
+                    title: T("PVP"),
+                    update: load("pvp")
+                }
+            ])]).show();
+        };
+        contents.push(ratings);
 
         return contents;
     },

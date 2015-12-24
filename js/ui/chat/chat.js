@@ -397,7 +397,7 @@ function Chat() {
         var icon = new Image();
         icon.src = "assets/icons/tab/tab-" + name + ".png";
         tab.icon = icon;
-        tab.title = T(name);
+        tab.title = TT(name);
         tab.init = function(title, contents) {
             title.style.zIndex = tabs.length - i;
             title.classList.add("chat-tab");

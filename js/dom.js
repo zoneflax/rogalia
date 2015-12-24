@@ -114,6 +114,11 @@ var dom = {
     checkbox: function(text, name) {
         return this.input(text, null, "checkbox", name, true);
     },
+    iframe: function(src, classOrName) {
+        var iframe = dom.tag("iframe", classOrName);
+        iframe.src = src;
+        return iframe;
+    },
     /* * * * * */
     remove: function(element) {
         element.parentNode.removeChild(element);

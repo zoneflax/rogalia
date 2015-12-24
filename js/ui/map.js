@@ -200,7 +200,7 @@ function Map() {
 
                 case  7: if (i != 3) return; break;
                 case 11: if (i != 2) return; break;
-                case 13: if (i != 1) return; break;
+                // case 13: if (i != 1) return; break; //TODO: fixme
                 case 14: if (i != 0) return; break;
 
                 case 15: if (i != 0) return; break;

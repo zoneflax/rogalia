@@ -106,6 +106,10 @@ var util = new function() {
         return (parseInt(value * c) / c).toFixed(digits);
     };
 
+    this.monetary = function(value) {
+        return String(value).replace(/(\.\d\d)\d+/, "$1");
+    };
+
     this.distanceLessThan = function (len1, len2, r) {
         return (len1 * len1 + len2 * len2 < r * r);
     };

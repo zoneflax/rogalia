@@ -8,7 +8,7 @@
 // 3. "from {name}": function(args) { return "to " + args.name }
 //
 // 4. "from {name}": "to {sel one two} {name}"
-// sexp {atom val1 val2} will select get index by evaluating args[sel] and take [val1, val2][index]
+// sexp {atom val1 val2} will select index by evaluating args[sel] and take [val1, val2][index]
 
 var dict = {
     "Spiced wolf meat": "Волчатина с пряностями",
@@ -64,6 +64,10 @@ var dict = {
     "Onion soup": "Луковый суп",
     "Pumpkin soup": "Тыквынный суп",
     "Vegetable soup": "Овощной суп",
+    "Faction": "Фракция",
+    "Rank": "Ранг",
+    "Confederation": "Конфедерация",
+    "Empire": "Империя",
     "Faction tribute": "Дань фракции",
     "Tour": "Экскурсия",
     "Drink water": "Выпить воды",
@@ -242,7 +246,7 @@ var dict = {
     "Fame": "Слава",
     "Kills": "Убийства",
     "Players killed": "Убито игроков",
-    "Death": "Смертей",
+    "Death": "Смерти",
     "Equip": "Экипировка",
     "Settings": "Настройки",
     "Config": "Конфиг",
@@ -412,7 +416,7 @@ var dict = {
     "entity": "объект",
     "network": "сеть",
     "system": "системные",
-    "general": "общий",
+    "general": "{sex общий общая}",
     "private": "личные",
     "party": "группа",
     "server": "сервер",
@@ -1289,7 +1293,20 @@ var dict = {
     "You need {liquid} to craft {name}": "Вам нужна {liquid} для создания {name}",
     "You need {num} free slots": "Вам нужно {num} свободных слотов",
     "You need {skill} skill at least {lvl} lvl to build {name}": "Вам нужно знание навыка {skill} {lvl} уровня, чтобы построить {name}",
+    "Skill {name} increase by {value}": "Навык {name} увеличился на {value}",
     "Vendor": "Торговец",
     "Internal server error; Please try again later": "Внутреняя ошибка сервер; Пожалуйста, попробуйте позже",
     "Poker table": "Покерный стол",
+    "Registered": "Регистрация",
+    "Online (hours)": "Онлайн (часов)",
+    "Lost": "Потеряно",
+    "Destroyed": "Уничтожено",
+    "Statistics": "Статистика",
+    "tsuki": "тски",
+    "shomen": "шомен",
+    "Ratings": "Рейтинги",
+    "Lost Vitamins": "Потерянные витамины",
+    "Lost LP": "Потерянные LP",
+    "Destroyed Vitamins": "Уничтоженные витамины",
+    "Destroyed LP": "Уничтоженные LP",
 };

@@ -1,15 +1,18 @@
 body {
-    background: url("../assets/bg/bg.png") repeat;
-    font-family: Dejavu Mono, monospace;
+    font: 13px/18px Dejavu Sans, Sans;
+    color: #fff;
+    margin: 0;
+    overflow-x: hidden;
+}
+a {
     color: #fff;
 }
 table {
-    margin: auto;
     border-collapse: collapse;
 }
 td, th {
     padding: 3px;
-    border: 1px solid #ccc;
+    border: 1px solid #593815;
     background: #7b5323;
 }
 td {
@@ -21,4 +24,9 @@ h1, h2, h3, h4, i {
 }
 i {
     display: block;
+}
+#top {
+    font-size: medium;
+    display: block;
+    margin: 4px 0;
 }

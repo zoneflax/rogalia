@@ -27,7 +27,7 @@ dict.init = function() {
 
             var list = name.split(" ");
             var atom = list.shift();
-            var index = args[atom];
+            var index = args[atom] || 0;
             return list[index];
         });
     };
@@ -51,22 +51,19 @@ dict.init = function() {
         }
         if (symbol)
             text = util.symbolToString(text);
-        return dict[text] || text;
+        return dict[text] ||  text;
     };
 
     dict.update = function(elem) {
-        var list = {};
         function update(elem) {
             if (elem.nodeType == 3) {
                 var text = elem.textContent;
                 elem.textContent = T(text);
-                list[text] = elem.textContent;
             } else if (elem.childNodes.length) {
                 [].forEach.call(elem.childNodes, update);
             }
         }
         update(elem || document.body);
-        // console.log(JSON.stringify(list));
     };
 
     dict.update();
