@@ -217,6 +217,10 @@ var dom = {
             if (tab.init) {
                 tab.init.call(tabs, title, content);
             }
+
+            tab.isActive = function() {
+                return title.classList.contains("active");
+            };
         });
 
         tabs.appendChild(titles);

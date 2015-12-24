@@ -869,7 +869,7 @@ hr {
 }
 #new-message {
     pointer-events: auto;
-    width: 100%;
+    width: 99%;
 }
 #attached-chat #new-message {
     margin-left: 5px;

@@ -153,13 +153,9 @@ function Chat() {
     }
 
 
-    this.scrollToTheEnd = function() {
-        setTimeout(function() {
-            tabs.forEach(function(tab) {
-                tab.messagesElement.scrollTop = tab.messagesElement.scrollHeight;
-            });
-        }, 50);
-    };
+    function scrollToTheEnd(element) {
+        element.scrollTop = element.scrollHeight;
+    }
 
     this.newMessageElement = document.createElement("input");
     this.newMessageElement.id = "new-message";
@@ -325,7 +321,7 @@ function Chat() {
         if (config.ui.chatAttached)
             this.attach();
 
-        this.scrollToTheEnd();
+        scrollAllToTheEnd();
     };
 
     this.attach = function() {
@@ -408,7 +404,7 @@ function Chat() {
         };
         tab.update = function(title, content) {
             defaultPrefix = tab.defaultPrefix || "";
-            self.scrollToTheEnd();
+            scrollToTheEnd(tab.messagesElement);
             title.classList.remove("has-new-messages");
         };
         var messagesElement = dom.div("messages no-drag");
@@ -440,6 +436,12 @@ function Chat() {
     chatSettingsIcon.onclick = function() {
         game.menu.show(chatSettingsActions);
     };
+
+    function scrollAllToTheEnd(element) {
+        tabs.forEach(function(tab) {
+            scrollToTheEnd(tab.messagesElement);
+        });
+    }
 
     this.panel = new Panel(
         "chat",
@@ -653,15 +655,17 @@ function Chat() {
                 return;
             if (!tab.titleElement.classList.contains("active"))
                 tab.titleElement.classList.add("has-new-messages");
-            var messagesElement = tab.messagesElement;
-            messagesElement.appendChild(elem.cloneNode(true));
+            var element = tab.messagesElement;
+            var m = elem.cloneNode(true);
+            element.appendChild(m);
+            cleanUpTab(element);
 
-            var height = messagesElement.scrollTop + messagesElement.clientHeight;
-            var scroll = Math.abs(height - messagesElement.scrollHeight) < 2*messagesElement.clientHeight;
-            if (scroll)
-                self.scrollToTheEnd();
+            if (tab.isActive()) {
+                var scroll = (element.scrollHeight - element.scrollTop <= element.clientHeight + 2*m.clientHeight);
+                if (scroll)
+                    scrollToTheEnd(element);
+            }
 
-            cleanUpTab(messagesElement);
         });
     }
 
@@ -669,7 +673,9 @@ function Chat() {
     function cleanUpTab(messagesElement) {
         var len = messagesElement.children.length;
         while (len-- >= maxMessages) {
+            var height = messagesElement.firstChild.clientHeight;
             dom.remove(messagesElement.firstChild);
+            messagesElement.scrollTop -= height;
         }
     };
 
@@ -856,7 +862,7 @@ function Chat() {
         else
             this.panel.show();
 
-        this.scrollToTheEnd();
+        scrollAllToTheEnd();
     };
 
     this.save = function() {
