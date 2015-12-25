@@ -173,6 +173,9 @@ hr {
     border-top: none;
     overflow: hidden;
 }
+#world.snap-left {
+    margin: 0;
+}
 #interface {
     display: none;
 }
@@ -1502,6 +1505,11 @@ big {
     position: absolute;
     left: 151px;
     top: 27px;
+}
+#target-container > canvas {
+    margin-top: 10px;
+    max-height: 40px;
+    max-width: 40px;
 }
 
 #party {

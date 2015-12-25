@@ -502,6 +502,10 @@ function Controller(game) {
             config.map.world = false;
             dom.hide(game.world);
         }
+
+        if (!config.graphics.centerScreen) {
+            game.world.classList.add("snap-left");
+        }
     };
 
     this.createButton = function(panel, buttonName) {

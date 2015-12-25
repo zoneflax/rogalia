@@ -219,6 +219,10 @@ Character.prototype = {
         case "sheep":
         case "omsk":
         case "omich":
+        case "kitty-pahan":
+        case "kitty-cutthroat":
+        case "kitty-robber":
+        case "kitty-junkie":
             return false;
         default:
             return this.IsNpc;
@@ -243,16 +247,9 @@ Character.prototype = {
         case "kitty-cutthroat":
         case "kitty-robber":
         case "kitty-junkie":
-            this.sprite.width = 64;
-            this.sprite.height = 64;
-            this.sprite.frames = {
-                "idle": 3,
-                "run": 4,
-            };
-            break;
-            this.sprite.width = 40;
-            this.sprite.height = 40;
-            this.sprite.speed = 7000;
+            this.sprite.width = 110;
+            this.sprite.height = 110;
+            this.sprite.offset = 30;
             break;
         case "goose":
             this.sprite.width = 70;

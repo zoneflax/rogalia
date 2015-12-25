@@ -111,7 +111,6 @@ function Game() {
     this.lang = localStorage.getItem("lang") || defaultLang();
     dict.init();
 
-
     this.talks = new Talks();
     this.sound = new Sound();
 

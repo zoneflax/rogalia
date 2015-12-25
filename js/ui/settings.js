@@ -44,6 +44,9 @@ function Settings() {
         "settings.graphics.low": function() {
             game.map.reset();
         },
+        "settings.graphics.centerScreen": function() {
+            game.world.classList.toggle("snap-left");
+        },
         "settings.graphics.fullscreen": function() {
             game.screen.update();
         },

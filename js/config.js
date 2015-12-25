@@ -33,6 +33,7 @@ var config = {
         fullscreen: false,
         autoHighlightDoors: true,
         snowflakes: true,
+        centerScreen: true,
     },
     sound: {
         playSound: true,
