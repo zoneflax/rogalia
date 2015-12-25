@@ -1,22 +1,22 @@
 "use strict";
 function Network() {
-    var proto = "ws://";
-    var host = "rogalik.tatrix.org";
-    var port = 49000;
+    this.proto = "ws://";
+    this.host = "rogalik.tatrix.org";
+    this.port = 49000;
     if (window.location.protocol == "https:") {
-        proto = "wss://";
-        port = 49443;
+        this.proto = "wss://";
+        this.port = 49443;
     }
 
 
     var override = document.location.search.match(/server=([^&]+)/);
     if (override) {
         override = override[1].split(":");
-        host = override[0] || host;
-        port = override[1] || port;
+        this.host = override[0] || this.host;
+        this.port = override[1] || this.port;
     }
 
-    this.addr = host + ":" + port;
+    this.addr = this.host + ":" + this.port;
 
     this.data = null;
     this.socket = null;
@@ -25,7 +25,7 @@ function Network() {
     this.defaultCallback = null;
 
     this.run = function() {
-        this.socket = new WebSocket(proto + this.addr);
+        this.socket = new WebSocket(this.proto + this.addr);
         this.socket.binaryType = "arraybuffer";
         this.socket.onopen = function() {
             game.setStage("login");

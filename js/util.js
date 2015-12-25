@@ -15,7 +15,7 @@ if ( !window.requestAnimationFrame ) {
 function Util() {}
 
 var util = new function() {
-    this.ajax = function(url, callback){
+    this.ajax = function(url, callback) {
 	var oReq = new XMLHttpRequest();
 	oReq.open("GET", url, true);
 	oReq.onreadystatechange = function (oEvent) {

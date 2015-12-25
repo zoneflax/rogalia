@@ -346,16 +346,16 @@ Stats.prototype = {
                 return function(title, contents) {
                     contents.innerHTML = "";
 
-                    var src = "/stats/" + stat;
+                    var src = location.protocol + "//" + game.network.host + "/stats/" + stat;
                     if (limit > 0)
                         src += "?limit=" + limit;
 
                     var iframe = dom.iframe(src);
-                    iframe.onload = function() {
-                        var body = iframe.contentWindow.document.body;
-                        dict.update(body);
-                        iframe.width = 1+body.scrollWidth + "px";
-                        iframe.height = 1+body.scrollHeight + "px";
+                    window.onmessage = function(event) {
+                        var body = event.data;
+                        iframe.width = 1+body.width + "px";
+                        iframe.height = 1+body.height + "px";
+                        window.onmessage = null;
                     };
                     contents.appendChild(iframe);
                 };
