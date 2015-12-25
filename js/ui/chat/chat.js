@@ -555,6 +555,7 @@ function Chat() {
         "b:": makeTagParser("b"),
         "i:": makeTagParser("i"),
         "u:": makeTagParser("u"),
+        "s:": makeTagParser("s"),
         "img:": imgParser,
     };
 
@@ -661,7 +662,7 @@ function Chat() {
             cleanUpTab(element);
 
             if (tab.isActive()) {
-                var scroll = (element.scrollHeight - element.scrollTop <= element.clientHeight + 2*m.clientHeight);
+                var scroll = (element.scrollHeight - element.scrollTop <= element.clientHeight + 4*m.clientHeight);
                 if (scroll)
                     scrollToTheEnd(element);
             }
