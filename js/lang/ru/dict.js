@@ -230,8 +230,6 @@ var dict = {
     "Intellect": "Интеллект",
     "Vitality": "Живучесть",
     "Dexterity": "Ловкость",
-    "Charisma": "Харизма",
-    "Luck": "Удача",
     "Protein": "Белки",
     "Carbohydrate": "Углеводы",
     "Fat": "Жиры",
@@ -1305,8 +1303,4 @@ var dict = {
     "tsuki": "тски",
     "shomen": "шомен",
     "Ratings": "Рейтинги",
-    "Lost Vitamins": "Потерянные витамины",
-    "Lost LP": "Потерянные LP",
-    "Destroyed Vitamins": "Уничтоженные витамины",
-    "Destroyed LP": "Уничтоженные LP",
 };

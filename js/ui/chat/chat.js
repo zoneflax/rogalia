@@ -321,7 +321,7 @@ function Chat() {
         if (config.ui.chatAttached)
             this.attach();
 
-        scrollAllToTheEnd();
+        setTimeout(scrollAllToTheEnd, 100);
     };
 
     this.attach = function() {
