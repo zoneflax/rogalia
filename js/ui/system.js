@@ -13,8 +13,6 @@ function System() {
     this.help = new Help();
     this.settings = new Settings();
 
-    console.log(config.graphics.centerScreen);
-
     var users = document.createElement("button");
     users.textContent = T("Users");
     users.onclick = this.users.panel.toggle.bind(this.users.panel);

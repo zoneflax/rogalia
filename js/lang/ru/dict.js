@@ -1303,4 +1303,6 @@ var dict = {
     "tsuki": "тски",
     "shomen": "шомен",
     "Ratings": "Рейтинги",
+    "Description": "Описание",
+    "Marker": "Метка",
 };

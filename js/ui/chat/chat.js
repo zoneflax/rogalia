@@ -141,6 +141,15 @@ function Chat() {
             return true;
         }
 
+        if (e.target.classList.contains("marker-link")) {
+            var marker = e.target.dataset.marker.split(" ");
+            var x = marker.shift();
+            var y = marker.shift();
+            var title = marker.join(" ");
+            game.controller.minimap.addMarker(x, y, title);
+            return true;
+        }
+
         if (!e.target.classList.contains("from"))
             return true;
 
@@ -552,6 +561,7 @@ function Chat() {
         "https://": makeLinkParser("https"),
         "http://": makeLinkParser("http"),
         "recipe:": recipeParser,
+        "marker:": markerParser,
         "b:": makeTagParser("b"),
         "i:": makeTagParser("i"),
         "u:": makeTagParser("u"),
@@ -613,6 +623,15 @@ function Chat() {
         return link;
     }
 
+    function markerParser(data) {
+        var link = document.createElement("a");
+        var title = data.split(" ").slice(2).join(" ") || T("Marker");
+        link.textContent = title;
+        link.className = "marker-link";
+        link.dataset.marker = data;
+        return link;
+    }
+
     function imgParser(data) {
         var img = Entity.getPreview(data);
         img.className = "";
@@ -620,7 +639,6 @@ function Chat() {
 
         var code = document.createElement("code");
         code.textContent = title;
-
 
         var cnt = document.createElement("span");
         cnt.appendChild(code);

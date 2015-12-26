@@ -474,5 +474,4 @@ function Map() {
             mctx.fillRect(x, y, w, h);
         });
     };
-
 }
