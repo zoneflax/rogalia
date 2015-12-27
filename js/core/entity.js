@@ -924,6 +924,7 @@ Entity.prototype = {
     cast: function() {
         switch (this.Type) {
         case "scroll-of-town-portal":
+        case "hunter-scroll":
             game.network.send("cast", {Id: this.Id});
             break;
         default:
@@ -980,6 +981,7 @@ Entity.prototype = {
             "Get creator": send("get-creator"),
             "Set comment": prepare("set-comment"),
             "Finish building": send("finish-building"),
+            "Summon": send("summon"),
             "100q": function() {
                 game.chat.send("*set-quality " + self.Id + " " + 100);
             },

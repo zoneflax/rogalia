@@ -147,6 +147,7 @@ function Chat() {
             var y = marker.shift();
             var title = marker.join(" ");
             game.controller.minimap.addMarker(x, y, title);
+            game.controller.minimap.panel.show();
             return true;
         }
 
