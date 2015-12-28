@@ -650,13 +650,24 @@ Character.prototype = {
         if(this.Action.Duration) {
             if (this.isPlayer) {
                 var ap = game.controller.actionProgress.firstChild;
-                ap.style.width = this.action.progress / (2*Math.PI) * 100  + "%";
+                ap.style.width = this.action.progress * 100 + "%";
             } else {
-                game.ctx.strokeStyle = "orange";
-                game.ctx.beginPath();
+                var w = 64;
+                var h = FONT_SIZE * 0.5;
                 var p = this.screen();
-                game.ctx.arc(p.x, p.y, CELL_SIZE, 0, this.action.progress);
-                game.ctx.stroke();
+                var x = p.x - w/2;
+                var y = p.y - this.sprite.nameOffset + h + 1;
+                h -= 2;
+
+                if (!config.ui.simpleFonts) {
+                    game.ctx.fillStyle = '#333';
+                    game.ctx.fillRect(x-1, y-1, w+2, h+2);
+                }
+                game.ctx.fillStyle = '#99682e';
+                game.ctx.fillRect(x, y, w, h);
+
+                game.ctx.fillStyle = '#cf9d62';
+                game.ctx.fillRect(x, y, this.action.progress * w, h);
             }
         }
     },
@@ -1000,13 +1011,19 @@ Character.prototype = {
                 var pad = 2;
                 game.ctx.fillRect(p.x - w/2 - pad, y - pad, w + 2*pad, dy + 2*pad); //wtf
             }
+            if (!config.ui.simpleFonts) {
+                game.ctx.fillStyle = '#333';
+                game.ctx.fillRect(p.x - w/2-1, y-1, w+2, dy+2); //wtf
+            }
+
             //full red rect
-            game.ctx.fillStyle = '#c33';
+            game.ctx.fillStyle = '#bd2323';
             game.ctx.fillRect(p.x - w/2, y, w, dy); //wtf
 
             //green hp
-            game.ctx.fillStyle = '#3c3';
+            game.ctx.fillStyle = '#3bac3b';
             game.ctx.fillRect(p.x - w/2, y, w * this.Hp.Current / this.Hp.Max, dy); //wtf
+
         } else {
             dy = 0;
         }
@@ -1171,7 +1188,7 @@ Character.prototype = {
                 }
             }
             if (this.Action.Duration) {
-                this.action.progress += (Math.PI * 2 / this.Action.Duration * 1000 * k);
+                this.action.progress += (1 / this.Action.Duration * 1000 * k);
             } else {
                 if (this.isPlayer) {
                     dom.hide(game.controller.actionProgress);

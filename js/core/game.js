@@ -161,7 +161,7 @@ function Game() {
     this.forceDrawStrokedText = function(text, x, y, strokeStyle) {
         var lineJoin = game.ctx.lineJoin;
         game.ctx.strokeStyle = strokeStyle || "#333";
-        game.ctx.lineWidth = 4;
+        game.ctx.lineWidth = 3;
         game.ctx.lineJoin = 'round';
         game.ctx.strokeText(text, x, y);
         game.ctx.fillText(text, x, y);
