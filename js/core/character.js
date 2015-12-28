@@ -430,6 +430,7 @@ Character.prototype = {
         case "bruno":
         case "scrooge":
         case "ahper":
+        case "cosmas":
             this.sprite.nameOffset = 70;
             break;
         case "small-spider":
@@ -1786,6 +1787,7 @@ Character.prototype = {
         case "Boris":
         case "Diego":
         case "Ahper":
+        case "Cosmas":
         case "Scrooge":
             type = this.Name.toLowerCase();
             break;
@@ -1811,6 +1813,7 @@ Character.prototype = {
         case "Boris":
         case "Charles":
         case "Ahper":
+        case "Cosmas":
         case "Scrooge":
         case "Snegurochka":
         case "Ded Moroz":

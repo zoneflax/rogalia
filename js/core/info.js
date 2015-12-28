@@ -84,26 +84,29 @@ function Info(message, character) {
             game.sound.playSound("heal");
         }
         break;
-    case "item-gain":
     case "craft-success":
+    case "item-gain":
         if (this.character.isPlayer) {
+            var ids = ("Ids" in this.data) ? this.data.Ids : [this.data.Id];
             game.controller.highlight("inventory", true);
-            var entity = Entity.get(this.data.Id);
-            if (!entity) {
-                game.sendErrorf("(Info.js) Cannot find item %d", this.data.Id);
-                return;
-            }
-            var cnt = entity.findContainer();
-            // container is not available for current player
-            if (!cnt) {
-                return;
-            }
-            var container = Container.get(cnt);
-            // container was not oppened
-            if (!container)
-                return;
-            container.update();
-            container.findSlot(entity).markAsUnseen();
+            ids.forEach(function(id) {
+                var entity = Entity.get(id);
+                if (!entity) {
+                    game.sendErrorf("(Info.js) Cannot find item %d", id);
+                    return;
+                }
+                var cnt = entity.findContainer();
+                // container is not available for current player
+                if (!cnt) {
+                    return;
+                }
+                var container = Container.get(cnt);
+                // container was not oppened
+                if (!container)
+                    return;
+                container.update();
+                container.findSlot(entity).markAsUnseen();
+            });
         }
         break;
     case ".invite":

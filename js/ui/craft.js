@@ -21,7 +21,6 @@ function Craft() {
     this.listWrapper.appendChild(this.createFilters());
     this.listWrapper.appendChild(this.list);
 
-
     this.titleElement = document.createElement("div");
     this.ingredientsList = document.createElement("ul");
     this.ingredientsList.className = "ingredients-list";
@@ -438,6 +437,8 @@ Craft.prototype = {
         var title = document.createElement("span");
         title.className = "recipe-title";
         title.textContent = T(this.current.title);
+        if (recipe.Output)
+            title.textContent += " x" + recipe.Output;
         this.type = this.current.type;
         var ingredients = document.createElement("ul");
         var slots = [];
@@ -629,11 +630,9 @@ Craft.prototype = {
         requirements.appendChild(document.createTextNode(T("Requirements") + ":"));
         var deps = document.createElement("ul");
 
-
-
         if (recipe.Skill) {
             var skill = document.createElement("li");
-            skill.textContent = sprintf("%s: %s", T("Skill"), T(recipe.Skill)) +
+            skill.textContent = sprintf("%s: %s", T("Skill"), util.lcfirst(T(recipe.Skill))) +
                 ((recipe.Lvl > 0) ? (" " + recipe.Lvl) : "");
 
             if (!this.safeToCreate(recipe)) {
@@ -646,16 +645,20 @@ Craft.prototype = {
             deps.appendChild(skill);
         }
 
+        function split(s) {
+            return s.split(",").map(TS).map(util.lcfirst).join(", ");
+        }
+
         if (recipe.Tool) {
             var tool = document.createElement("li");
-            tool.textContent = T("Tool") + ": " + TS(recipe.Tool);
+            tool.textContent = T("Tool") + ": " + split(recipe.Tool);
             tool.title = T("Must be equipped");
             deps.appendChild(tool);
         }
 
         if (recipe.Equipment) {
             var equipment = document.createElement("li");
-            equipment.textContent = T("Equipment") + ": " + TS(recipe.Equipment);
+            equipment.textContent = T("Equipment") + ": " + split(recipe.Equipment);
             equipment.title = T("You must be near equipment");
             deps.appendChild(equipment);
         }
