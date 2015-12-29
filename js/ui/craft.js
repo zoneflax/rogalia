@@ -434,6 +434,7 @@ Craft.prototype = {
             this.renderBuildRecipe(e);
     },
     renderRecipe: function() {
+        var self = this;
         this.recipeDetails.innerHTML = "";
         this.requirements = null;
         this.slots = [];
@@ -468,7 +469,7 @@ Craft.prototype = {
                         panel.show();
                     }.bind(help);
                 } else {
-                    slot.onclick = game.controller.craft.makeSearch(slot);
+                    slot.onclick = self.makeSearch(slot);
                 }
                 var image = Entity.getPreview(group);
 
@@ -695,6 +696,7 @@ Craft.prototype = {
         return previewWrapper;
     },
     dwim: function(slot) {
+        var self = this;
         if (!this.panel.visible)
             return false;
         if (slot.locked)
@@ -707,7 +709,7 @@ Craft.prototype = {
         return this.slots.some(function(slot) {
             if (slot.used || !entity.is(slot.group))
                 return false;
-            game.controller.craft.use(entity, slot);
+            self.use(entity, slot);
             return true;
         });
     },
