@@ -193,34 +193,15 @@ Container.prototype = {
             return;
         }
 
-        slot.lock();
 
         if (mods.ctrl) {
             this.dwim(slot);
             return;
         }
-        e.stopPropagation();
 
+        e.stopPropagation();
+        slot.lock();
         game.controller.cursor.set(entity, e.pageX, e.pageY, slot.unlock.bind(slot));
-    },
-    dwimCraft: function(slot) {
-        if (slot.locked)
-            return false;
-        if (!slot.entity) {
-            console.log("dwimCraft: got empty slot");
-            return false;
-        }
-        var entity = slot.entity;
-        if (game.controller.craft.panel.visible) {
-            var slots = game.controller.craft.slots;
-            for(var i = 0, l = slots.length; i < l; i++) {
-                if (!slots[i].used && entity.is(slots[i].group)) {
-                    game.controller.craft.use(entity, slots[i]);
-                    return true;
-                }
-            }
-        }
-        return false;
     },
     // dwim want slot with entity
     dwim: function(slot) {
@@ -229,9 +210,8 @@ Container.prototype = {
             return;
         }
 
-        if (this.dwimCraft(slot))
+        if (game.controller.craft.dwim(slot))
             return;
-        slot.unlock();
 
         var blank = game.controller.craft.blank;
         if (blank.panel && blank.panel.visible) {

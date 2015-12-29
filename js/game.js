@@ -225,6 +225,7 @@ function Game() {
             return;
         Panel.save();
         Container.save();
+        game.controller.craft && game.controller.craft.save();
         game.chat && game.chat.save();
         if (game.help)
             game.help.save();

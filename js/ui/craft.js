@@ -67,6 +67,9 @@ function Craft() {
         game.controller.newCreatingCursor(this.blank.type, "build");
         this.panel.hide();
     }.bind(this);
+
+    if (this.searchInput.value != "")
+        this.search(this.searchInput.value, true);
 }
 
 
@@ -302,6 +305,8 @@ Craft.prototype = {
         var input = document.createElement("input");
         input.placeholder = T("search");
         input.addEventListener("keyup", this.searchHandler.bind(this));
+        input.value = localStorage.getItem("craft.search") || "";
+
         this.searchInput = input;
 
         var clear = document.createElement("button");
@@ -318,6 +323,7 @@ Craft.prototype = {
         label.className = "recipe-search";
         label.appendChild(input);
         label.appendChild(clear);
+
 
         return label;
     },
@@ -619,6 +625,8 @@ Craft.prototype = {
         to.appendChild(to.image);
     },
     safeToCreate: function(recipe) {
+        if (!recipe.Lvl)
+            return true;
         var skill = game.player.Skills[recipe.Skill];
         if (!skill)
             game.error("Skill %s not found", recipe.Skill);
@@ -685,5 +693,25 @@ Craft.prototype = {
         preview.id = "item-preview";
         previewWrapper.appendChild(preview);
         return previewWrapper;
+    },
+    dwim: function(slot) {
+        if (!this.panel.visible)
+            return false;
+        if (slot.locked)
+            return false;
+        if (!slot.entity) {
+            console.log("dwimCraft: got empty slot");
+            return false;
+        }
+        var entity = slot.entity;
+        return this.slots.some(function(slot) {
+            if (slot.used || !entity.is(slot.group))
+                return false;
+            game.controller.craft.use(entity, slot);
+            return true;
+        });
+    },
+    save: function() {
+        localStorage.setItem("craft.search", this.searchInput.value);
     },
 };
