@@ -571,8 +571,8 @@ Craft.prototype = {
     },
     auto: function(callback) {
         callback = callback || function(slot, container) {
-            container.dwimCraft(slot);
-        };
+            this.dwim(slot);
+        }.bind(this);
 
         // prepare player's inventory
         // because we want to check it contents even if it's closed
