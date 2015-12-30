@@ -120,7 +120,14 @@ Character.prototype = {
             game.sortedEntities.add(this);
     },
     screen: function() {
-        return new Point(this.X, this.Y).toScreen();
+        if (this.mount) {
+            var x = this.mount.X;
+            var y = this.mount.Y;
+        } else {
+            x = this.X;
+            y = this.Y;
+        }
+        return new Point(x, y).toScreen();
     },
     sync: function(data, init) {
         Character.copy(this, data);
@@ -1602,7 +1609,7 @@ Character.prototype = {
     updateCamera: function() {
         var camera = game.camera;
         var screen = game.screen;
-        var p = new Point(this.X, this.Y).toScreen();
+        var p = this.screen();
         camera.x = (p.x - screen.width / 2) << 0;
         camera.y = (p.y - screen.height / 2) << 0;
     },

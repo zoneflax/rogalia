@@ -499,6 +499,7 @@ function Game() {
     this.jukebox = new function() {
         this.iframe = dom.tag("iframe");
         this.panel = new Panel("jukebox", "Jukebox", [this.iframe]);
+        this.panel.temporary = true;
 
         var videoRegexp = new RegExp(/^[A-Za-z0-9_-]{11}$/);
         var current = {

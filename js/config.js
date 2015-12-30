@@ -15,9 +15,9 @@ var config = {
         language: function() {
             return game.lang == "ru";
         },
-        hp: false,
-        name: false,
-        npc: false,
+        hp: true,
+        name: true,
+        npc: true,
         simpleFonts: false,
         allowSelfSelection: false,
         showMeterValues: true,

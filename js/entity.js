@@ -296,11 +296,6 @@ Entity.prototype = {
         }
 
         this._spriteVersion = spriteVersion;
-
-        //TODO removeme
-        if (this.Group == "shovel") {
-            this._icon = loader.loadImage(this.Type + "-icon.png");
-        }
     },
     add: function() {
         game.controller.newCreatingCursor(this.Type);
