@@ -15,7 +15,6 @@ function ContainerSlot(container, index) {
 
     this.sub = null;
 
-
     this.onclear = function() {};
 }
 
@@ -87,7 +86,8 @@ ContainerSlot.prototype = {
     updateProgress: function() {
         if ("Readiness" in this.entity && "Fuel" in this.container.entity) {
             var rd = this.entity.Readiness;
-            this.setSub(util.toFixed(100*rd.Current / rd.Max) + "%");
+            if (rd.Max != 0)
+                this.setSub(util.toFixed(100*rd.Current / rd.Max) + "%");
             return;
         }
         //TODO: make generic `progress' @server-side

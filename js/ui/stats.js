@@ -399,7 +399,9 @@ Stats.prototype = {
         var xp = document.getElementById("xp-progress");
         var exp = game.player.Exp;
         var width = exp.Current/exp.Max * 100;
-        if (+xp.style.width != width)
+        if (+xp.style.width != width) {
             xp.style.width = width + "%";
+            xp.title = sprintf("%d/%d", exp.Current, exp.Max);
+        }
     },
 };

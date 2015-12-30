@@ -69,6 +69,11 @@ function Sound() {
         playNextTrack();
     };
 
+    this.stopMusic = function() {
+        if (currentTrack)
+            currentTrack.pause();
+    };
+
     function loadTrack(trackId) {
         return new Audio(musicDir + trackId + ".webm");
     };
@@ -123,7 +128,6 @@ function Sound() {
             currentTrack.pause();
         }
     };
-
 
     this.playSound = function(name, repeat) {
         if (!config.sound.playSound)

@@ -2,7 +2,6 @@ var dom = {
     tag: function(tag, classOrId, cfg) {
         var elem = document.createElement(tag);
 
-
         if (classOrId) {
             this.setClassOrId(elem, classOrId);
         }
@@ -85,6 +84,10 @@ var dom = {
             if (child)
                 element.appendChild(child);
         });
+        return element;
+    },
+    wrap: function(classOrId, elements) {
+        return this.append(dom.div(classOrId), elements);
     },
     appendText: function(element, text) {
         element.appendChild(document.createTextNode(text));

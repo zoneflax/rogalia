@@ -31,13 +31,14 @@ var config = {
     graphics: {
         // low: false,
         fullscreen: false,
-        autoHighlightDoors: true,
+        autoHighlightDoors: false,
         snowflakes: true,
         centerScreen: true,
     },
     sound: {
         playSound: true,
-        playMusic: true
+        playMusic: true,
+        jukebox: true,
     },
 };
 var debug = {

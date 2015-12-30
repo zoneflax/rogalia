@@ -14,6 +14,8 @@ function Game() {
     };
     this.setFontSize();
 
+    Settings.load(config);
+
     this.screen = {
         width: 0,
         height: 0,
@@ -322,7 +324,9 @@ function Game() {
             delete game.containers[id];
         }
 
-        game.sortedEntities.remove(game.entities.get(id));
+        var entity = Entity.get(id);
+        entity.onremove();
+        game.sortedEntities.remove(entity);
         game.entities.remove(id);
         game.claims.remove(id);
     };
@@ -490,6 +494,50 @@ function Game() {
         game.sendErrorf(arguments);
         game.exit();
         throw "Fatal error";
+    };
+
+    this.jukebox = new function() {
+        this.iframe = dom.tag("iframe");
+        this.panel = new Panel("jukebox", "Jukebox", [this.iframe]);
+
+        var videoRegexp = new RegExp(/^[A-Za-z0-9_-]{11}$/);
+        var current = {
+            video: "",
+            time: 0,
+        }
+
+        this.play = function(video, time) {
+            if (!videoRegexp.test(video)) {
+                this.stop();
+                return;
+            }
+            current.video = video;
+            current.time = time;
+            if (!config.sound.jukebox)
+                return;
+            game.sound.stopMusic();
+
+            var src = "http://www.youtube.com/embed/" + video + "?autoplay=1";
+            if (time)
+                src += "&start=" + time;
+            this.iframe.src = src;
+        };
+
+        this.stop = function() {
+            this.iframe.src = "";
+        };
+
+        this.toggle = function() {
+            if (config.sound.jukebox) {
+                this.play(current.video, current.time);
+            } else {
+                this.stop();
+            }
+        }
+
+        this.open = function() {
+            this.panel.show();
+        }.bind(this);
     };
 
     var maximize = document.getElementById("maximize");

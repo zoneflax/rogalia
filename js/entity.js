@@ -78,6 +78,8 @@ Entity.prototype = {
 
         if ("Damage" in this)
             name += "\n" + T("Damage") + ": " + this.Damage;
+        else if (this.Props.Energy)
+            name += "\n" + T("Energy") + ": " + this.Props.Energy;
 
         if (!("Amount" in this))
             name += "\n" + T("Quality") + ": " + this.Quality;
@@ -357,12 +359,12 @@ Entity.prototype = {
         }
         return null;
     },
-    defaultActionSuccess: function() {
+    defaultActionSuccess: function(data) {
     },
     defaultAction: function() {
         game.network.send("entity-use", { id: this.Id }, function done(data) {
             if (data.Done)
-                return this.defaultActionSuccess();
+                return this.defaultActionSuccess(data);
             else
                 return done.bind(this);
         }.bind(this));
@@ -491,6 +493,8 @@ Entity.prototype = {
         this.setPoint(p);
 
         switch(this.Group) {
+        case "jukebox":
+            this.defaultActionSuccess = game.jukebox.open;
         case "portal":
         case "book":
         case "grave":
@@ -539,6 +543,11 @@ Entity.prototype = {
 
         if ("Amount" in this && this.Amount > 1)
             this.Actions.push("split");
+
+        if (this.Group == "jukebox") {
+            var time = (Date.now() - this.Started * 1000) / 1000;
+            game.jukebox.play(this.Props.Text, time >> 0);
+        }
     },
     autoHideable: function() {
         if (this.Height <= 8 || this.Width <= 8)
@@ -1010,5 +1019,12 @@ Entity.prototype = {
                 game.chat.append("*" + cmd + " " + id);
             },
         });
-    }
+    },
+    onremove: function() {
+        switch (this.Group) {
+        case "jukebox":
+            game.jukebox.stop();
+            game.jukebox.panel.hide();
+        }
+    },
 };

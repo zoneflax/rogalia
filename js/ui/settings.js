@@ -3,6 +3,7 @@ function Settings() {
     Settings.instance = this;
     var tabs = this.makeSettingsTabs(game.config, "Config");
     if (game.player.IsAdmin) {
+        Settings.load(game.debug)
         this.makeSettingsTabs(game.debug, "Debug").forEach(function(tab) {
             tabs.push(tab);
         });
@@ -28,6 +29,9 @@ function Settings() {
         },
         "settings.sound.playMusic": function() {
             game.sound.toggleMusic();
+        },
+        "settings.sound.jukebox": function() {
+            game.jukebox.toggle();
         },
         "settings.map.world": function() {
             dom.toggle(game.world);
@@ -60,6 +64,21 @@ function Settings() {
             game.player.reloadSprite();
         },
     };
+}
+
+Settings.load = function(map) {
+    Object.keys(map).forEach(function(name) {
+        var group = map[name];
+        Object.keys(group).forEach(function(prop) {
+            if (group[prop] instanceof Function)
+                return;
+            var key = ["settings", name, prop].join(".");
+            var saved = localStorage.getItem(key);
+            if (saved !== null) {
+                group[prop] = JSON.parse(saved);
+            }
+        })
+    })
 }
 
 
@@ -104,12 +123,6 @@ Settings.prototype = {
                         value = value();
                     else
                         value = false;
-                } else {
-                    var saved = localStorage.getItem(key);
-                    if (saved !== null) {
-                        value = JSON.parse(saved);
-                        group[prop] = value;
-                    }
                 }
 
                 var desc = Settings.descriptions[name] && Settings.descriptions[name][prop] || [prop, ""];

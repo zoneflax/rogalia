@@ -1955,5 +1955,7 @@ Character.prototype = {
         if (!panel)
             return;
         panel.setContents(panel.quest.getContents());
-    }
+    },
+    onremove: function() {
+    },
 };
