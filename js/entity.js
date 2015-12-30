@@ -536,6 +536,11 @@ Entity.prototype = {
         case "spell-scroll":
             this.Actions.push("cast");
             break;
+        case "mailbox":
+            this.defaultActionSuccess = function(data) {
+                new Mail(this, data.Mail);
+            }.bind(this);
+            break;
         }
 
         if (this.Creator && this.MoveType != Entity.MT_STATIC)

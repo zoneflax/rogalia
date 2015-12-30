@@ -2121,3 +2121,47 @@ input[type=number], .lot-quantity > input, .price > input {
 #ratings {
     max-width: none;
 }
+.mail-body {
+    width: 300px;
+    height: 100px;
+}
+.mail-to, .mail-subject  {
+    display: flex;
+    width: 100%;
+    margin-bottom: 3px;
+}
+.mail-to > label, .mail-subject > label {
+    width: 52px;
+    text-align: right;
+}
+.mail-to > input, .mail-subject > input {
+    margin: 0 5px;
+    flex-grow: 1;
+}
+.mail-send {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#mail .tab-content {
+    padding-top: 3px;
+}
+.letter {
+    width: 100%;
+    cursor: pointer;
+    min-height: 32px;
+}
+.letter:hover {
+    background: #99682e;
+}
+.letter-from {
+    float: left;
+    margin-right: 3px;
+}
+.letter-from:after {
+    content: ":";
+}
+.letter-delete {
+    min-width: 0;
+    float: right;
+}
