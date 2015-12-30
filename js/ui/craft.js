@@ -232,7 +232,7 @@ Craft.prototype = {
     },
     createList: function() {
         var list = document.createElement("ul");
-        list.className = "recipe-list no-drag";
+        list.className = "recipe-list no-drag filter-unavailable";
         var groups = {};
         for (var group in game.player.Skills) {
             groups[group] = {};
@@ -329,14 +329,13 @@ Craft.prototype = {
     },
     createFilters: function() {
         var filters = document.createElement("div");
-        return filters;
-        //TODO: add icons and remove return
         var recipeList = this.list;
         ["portable", "liftable", "static", "unavailable"].forEach(function(name) {
             var label = document.createElement("label");
             var checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.checked = true; //TODO: save to localStorage
+            //TODO: save to localStorage
+            checkbox.checked = (name != "unavailable");
             checkbox.onchange = function(e) {
                 recipeList.classList.toggle("filter-"+name);
             };
