@@ -1333,4 +1333,5 @@ var dict = {
     "Hunter root": "Корень охотника",
     "Hunter scroll": "Свиток охотника",
     "You have lost {cost}": "Вы потеряли {cost}",
+    "Jukebox": "Музыкальный автомат",
 };
