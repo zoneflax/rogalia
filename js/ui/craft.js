@@ -640,8 +640,8 @@ Craft.prototype = {
 
         if (recipe.Skill) {
             var skill = document.createElement("li");
-            skill.textContent = sprintf("%s: %s", T("Skill"), util.lcfirst(T(recipe.Skill))) +
-                ((recipe.Lvl > 0) ? (" " + recipe.Lvl) : "");
+            var lvl = (recipe.Lvl > 0) ? recipe.Lvl : "";
+            skill.textContent = sprintf("%s: %s %s", T("Skill"), util.lcfirst(T(recipe.Skill)), lvl);
 
             if (!this.safeToCreate(recipe)) {
                 skill.className = "unavailable";
@@ -653,20 +653,39 @@ Craft.prototype = {
             deps.appendChild(skill);
         }
 
-        function split(s) {
-            return s.split(",").map(TS).map(util.lcfirst).join(", ");
+        var self = this;
+        function makeLinks(s) {
+            if (!s)
+                return [];
+            return s.split(",").map(function(item) {
+                var name = util.lcfirst(TS(item));
+                var link = dom.link("", name);
+                link.className = "item-link";
+                link.onclick = self.search.bind(self, name);
+                return link;
+            });
+        }
+
+        function appendLinks(links, to) {
+            for (var i = 0, l = links.length; i < l; i++) {
+                to.appendChild(links[i]);
+                if (i + 1 < l)
+                    to.appendChild(dom.text(","));
+            }
         }
 
         if (recipe.Tool) {
             var tool = document.createElement("li");
-            tool.textContent = T("Tool") + ": " + split(recipe.Tool);
+            tool.appendChild(dom.text(T("Tool") + ":"));
+            appendLinks(makeLinks(recipe.Tool), tool);
             tool.title = T("Must be equipped");
             deps.appendChild(tool);
         }
 
         if (recipe.Equipment) {
             var equipment = document.createElement("li");
-            equipment.textContent = T("Equipment") + ": " + split(recipe.Equipment);
+            equipment.textContent = T("Equipment") + ":";
+            appendLinks(makeLinks(recipe.Equipment), equipment);
             equipment.title = T("You must be near equipment");
             deps.appendChild(equipment);
         }

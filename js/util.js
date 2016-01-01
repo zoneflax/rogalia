@@ -341,6 +341,10 @@ var util = new function() {
             throw "not imlemented"; //TODO: implement date.format
         },
     };
+
+    this.isString = function(s) {
+        return (typeof s === "string" || s instanceof String);
+    };
 };
 
 if (!Math.hypot) {

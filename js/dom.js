@@ -53,8 +53,10 @@ var dom = {
     },
     link: function(url, text) {
         var link = document.createElement("a");
-        link.target = "_blank";
-        link.href = url;
+        if (url) {
+            link.target = "_blank";
+            link.href = url;
+        }
         if (text)
             link.textContent = text;
         return link;
@@ -79,10 +81,14 @@ var dom = {
     clear: function(element) {
         element.innerHTML = "";
     },
+    make: function(tag, contents) {
+        return this.append(this.tag(tag), contents);
+    },
     append: function(element, contents) {
         contents.forEach(function(child) {
-            if (child)
-                element.appendChild(child);
+            if (child) {
+                element.appendChild((child instanceof Node) ? child : document.createTextNode(child));
+            }
         });
         return element;
     },
@@ -121,6 +127,19 @@ var dom = {
         var iframe = dom.tag("iframe", classOrName);
         iframe.src = src;
         return iframe;
+    },
+    table: function(header, rows) {
+        var dom = this;
+        return this.make("table", [
+            this.make("tr", header.map(function(title) {
+                return dom.make("th", [title]);
+            })),
+            this.make("tbody", rows.map(function(row) {
+                return dom.make("tr", row.map(function(cell) {
+                    return dom.make("td", [cell]);
+                }));
+            }))
+        ]);
     },
     /* * * * * */
     remove: function(element) {

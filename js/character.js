@@ -1836,6 +1836,7 @@ Character.prototype = {
         case "Bertran":
         case "Boris":
         case "Charles":
+        case "Diego":
         case "Ahper":
         case "Cosmas":
         case "Scrooge":

@@ -178,5 +178,29 @@ Character.npcActions = {
     },
     "Buy indulgence": function() {
         game.alert("Пока не реализовано :-(");
-    }
+    },
+    "Show instances": function() {
+        game.network.send("instance-list", {}, function(data) {
+            var instances = dom.table(
+                [T("Name"), T("Min"), T("Max"), T("Cost"), ""],
+                data.Instances.map(function(instance) {
+                    var enter = dom.button(T("Enter"));
+                    enter.onclick = function() {
+                        Panel.top.close();
+                        game.network.send("instance", {Name: instance.Name});
+                    };
+                    return [
+                        T(instance.Name),
+                        instance.MinLvl,
+                        instance.MaxLvl,
+                        Vendor.createPrice(instance.Cost),
+                        enter,
+                    ];
+                    return inst;
+                })
+            );
+            Panel.top.close();
+            new Panel("instances", "Instances", [instances]).show();
+        });
+    },
 };

@@ -35,6 +35,19 @@ input, textarea, code, .messages, .message, .message .body, .message .from{
     font:  13px/18px Dejavu Sans, Sans;
     color: white;
 }
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+td, th {
+    border: 1px solid #593815;
+    padding: 1px 5px;
+}
+th {
+    font-weight: normal;
+    font-size: 15px;
+    text-align: center;
+}
 label {
     display: inline-block;
 }
@@ -719,8 +732,9 @@ hr {
 .recipe-list .recipe:hover, .recipe-list .group-toggle:hover {
     color: lightgreen;
 }
-#recipe-details li[title] {
-    cursor: help;
+#recipe-details .item-link {
+    margin-left: 3px;
+    cursor: pointer;
 }
 #recipe-slots {
     overflow: auto;
@@ -1957,7 +1971,6 @@ input[type=number], .lot-quantity > input, .price > input {
     top: 4px;
 }
 #exchange-rates-table td {
-    border: 1px solid #ccc;
     text-align: center;
 }
 #exchange-rates-table input {
@@ -2101,18 +2114,11 @@ input[type=number], .lot-quantity > input, .price > input {
     width: 300px;
     height: 331px;
 }
-.stats-table {
-    border-collapse: collapse;
-    width: 100%;
+.stats-table th {
+    border: none;
 }
 .stats-table td {
-    border: 1px solid #593815;
     padding: 0 3px;
-}
-.stats-table th {
-    font-weight: normal;
-    font-size: 15px;
-    text-align: center;
 }
 .stats-table td:nth-child(2)    {
     width: 75px;
@@ -2164,4 +2170,8 @@ input[type=number], .lot-quantity > input, .price > input {
 .letter-delete {
     min-width: 0;
     float: right;
+}
+
+#instances {
+    min-width: 300px;
 }

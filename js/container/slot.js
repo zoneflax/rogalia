@@ -106,6 +106,8 @@ ContainerSlot.prototype = {
             this.setSub(this.entity.Type);
         } else if ("Amount" in this.entity) {
             this.setSub(this.entity.Amount);
+        } else if (this.entity.SpawnChance > 0) {
+            this.setSub(this.entity.SpawnChance);
         }
     },
 };

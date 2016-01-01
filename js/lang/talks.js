@@ -52,6 +52,14 @@ function Talks() {
                 // "Get village claim": "Получить деревенский клейм. Стоимость 10 платины.",
             },
         },
+        "diego": {
+            "default": {
+                "male": ["Вы не видели котов?"],
+            },
+            "actions": {
+                "Show instances": "Показать доступные инстансы",
+            }
+        },
         "scrooge": {
             "default": {
                 "male": [

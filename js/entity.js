@@ -123,6 +123,7 @@ Entity.prototype = {
     },
     showInfo: function() {
         var elements = [];
+        elements.push(Stats.prototype.createValue("Level", this.Lvl));
         elements.push(Stats.prototype.createValue("Quality", this.Quality));
         elements.push(Stats.prototype.createParam("Durability", this.Durability));
 
@@ -357,6 +358,12 @@ Entity.prototype = {
     defaultActionSuccess: function(data) {
     },
     defaultAction: function() {
+        switch (this.Type) {
+        case "instance-exit":
+            if (!confirm(T("You will not be able to return to this intance. Are you sure?")))
+                return;
+            break;
+        }
         game.network.send("entity-use", { id: this.Id }, function done(data) {
             if (data.Done)
                 return this.defaultActionSuccess(data);
@@ -1015,7 +1022,9 @@ Entity.prototype = {
                 });
             },
             "$prompt": function() {
-                var cmd = prompt("cmd?", "set-quality");
+                var lastCmd = Entity.lastPromptCmd || "set-quality";
+                var cmd = prompt("cmd?", lastCmd);
+                Entity.lastPromptCmd = cmd
                 game.chat.append("*" + cmd + " " + id);
             },
         });
