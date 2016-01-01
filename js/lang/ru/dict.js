@@ -1345,5 +1345,5 @@ var dict = {
     "Cake": "Пироженка",
     "Donut": "Пончик",
     "Chupa chups": "Чупа-чупc",
-
+    "No available instances": "Нет доступных инстансов",
 };

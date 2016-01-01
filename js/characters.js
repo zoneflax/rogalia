@@ -181,6 +181,11 @@ Character.npcActions = {
     },
     "Show instances": function() {
         game.network.send("instance-list", {}, function(data) {
+            if (!data.Instances) {
+                game.alert(T("No available instances"));
+                return;
+            }
+
             var instances = dom.table(
                 [T("Name"), T("Min"), T("Max"), T("Cost"), ""],
                 data.Instances.map(function(instance) {
