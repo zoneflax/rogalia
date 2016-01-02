@@ -77,7 +77,7 @@ Entity.prototype = {
         }
 
         if ("Damage" in this)
-            name += "\n" + T("Damage") + ": " + this.Damage;
+            name += "\n" + T("Damage") + ": " + this.damage();
         else if (this.Props.Energy)
             name += "\n" + T("Energy") + ": " + this.Props.Energy;
 
@@ -144,8 +144,7 @@ Entity.prototype = {
             var block = this.Block;
             elements.push(Stats.prototype.createValue("Block", block));
         } else if ("Damage" in this) {
-            var damage = this.Damage * (Math.pow(this.Quality, 1.5) / 5000 + 1);
-            elements.push(Stats.prototype.createValue("Damage", damage));
+            elements.push(Stats.prototype.createValue("Damage", this.damage()));
         } else if (this.Props.Capacity) {
             elements.push(Stats.prototype.createParam("Capacity", this.Props.Capacity));
         }
@@ -155,6 +154,9 @@ Entity.prototype = {
 
         var panel = new Panel("item-info", TS(this.Name), elements);
         panel.show();
+    },
+    damage: function() {
+        return util.toFixed(this.Damage * (Math.pow(this.Quality, 1.5) / 5000 + 1), 0);
     },
     makeDescription: function() {
         return Entity.makeDescription(this.Type);
