@@ -571,7 +571,7 @@ Character.prototype = {
                 this._loadNpcSprites();
                 return;
             }
-            if (this.Type == "Vendor") {
+            if (this.Type == "vendor") {
                 type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
                     return hash + c.charCodeAt(0);
                 }, 0) % 3 + 1);
@@ -949,8 +949,8 @@ Character.prototype = {
         var name = this.Name;
         if (this.Type == "vendor") {
             name = name.replace("Vendor-", "");
-            // return "$ " + name;
-            return TT("Vendor of {name}", {name: name});
+            return "$ " + name;
+            // return TT("Vendor of {name}", {name: name});
         }
         if (this.IsNpc && name && this.Type != "vendor") {
             name = name.replace(/-\d+$/, "");
@@ -982,7 +982,11 @@ Character.prototype = {
         var y = p.y - this.sprite.nameOffset;
         var dy = FONT_SIZE * 0.5;
 
-        drawHp = drawHp || ((!this.IsNpc || game.config.ui.npc) && game.config.ui.hp);
+        if (this.isInteractive())
+            drawHp = false;
+        else
+            drawHp = drawHp || ((!this.IsNpc || game.config.ui.npc) && game.config.ui.hp);
+
         drawName = drawName || ((!this.IsNpc || game.config.ui.npc) && game.config.ui.name);
 
         if (this.PvpExpires) {
