@@ -27,6 +27,8 @@ function Craft() {
 
     this.recipeDetails = this.createRecipeDetails();
 
+    this.history = [];
+
     this.panel = new Panel(
         "craft",
         "Craft",
@@ -232,7 +234,7 @@ Craft.prototype = {
     },
     createList: function() {
         var list = document.createElement("ul");
-        list.className = "recipe-list no-drag filter-unavailable";
+        list.className = "recipe-list no-drag";
         var groups = {};
         for (var group in game.player.Skills) {
             groups[group] = {};
@@ -334,10 +336,14 @@ Craft.prototype = {
             var label = document.createElement("label");
             var checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            //TODO: save to localStorage
-            checkbox.checked = (name != "unavailable");
+            var saved = localStorage.getItem("craft.filter." + name);
+            checkbox.checked = (saved) ? JSON.parse(saved) : (name != "unavailable");
+            if (!checkbox.checked)
+                recipeList.classList.add("filter-" + name);
+
             checkbox.onchange = function(e) {
-                recipeList.classList.toggle("filter-"+name);
+                var checked = !recipeList.classList.toggle("filter-"+name);
+                localStorage.setItem("craft.filter." + name, checked);
             };
             label.appendChild(checkbox);
             label.title = T(name);
@@ -390,7 +396,7 @@ Craft.prototype = {
 
 
         if (matching) {
-            this.clickListener({target: matching}); //omfg it's ugly
+            this.openRecipe(matching, false);
         }
     },
     createRecipeDetails: function() {
@@ -400,8 +406,7 @@ Craft.prototype = {
         return recipeDetails;
     },
     clickListener: function(e) {
-        var recipe = e.target.recipe;
-        if(!recipe)
+        if (!e.target.recipe)
             return;
 
         if (game.controller.modifier.shift) {
@@ -412,25 +417,37 @@ Craft.prototype = {
             game.controller.newCreatingCursor(e.target.type);
             return;
         }
-
-        e.target.classList.add("selected");
+        this.openRecipe(e.target, true);
+    },
+    openRecipe: function(target, clearHistory, noHistory) {
+        var recipe = target.recipe;
+        target.classList.add("selected");
 
         if (this.selected)
             this.selected.classList.remove("selected");
 
-        this.selected = e.target;
+        if (clearHistory) {
+            this.history = [];
+        } else if (this.selected && !noHistory) {
+            this.history.push(this.selected);
+        }
+
+        this.selected = target;
 
         this.cleanUp();
         this.current = {
             recipe: recipe,
-            type: e.target.type,
-            title: e.target.title
+            type: target.type,
+            title: target.title
         };
-        var template = Entity.templates[e.target.type];
+
+        var template = Entity.templates[target.type];
         if (template.MoveType == Entity.MT_PORTABLE)
             this.renderRecipe();
         else
-            this.renderBuildRecipe(e);
+            this.renderBuildRecipe(target);
+
+        this.renderBackButton();
     },
     renderRecipe: function() {
         var self = this;
@@ -451,9 +468,8 @@ Craft.prototype = {
 
         for(var group in recipe.Ingredients) {
             var groupTitle = TS(group);
-            var ingredient = document.createElement("li");
             var required = T(recipe.Ingredients[group]);
-            ingredient.textContent = required + "x " + groupTitle;
+            var ingredient = dom.make("li", [required, "x ", this.makeLink(groupTitle)]);
             ingredients.appendChild(ingredient);
 
             for(var j = 0; j < required; j++) {
@@ -534,22 +550,22 @@ Craft.prototype = {
         hr();
         this.recipeDetails.appendChild(Entity.makeDescription(this.current.type));
     },
-    renderBuildRecipe: function(e) {
-        var recipe = e.target.recipe;
+    renderBuildRecipe: function(target) {
+        var recipe = target.recipe;
         this.recipeDetails.innerHTML = "";
 
         var title = document.createElement("span");
         title.className = "recipe-title";
-        title.textContent = e.target.title;
+        title.textContent = target.title;
 
-        this.blank.type = e.target.type;
+        this.blank.type = target.type;
 
         var ingredients = document.createElement("ul");
         var slots = [];
         for(var name in recipe.Ingredients) {
-            var ingredient = document.createElement("li");
             var required = recipe.Ingredients[name];
-            ingredient.textContent = required + "x " + TS(name.replace("meta-", ""));
+            var groupTitle = TS(name.replace("meta-", ""));
+            var ingredient = dom.make("li", [required, "x ", this.makeLink(groupTitle)]);
             ingredients.appendChild(ingredient);
         }
         var hr = function() {
@@ -568,6 +584,17 @@ Craft.prototype = {
         this.recipeDetails.appendChild(ingredients);
         hr();
         this.recipeDetails.appendChild(create);
+    },
+    renderBackButton: function() {
+        if (this.history.length == 0)
+            return;
+
+        var button = dom.button(T("Back"), "craft-history-back");
+        button.onclick = function() {
+            this.openRecipe(this.history.pop(), false, true);
+        }.bind(this);
+
+        dom.append(this.recipeDetails, [dom.hr(), button]);
     },
     auto: function(callback) {
         callback = callback || function(slot, container) {
@@ -657,13 +684,7 @@ Craft.prototype = {
         function makeLinks(s) {
             if (!s)
                 return [];
-            return s.split(",").map(function(item) {
-                var name = util.lcfirst(TS(item));
-                var link = dom.link("", name);
-                link.className = "item-link";
-                link.onclick = self.search.bind(self, name);
-                return link;
-            });
+            return s.split(",").map(self.makeLink.bind(self));
         }
 
         function appendLinks(links, to) {
@@ -704,6 +725,13 @@ Craft.prototype = {
             this.recipeDetails.appendChild(requirements);
 
         this.requirements = requirements;
+    },
+    makeLink: function(item)  {
+        var name = util.lcfirst(TS(item));
+        var link = dom.link("", name);
+        link.className = "item-link";
+        link.onclick = this.search.bind(this, name);
+        return link;
     },
     makePreview: function(type) {
         var previewWrapper = document.createElement("div");

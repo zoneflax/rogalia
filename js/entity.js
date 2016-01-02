@@ -150,6 +150,7 @@ Entity.prototype = {
             elements.push(Stats.prototype.createParam("Capacity", this.Props.Capacity));
         }
 
+        elements.push(dom.hr());
         elements.push(this.makeDescription());
 
         var panel = new Panel("item-info", TS(this.Name), elements);

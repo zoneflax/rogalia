@@ -1347,4 +1347,5 @@ var dict = {
     "Donut": "Пончик",
     "Chupa chups": "Чупа-чупc",
     "No available instances": "Нет доступных инстансов",
+    "No description yet": "Описания пока нет :(",
 };
