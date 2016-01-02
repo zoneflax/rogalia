@@ -66,23 +66,21 @@ function Info(message, character) {
         break;
     case "heal":
         this.value = this.data;
-        if (this.value > this.character.Hp.Max/10) {
-            this.character.playAnimation({
-                up: {
-                    name: "heal",
-                    width: 96,
-                    height: 128,
-                    dy: -8
-                },
-                down: {
-                    name: "heal",
-                    width: 96,
-                    height: 128,
-                    dy: -8
-                }
-            });
-            game.sound.playSound("heal");
-        }
+        this.character.playAnimation({
+            up: {
+                name: "heal",
+                width: 96,
+                height: 128,
+                dy: -8
+            },
+            down: {
+                name: "heal",
+                width: 96,
+                height: 128,
+                dy: -8
+            }
+        });
+        game.sound.playSound("heal");
         break;
     case "craft-success":
     case "item-gain":
