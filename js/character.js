@@ -948,8 +948,7 @@ Character.prototype = {
     getName: function() {
         var name = this.Name;
         if (this.Type == "vendor") {
-            name = name.replace("Vendor-", "");
-            return "$ " + name;
+            return name.replace("Vendor-", "$ ");
             // return TT("Vendor of {name}", {name: name});
         }
         if (this.IsNpc && name && this.Type != "vendor") {

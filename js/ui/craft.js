@@ -2,24 +2,23 @@
 function Craft() {
     this.visibleGroups = {};
     this.buildButton = null;
-    this.filter = function(recipe) {
-        return true;
-    };
     this.selected = null;
     this.slots = [];
     this.current = {};
     this.requirements = null;
 
+    this.recipes = {};
     this.list = this.createList();
 
     this.searchInput = null;
+    this.searchSlot = this.createSearchSlot();
 
-    this.listWrapper = document.createElement("div");;
-    this.listWrapper.id = "recipe-list-wrapper";
-    this.listWrapper.appendChild(this.createSearchField());
-    this.listWrapper.appendChild(dom.hr());
-    this.listWrapper.appendChild(this.createFilters());
-    this.listWrapper.appendChild(this.list);
+    this.listWrapper = dom.wrap("#recipe-list-wrapper", [
+        this.createSearchField(),
+        dom.wrap("#recipe-filters", [this.searchSlot, this.createFilters()]),
+        dom.hr(),
+        this.list
+    ]);
 
     this.titleElement = document.createElement("div");
     this.ingredientsList = document.createElement("ul");
@@ -253,8 +252,6 @@ Craft.prototype = {
 
             for (var type in recipes) {
                 var recipe = recipes[type];
-                if (!this.filter(recipe))
-                    continue;
                 var item = document.createElement("li");
                 item.className = "recipe";
                 item.classList.add(["portable", "liftable", "static"][Entity.templates[type].MoveType]);
@@ -271,8 +268,8 @@ Craft.prototype = {
                 if (!this.safeToCreate(recipe))
                     item.classList.add("unavailable");
 
-
                 subtree.appendChild(item);
+                this.recipes[type] = item;
             }
 
             if (subtree.children.length == 0)
@@ -326,8 +323,50 @@ Craft.prototype = {
         label.appendChild(input);
         label.appendChild(clear);
 
-
         return label;
+    },
+    createSearchSlot: function() {
+        var self = this;
+        var slot = dom.slot();
+        slot.title = T("Search by ingredient");
+        slot.canUse = function() {
+            return true;
+        };
+        slot.use = function(entity) {
+            slot.entity = entity;
+            slot.innerHTML = "";
+            slot.appendChild(entity.icon());
+            var searching = self.list.classList.contains("searching");
+            self.list.classList.add("searching");
+            for (var type in self.recipes) {
+                var li = self.recipes[type];
+                if (searching && !li.classList.contains("found"))
+                    continue;
+
+                li.classList.remove("found");
+                var recipe = Entity.recipes[type];
+                for (var ingredient in recipe.Ingredients) {
+                    if (entity.is(ingredient)) {
+                        li.classList.add("found");
+                        li.parentNode.parentNode.classList.add("found");
+                        continue;
+                    }
+                }
+            }
+            dom.forEach(".recipe-list > .found", function() {
+                if (this.querySelector(".found") == null)
+                    this.classList.remove("found");
+            });
+            return true;
+        };
+        slot.addEventListener("mousedown", function() {
+            slot.entity = null;
+            slot.innerHTML = "";
+            self.search(self.searchInput.value);
+            slot.onclick = null;
+        }, true);
+
+        return slot;
     },
     createFilters: function() {
         var filters = document.createElement("div");
@@ -370,6 +409,9 @@ Craft.prototype = {
         dom.removeClass(id + ".recipe-list .found", "found");
         if (!pattern) {
             this.list.classList.remove("searching");;
+            if (this.searchSlot.entity) {
+                this.searchSlot.use(this.searchSlot.entity);
+            }
             return;
         }
         this.list.classList.add("searching");
@@ -394,6 +436,9 @@ Craft.prototype = {
             this.parentNode.parentNode.classList.add("found");
         });
 
+        if (this.searchSlot.entity) {
+            this.searchSlot.use(this.searchSlot.entity);
+        }
 
         if (matching) {
             this.openRecipe(matching, false);

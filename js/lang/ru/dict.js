@@ -1348,4 +1348,8 @@ var dict = {
     "Chupa chups": "Чупа-чупc",
     "No available instances": "Нет доступных инстансов",
     "No description yet": "Описания пока нет :(",
+    "roasted-kitty-meat": "Жареная кошатина",
+    "Mattress": "Матрасс",
+    "Search by ingredient": "Поиск по ингредиенту",
+    "search": "поиск",
 };

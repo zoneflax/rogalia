@@ -287,6 +287,7 @@ hr {
     background-image: url("assets/bg/slot-locked.png")!important;
 }
 .slot > img, .slot > canvas {
+    pointer-events: none;
     max-width: 45px;
     max-height: 40px;
     vertical-align: middle;
@@ -662,6 +663,11 @@ hr {
 }
 #recipe-list-wrapper {
     width: 34%;
+}
+#recipe-filters {
+    display: flex;
+    align-items: center;
+    margin-top: 3px;
 }
 #recipe-details {
     width: 65%;
