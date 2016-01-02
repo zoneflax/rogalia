@@ -821,6 +821,7 @@ var dict = {
     "Status points": "Статусные очки",
     "Wisdom": "Мудрость",
     "Move all": "Переместить всё",
+    "Open all": "Открыть всё",
     "Forum": "Форум",
     "Craft all": "Сдел. всё",
     "Knife": "Нож",

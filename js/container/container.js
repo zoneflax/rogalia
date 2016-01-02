@@ -118,9 +118,7 @@ Container.prototype = {
 
         var id = this.id;
 
-        var moveAll = new Image();
-        moveAll.className = "icon-button";
-        moveAll.src = "assets/icons/panel/move-all.png";
+        var moveAll = dom.img("assets/icons/panel/move-all.png", "icon-button");
         moveAll.title = T("Move all");
 
         moveAll.onclick = function() {
@@ -129,18 +127,39 @@ Container.prototype = {
                 game.network.send("move-all", {From: id, To: top.id});
         }.bind(this);
 
-        var sort = new Image();
-        sort.className = "icon-button";
-        sort.src = "assets/icons/panel/sort.png";
+        var sort = dom.img("assets/icons/panel/sort.png", "icon-button");
         sort.title = T("Sort");
         sort.onclick = function() {
             game.network.send("Sort", {Id: id});
         };
 
+        var openAll = dom.img("assets/icons/panel/open-all.png", "icon-button");
+        openAll.title = T("Open all");
+        openAll.onclick = function() {
+            var containers = this.slots.filter(function(slot) {
+                return (slot.entity && slot.entity.Props.Slots);
+            }).map(function(slot) {
+                return slot.entity;
+            });
+            var opened = containers.reduce(function(opened, entity) {
+                var cnt = Container.get(entity);
+                return (cnt && cnt.visible) ? opened + 1 : opened;
+            }, 0);
+
+            var open = opened < containers.length;
+            containers.forEach(function(entity) {
+                var cnt = Container.open(entity);
+                if (open)
+                    cnt.panel.show();
+                else
+                    cnt.panel.hide();
+            });
+        }.bind(this);
+
         this.panel = new Panel(
             "container-" + this.id,
             this.name,
-            [slots, this.fuel, dom.hr(), moveAll, sort],
+            [slots, this.fuel, dom.hr(), moveAll, sort, openAll],
             {
                 mousedown: function(e) {
                     game.controller.highlight("inventory", false);
