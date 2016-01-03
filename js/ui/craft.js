@@ -491,8 +491,6 @@ Craft.prototype = {
             this.renderRecipe();
         else
             this.renderBuildRecipe(target);
-
-        this.renderBackButton();
     },
     renderRecipe: function() {
         var self = this;
@@ -572,11 +570,7 @@ Craft.prototype = {
         all.textContent = T("Craft all");
         all.onclick = this.craftAll.bind(this);
 
-        var buttons = document.createElement("div");
-        buttons.id = "recipe-buttons";
-        buttons.appendChild(all);
-        buttons.appendChild(auto);
-        buttons.appendChild(create);
+        var buttons = dom.wrap("#recipe-buttons", [all, auto, create]);
 
         var hr = function() {
             this.recipeDetails.appendChild(dom.hr());
@@ -594,6 +588,8 @@ Craft.prototype = {
         this.recipeDetails.appendChild(buttons);
         hr();
         this.recipeDetails.appendChild(Entity.makeDescription(this.current.type));
+
+        this.renderBackButton();
     },
     renderBuildRecipe: function(target) {
         var recipe = target.recipe;
@@ -629,6 +625,8 @@ Craft.prototype = {
         this.recipeDetails.appendChild(ingredients);
         hr();
         this.recipeDetails.appendChild(create);
+
+        this.renderBackButton();
     },
     renderBackButton: function() {
         if (this.history.length == 0)
