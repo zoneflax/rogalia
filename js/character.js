@@ -409,14 +409,6 @@ Character.prototype = {
             };
             this.sprite.speed = 50000;
             break;
-        case "naked-ass":
-            this.sprite.width = 64;
-            this.sprite.height = 96;
-            this.sprite.frames = {
-                "idle": 2,
-                "run": [0, 6],
-            };
-            break;
         case "red-hair":
             this.sprite.width = 64;
             this.sprite.height = 96;
