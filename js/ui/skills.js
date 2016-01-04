@@ -30,6 +30,26 @@ function Skills() {
     this.hash = "";
 }
 
+Skills.toAttr = {
+    Carpentry: "strength",
+    Metalworking: "strength",
+    Leatherworking: "strength",
+    Stoneworking: "vitality",
+    Mining: "vitality",
+    Lumberjacking: "vitality",
+    Pottery: "dexterity",
+    Tailoring: "dexterity",
+    Swordsmanship: "dexterity",
+    Survival: "perception",
+    Farming: "perception",
+    Fishing: "perception",
+    Mechanics: "intellect",
+    Alchemy: "intellect",
+    Herbalism: "wisdom",
+    Cooking: "wisdom",
+    Leadership: "wisdom",
+};
+
 Skills.prototype = {
     update: function() {
         if (this.panel && !this.panel.visible)
@@ -57,6 +77,9 @@ Skills.prototype = {
             item.name = name;
             item.skill = skill;
             item.classList.add("skill");
+            var attr = Skills.toAttr[name];
+            item.title = TT("This skill depends on {attr}", {attr: attr});
+            dom.insert(dom.span("◾ ", "attr-" + attr), item);
             if (skill.Value.Current == skill.Value.Max && skill.Value.Max != max) {
                 item.classList.add("capped");
                 item.title = T("Skill is capped");

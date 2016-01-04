@@ -1351,4 +1351,5 @@ var dict = {
     "Mattress": "Матрасс",
     "Search by ingredient": "Поиск по ингредиенту",
     "search": "поиск",
+    "This skill depends on {attr}": "Этот навык зависит от атрибута {attr}",
 };

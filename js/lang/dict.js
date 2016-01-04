@@ -44,6 +44,8 @@ dict.init = function() {
         return;
     }
     window.T = function(text, symbol) {
+        if (!text)
+            return "";
         if (game.lang == "ru") {
             var info = Items[text];
             if (info && info.name.ru)
@@ -51,7 +53,13 @@ dict.init = function() {
         }
         if (symbol)
             text = util.symbolToString(text);
-        return dict[text] ||  text;
+        var t = dict[text];
+        if (t)
+            return t;
+        t = dict[util.ucfirst(text)];
+        if (t)
+            return util.lcfirst(t);
+        return text;
     };
 
     dict.update = function(elem) {

@@ -159,14 +159,14 @@ Stats.prototype = {
                 var attributes = dom.div("attributes");
                 Character.attrs.forEach(function(attr) {
                     var elem = self.createValue(attr, player.Attr[attr], 2);
-                    elem.classList.add(attr.toLowerCase());
+                    elem.classList.add("attr-" + attr.toLowerCase());
                     attributes.appendChild(elem);
                 });
 
                 var health = dom.div("health");
                 Character.vitamins.forEach(function(vitamin) {
                     var elem = self.createValue(vitamin, player.Health[vitamin], 2);
-                    elem.classList.add(vitamin.toLowerCase());
+                    elem.classList.add("vitamin-" + vitamin.toLowerCase());
                     health.appendChild(elem);
                 });
                 return [

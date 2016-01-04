@@ -1077,22 +1077,22 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     text-align: center;
     color: #fff;
 }
-.param.strength, .param.protein {
+.attr-strength, .vitamin-protein {
     color: #f99;
 }
-.param.vitality, .param.fat {
+.attr-vitality, .vitamin-fat {
     color: #ff9;
 }
-.param.dexterity, .param.carbohydrate {
+.attr-dexterity, .vitamin-carbohydrate {
     color: #9f9;
 }
-.param.intellect, .param.phosphorus {
+.attr-intellect, .vitamin-phosphorus {
     color: #9ff;
 }
-.param.perception, .param.calcium {
+.attr-perception, .vitamin-calcium {
     color: #f9f;
 }
-.param.wisdom, .param.magnesium {
+.attr-wisdom, .vitamin-magnesium {
     color: #99f;
 }
 
@@ -1345,7 +1345,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 }
 
 #skills {
-    width: 320px;
+    width: 369px;
     white-space: pre-wrap;
 }
 #skill-list {
