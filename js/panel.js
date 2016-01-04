@@ -65,7 +65,8 @@ function Panel(name, title, elements, listeners, hooks) {
     }
 
     this.element.addEventListener('mousedown', function() {
-        if (game.controller.modifier.any())
+        var mod = game.controller.modifier;
+        if (mod.ctrl || mod.shift || mod.alt)
             return;
         this.toTop();
     }.bind(this));

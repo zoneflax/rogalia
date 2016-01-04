@@ -53,9 +53,6 @@ function Controller(game) {
         ctrl: false,
         shift: false,
         alt: false,
-        any: function() {
-            return this.ctrl || this.shift || this.alt;
-        },
     };
     this.keys = {};
     this.currentTarget = null;
@@ -806,7 +803,6 @@ function Controller(game) {
                 if (e.target.nodeName == "TEXTAREA")
                     return true;
             }
-
 
             this.keys[c] = true;
 
