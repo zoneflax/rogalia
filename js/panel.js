@@ -64,7 +64,11 @@ function Panel(name, title, elements, listeners, hooks) {
         }
     }
 
-    this.element.addEventListener('mousedown', this.toTop.bind(this));
+    this.element.addEventListener('mousedown', function() {
+        if (game.controller.modifier.any())
+            return;
+        this.toTop();
+    }.bind(this));
     this.element.addEventListener('mousedown', game.controller.makeHighlightCallback(name, false));
     this.element.id = name;
     dom.insert(this.element);

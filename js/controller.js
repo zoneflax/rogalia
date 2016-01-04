@@ -52,7 +52,10 @@ function Controller(game) {
     this.modifier = {
         ctrl: false,
         shift: false,
-        alt: false
+        alt: false,
+        any: function() {
+            return this.ctrl || this.shift || this.alt;
+        },
     };
     this.keys = {};
     this.currentTarget = null;
