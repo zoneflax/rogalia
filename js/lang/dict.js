@@ -44,8 +44,8 @@ dict.init = function() {
         return;
     }
     window.T = function(text, symbol) {
-        if (!text)
-            return "";
+        if (!util.isString(text))
+            return text;
         if (game.lang == "ru") {
             var info = Items[text];
             if (info && info.name.ru)
