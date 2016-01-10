@@ -177,7 +177,7 @@ Character.npcActions = {
         game.controller.vendor.open(this);
     },
     "Auction": function() {
-        game.controller.auction.open(this.Id);
+        game.controller.auction.open(this);
     },
     "Drink water": function() {
         game.network.send("buy-water", {Id: this.Id});

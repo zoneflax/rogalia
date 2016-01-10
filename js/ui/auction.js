@@ -6,7 +6,7 @@ function Auction() {
         {
             title: T("Buy"),
             update: function(title, contents) {
-                game.network.send("auction-buy-list", {Broker: self.broker}, function(data) {
+                game.network.send("auction-buy-list", {Broker: self.broker.Id}, function(data) {
                     dom.setContents(contents, self.buyView(data.Lots));
                 });
             }
@@ -14,7 +14,7 @@ function Auction() {
         {
             title: T("Sell"),
             update: function(title, contents) {
-                game.network.send("auction-sell-list", {Broker: self.broker}, function(data) {
+                game.network.send("auction-sell-list", {Broker: self.broker.Id}, function(data) {
                     dom.setContents(contents, self.sellView(data.Lots));
                 });
             }
@@ -25,7 +25,7 @@ function Auction() {
 Auction.prototype = {
     panel: null,
     tabs: null,
-    broker: 0,
+    broker: null,
     open: function(broker) {
         this.broker = broker;
         if (!this.panel) {
@@ -45,7 +45,7 @@ Auction.prototype = {
             ]);
             lot.count = count;
             lot.onclick = function() {
-                game.network.send(cmd, {Broker: self.broker, Type: type}, function(data) {
+                game.network.send(cmd, {Broker: self.broker.Id, Type: type}, function(data) {
                     var content = self.tabs[tabIndex].tab.content;
                     self.backContents = dom.detachContents(content);
                     dom.append(content, callback(data.Lots, type));
@@ -96,7 +96,7 @@ Auction.prototype = {
                             if (confirm(T("Buy") + " "+ TS(lot.Type) + "?")) {
                                 game.network.send(
                                     "buy",
-                                    {Id: lot.Id, VendorName: lot.Vendor, Broker: self.broker},
+                                    {Id: lot.Id, VendorName: lot.Vendor, Broker: self.broker.Id},
                                     function() {
                                         self.backContents = null;
                                         dom.remove(e.target.parentNode.parentNode);
@@ -155,7 +155,7 @@ Auction.prototype = {
                         if (slot.entity) {
                             game.network.send(
                                 "sell",
-                                {VendorName: lot.Vendor, Broker: self.broker, Id: slot.entity.Id},
+                                {VendorName: lot.Vendor, Broker: self.broker.Id, Id: slot.entity.Id},
                                 function() {
                                     cleanup(null, 1);
                                 }
@@ -164,7 +164,7 @@ Auction.prototype = {
                         }
                         Vendor.sellPrompt(
                             canBeSold,
-                            {VendorName: lot.Vendor, Broker: self.broker},
+                            {VendorName: lot.Vendor, Broker: self.broker.Id},
                             cleanup
                         );
                     });
