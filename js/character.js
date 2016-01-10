@@ -528,9 +528,25 @@ Character.prototype = {
                 var image = part.image;
                 if (image && image.width > 0) {
                     if (part.color && part.opacity) {
-                        image = ImageFilter.tint(image, part.color, part.opacity);
+                        var worker = new Worker("js/tint.js");
+                        var tmpCanvas = util.imageToCanvas(image);
+                        var tmpCtx = tmpCanvas.getContext("2d");
+                        worker.onmessage = function(e) {
+                            tmpCtx.putImageData(e.data, 0, 0);
+                            ctx.drawImage(tmpCanvas, 0, 0);
+                        };
+                        worker.postMessage({
+                            imageData: tmpCtx.getImageData(0, 0, image.width, image.height),
+                            color: part.color,
+                            opacity: part.opacity,
+                        });
+
+                        // very slow
+                        // image = ImageFilter.tint(image, part.color, part.opacity);
+                        // ctx.drawImage(image, 0, 0);
+                    } else {
+                        ctx.drawImage(image, 0, 0);
                     }
-                    ctx.drawImage(image, 0, 0);
                 }
             });
 
@@ -618,7 +634,7 @@ Character.prototype = {
             };
             if (this.Type == "vendor") {
                 common.RemoveVendor = function() {
-                    game.chat.send("*remove-vendor " + this.Name.replace("Vendor-", ""));
+                    game.chat.send("*remove-vendor " + this.Name);
                 };
             }
         }
@@ -702,8 +718,8 @@ Character.prototype = {
         if (x == this.Dst.X && y == this.Dst.Y)
             return;
 
-        game.network.send("set-dst", {x: x, y: y}, game.player.resetAction);
-
+        game.network.send("set-dst", {x: x, y: y});
+        game.controller.resetAction();
         this.dst.x = x;
         this.dst.y = y;
         this.dst.radius = 9;
@@ -723,9 +739,6 @@ Character.prototype = {
         this.Dx = len_x / len;
         this.Dy = len_y / len;
     },
-    resetAction: function(data) {
-        game.controller.resetAction(data);
-    },
     getDrawPoint: function() {
         var p = this.screen();
         var dy = (this.mount) ? this.mount.sprite.offset : 0;
@@ -736,8 +749,6 @@ Character.prototype = {
         };
     },
     draw: function() {
-        if (this.Invisible)
-            return;
         if (!game.player.see(this))
             return;
 
@@ -763,7 +774,10 @@ Character.prototype = {
         }
 
         // drawing character model
-        this.sprite.draw(p);
+        if (this.Invisible)
+            this.sprite.drawAlpha(p, 0.3);
+        else
+            this.sprite.draw(p);
 
         if (up) {
             var upPoint = new Point(
@@ -940,7 +954,7 @@ Character.prototype = {
     getName: function() {
         var name = this.Name;
         if (this.Type == "vendor") {
-            return name.replace("Vendor-", "$ ");
+            return (this.Owner) ? "$ " + name : T(name);
             // return TT("Vendor of {name}", {name: name});
         }
         if (this.IsNpc && name && this.Type != "vendor") {
@@ -960,8 +974,6 @@ Character.prototype = {
         return name;
     },
     drawName: function(drawHp, drawName) {
-        if (this.Invisible)
-            return;
         var name = this.getName();
 
         if (game.controller.modifier.shift) {
@@ -1357,7 +1369,7 @@ Character.prototype = {
                 button.style.width = "100px";
                 button.disabled = true;
                 button.onclick = function() {
-                    game.network.send("fishing-move", {move: this.move}, repeat);
+                    game.network.send("fishing-move", {move: this.move});
                     dom.forEach("#fishing-buttons > button", function() {
                         this.disabled = true;
                     });
@@ -1385,12 +1397,12 @@ Character.prototype = {
             panel.fish.value = +data.Fish || 0;
             panel.rating.textContent = T(data.Rating);
         }
-        if (data.Ack == "fishing" || data.Done) {
+        if (data.Ok == "fishing" || data.Ok) {
             dom.forEach("#fishing-buttons > button", function() {
                 this.disabled = false;
             });
         }
-        if (data.Done || data.Warning) {
+        if (data.Ok) {
             dom.forEach("#fishing-buttons > button", function() {
                 this.disabled = true;
             });
@@ -1409,7 +1421,7 @@ Character.prototype = {
             if (efdiv.hash == hash)
                 return;
 
-            efdiv.innerHTML = "";
+            dom.clear(efdiv);
             clearInterval(efdiv.interval);
         } else {
             efdiv = document.createElement("div");
@@ -1442,7 +1454,7 @@ Character.prototype = {
         }
 
         var title = TS(name);
-        var ename = dom.div("effect-name", {text: title})
+        var ename = dom.div("effect-name", {text: title});
         if (effect.Stacks > 1)
             ename.textContent += " x" + effect.Stacks;
 
@@ -1540,8 +1552,7 @@ Character.prototype = {
 
 
         if (this.isPlayer) {
-            Container.updateVisibility();
-            game.controller.craft.updateVisibility();
+            game.controller.updateVisibility();
             game.controller.minimap.update();
         }
 
@@ -1734,66 +1745,32 @@ Character.prototype = {
     interact: function() {
         var self = this;
         game.player.interactTarget = this;
-        game.network.send("follow", {Name: this.Name}, function interact(data) {
-            if (!data.Done)
-                return interact;
-
-            var panel = null;
-            var contents = [];
-            // TODO: omfg rename me
-            var info = self.getTalks();
-
-            if (self.getQuests().length > 0)
-                info.actions["Quest"] = T("Quest");
-
-            info.talks.forEach(function(text) {
-                var p = document.createElement("p");
-                p.textContent = text;
-                contents.push(p);
-            });
-
-            var buttons = document.createElement("div");
-            var actions = document.createElement("ol");
-            Object.keys(info.actions).forEach(function(title) {
-                var button = document.createElement("button");
-                if (title == "Quest") {
-                    button.className = "quest-button";
-                }
-                button.textContent = T(title);
-                button.onclick = function() {
-                    Character.npcActions[title].call(self);
-                };
-                buttons.appendChild(button);
-
-                var li = document.createElement("li");
-                li.className = "talk-link";
-                li.textContent = info.actions[title];
-                li.onclick = button.onclick;
-
-                actions.appendChild(li);
-            });
-            //TODO: make it less uglier
-            if (self.Type == "vendor" && self.Owner == game.player.Id) {
-                buttons.appendChild(game.makeSendButton(
-                    "Take revenue",
-                    "take-revenue",
-                    {Vendor: self.Id}
-                ));
-                buttons.appendChild(game.makeSendButton(
-                    "Take sold items",
-                    "take-sold-items",
-                    {Vendor: self.Id}
-                ));
+        game.network.send("follow", {Id: this.Id}, function interact() {
+            if (self.Type == "vendor" && self.Owner != 0) {
+                game.controller.vendor.open(self);
+                return;
             }
 
-            var wrapper = document.createElement("div");
-            wrapper.appendChild(actions);
-            wrapper.appendChild(buttons);
-            contents.push(wrapper);
+            var actions = ["Talk"];
 
-            panel = new Panel("interraction", self.Name, contents);
+            if (self.getQuests().length > 0)
+                actions.push("Quest");
+
+            actions = actions.concat(Object.keys(self.getTalks().actions));
+
+            var panel = new Panel(
+                "interraction",
+                self.Name,
+                actions.map(function(title) {
+                    var cls = (title == "Quest") ? "quest-button" : "";
+                    return dom.button(T(title), cls, function() {
+                        panel.close();
+                        Character.npcActions[title].call(self);
+                    });
+                })
+            );
+            panel.entity = self;
             panel.show();
-            return null;
         });
     },
     getTalks: function() {
@@ -1855,6 +1832,9 @@ Character.prototype = {
         return false;
     },
     canUse: function(entity) {
+        if (entity instanceof Character)
+            return this.distanceTo(entity) < 2*CELL_SIZE;
+
         switch (entity.Group) {
         case "shit":
         case "dildo":
@@ -1936,7 +1916,7 @@ Character.prototype = {
         name.textContent = target.getName();
 
         cnt.dataset.targetId = target.Id;
-        cnt.innerHTML = "";
+        dom.clear(cnt);
         cnt.appendChild(target.sprite.icon());
         cnt.appendChild(name);
         dom.show(cnt);

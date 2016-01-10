@@ -58,11 +58,6 @@ Container.move = function(entity, toContainer, slotIndex) {
     });
 };
 
-Container.updateVisibility = function() {
-    for(var id in game.containers)
-        game.containers[id].updateVisibility();
-};
-
 Container.save = function() {
     localStorage.setItem("containers", JSON.stringify(Object.keys(game.containers)));
 };
@@ -137,7 +132,7 @@ Container.prototype = {
         openAll.title = T("Open all");
         openAll.onclick = function() {
             var containers = this.slots.filter(function(slot) {
-                return (slot.entity && slot.entity.Props.Slots);
+                return (slot.entity && slot.entity.isContainer());
             }).map(function(slot) {
                 return slot.entity;
             });
@@ -167,6 +162,7 @@ Container.prototype = {
                 }.bind(this)
             }
         );
+        this.panel.entity = this.entity;
         this.panel.hooks.hide = this.markAllAsSeen.bind(this);
         this.panel.hooks.show = function() {
             if (this._syncReq) {
@@ -264,11 +260,6 @@ Container.prototype = {
         this._slotsWidth = props.SlotsWidth;
         this._slotsHeight = props.SlotsHeight;
         this.name = TS(entity.Name);
-    },
-    updateVisibility: function() {
-        if (this.visible && !game.player.canUse(this.entity)) {
-            this.panel.hide();
-        }
     },
     // called on each Entity.sync()
     update: function() {

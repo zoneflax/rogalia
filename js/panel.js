@@ -20,23 +20,23 @@ function Panel(name, title, elements, listeners, hooks) {
 
     this.contents = dom.div("contents");
 
-    this._title = dom.div("title-text");
+    this.title = dom.div("title-text");
     this.setTitle(title);
 
 
-    this._titleBar = document.createElement("header");
-    this._titleBar.className = "title-bar";
-    this._titleBar.appendChild(this._title);
+    this.titleBar = document.createElement("header");
+    this.titleBar.className = "title-bar";
+    this.titleBar.appendChild(this.title);
 
-    this._closeButton = document.createElement("span");
-    this._closeButton.className = "close";
-    this._closeButton.panel = this;
-    this._closeButton.onclick = this.hide.bind(this);
-    this._titleBar.appendChild(this._closeButton);
+    this.closeButton = document.createElement("span");
+    this.closeButton.className = "close";
+    this.closeButton.panel = this;
+    this.closeButton.onclick = this.hide.bind(this);
+    this.titleBar.appendChild(this.closeButton);
 
     this.button = null;
 
-    this.element.appendChild(this._titleBar);
+    this.element.appendChild(this.titleBar);
 
     hooks = hooks || {};
     this.hooks = {
@@ -89,6 +89,8 @@ function Panel(name, title, elements, listeners, hooks) {
 
     this.x = position.x;
     this.y = position.y;
+
+    this.entity = null;
 }
 
 Panel.save = function() {
@@ -147,10 +149,10 @@ Panel.prototype = {
             Panel.top = next;
     },
     hideCloseButton: function() {
-        dom.hide(this._closeButton);
+        dom.hide(this.closeButton);
     },
     hideTitle: function() {
-        dom.hide(this._titleBar);
+        dom.hide(this.titleBar);
     },
     close: function() {
         this.hide();
@@ -160,8 +162,8 @@ Panel.prototype = {
         delete game.panels[this.name];
     },
     setTitle: function(text) {
-        this._title.title = T(text);
-        this._title.textContent = T(text);
+        this.title.title = T(text);
+        this.title.textContent = T(text);
     },
     setContents: function(elements) {
         dom.clear(this.contents);
@@ -172,6 +174,10 @@ Panel.prototype = {
         back.textContent = T("Back");
         back.onclick = function() {};
         return back;
+    },
+    setEntity: function(entity) {
+        this.entity = entity;
+        return this;
     },
     show: function(x, y) {
         this.toTop();
@@ -197,6 +203,7 @@ Panel.prototype = {
 
         this.hooks.show && this.hooks.show.call(this);
         window.scrollTo(0, 0);
+        return this;
     },
     toggle: function() {
         if (this.visible)
@@ -224,5 +231,13 @@ Panel.prototype = {
         var pad = 20;
         this.element.style.width = w + pad + "px";
         this.element.style.maxWidth = w + pad + "px";
+    },
+    updateVisibility: function() {
+        if (!this.visible || !this.entity)
+            return;
+
+        if (!game.player.canUse(this.entity)) {
+            this.hide();
+        }
     },
 };

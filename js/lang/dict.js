@@ -46,11 +46,6 @@ dict.init = function() {
     window.T = function(text, symbol) {
         if (!util.isString(text))
             return text;
-        if (game.lang == "ru") {
-            var info = Items[text];
-            if (info && info.name.ru)
-                return info.name.ru;
-        }
         if (symbol)
             text = util.symbolToString(text);
         var t = dict[text];
@@ -75,7 +70,8 @@ dict.init = function() {
     };
 
     dict.update();
-}
+};
+
 dict.getTranslations = function() {
     for (var type in Entity.templates) {
         var entity = Entity.templates[type];

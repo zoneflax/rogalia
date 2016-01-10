@@ -49,11 +49,7 @@ function Fight() {
         args.X = game.controller.world.x;
         args.Y = game.controller.world.y;
 
-        game.network.send("waza", args, function(data) {
-            if (data.Warning) {
-                game.controller.showWarning(T(data.Warning));
-            }
-        });
+        game.network.send("waza", args);
 
         hotbar.classList.add("cooldown");
         setTimeout(function() {

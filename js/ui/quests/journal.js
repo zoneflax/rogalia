@@ -29,7 +29,7 @@ Journal.prototype = {
             this.list.innerHTML = T("No quests") ;
             return;
         }
-        this.list.innerHTML = "";
+        dom.clear(this.list);
 
         Object.keys(game.player.ActiveQuests).forEach(function(id) {
             var quest = new Quest(game.player.ActiveQuests[id].Quest);
@@ -45,7 +45,7 @@ Journal.prototype = {
                 dom.removeClass(".quest", "selected");
                 this.selected = id;
                 name.classList.add("selected");
-                this.view.innerHTML = "";
+                dom.clear(this.view);
 
                 var title = document.createElement("div");
                 title.className = "quest-title";

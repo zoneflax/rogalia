@@ -177,7 +177,7 @@ function createCharacterStage() {
     name.focus();
 
     this.sync = function(data) {
-        if ("Warning" in data)
+        if (data.Warning)
             game.alert(data.Warning);
         else
             game.setStage("loading", data);

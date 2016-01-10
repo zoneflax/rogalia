@@ -131,9 +131,6 @@ Quest.prototype = {
             var self = this;
             button.onclick = function() {
                 game.network.send("quest", {QuestId: self.Id}, function update(data) {
-                    if (!data.Done) {
-                        return update;
-                    }
                     // we must clear AvailableQuests because
                     // server will send us only non-empty quest list
                     // so when we accept the last "available" quest

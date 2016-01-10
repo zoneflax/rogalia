@@ -39,7 +39,7 @@ ContainerSlot.prototype = {
     clear: function() {
         this.entity = null;
         this.sub = null;
-        this.element.innerHTML = "";
+        dom.clear(this.element);
         this.element.classList.remove("has-item");
         this.setTitle("");
         this.markAsSeen();

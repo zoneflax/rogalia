@@ -80,6 +80,11 @@ Sprite.prototype = {
 
         this.outline = canvas;
     },
+    drawAlpha: function(p, alpha) {
+        game.ctx.globalAlpha = alpha;
+        this.draw(p);
+        game.ctx.glovalAlpha = 1;
+    },
     draw: function(p) {
         if (this.image.width == 0 || this.frame * this.width + this.width > this.image.width) {
             return;

@@ -78,11 +78,11 @@ function Controller(game) {
         },
         clear: function() {
             this.entity = null;
-            this.element.innerHTML = "";
+            dom.clear(this.element);
         },
         set: function(entity, x, y, cleanup) {
             var icon = entity.icon();
-            this.element.innerHTML = "";
+            dom.clear(this.element);
             this.element.appendChild(icon);
             this.element.style.display = "block";
             this.element.style.left = x + "px";
@@ -225,12 +225,12 @@ function Controller(game) {
             this.action = null;
             this.handler = null;
             this.element.onclick = null;
-            this.element.innerHTML = "";
+            dom.clear(this.element);
             this.icon = null;
             this.inProgress = false;
         },
         loadIcon: function(action) {
-            this.element.innerHTML = "";
+            dom.clear(this.element);
             this.icon = loader.loadImage("icons/tools/" + action + ".png");
             this.element.appendChild(this.icon);
         },
@@ -473,6 +473,8 @@ function Controller(game) {
         this.journal = new Journal();
         this.system = new System();
         this.wiki = new Wiki();
+        this.auction = new Auction();
+        this.vendor = new Vendor();
         this.fpsStats = this.system.fps;
         this.inventory = {panel: {}};
 
@@ -653,8 +655,6 @@ function Controller(game) {
     };
 
     this.processActionQueue = function process(data) {
-        if (!data.Done)
-            return process;
         var action = game.controller.actionQueue.shift();
         if (!action)
             return null;
@@ -662,10 +662,8 @@ function Controller(game) {
         return process;
     };
 
-    this.resetAction = function(data) {
-        if (!data.Ack)
-            return;
-        game.network.defaultCallback = null;
+    this.resetAction = function() {
+        game.network.queue = [];
         this.clearActionQueue();
         this.hideUnnecessaryPanels();
     };
@@ -940,7 +938,6 @@ function Controller(game) {
 
         if (game.chat)
             game.chat.addMessage(warn.textContent);
-
     };
 
     this.showError = function(message) {
@@ -994,4 +991,12 @@ function Controller(game) {
             return;
         this.minimap.sync(data);
     };
+
+    this.updateVisibility = function() {
+        for (var name in game.panels) {
+            var panel = game.panels[name];
+            panel.updateVisibility();
+        }
+    };
+
 };

@@ -31,12 +31,8 @@ Character.sync = function(data, remove) {
         var to = game.entities.get(id);
         if (!to) {
             to = new Character(id, from.Name);
-            game.addCharacter(to);
-            if (from.Name == game.player.Name) {
-                to.isPlayer = true;
-                game.player = to;
-            }
             to.init(from);
+            game.addCharacter(to);
         } else {
             to.sync(from);
         }
@@ -138,7 +134,7 @@ Character.npcActions = {
             game.controller.showWarning(T("No more quests"));
             return;
         }
-        var id = this.Id;
+        var self = this;
         var talks = {};
         quests.forEach(function(q) {
             var quest = new Quest(q);
@@ -146,29 +142,42 @@ Character.npcActions = {
             talks[name] = function() {
                 var panel = new Panel("quest", "Quest", quest.getContents());
                 panel.quest = quest;
+                panel.entity = self;
                 panel.show();
             };
         });
         game.menu.show(talks);
     },
     "Talk": function() {
-        var name = this.Name;
-        var talks = {};
-        for (var i in game.talks.stories) {
-            talks[i] = function() {
-                var p = document.createElement("p");
-                p.textContent = this;
-                var panel = new Panel("story", name, [p]);
-                panel.show();
-            }.bind(game.talks.stories[i]);
-        };
-        game.menu.show(talks);
+        var self = this;
+        var info = this.getTalks();
+        var panel = new Panel(
+            "interaction",
+            this.Name,
+            [
+                dom.wrap("", info.talks.map(function(text) {
+                    return dom.tag("p", "", {text: text});
+                })),
+                dom.make("ul", Object.keys(info.actions).map(function(title) {
+                    return dom.tag("li", "talk-link", {
+                        text: info.actions[title],
+                        onclick: function() {
+                            panel.close();
+                            Character.npcActions[title].call(self);
+                        }
+                    });
+                })),
+            ]
+        );
+        panel.entity = this;
+        panel.show();
+
     },
-    "Buy": function() {
-        game.network.send("buy-list", {Vendor: this.Id}, Vendor.buy.bind(this));
+    "Trade": function() {
+        game.controller.vendor.open(this);
     },
-    "Sell": function() {
-        game.network.send("sell-list", {Vendor: this.Id}, Vendor.sell.bind(this));
+    "Auction": function() {
+        game.controller.auction.open(this.Id);
     },
     "Drink water": function() {
         game.network.send("buy-water", {Id: this.Id});
@@ -180,6 +189,7 @@ Character.npcActions = {
         game.alert("Пока не реализовано :-(");
     },
     "Show instances": function() {
+        var self = this;
         game.network.send("instance-list", {}, function(data) {
             if (!data.Instances) {
                 game.alert(T("No available instances"));
@@ -191,7 +201,6 @@ Character.npcActions = {
                 data.Instances.map(function(instance) {
                     var enter = dom.button(T("Enter"));
                     enter.onclick = function() {
-                        Panel.top.close();
                         game.network.send("instance", {Name: instance.Name});
                     };
                     return [
@@ -204,8 +213,7 @@ Character.npcActions = {
                     return inst;
                 })
             );
-            Panel.top.close();
-            new Panel("instances", "Instances", [instances]).show();
+            new Panel("instances", "Instances", [instances]).show().setEntity(self);
         });
     },
 };

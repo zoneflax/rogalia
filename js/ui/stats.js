@@ -344,7 +344,7 @@ Stats.prototype = {
         ratings.onclick = function(data) {
             function load(stat, limit) {
                 return function(title, contents) {
-                    contents.innerHTML = "";
+                    dom.clear(contents);
 
                     var src = location.protocol + "//" + game.network.host + "/stats/" + stat;
                     if (limit > 0)
@@ -392,7 +392,7 @@ Stats.prototype = {
         section.hash = hash;
         var fragment = document.createDocumentFragment();
         contents.forEach(fragment.appendChild.bind(fragment));
-        section.elem.innerHTML = "";
+        dom.clear(section.elem);
         section.elem.appendChild(fragment);
     },
     updateExp: function() {

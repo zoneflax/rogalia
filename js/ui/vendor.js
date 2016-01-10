@@ -1,9 +1,7 @@
 "use strict";
 function Vendor() {
-
 }
 
-Vendor.panel = null;
 Vendor.createPrice = function(cost) {
     cost = parseInt(cost) || 0;
 
@@ -46,7 +44,7 @@ Vendor.createPrice = function(cost) {
     return price;
 };
 
-Vendor.createPriceInput = function(hidden) {
+Vendor.createPriceInput = function() {
     var platinum = document.createElement("input");
     platinum.className = "platinum";
     platinum.title = T("Platinum");
@@ -63,7 +61,7 @@ Vendor.createPriceInput = function(hidden) {
     silver.value = 0;
 
     var price = document.createElement("div");
-    price.className = "lot-price price" + (hidden ? " hidden" : "");
+    price.className = "price";
     price.appendChild(platinum);
     price.appendChild(document.createTextNode("p"));
     price.appendChild(gold);
@@ -77,589 +75,336 @@ Vendor.createPriceInput = function(hidden) {
             parseInt(silver.value || 0);
     };
     return price;
-}
-Vendor.buy = function(data) {
-    var vendor = this;
-    var open = Vendor.buy.bind(this);
+};
 
-    if (!data.Done) {
-        return open;
-    }
-
-
-    var items = data.items || [];
-    var prices = data.prices || {};
-
-    var lots = document.createElement("ul");
-    lots.id = "lot-list";
-    function byType(a, b) {
+Vendor.sort = new function() {
+    var self = this;
+    this.byType = function(a, b) {
         if (a.Type != b.Type)
             return (a.Type > b.Type) ? +1 : -1;
         else
-            return byQuality(a, b);
-    }
-    function byQuality(a, b) {
+            return self.byQuality(a, b);
+    };
+    this.byQuality = function(a, b) {
         if (a.Quality != b.Quality)
             return b.Quality - a.Quality;
         else
-            return byPrice(a, b);
-    }
-    function byPrice(a, b) {
-        return prices[b.Id] - prices[a.Id];
-    }
+            return self.byPrice(a, b);
+    };
+    this.byPrice = function(a, b) {
+        return b.Cost - b.Cost;
+    };
+};
 
-    items.sort(byType).forEach(function(item) {
-        var e = new Entity(item.Type, item.Id);
-        e.sync(item);
-        e.initSprite();
-        game.sortedEntities.remove(e);
-        game.addEntity(e);
-        if (e.inContainer()) {
-            return;
+Vendor.prototype = {
+    panel: null,
+    vendor: null,
+    items: {},
+    open: function(vendor) {
+        var self = this;
+        this.vendor = vendor;
+        this.tabs = this.tabs = [
+            {
+                title: T("Buy"),
+                update: function(title, contents) {
+                    game.network.send("buy-list", {Vendor: self.vendor.Id}, function(data) {
+                        dom.setContents(contents, self.buyView(data.Lots));
+                    });
+                }
+            },
+            {
+                title: T("Sell"),
+                update: function(title, contents) {
+                    game.network.send("sell-list", {Vendor: self.vendor.Id}, function(data) {
+                        dom.setContents(contents, self.sellView(data.Lots));
+                    });
+                }
+            },
+        ];
+
+        if (this.vendor.Type == "vendor" && this.vendor.Owner == game.player.Id) {
+            this.tabs.push({
+                title: T("Manage"),
+                contents: this.manageView(),
+            });
         }
 
+        this.panel = new Panel("vendor", TT("Vendor of {name}", {name: vendor.Name}), [dom.tabs(this.tabs)]);
+        this.panel.entity = vendor;
+        this.panel.temporary = true;
+        this.panel.hooks.hide = this.removeItems.bind(this);
+        this.panel.show();
+    },
+    buyView: function(lots) {
+        if (!lots)
+            return T("Vendor is empty");
+        var self = this;
+        return dom.wrap("lot-table", dom.table(
+            ["", T("Name"), T("Quality"), T("Cost"), "", ""],
+            lots.sort(Vendor.sort.byType).map(function(lot) {
+                var name = TS(lot.Type);
+                return [
+                    dom.wrap("slot", [Entity.templates[lot.Type].icon()]),
+                    name,
+                    lot.Quality,
+                    Vendor.createPrice(lot.Cost),
+                    dom.button("?", "lot-info", function(e) {
+                        var item = Entity.get(lot.Id);
+                        if (item) {
+                            self.showInfo(item);
+                            return;
+                        }
+                        game.network.send(
+                            "lot-info",
+                            {Id: lot.Id, Vendor: self.vendor.Id},
+                            function(data) {
+                                self.saveItems(data.Lots);
+                                self.showInfo(Entity.get(lot.Id));
+                            }
+                        );
+                    }),
+                    dom.button(T("Buy"), "lot-buy", function(e) {
+                        if (confirm(T("Buy") + " " + name + "?")) {
+                            game.network.send(
+                                "buy",
+                                {Id: lot.Id, Vendor: self.vendor.Id},
+                                function() {
+                                    dom.remove(e.target.parentNode.parentNode);
+                                }
+                            );
+                        }
+                    }),
+                ];
+            })
+        ));
+    },
+    sellView: function(lots) {
+        if (!lots)
+            return T("Vendor is empty");
+        var self = this;
+        return dom.wrap("lot-table", dom.table(
+            ["", T("Name"), T("Quantity"), T("Cost"), "", ""],
+            lots.sort(Vendor.sort.byType).map(function(lot) {
+                var canBeSold = Vendor.canBeSold(lot.Type);
+                var slot = dom.slot();
+                slot.check = function(cursor) {
+                    return cursor.entity.is(lot.Type);
+                };
+                slot.canUse = function() {
+                    return true;
+                };
+                slot.use = function(entity) {
+                    slot.entity = entity;
+                    dom.setContents(slot, entity.icon());
+                    button.disabled = false;
+                    return true;
+                };
+                slot.cleanup = function() {
+                    slot.entity = null;
+                    button.disabled = (canBeSold.length == 0);
+                    dom.clear(slot);
+                };
+                slot.addEventListener("mousedown", slot.cleanup, true);
 
-        var icon = document.createElement("div");
-        icon.className = "lot-icon slot";
-        icon.appendChild(e.icon());
+                var quantity = dom.span(lot.Quantity);
+                function cleanup(_, sold) {
+                    sold = sold || 1;
+                    lot.Quantity -= sold;
+                    if (lot.Quantity == 0)
+                        dom.remove(slot.parentNode.parentNode);
+                    else
+                        quantity.textContent = lot.Quantity;
 
-        var name = document.createElement("div");
-        name.className = "lot-name";
-        name.textContent = e.name;
+                    canBeSold = Vendor.canBeSold(lot.Type);
+                    slot.cleanup();
+                }
+                var button = dom.button(T("Sell"), "lot-sell", function(e) {
+                    if (slot.entity) {
+                        game.network.send(
+                            "sell",
+                            {Vendor: self.vendor.Id, Id: slot.entity.Id},
+                            cleanup
+                        );
+                        return;
+                    }
+                    Vendor.sellPrompt(
+                        canBeSold,
+                        {Vendor: self.vendor.Id},
+                        cleanup
+                    );
+                });
+                button.disabled = (canBeSold.length == 0);
 
-        var price = document.createElement("div");
-        price.className = "lot-price";
-        //price.appendChild(document.createTextNode(T("Price") + ": "));
-        price.appendChild(Vendor.createPrice(prices[e.Id]));
+                var cancel = dom.button("×", "lot-cancel", function() {
+                    game.network.send(
+                        "undo-buy",
+                        {Type: lot.type, Vendor: self.vendor.Id},
+                        cleanup
+                    );
+                });
+                cancel.title = T("Cancel buying and return money");
 
-        var info = document.createElement("button");
-        info.className = "lot-info";
-        info.textContent = "?";
-        info.onclick = function() {
-            e.showInfo();
-            if (e.Props.Slots)
-                Container.show(e);
-        };
+                return [
+                    dom.wrap("slot", [Entity.templates[lot.Type].icon()]),
+                    TS(lot.Type),
+                    quantity,
+                    Vendor.createPrice(lot.Cost),
+                    slot,
+                    dom.wrap("", [cancel, button]),
+                ];
+            })
+        ));
+    },
+    manageView: function() {
+        return [
+            dom.wrap("manage-vendor-row", this.manageBuy()),
+            dom.hr(),
+            dom.wrap("manage-vendor-row", this.manageSell()),
+            dom.hr(),
+            dom.button(T("Take revenue"), "", function() {
+                game.network.send("take-revenue", {Vendor: self.vendor.Id});
+            }),
+            dom.button(T("Take sold items"), "", function() {
+                game.network.send("take-sold-items", {Vendor: self.vendor.Id});
+            }),
+        ];
+    },
+    manageBuy: function() {
+        var self = this;
+        var price = Vendor.createPriceInput();
+        var slot = dom.slot();
 
-        var buy = document.createElement("button");
-        buy.className = "lot-buy";
-        buy.textContent = T("Buy");
-        buy.onclick = function() {
-            if (confirm(T("Buy") + " "+ e.name + "?")) {
-                game.network.send("buy", {Id: item.Id, Vendor: vendor.Id}, open);
-            }
-        };
-
-        var lot = document.createElement("li");
-        lot.className = "lot";
-        lot.appendChild(icon);
-        lot.appendChild(name);
-        lot.appendChild(price);
-        lot.appendChild(buy);
-        lot.appendChild(info);
-
-        lots.appendChild(lot);
-    });
-
-    var elements = [lots];
-
-    var sellCleanUp = function() {};
-    if (game.player.IsAdmin || game.player.Id == this.Owner) {
-        var price = Vendor.createPriceInput(true);
-
-        var lot = document.createElement("div");
-        lot.className = "slot lot-icon";
-        lot.vendor = vendor;
-
-        var name = document.createElement("div");
-        name.className = "lot-name";
-
-        var button = document.createElement("button");
-        button.className = "lot-sell hidden";
-        button.textContent = T("Sell");
-        button.onclick = function() {
-            sellCleanUp();
-            game.sortedEntities.remove(Entity.get(lot.id));
+        var button = dom.button(T("Sell"), "", function() {
             game.network.send(
                 "buy-add",
                 {
-                    Id: parseInt(lot.id),
+                    Id: parseInt(slot.entity.Id),
                     Cost: price.cost(),
-                    Vendor: vendor.Id
+                    Vendor: self.vendor.Id
                 },
-                open
+                slot.cleanup.bind(slot)
             );
-        };
+        });
+        button.disabled = true;
 
-        var sell = document.createElement("div");
-        var legend = document.createElement("div");
-        legend.textContent = T("Sell item");
-        sell.appendChild(legend);
-        sell.appendChild(lot);
-        sell.appendChild(name);
-        sell.appendChild(price);
-        sell.appendChild(button);
-
-        elements.push(dom.hr());
-        elements.push(sell);
-
-        var cleanUp = function() {
-            lot.innerHTML = "";
-            name.textContent = "";
-            dom.hide(button);
-            dom.hide(price);
-        };
-
-        if (game.player.burden) {
-            var burden = game.player.burden;
-            lot.use =  function(){};
-            lot.id = burden.Id;
-            lot.appendChild(burden.icon());
-            dom.show(button);
-            dom.show(price);
-            name.textContent = burden.name;
-            sellCleanUp = function() {
-                cleanUp();
-                game.player.burden = null;
-            };
-        } else {
-            lot.use = function(entity, to) {
-                var slot = Container.getEntityContainer(entity).findSlot(entity);
-                sellCleanUp = function() {
-                    slot.unlock();
-                    lot.onclick = null;
-                    cleanUp();
-                };
-
-                slot.lock();
-                lot.id = entity.Id;
-                dom.show(button);
-                dom.show(price);
-                lot.innerHTML = "";
-                lot.appendChild(entity.icon());
-                name.textContent = entity.name;
-                lot.onmousedown = sellCleanUp;
-                return true;
-            };
-        }
-    }
-
-    if (Vendor.panel)
-        Vendor.panel.close();
-    Vendor.panel = new Panel(
-        "vendor",
-        vendor.Name,
-        elements
-    );
-    Vendor.panel.hooks.hide = sellCleanUp;
-    Vendor.panel.show();
-
-    return null;
-}
-
-//TODO: remove paste
-Vendor.sell = function(data) {
-    var vendor = this;
-    var open = Vendor.sell.bind(this);
-
-    if (!data.Done) {
-        return open;
-    }
-    var prices = data.prices || {};
-    var lots = document.createElement("ul");
-    lots.id = "lot-list";
-    var cleanUp = function() {};
-    for (var type in prices) {
-        (function(type) {
-            var e = Entity.templates[type];
-            var info = prices[type];
-
-            var button = document.createElement("button");
-            button.className = "lot-sell";
-
-            var canBeSold = [];
-            Container.forEach(function(container) {
-                if (!container.entity.belongsTo(game.player))
-                    return;
-                container.forEach(function(slot) {
-                    var entity = slot.entity;
-                    if (entity && entity.Type == type) {
-                        canBeSold.push(entity);
-                    }
-                });
-            });
-            if (canBeSold.length == 0)
-                dom.hide(button);
-
-            button.textContent = T("Sell");
-            button.onclick = function() {
-                if (icon.entity) {
-                    cleanUp();
-                    game.network.send("sell", {Vendor: vendor.Id, Id: icon.entity.Id}, open);
-                    return;
-                }
-                var quantity = dom.input(T("Quantity"), canBeSold.length, "number");
-                quantity.min = 1;
-                quantity.max = canBeSold.length;
-                quantity.style.width = "auto";
-                var sell = dom.button(T("Sell"));
-                sell.onclick = function() {
-                    var list = canBeSold.slice(0, quantity.value).map(function(entity) {
-                        return entity.Id;
-                    });
-                    game.network.send("sell", {Vendor: vendor.Id, List: list}, open);
-                };
-                var prompt = new Panel("prompt", T("Sell"), [quantity.label, sell]);
-                prompt.show();
-            };
-
-            var icon = document.createElement("div");
-            icon.className = "lot-icon slot";
-            var i = e.icon();
-            i.classList.add("item-preview");
-            icon.appendChild(i);
-
-            icon.type = e.Type;
-            icon.check = function(cursor) {
-                return cursor.entity.Type == this.type;
-            };
-            icon.vendor = true;
-            icon.use = function(entity, to) {
-                var slot = Container.getEntityContainer(entity).findSlot(entity);
-                cleanUp = function() {
-                    slot.unlock();
-                    if (canBeSold.length == 0)
-                        dom.hide(button);
-                    to.firstChild.classList.add("item-preview");
-                    to.onclick = null;
-                };
-                slot.lock();
-                dom.show(button);
-                to.firstChild.classList.remove("item-preview");
-                to.entity = entity;
-                to.onmousedown = cleanUp;
-                return true;
-            };
-
-
-            var name = document.createElement("div");
-            name.className = "lot-name";
-            name.textContent = TS(e.Type);
-
-            var quantity = document.createElement("div");
-            quantity.textContent = T("Quantity") + ": " + info.Quantity;
-
-            var price = document.createElement("div");
-            price.className = "lot-price";
-            price.appendChild(Vendor.createPrice(info.Cost));
-
-            var lot = document.createElement("li");
-            lot.className = "lot";
-            lot.appendChild(icon);
-            lot.appendChild(name);
-            lot.appendChild(quantity);
-            lot.appendChild(price);
-            if (game.player.IsAdmin || game.player.Id == vendor.Owner) {
-                var cancel = document.createElement("button");
-                cancel.className = "lot-cancel";
-                cancel.textContent = T("×");
-                cancel.title = T("Cancel buying and return money");
-                cancel.onclick = function() {
-                    game.network.send("undo-buy", {Type: type, Vendor: vendor.Id}, open);
-                };
-                lot.appendChild(cancel);
-            }
-            lot.appendChild(button);
-
-
-            lots.appendChild(lot);
-        })(type);
-    }
-
-
-    var elements = [lots];
-
-    var sellCleanUp = function() {};
-    if (game.player.IsAdmin || game.player.Id == this.Owner) {
-        sellCleanUp = function() {
-            lot.innerHTML = "";
-            name.textContent = "";
-            dom.hide(button);
-            dom.hide(price);
-            dom.hide(quantityLabel);
-        };
-        var price = Vendor.createPriceInput(true);
-        var lot = document.createElement("div");
-        lot.className = "slot lot-icon";
-        lot.vendor = vendor;
-
-        lot.use = function(entity, _) {
-            dom.show(button);
-            dom.show(price);
-            dom.show(quantityLabel);
-            lot.type = entity.Type;
-            lot.innerHTML = "";
-            lot.appendChild(entity.icon());
-            name.textContent = TS(entity.Type);
-            lot.onmousedown = sellCleanUp;
+        slot.canUse = function() {
             return true;
         };
-        var name = document.createElement("div");
-        name.className = "lot-name";
+        slot.use = function(entity) {
+            slot.entity = entity;
+            dom.setContents(slot, entity.icon());
+            button.disabled = false;
+            return true;
+        };
+        slot.cleanup = function() {
+            slot.entity = null;
+            button.disabled = true;
+            dom.clear(slot);
+        };
+        slot.addEventListener("mousedown", slot.cleanup, true);
 
-        var quantity = document.createElement("input");
-        quantity.value = 1;
-        var quantityLabel = document.createElement("label");
-        quantityLabel.appendChild(document.createTextNode(T("Quantity") + ": "));
-        quantityLabel.appendChild(quantity);
-        quantityLabel.className = "lot-quantity hidden";
+        var burden = dom.button(T("Use burden"), "", function() {
+            if (game.player.burden)
+                slot.use(game.player.burden);
+        });
+        burden.disabled = !game.player.burden;
 
-        var button = document.createElement("button");
-        button.className = "lot-sell hidden";
-        button.textContent = T("Buy");
-        button.onclick = function() {
-            sellCleanUp();
+        return [
+            dom.wrap("lot-item", [slot, price]),
+            dom.wrap("lot-controlls", [burden, button]),
+        ];
+    },
+    manageSell: function() {
+        var self = this;
+        var price = Vendor.createPriceInput();
+        var slot = dom.slot();
+
+        var quantity = dom.input(T("Quantity"), 1);
+        quantity.label.className = "lot-quantity";
+        var button = dom.button(T("Buy up"), "", function() {
             game.network.send(
                 "sell-add",
                 {
-                    Type: lot.type,
+                    Type: slot.entity.Type,
                     Cost: price.cost(),
                     Quantity: +quantity.value,
-                    Vendor: vendor.Id
+                    Vendor: self.vendor.Id
                 },
-                open
+                slot.cleanup.bind(slot)
             );
+        });
+        button.disabled = true;
+
+        slot.canUse = function() {
+            return true;
         };
+        slot.use = function(entity) {
+            slot.entity = entity;
+            dom.setContents(slot, entity.icon());
+            button.disabled = false;
+            return true;
+        };
+        slot.cleanup = function() {
+            slot.entity = null;
+            button.disabled = true;
+            dom.clear(slot);
+        };
+        slot.addEventListener("mousedown", slot.cleanup, true);
 
-        var sell = document.createElement("div");
-        var legend = document.createElement("div");
-        legend.textContent = T("Buy up");
-        sell.appendChild(legend);
-        sell.appendChild(lot);
-        sell.appendChild(name);
-        sell.appendChild(price);
-        sell.appendChild(button);
-        sell.appendChild(quantityLabel);
-
-        elements.push(dom.hr());
-        elements.push(sell);
-    }
-
-    if (Vendor.panel)
-        Vendor.panel.close();
-    Vendor.panel = new Panel(
-        "vendor",
-        vendor.Name,
-        elements
-    );
-    Vendor.panel.hooks.hide = function() {
-        sellCleanUp();
-        cleanUp();
-    }
-    Vendor.panel.show();
-    return null
-}
-
-function Bank() {
-    var balance = document.createElement("label");
-    var price = Vendor.createPriceInput();
-
-    var deposit = document.createElement("button");
-    deposit.textContent = T("Deposit");
-    deposit.onclick = function() {
-        game.network.send("deposit", {"Cost": price.cost()}, callback);
-    };
-
-    var withdraw = document.createElement("button");
-    withdraw.textContent = T("Withdraw");
-    withdraw.onclick = function() {
-        game.network.send("withdraw", {"Cost": price.cost()}, callback);
-    };
-
-    var claimRent = document.createElement("label");
-    var claimPaidTill = document.createElement("label");
-    // var claimLastPaid = document.createElement("label");
-    var claimPay = document.createElement("button");
-    claimPay.textContent = T("Pay");
-    claimPay.onclick = function() {
-        if (confirm(T("Confirm?"))) {
-            game.network.send("pay-for-claim", {}, callback);
+        return [
+            dom.wrap("lot-item", [slot, price]),
+            dom.wrap("lot-controlls", [quantity.label, button]),
+        ];
+    },
+    showInfo: function(item) {
+        item.showInfo();
+        if (item.isContainer())
+            Container.show(item);
+    },
+    saveItems: function(items) {
+        for (var id in items) {
+            this.items[id] = items[id];
         }
-    };
-
-    var claim = document.createElement("div");
-    claim.appendChild(document.createTextNode(T("Claim")));
-    claim.appendChild(claimRent);
-    claim.appendChild(claimPaidTill);
-    // claim.appendChild(claimLastPaid);
-    claim.appendChild(claimPay);
-
-    var vault = document.createElement("div");
-
-    var contents = [
-        balance,
-        dom.hr(),
-        price,
-        deposit,
-        withdraw,
-        dom.hr(),
-        claim,
-        dom.hr(),
-        vault,
-    ];
-    var panel = new Panel("bank", "Bank", contents);
-    panel.hide();
-
-    game.network.send("get-bank-info", {}, callback);
-
-    function date(unixtime) {
-        var span = document.createElement("span");
-        if (unixtime > 0)
-            span.textContent = util.date.human(new Date(unixtime * 1000));
-        else
-            span.textContent = "-";
-        return span;
+        Entity.sync(items);
+    },
+    removeItems: function() {
+        Object.keys(this.items).forEach(game.removeEntityById);
+        this.items = {};
     }
+};
 
-    function callback(data) {
-        if (data.Warning)
+Vendor.canBeSold = function(type) {
+    var list = [];
+    Container.forEach(function(container) {
+        if (!container.entity.belongsTo(game.player))
             return;
-        if (!data.Done)
-            return callback;
-        //TODO: add price.set()
-        balance.innerHTML = T("Balance") + ": ";
-        balance.appendChild(Vendor.createPrice(data.Bank.Balance));
-
-        var claim = data.Bank.Claim;
-        claimRent.innerHTML = T("Rent") + ": ";
-        claimRent.appendChild(Vendor.createPrice(claim.Cost));
-
-
-        claimPaidTill.innerHTML = T("Paid till") + ": ";
-        claimPaidTill.appendChild(date(claim.PaidTill));
-
-        // claimLastPaid.innerHTML = T("Last paid") + ": ";
-        // claimLastPaid.appendChild(date(claim.LastPaid));
-
-        vault.innerHTML = "";
-        data.Bank.Vault.forEach(function(vaultSlot, i) {
-            var slot = document.createElement("div");
-            slot.className = "slot";
-            if (vaultSlot.Unlocked) {
-                var entity = Entity.get(vaultSlot.Id);
-                slot.appendChild(entity.icon());
-                slot.onclick = function() {
-                    Container.show(entity);
-                };
-            } else {
-                slot.classList.add("plus");
-                slot.onclick = function() {
-                    var cost = Math.pow(100, i);
-                    if (confirm(TT("Buy slot {cost} gold?", {cost: cost}))) {
-                        game.network.send("buy-bank-vault-slot", {}, callback);
-                    };
-                };
+        container.forEach(function(slot) {
+            var entity = slot.entity;
+            if (entity && entity.Type == type) {
+                list.push(entity);
             }
-            vault.appendChild(slot);
-
         });
-        // //TODO: remove items on panel close?
-
-
-        panel.show();
-    };
-}
-
-function Exchange() {
-    game.network.send("get-exchange-info", {}, function callback(data) {
-        if (data.Warning)
-            return null;
-        if (!data.Done)
-            return callback;
-        var table = document.createElement("table");
-        table.id = "exchange-rates-table";
-        table.innerHTML = "<tr>" +
-            "<th>" + T("Rate") + "</th>" +
-            "<th>" + T("Rate") + "</th>" +
-            "<th>" + T("Buy") + "</th>" +
-            "<th>" + T("Rate") + "</th>" +
-            "<th>" + T("Sell") + "</th>" +
-            "<th>" + T("Sell ingots") + "</th>" +
-            "</tr>";
-        Object.keys(data.Rates).forEach(function(assignation) {
-            var rate = data.Rates[assignation];
-            {
-                var name = document.createElement("td");
-                name.textContent = T(assignation);
-                name.title = T("Sold") + ": " + rate.Stats.Sold + "\n" +
-                    T("Bought") + ": " + rate.Stats.Bought;
-            }
-            {
-                var rateBuy = document.createElement("td");
-                rateBuy.appendChild(Vendor.createPrice(rate.Buy));
-            }
-            {
-                var inputBuy = document.createElement("input");
-                var buttonBuy = document.createElement("button");
-                buttonBuy.textContent = T("Buy");
-                buttonBuy.onclick = function() {
-                    game.network.send(
-                        "exchange", {Assignation: assignation, Amount: +inputBuy.value}
-                    );
-                };
-
-                var buy = document.createElement("td");
-                buy.appendChild(inputBuy);
-                buy.appendChild(buttonBuy);
-            }
-            {
-                var rateSell = document.createElement("td");
-                rateSell.appendChild(Vendor.createPrice(rate.Sell));
-            }
-            {
-                var inputSell = document.createElement("input");
-                var buttonSell = document.createElement("button");
-                buttonSell.textContent = T("Sell");
-                buttonSell.onclick = function() {
-                    game.network.send(
-                        "exchange", {Assignation: assignation, Amount: -inputSell.value}
-                    );
-                };
-
-
-                var sell = document.createElement("td");
-                sell.appendChild(inputSell);
-                sell.appendChild(buttonSell);
-            }
-            {
-                var inputIngots = document.createElement("input");
-                var buttonIngots = document.createElement("button");
-                buttonIngots.textContent = T("Sell");
-                buttonIngots.onclick = function() {
-                    game.network.send(
-                        "exchange", {
-                            Assignation: assignation,
-                            Amount: +inputIngots.value,
-                            Ingot: true,
-                        }
-                    );
-                };
-                var ingots = document.createElement("td");
-                ingots.appendChild(inputIngots);
-                ingots.appendChild(buttonIngots);
-            }
-
-            var tr = document.createElement("tr");
-            tr.appendChild(name);
-            tr.appendChild(rateBuy);
-            tr.appendChild(buy);
-            tr.appendChild(rateSell);
-            tr.appendChild(sell);
-            tr.appendChild(ingots);
-            table.appendChild(tr);
-        });
-        var panel = new Panel("exchange", "Exchange", [table]);
-        panel.show();
-        return null;
     });
+    return list;
+};
+
+Vendor.sellPrompt = function(items, args, callback) {
+    var quantity = dom.input(T("Quantity"), items.length, "number");
+    quantity.min = 1;
+    quantity.max = items.length;
+    quantity.style.width = "auto";
+    var sell = dom.button(T("Sell"));
+    sell.onclick = function() {
+        var list = items.slice(0, quantity.value).map(function(entity) {
+            return entity.Id;
+        });
+        prompt.hide();
+        args.List = list;
+        game.network.send("sell", args, function(data) {
+            callback(data, list.length);
+        });
+    };
+    var prompt = new Panel("prompt", T("Sell"), [quantity.label, sell]);
+    prompt.show();
+
 };

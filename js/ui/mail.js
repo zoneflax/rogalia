@@ -35,7 +35,7 @@ Mail.prototype = {
                 dom.hr(),
             ]);
         });
-        contents.innerHTML = "";
+        dom.clear(contents);
         dom.append(contents, [
             letters,
             dom.button(T("Delete all")),

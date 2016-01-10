@@ -59,7 +59,7 @@ Skills.prototype = {
             return;
         this.hash = hash;
 
-        this.skills.innerHTML = "";
+        dom.clear(this.skills);
 
         var max = 100;
         Object.keys(game.player.Skills).forEach(function(name) {

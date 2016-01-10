@@ -63,16 +63,17 @@ var util = new function() {
     };
 
     this.symbolToString = function(string) {
-        return this.ucfirst([].map.call(string, function(c, i) {
-            if (i != 0) {
-                var l = c.toLowerCase();
-                if (c != l)
-                    return " " + l;
-            }
-            if (c == "-")
-                return " ";
-            return c;
-        }).join(""));
+        return this.ucfirst(string.split("-").join(" "));
+        // return this.ucfirst([].map.call(string, function(c, i) {
+        //     if (i != 0) {
+        //         var l = c.toLowerCase();
+        //         if (c != l)
+        //             return " " + l;
+        //     }
+        //     if (c == "-")
+        //         return " ";
+        //     return c;
+        // }).join(""));
     };
     this.stringToSymbol = function(symbol) {
         return [].map.call(this.lcfirst(symbol), function(c, i) {
@@ -345,6 +346,22 @@ var util = new function() {
     this.isString = function(s) {
         return (typeof s === "string" || s instanceof String);
     };
+
+    this.imageToCanvas = function(image) {
+	var canvas = document.createElement("canvas");
+	canvas.width = image.width;
+	canvas.height = image.height;
+	canvas.getContext("2d").drawImage(image, 0, 0);
+
+	return canvas;
+    };
+
+    this.canvasToImage = function(canvas) {
+	var image = new Image();
+	image.src = canvas.toDataURL("image/png");
+	return image;
+    };
+
 };
 
 if (!Math.hypot) {

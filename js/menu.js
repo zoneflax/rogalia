@@ -73,7 +73,7 @@ Menu.prototype = {
             index = 0;
 
         var item_a = document.createElement("a");
-        item_a.textContent = index + ". " + TS(title);
+        item_a.textContent = index + ". " + TS(util.stringToSymbol(title));
         item_a.className = "action";
         if (action instanceof Function) {
             var callback = action.bind(object);

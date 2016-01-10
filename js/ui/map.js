@@ -152,11 +152,11 @@ function Map() {
         var m = this.location;
         var scr = game.screen;
 
-        var sw = Math.max(0, ((pl.X - m.x) / CELL_SIZE << 0) - scr.cells_x);
-        var ew = Math.min(this.cells_x, sw + scr.cells_x * 2);
+        var sw = Math.max(0, ((pl.X - m.x) / CELL_SIZE << 0) - scr.cells_x) >> 0;
+        var ew = Math.min(this.cells_x, sw + scr.cells_x * 2) >> 0;
 
-        var sh = Math.max(0, ((pl.Y - m.y) / CELL_SIZE << 0) - scr.cells_y);
-        var eh = Math.min(this.cells_y, sh + scr.cells_y * 2);
+        var sh = Math.max(0, ((pl.Y - m.y) / CELL_SIZE << 0) - scr.cells_y) >> 0;
+        var eh = Math.min(this.cells_y, sh + scr.cells_y * 2) >> 0;
 
         for (var h = sh; h < eh; h++) {
             for (var w = sw; w < ew; w++) {
@@ -207,6 +207,7 @@ function Map() {
                 }
             }
 
+
             ctx.drawImage(
                 tile,
 
@@ -224,6 +225,10 @@ function Map() {
     };
 
     this.draw = function() {
+        // this.each(function(w, h, p, x, y) {
+        //     this.drawTile(game.ctx, w, h, p);
+        // });
+        // return;
         var layers = this.makeLayers();
 
         var scr = game.screen;

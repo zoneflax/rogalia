@@ -87,12 +87,7 @@ function lobbyStage(data) {
         window.removeEventListener("keypress", fastenter);
         panel.close();
     };
-    // first data packet of the loading stage has no ack field
-    // so use this.sync instead of network.send callback
     this.sync = function(data) {
-        // see bugreport-sent
-        if (data.Ack)
-            return;
         game.setStage("loading", data);
     };
 };

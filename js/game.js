@@ -63,16 +63,6 @@ function Game() {
         title.id = "build-warning";
         panel.setTitle(title.textContent);
 
-        document.getElementById("bugreport-send").onclick = function() {
-            var text = document.getElementById("bugreport-text");
-            game.network.send("bugreport", {Text: text.value}, function(data) {
-                if (data.Ack) {
-                    text.value = "";
-                    game.alert(T("Message sent"));
-                }
-            });
-        };
-
         title.onclick = function() {
             panel.show();
         };
@@ -308,8 +298,16 @@ function Game() {
     }.bind(this);
 
     this.addCharacter = function(character) {
-        this.characters.set(character.Name,  character);
         this.addEntity(character);
+
+        if (character.Type == "vendor")
+            return;
+
+        this.characters.set(character.Name,  character);
+        if (character.Name == game.player.Name) {
+            character.isPlayer = true;
+            game.player = character;
+        }
     };
 
     this.addEntity = function(entity) {
@@ -481,15 +479,6 @@ function Game() {
         },
     };
 
-    this.makeSendButton = function(title, cmd, args, callback) {
-        var button = document.createElement("button");
-        button.textContent = T(title);
-        button.onclick = function() {
-            game.network.send(cmd, args, callback);
-        };
-        return button;
-    };
-
     this.error = function() {
         game.sendErrorf(arguments);
         game.exit();
@@ -505,7 +494,7 @@ function Game() {
         var current = {
             video: "",
             time: 0,
-        }
+        };
 
         this.play = function(video, time) {
             if (!videoRegexp.test(video)) {

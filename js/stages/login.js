@@ -19,17 +19,7 @@ function loginStage() {
                 Password: password,
                 // Captcha: captcha,
             },
-            function(data) {
-                if ("Warning" in data) {
-                    localStorage.removeItem("password");
-                    if (!autoLogin)
-                        game.alert(data.Warning);
-                    panel.show();
-                    autoLogin = false;
-                } else {
-                    enterLobby(data);
-                }
-            }
+            enterLobby
         );
     }
 
@@ -44,13 +34,7 @@ function loginStage() {
                 Referrer: document.referrer,
                 UA: navigator.userAgent,
             },
-            function(data) {
-                if ("Warning" in data) {
-                    game.alert(data.Warning);
-                } else {
-                    enterLobby(data);
-                }
-            }
+            enterLobby
         );
     }
 
@@ -182,6 +166,16 @@ function loginStage() {
             panel.show();
         };
     }
+
+    this.sync = function (data) {
+        if (data.Warning) {
+            localStorage.removeItem("password");
+            if (!autoLogin)
+                game.alert(data.Warning);
+            panel.show();
+            autoLogin = false;
+        }
+    };
 
     this.end = function() {
         panel.close();

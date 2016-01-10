@@ -152,14 +152,14 @@ Entity.prototype = {
         elements.push(dom.hr());
         elements.push(this.makeDescription());
 
-        var panel = new Panel("item-info", TS(this.Name), elements);
-        panel.show();
+        new Panel("item-info", TS(this.Name), elements).setEntity(this).show();
     },
     damage: function() {
         return util.toFixed(this.Damage * (Math.pow(this.Quality, 1.5) / 5000 + 1), 0);
     },
     makeDescription: function() {
-        return Entity.makeDescription(this.Type);
+        var text = Items[this.Type] || Items[this.Group] || T("No description yet");
+        return dom.div("item-descr", {text: text});
     },
     leftTopX: function() {
         return (this.X - this.Width / 2) << 0;
@@ -325,9 +325,9 @@ Entity.prototype = {
         else if (this.MoveType == Entity.MT_LIFTABLE)
             actions[0]["Lift"] = this.lift;
 
-        for(var i = 0, l = this.Actions.length; i < l; i++) {
-            actions[1][this.Actions[i]] =  this.actionApply(this.Actions[i]);
-        }
+        this.Actions.forEach(function(action) {
+            actions[1][action] = this.actionApply(action);
+        }.bind(this));
 
         if (this.Orientation != "" && this.MoveType != Entity.MT_STATIC) {
             actions[2]["Rotate"] = function() {
@@ -367,12 +367,7 @@ Entity.prototype = {
                 return;
             break;
         }
-        game.network.send("entity-use", { id: this.Id }, function done(data) {
-            if (data.Done)
-                return this.defaultActionSuccess(data);
-            else
-                return done.bind(this);
-        }.bind(this));
+        game.network.send("entity-use", { id: this.Id }, this.defaultActionSuccess.bind(this));
     },
     destroy: function() {
         game.network.send("entity-destroy", {id: this.Id});
@@ -440,8 +435,7 @@ Entity.prototype = {
         } else {
             text.value = this.Props.Text;
         }
-        var p = new Panel("editable", this.Name, [text]);
-        p.show();
+        new Panel("editable", this.Name, [text]).setEntity(this).show();
     },
     //used by sign
     edit: function() {
@@ -477,9 +471,6 @@ Entity.prototype = {
         } else {
             game.network.send("Split", args);
         }
-    },
-    bugreport: function() {
-        window.open("http://rogalik.tatrix.org/forum/posting.php?mode=reply&f=2&t=11", "_blank");
     },
     sync: function(data) {
         var p = new Point(this.X, this.Y);
@@ -520,8 +511,6 @@ Entity.prototype = {
         case "container":
             if (this.MoveType != Entity.MT_PORTABLE)
                 this.defaultActionSuccess = this.open.bind(this);
-            if (this.Type == "altar")
-                this.Actions.push("bugreport");
             break;
         case "blank":
             this.defaultActionSuccess = function() {
@@ -1027,10 +1016,13 @@ Entity.prototype = {
             "$prompt": function() {
                 var lastCmd = Entity.lastPromptCmd || "set-quality";
                 var cmd = prompt("cmd?", lastCmd);
-                Entity.lastPromptCmd = cmd
+                Entity.lastPromptCmd = cmd;
                 game.chat.append("*" + cmd + " " + id);
             },
         });
+    },
+    isContainer: function() {
+        return "Slots" in this.Props;
     },
     onremove: function() {
         switch (this.Group) {

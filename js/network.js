@@ -21,8 +21,7 @@ function Network() {
     this.data = null;
     this.socket = null;
 
-    this.callback = null;
-    this.defaultCallback = null;
+    this.queue = [];
 
     this.run = function() {
         this.socket = new WebSocket(this.proto + this.addr);
@@ -60,7 +59,7 @@ function Network() {
         var decompressed = util.decompress(message.data);
         var data = JSON.parse(decompressed);
         this.data = data;
-        if(this.sendStart && data.Ack) {
+        if(this.sendStart && data.Ok) {
             game.ping = Date.now() - this.sendStart;
             if (game.controller.system && game.controller.system.panel.visible) {
                 game.controller.system.ping.textContent = "Ping: " + game.ping + "ms";
@@ -72,7 +71,7 @@ function Network() {
             console.log("Server data len: ", message.data.byteLength);
 
         if (game.debug.network.data)
-            console.dir(data);
+            console.log(data);
 
         if (data.Error) {
             game.controller.showError(data.Error);
@@ -81,9 +80,14 @@ function Network() {
 
         game.stage.sync(data);
 
-        if (data.Ack || data.Done || data.Warning) {
-            var callback = (this.callback) ? this.callback(data) : this.defaultCallback;
-            this.callback = (callback instanceof Function) ? callback : null;
+        if (this.queue.length == 0)
+            return;
+
+        if (data.Ok) {
+            var callback = this.queue.shift();
+            var result = callback(data);
+            if (result instanceof Function)
+                this.queue.push(result);
         }
     }
 
@@ -92,12 +96,7 @@ function Network() {
         this.socket.close();
     };
 
-    var lastSend = 0;
-    this.send = function(command, args, callback, setAsDefault) {
-        var now = Date.now();
-        if (now - lastSend < 25)
-            return;
-        lastSend = now;
+    this.send = function(command, args, callback) {
         args = args || {};
         args.Command = command;
 
@@ -107,11 +106,8 @@ function Network() {
         this.sendStart = Date.now();
         this.socket.send(JSON.stringify(args));
 
-        if (callback) {
-            this.callback = callback;
-            if (setAsDefault)
-                this.defaultCallback = callback;
-        }
+        if (callback)
+            this.queue.push(callback);
     };
 
     //for debug

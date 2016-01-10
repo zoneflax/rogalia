@@ -8,6 +8,10 @@ var dom = {
         if (cfg) {
             if ("text" in cfg)
                 elem.textContent = cfg.text;
+            if ("onclick" in cfg)
+                elem.onclick = cfg.onclick;
+            if ("title" in cfg)
+                elem.title = cfg.title;
         }
 
         return elem;
@@ -61,8 +65,8 @@ var dom = {
             link.textContent = text;
         return link;
     },
-    button: function(text, classOrId) {
-        return this.tag("button", classOrId, {text: text});
+    button: function(text, classOrId, onclick) {
+        return this.tag("button", classOrId, {text: text, onclick: onclick});
     },
     select: function(options, classOrId) {
         var select = this.tag("select", classOrId);
@@ -79,12 +83,24 @@ var dom = {
         toElem.insertBefore(element, toElem.firstChild);
     },
     clear: function(element) {
-        element.innerHTML = "";
+        while (element.firstChild) {
+            element.removeChild(element.firstChild);
+        }
+    },
+    detachContents: function(element) {
+        var contents = [];
+        while (element.firstChild) {
+            contents.push(element.firstChild);
+            element.removeChild(element.firstChild);
+        }
+        return contents;
     },
     make: function(tag, contents) {
         return this.append(this.tag(tag), contents);
     },
     append: function(element, contents) {
+        if (!Array.isArray(contents))
+            contents = [contents];
         contents.forEach(function(child) {
             if (child) {
                 element.appendChild((child instanceof Node) ? child : document.createTextNode(child));
@@ -92,8 +108,8 @@ var dom = {
         });
         return element;
     },
-    wrap: function(classOrId, elements) {
-        return this.append(dom.div(classOrId), elements);
+    wrap: function(classOrId, elements, cfg) {
+        return this.append(dom.div(classOrId, cfg), elements);
     },
     appendText: function(element, text) {
         element.appendChild(document.createTextNode(text));
@@ -131,12 +147,12 @@ var dom = {
     table: function(header, rows) {
         var dom = this;
         return this.make("table", [
-            this.make("tr", header.map(function(title) {
-                return dom.make("th", [title]);
-            })),
+            this.make("thead", this.make("tr", header.map(function(title) {
+                return dom.make("th", title);
+            }))),
             this.make("tbody", rows.map(function(row) {
                 return dom.make("tr", row.map(function(cell) {
-                    return dom.make("td", [cell]);
+                    return dom.make("td", cell);
                 }));
             }))
         ]);
@@ -165,6 +181,10 @@ var dom = {
         }
         old.parentNode.insertBefore(New, old);
         old.parentNode.removeChild(old);
+    },
+    setContents: function(element, contents) {
+        this.clear(element);
+        return this.append(element, contents);
     },
     move: function(element, to) {
         this.remove(element);
@@ -242,6 +262,10 @@ var dom = {
 
             tab.isActive = function() {
                 return title.classList.contains("active");
+            };
+            tab.tab = {
+                title: title,
+                content: content,
             };
         });
 

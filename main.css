@@ -213,7 +213,7 @@ hr {
     position: absolute;
     z-index: 9000!important;
 }
-#menu ul, #vendor ul, #interraction ul {
+#menu ul {
     margin: 0;
     padding: 0;
 }
@@ -1426,10 +1426,6 @@ ol li a:hover {
 #build-warning-panel {
     width: 500px;
 }
-#bugreport-text {
-    width: 99%;
-    height: 100px;
-}
 
 big {
     font-size: 24px;
@@ -1573,6 +1569,11 @@ input[type=number], .lot-quantity > input, .price > input {
     line-height: 15px;
     vertical-align: bottom;
 }
+.price {
+    display: inline-block;
+    text-align: right;
+    white-space: nowrap;
+}
 .price > .silver {
     color: silver;
     margin-left: 3px;
@@ -1589,55 +1590,6 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 .price.negative {
     border-bottom: 1px dotted red;
-}
-
-#lot-list {
-    height: 500px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    margin: 0 -5px!important;
-}
-.lot {
-    overflow: auto;
-    padding: 0 5px;
-    position: relative;
-    list-style-type: none;
-}
-.lot:after {
-    content: "";
-    display: block;
-    height: 3px;
-    background: #593815 url("assets/bg/hr.png") repeat-x;
-    margin: 0 -5px;
-}
-.lot:last-child {
-    border: none;
-}
-.lot-icon {
-    margin-right: 5px;
-}
-.lot-name {
-    white-space: pre;
-    overflow: hidden;
-}
-.lot-price {
-    margin-top: 5px;
-    border: none;
-    display: inline-block;
-}
-.lot-info, .lot-buy, .lot-sell, .lot-cancel {
-    float: right;
-    min-width: 0;
-}
-.lot-quantity {
-    margin-top: 10px;
-}
-.lot-quantity, .lot-total {
-    display: block;
-    margin-left: 70px;
-}
-.lot-quantity > input {
-    color: white;
 }
 
 #wss {
@@ -1683,6 +1635,7 @@ input[type=number], .lot-quantity > input, .price > input {
 #item-info .item-descr {
     padding-top: 3px;
     margin-top: 5px;
+    white-space: pre-wrap;
 }
 
 #item-preview {
@@ -1772,8 +1725,9 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 #bank .lot-price {
-    display: block;
     margin: 5px auto;
+    display: block;
+    width: auto;
 }
 #bank button+button {
     clear: none;
@@ -1976,8 +1930,12 @@ input[type=number], .lot-quantity > input, .price > input {
     position: relative;
     top: 4px;
 }
+#exchange {
+    max-width: none;
+}
 #exchange-rates-table td {
     text-align: center;
+    white-space: nowrap;
 }
 #exchange-rates-table input {
     width: 40px;
@@ -2180,4 +2138,66 @@ input[type=number], .lot-quantity > input, .price > input {
 
 #instances {
     min-width: 300px;
+}
+
+#auction .lot:hover {
+    cursor: pointer;
+    background-color: #99682e;
+}
+#auction {
+    min-width: 250px;
+}
+
+#auction .back-button {
+    float: right;
+}
+/* vendors, lots */
+.lot-table, .lot-list {
+    height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.lot-table {
+    text-align: center;
+    padding-right: 20px;
+}
+.lot-list {
+    margin: 0 -5px!important;
+}
+.lot {
+    overflow: auto;
+    padding: 2px 5px 5px;
+    background: url("assets/bg/hr.png") repeat-x 0 100%;
+}
+.lot:last-child {
+    background: none;
+}
+.lot-icon {
+    margin-right: 5px;
+}
+.lot-info, .lot-buy, .lot-sell, .lot-cancel {
+    min-width: 0;
+}
+#interraction > .contents {
+    display: flex;
+    flex-direction: column;
+}
+#vendor {
+    max-width: none;
+}
+.manage-vendor-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.lot-item {
+    display: flex;
+    align-items: center;
+}
+.lot-item > .price {
+    margin-left: 5px;
+}
+.lot-controlls {
+    display: flex;
+    flex-direction: column;
 }

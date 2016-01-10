@@ -3,7 +3,7 @@ function Users() {
     var lists = {};
 
     function renderList(content, list, empty) {
-        content.innerHTML = "";
+        dom.clear(content);
         if (list) {
             var ul = dom.tag("ul");
             list.sort().forEach(function(name) {

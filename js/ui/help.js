@@ -339,7 +339,7 @@ Help.prototype = {
         for (var i in this.hooks)
             this.runnedHooks[i] = true;
         this.save();
-        this.messages.innerHTML = "";
+        dom.clear(this.messages);
     },
     load: function() {
         this.disableHelp();

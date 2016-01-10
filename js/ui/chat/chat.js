@@ -275,24 +275,21 @@ function Chat() {
                 }
                 break;
             case "terra":
-                var bioms = game.map.bioms.map(function(biom, i) {
-                    var div = document.createElement("div");
-                    div.appendChild(game.map.tiles[i]);
-                    div.classList.add("slot");
-                    div.title = biom.Name;
-                    return div;
-                });
                 new Panel(
                     "terra-bar",
                     "Terraforming",
-                    bioms,
-                    {
-                        click: function(e) {
-                            if(!e.target.id)
-                                return;
-                            game.controller.terraCursor(e.target);
-                        }
-                    }
+                    game.map.bioms.map(function(biom, i) {
+                        return dom.wrap(
+                            "slot",
+                            game.map.tiles[i],
+                            {
+                                title: biom.Name,
+                                onclick: function() {
+                                    game.controller.terraCursor(game.map.tiles[i]);
+                                }
+                            }
+                        );
+                    })
                 ).show();
                 break;
             case "get-translations":
@@ -754,6 +751,7 @@ function Chat() {
                 break;
             case SERVER:
                 color = "yellow";
+                message.From = "[" + T("server") + "]";
                 processServerMessage(message);
                 break;
             default:

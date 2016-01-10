@@ -88,7 +88,7 @@ Craft.prototype = {
             return;
         this.titleElement.textContent = TS(type);
 
-        this.ingredientsList.innerHTML = "";
+        dom.clear(this.ingredientsList);
         var canBuild = true;
         for(var group in ingredients) {
             var has = ingredients[group];
@@ -119,15 +119,9 @@ Craft.prototype = {
             this.renderRequirements(this.current.recipe);
         }
     },
-    updateVisibility: function() {
-        var panel = this.blank.panel;
-        var e = this.blank.entity;
-        if (panel && e && !game.player.isNear(e)) {
-            panel.hide();
-        }
-    },
     open: function(blank, burden) {
         this.blank.entity = blank;
+        this.blank.panel.entity = blank;
 
         var slotHelp = document.createElement("div");
         slotHelp.textContent = T("Drop ingredients here") + ":";
@@ -220,7 +214,7 @@ Craft.prototype = {
         var index = this.slots.indexOf(to);
         this.slots[index].used = true;
         this.slots[index].unlock = slot.unlock.bind(slot);
-        to.innerHTML = "";
+        dom.clear(to);
         to.appendChild(ingredient);
         to.onmousedown = this.cancel.bind(this, from, to);
         return true;
@@ -334,7 +328,7 @@ Craft.prototype = {
         };
         slot.use = function(entity) {
             slot.entity = entity;
-            slot.innerHTML = "";
+            dom.clear(slot);
             slot.appendChild(entity.icon());
             var searching = self.list.classList.contains("searching");
             self.list.classList.add("searching");
@@ -361,9 +355,8 @@ Craft.prototype = {
         };
         slot.addEventListener("mousedown", function() {
             slot.entity = null;
-            slot.innerHTML = "";
+            dom.clear(slot);
             self.search(self.searchInput.value);
-            slot.onclick = null;
         }, true);
 
         return slot;
@@ -403,7 +396,9 @@ Craft.prototype = {
         }.bind(this);
     },
     search: function(pattern, selectMatching) {
-        this.panel.show();
+        // we do not want to show on load
+        if (game.stage.name == "main")
+            this.panel.show();
         //TODO: fast solution; make another one
         var id = "#" + this.panel.name + " ";
         dom.removeClass(id + ".recipe-list .found", "found");
@@ -494,7 +489,7 @@ Craft.prototype = {
     },
     renderRecipe: function() {
         var self = this;
-        this.recipeDetails.innerHTML = "";
+        dom.clear(this.recipeDetails);
         this.requirements = null;
         this.slots = [];
 
@@ -587,13 +582,13 @@ Craft.prototype = {
         hr();
         this.recipeDetails.appendChild(buttons);
         hr();
-        this.recipeDetails.appendChild(Entity.makeDescription(this.current.type));
+        this.recipeDetails.appendChild(Entity.templates[this.current.type].makeDescription());
 
         this.renderBackButton();
     },
     renderBuildRecipe: function(target) {
         var recipe = target.recipe;
-        this.recipeDetails.innerHTML = "";
+        dom.clear(this.recipeDetails);
 
         var title = document.createElement("span");
         title.className = "recipe-title";
@@ -673,17 +668,13 @@ Craft.prototype = {
             ingredients.push(parseInt(ingredient.id));
         }
         var done = function (data) {
-            if (data.Warning)
-                return null;
-            if (!data.Done)
-                return done;
             this.cleanUp();
             this.renderRecipe();
             if (craftAll === true)
                 setTimeout(this.craftAll.bind(this), 100);
         }.bind(this);
 
-        game.network.send("craft", {type: this.type, ingredients: ingredients}, done, craftAll);
+        game.network.send("craft", {type: this.type, ingredients: ingredients}, done);
         return true;
     },
     cancel:  function(from, to) {
@@ -691,7 +682,7 @@ Craft.prototype = {
         var slot = this.slots[index];
         slot.used = false;
         slot.unlock && slot.unlock();
-        to.innerHTML = "";
+        dom.clear(to);
         to.appendChild(to.image);
     },
     safeToCreate: function(recipe) {
