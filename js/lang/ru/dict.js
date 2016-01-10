@@ -672,6 +672,7 @@ var dict = {
     "Glass": "Стекло",
     "Roasted carassius": "Жареный карась",
     "Wattle fence": "Плетёный забор",
+    "Wattle gate": "Плетёные ворота",
     "Energy": "Энергия",
     "Palm tree stub": "Пень пальмы",
     "Wheat plant": "Саженец пшеницы",

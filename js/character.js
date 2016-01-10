@@ -663,9 +663,10 @@ Character.prototype = {
     },
     drawAction: function() {
         if(this.Action.Duration) {
+            var progress = Math.min(this.action.progress, 1);
             if (this.isPlayer) {
                 var ap = game.controller.actionProgress.firstChild;
-                ap.style.width = this.action.progress * 100 + "%";
+                ap.style.width = progress * 100 + "%";
             } else {
                 var w = 64;
                 var h = FONT_SIZE * 0.5;
@@ -682,7 +683,7 @@ Character.prototype = {
                 game.ctx.fillRect(x, y, w, h);
 
                 game.ctx.fillStyle = '#cf9d62';
-                game.ctx.fillRect(x, y, this.action.progress * w, h);
+                game.ctx.fillRect(x, y, progress * w, h);
             }
         }
     },
