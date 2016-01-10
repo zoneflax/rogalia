@@ -93,7 +93,7 @@ Auction.prototype = {
                         lot.Quality,
                         Vendor.createPrice(lot.Cost),
                         dom.button(T("Buy"), "lot-buy", function(e) {
-                            if (confirm(T("Buy") + " "+ TS(lot.Type) + "?")) {
+                            if (confirm(T("Buy") + " "+ TS(type) + "?")) {
                                 game.network.send(
                                     "buy",
                                     {Id: lot.Id, VendorName: lot.Vendor, Broker: self.broker.Id},
