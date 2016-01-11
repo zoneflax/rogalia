@@ -1,2 +1,2 @@
 Rogalik mmo client
-http://rogalik.tatrix.org/
+http://rogalia.ru/play
