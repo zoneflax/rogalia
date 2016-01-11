@@ -752,6 +752,8 @@ Character.prototype = {
     draw: function() {
         if (!game.player.see(this))
             return;
+        if ("Sleeping" in this.Effects)
+            return;
 
         this.drawDst();
 
