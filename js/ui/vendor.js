@@ -256,6 +256,7 @@ Vendor.prototype = {
         ));
     },
     manageView: function() {
+        var self = this;
         return [
             dom.wrap("manage-vendor-row", this.manageBuy()),
             dom.hr(),
