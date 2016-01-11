@@ -1400,20 +1400,17 @@ Character.prototype = {
             panel.fish.value = +data.Fish || 0;
             panel.rating.textContent = T(data.Rating);
         }
-        if (data.Ok == "fishing" || data.Ok) {
-            dom.forEach("#fishing-buttons > button", function() {
-                this.disabled = false;
-            });
-        }
-        if (data.Ok) {
+        if (data.Ok == "fishing-finished") {
             dom.forEach("#fishing-buttons > button", function() {
                 this.disabled = true;
             });
-            panel && panel.hide();
+            panel.hide();
             return null;
-        } else {
-            panel.show();
         }
+        dom.forEach("#fishing-buttons > button", function() {
+            this.disabled = false;
+        });
+        panel.show();
         return repeat;
     },
     updateEffect: function(name, effect) {

@@ -139,7 +139,7 @@ function Talks() {
                 ]
             },
             "actions": {
-                "Trade sex": "Купить секс (10 золота)",
+                "Buy sex": "Купить секс (10 золота)",
             }
         },
         "bruno": {
