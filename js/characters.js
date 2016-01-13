@@ -204,7 +204,7 @@ Character.npcActions = {
                         game.network.send("instance", {Name: instance.Name});
                     };
                     return [
-                        T(instance.Name),
+                        TS(instance.Name),
                         instance.MinLvl,
                         instance.MaxLvl,
                         Vendor.createPrice(instance.Cost),

@@ -532,7 +532,7 @@ Entity.prototype = {
             break;
         case "mailbox":
             this.defaultActionSuccess = function(data) {
-                new Mail(this, data.Mail);
+                game.controller.mail.open(this, data.Mail);
             }.bind(this);
             break;
         }

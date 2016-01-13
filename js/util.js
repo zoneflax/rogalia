@@ -362,6 +362,9 @@ var util = new function() {
 	return image;
     };
 
+    this.dotimes = function(n, callback) {
+        return Array.apply(null, Array(n)).map(callback);
+    };
 };
 
 if (!Math.hypot) {

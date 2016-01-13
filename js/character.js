@@ -1746,7 +1746,8 @@ Character.prototype = {
         var self = this;
         game.player.interactTarget = this;
         game.network.send("follow", {Id: this.Id}, function interact() {
-            if (self.Type == "vendor" && self.Owner != 0) {
+            // TODO: remove margo hack
+            if (self.Type == "vendor" && self.Owner != 0 && self.Name != "Margo") {
                 game.controller.vendor.open(self);
                 return;
             }

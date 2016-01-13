@@ -1,58 +1,120 @@
 "use strict";
-function Mail(mailbox, mail) {
-    this.mailbox = mailbox;
-    this.mail = mail;
-    var tabs = [
+function Mail() {
+    var self = this;
+    this.tabs = [
         {
             title: T("Inbox"),
-            update: this.update.bind(this),
+            update: function(title, contents) {
+                if (self.mail) {
+                    dom.setContents(contents, self.listView(self.mail));
+                    self.mail = null;
+                    return;
+                }
+                game.network.send("entity-use", {Id: self.mailbox.Id}, function(data) {
+                    dom.setContents(contents, self.listView(data.Mail));
+                });
+            },
         },
         {
             title: T("Compose"),
-            contents: this.composeTab(),
+            update: function(title, contents) {
+                dom.setContents(contents, self.composeView());
+            },
         }
-    ]
-    this.panel = new Panel("mail", "Mail", [dom.tabs(tabs)]);
-    this.panel.show();
+    ];
 }
 
 Mail.prototype = {
-    update: function(title, contents) {
+    mailbox: null,
+    mail: null,
+    backContents: null,
+    open: function(mailbox, mail) {
+        this.mailbox = mailbox;
+        this.mail = mail || [];
+        if (!this.panel)
+            this.panel = new Panel("mail", "Mail", [dom.tabs(this.tabs)]);
+        this.panel.temporary = true;
+        this.panel.entity = mailbox;
+        this.panel.show();
+    },
+    listView: function(mail) {
+        if (!mail)
+            return T("No mail");
+
         var self = this;
-        var letters = dom.div("letters");
-        this.mail.forEach(function(letter, id) {
+        return dom.wrap("letters", mail.map(function(letter, id) {
+            console.log(letter);
             var del = dom.button("x", "letter-delete");
-            del.onclick = function() {
-                game.network.send("letter-delete", {Id: self.mailbox.Id, Letter: id})
-            };
-            dom.append(letters, [
-                dom.wrap("letter", [
-                    dom.div("letter-from", {text: letter.From}),
-                    dom.div("letter-subject", {text: letter.Subject}),
-                    // dom.div("letter-sent", {// TODO: ext: util.date.human(letter.Created * 1000)})
-                    del,
-                ]),
-                dom.hr(),
+            var row = dom.wrap("letter", [
+                dom.wrap("letter-avatar slot", game.player.icon()),
+                dom.div("letter-from", {text: letter.From}),
+                dom.div("letter-subject", {text: letter.Subject}),
+                (letter.Items.length > 0) ? dom.div("letter-has-attachment") : null,
+                // dom.div("letter-sent", {// TODO: ext: util.date.human(letter.Created * 1000)})
+                del,
             ]);
-        });
-        dom.clear(contents);
-        dom.append(contents, [
-            letters,
-            dom.button(T("Delete all")),
-        ])
+            del.onclick = function() {
+                game.network.send("delete-letter", {Id: self.mailbox.Id, Letter: id}, function() {
+                    dom.remove(row);
+                });
+            };
+            row.onclick = function() {
+                var content = self.tabs[0].tab.content;
+                self.backContents = dom.detachContents(content);
+                dom.append(content, self.letterView(letter));
+            };
+            return row;
+        }));
     },
-    view: function(letter) {
+    letterView: function(letter) {
+        var self = this;
+        return [
+            dom.button(T("Back"), "back-button", function() {
+                if (self.backContents) {
+                    dom.setContents(self.tabs[0].tab.content, self.backContents);
+                    self.backContents = null;
+                } else {
+                    self.tabs[0].update();
+                }
+            }),
+            dom.wrap("letter-from", [
+                T("From") + ": ",
+                letter.From,
+            ]),
+            dom.wrap("letter-subject", [
+                T("Subject") + ": ",
+                letter.Subject,
+            ]),
+            dom.hr(),
+            dom.wrap("letter-body", [
+                letter.Body,
+            ])
+        ];
     },
-    composeTab: function() {
+    composeView: function() {
         var to = dom.input(T("To:"));
         var postage = Vendor.createPrice(30);
-        var subject = dom.input(T("Subject:"))
+        var subject = dom.input(T("Subject:"));
         var body = dom.tag("textarea", "mail-body");
         var send = dom.button(T("Send"));
 
-        var slots = [];
-        for (var i = 0; i < 4; i++)
-            slots.push(dom.slot());
+        var slots = util.dotimes(4, function() {
+            var slot = dom.slot();
+            slot.canUse = function() {
+                return true;
+            };
+            slot.use = function(entity) {
+                slot.entity = entity;
+                dom.setContents(slot, entity.icon());
+                return true;
+            };
+            slot.cleanup = function() {
+                slot.entity = null;
+                dom.clear(slot);
+            };
+            slot.addEventListener("mousedown", slot.cleanup, true);
+            return slot;
+        });
 
         var self = this;
         send.onclick = function() {
@@ -61,12 +123,19 @@ Mail.prototype = {
                 To: to.value,
                 Subject: subject.value,
                 Body: body.value,
-                // Items: slots.filter(function(e) { return !!e}).map(function(e) { return e.Id; })
+                Items: slots.filter(function(slot) {
+                    return slot.entity != null;
+                }).map(function(slot) {
+                    return slot.entity.Id;
+                })
             }, function() {
                 to.value = "";
                 subject.value = "";
                 body.value = "";
-            })
+                slots.forEach(function(slot) {
+                    slot.cleanup();
+                });
+            });
         };
         return [
             dom.wrap("mail-to", [
@@ -80,4 +149,4 @@ Mail.prototype = {
             dom.wrap("mail-send", slots.concat(send)),
         ];
     }
-}
+};

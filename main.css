@@ -1933,6 +1933,9 @@ input[type=number], .lot-quantity > input, .price > input {
 #exchange {
     max-width: none;
 }
+#exchange .price {
+    width: 85px;
+}
 #exchange-rates-table td {
     text-align: center;
     white-space: nowrap;
@@ -2117,23 +2120,29 @@ input[type=number], .lot-quantity > input, .price > input {
     padding-top: 3px;
 }
 .letter {
-    width: 100%;
     cursor: pointer;
     min-height: 32px;
+    position: relative;
 }
 .letter:hover {
     background: #99682e;
 }
-.letter-from {
-    float: left;
-    margin-right: 3px;
-}
-.letter-from:after {
-    content: ":";
-}
 .letter-delete {
     min-width: 0;
-    float: right;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.letter-has-attachment {
+    width: 16px;
+    height: 16px;
+    background-image: url("assets/icons/attachment.png");
+    position: absolute;
+    top: 26px;
+    right: 2px;
+}
+.letters .letter-subject {
+    font-size: smaller;
 }
 
 #instances {
@@ -2148,7 +2157,7 @@ input[type=number], .lot-quantity > input, .price > input {
     min-width: 250px;
 }
 
-#auction .back-button {
+#auction .back-button, #mail .back-button {
     float: right;
 }
 /* vendors, lots */
@@ -2164,15 +2173,15 @@ input[type=number], .lot-quantity > input, .price > input {
 .lot-list {
     margin: 0 -5px!important;
 }
-.lot {
+.lot, .letter {
     overflow: auto;
     padding: 2px 5px 5px;
     background: url("assets/bg/hr.png") repeat-x 0 100%;
 }
-.lot:last-child {
-    background: none;
+.lot:last-child, .letter:last-child {
+    background-image: none;
 }
-.lot-icon {
+.lot-icon, .letter-avatar {
     margin-right: 5px;
 }
 .lot-info, .lot-buy, .lot-sell, .lot-cancel {

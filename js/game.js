@@ -523,7 +523,7 @@ function Game() {
             } else {
                 this.stop();
             }
-        }
+        };
 
         this.open = function() {
             this.panel.show();
