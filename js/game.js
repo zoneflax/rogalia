@@ -48,26 +48,6 @@ function Game() {
 
     this.version = JSON.parse(localStorage.getItem("Version"));
 
-    util.ajax("build-warning.html", function(warn) {
-        if (!warn) {
-            return;
-        }
-        dom.show(document.getElementById("build-warning"));
-
-        var panel = new Panel("build-warning-panel", "");
-        panel.contents.innerHTML = warn;
-
-        var title = document.getElementById("build-warning-title");
-        var buildWarning = document.getElementById("build-warning");
-        dom.replace(buildWarning, title);
-        title.id = "build-warning";
-        panel.setTitle(title.textContent);
-
-        title.onclick = function() {
-            panel.show();
-        };
-    });
-
     this.initTime = function(time, tick) {
         this.setTime(time);
         setInterval(function() {
