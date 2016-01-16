@@ -48,7 +48,7 @@ function System() {
             users,
             dom.hr(),
             game.button.wiki(),
-            game.button.bugtracker(),
+            // game.button.bugtracker(),
             dom.hr(),
             links,
             game.button.donate(),
