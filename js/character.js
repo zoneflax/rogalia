@@ -199,8 +199,7 @@ Character.prototype = {
         this.loadSprite();
     },
     init: function(data) {
-        //TODO: refactor
-        this.IsNpc = data.Type != "man";
+        this.IsNpc = (data.Type != "man");
         this.sync(data, true);
         this.loadSprite();
     },
@@ -305,7 +304,6 @@ Character.prototype = {
                 "run": 0,
             };
             break;
-        case "desu":
         case "suiseiseki":
             this.sprite.width = 68;
             this.sprite.height = 96;
@@ -341,10 +339,6 @@ Character.prototype = {
                 "idle": 1,
                 "run": 3,
             };
-            break;
-        case "omsk":
-            this.sprite.width = 170;
-            this.sprite.height = 170;
             break;
         case "omsk":
             this.sprite.width = 170;
@@ -429,6 +423,8 @@ Character.prototype = {
         case "scrooge":
         case "ahper":
         case "cosmas":
+        case "shot":
+        case "umi":
             this.sprite.nameOffset = 70;
             break;
         case "small-spider":
@@ -562,23 +558,17 @@ Character.prototype = {
     },
     loadNpcSprite: function() {
         var type = this.Type;
-        switch (this.Name) {
-        case "Margo":
+        switch (type) {
+        case "margo":
             var name = (this.Owner == game.player.Id) ? "margo-" + util.rand(0, 1) : "margo";
             this.sprite.load(Character.spriteDir + name + ".png");
             return;
-        case "Umi":
-            type = "umi";
-            break;
-        case "Shot":
-            type = "shot";
-            break;
         default:
             if (!this.isSimpleSprite()) {
                 this._loadNpcSprites();
                 return;
             }
-            if (this.Type == "vendor") {
+            if (type == "vendor") {
                 type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
                     return hash + c.charCodeAt(0);
                 }, 0) % 3 + 1);
@@ -749,8 +739,6 @@ Character.prototype = {
         };
     },
     draw: function() {
-        if (!game.player.see(this))
-            return;
         if ("Sleeping" in this.Effects)
             return;
 
@@ -841,9 +829,6 @@ Character.prototype = {
             this.drawAttackRadius();
     },
     drawUI: function() {
-        if (!game.player.see(this))
-            return;
-
         var marker = this.getQuestMarker();
         if (marker)
             this.drawQuestMarker(marker);
@@ -904,7 +889,7 @@ Character.prototype = {
         for (var name in game.player.ActiveQuests) {
             var questLog = game.player.ActiveQuests[name];
             var quest = questLog.Quest;
-            if (quest.End != this.Name)
+            if (quest.End != this.Type)
                 continue;
             if (questLog.State == "ready")
                 return game.questMarkers["ready"];
@@ -959,12 +944,9 @@ Character.prototype = {
             return (this.Owner) ? "$ " + name : T(name);
             // return TT("Vendor of {name}", {name: name});
         }
-        if (this.IsNpc && name && this.Type != "vendor") {
-            name = name.replace(/-\d+$/, "");
-            if (name != this.Name)
-                name = TS(name);
-            else
-                name = T(name);
+
+        if (this.IsNpc) {
+            return (name) ? T(name) : TS(this.Type);
         }
 
         if (this.Title)
@@ -1774,50 +1756,17 @@ Character.prototype = {
         });
     },
     getTalks: function() {
-        var type = this.Type;
-        // TODO: remove fix after server update
-        switch (this.Name) {
-        case "Shot":
-        case "Bruno":
-        case "Bertran":
-        case "Boris":
-        case "Diego":
-        case "Ahper":
-        case "Cosmas":
-        case "Scrooge":
-            type = this.Name.toLowerCase();
-            break;
-        case "Margo":
-        case "Umi":
-            type = "margo";
-            break;
-        }
-        var sex = game.player.sex();
-        var faction = game.player.Citizenship.Faction.toLowerCase();
-        return game.talks.get(type, faction, sex);
+        return game.talks.get(
+            this.Type,
+            game.player.Citizenship.Faction.toLowerCase(),
+            game.player.sex()
+        );
     },
     sex: function() {
         return Character.sex(this.Sex);
     },
     isInteractive: function() {
-        switch (this.Name) {
-        case "Shot":
-        case "Margo":
-        case "Umi":
-        case "Bruno":
-        case "Bertran":
-        case "Boris":
-        case "Charles":
-        case "Diego":
-        case "Ahper":
-        case "Cosmas":
-        case "Scrooge":
-        case "Snegurochka":
-        case "Ded Moroz":
-            return true;
-        default:
-            return this.Type == "vendor";
-        }
+        return (this.Type.toLowerCase() in game.talks.npcs) || (this.Type == "vendor");
     },
     use: function(entity) {
         switch (entity.Group) {
@@ -1922,13 +1871,13 @@ Character.prototype = {
         dom.show(cnt);
     },
     getAvailableQuests: function() {
-        return game.player.AvailableQuests[this.Name] || [];
+        return game.player.AvailableQuests[this.Type] || [];
     },
     getQuests: function() {
         var quests =  this.getAvailableQuests();
         for (var id in game.player.ActiveQuests) {
             var quest = game.player.ActiveQuests[id].Quest;
-            if (quest.End == this.Name)
+            if (quest.End == this.Type)
                 quests.push(quest);
         }
         return quests;

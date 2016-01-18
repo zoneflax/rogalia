@@ -909,7 +909,7 @@ function Controller(game) {
 
         var actions = {};
         items.forEach(function(item) {
-            var name = item.Name;
+            var name = item.Name || item.Type;
             while (name in actions) {
                 name = name + " "; //TODO: (fixme)dirty hack for objects of the same type
             }

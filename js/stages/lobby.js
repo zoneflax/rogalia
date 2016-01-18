@@ -70,7 +70,7 @@ function lobbyStage(data) {
     characters.forEach(function(info) {
         var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png").cloneNode();
         add(info.Name, icon, function() {
-            game.player.Name = info.Name;
+            game.playerName = info.Name;
             game.network.send("enter", {Name: info.Name, Version: game.version});
         });
     });

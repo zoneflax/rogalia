@@ -97,7 +97,8 @@ function Game() {
     this.menu = new Menu();
 
     this.login = null;
-    this.player = new Character(); // will be replaced in Character.sync()
+    this.player = null;
+    this.playerName = "";
 
     this.map = new Map();
 
@@ -280,14 +281,14 @@ function Game() {
     this.addCharacter = function(character) {
         this.addEntity(character);
 
-        if (character.Type == "vendor")
-            return;
+        var key = (character.IsNpc) ? character.Id : character.Name;
+        this.characters.set(key,  character);
 
-        this.characters.set(character.Name,  character);
-        if (character.Name == game.player.Name) {
-            character.isPlayer = true;
+        if (character.Name == game.playerName) {
+            character.isPlayer = true;;
             game.player = character;
         }
+
     };
 
     this.addEntity = function(entity) {
