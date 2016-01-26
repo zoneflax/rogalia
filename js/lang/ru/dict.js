@@ -1413,4 +1413,5 @@ var dict = {
     "No mail": "Нет почты",
     "From": "От",
     "Subject": "Тема",
+    "Underframe": "Подрамник",
 };

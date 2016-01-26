@@ -1,4 +1,6 @@
 "use strict";
+// rloader.js is called like this because of stupid adblock rule '/js/loader.js'
+
 function Loader(assetsDir) {
     this.assetsDir = assetsDir;
 };

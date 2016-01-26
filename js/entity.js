@@ -509,6 +509,7 @@ Entity.prototype = {
         case "drying-frame":
         case "garbage":
         case "container":
+        case "feeder":
             if (this.MoveType != Entity.MT_PORTABLE)
                 this.defaultActionSuccess = this.open.bind(this);
             break;
@@ -705,6 +706,10 @@ Entity.prototype = {
             game.ctx.fillStyle = "#fff";
             game.ctx.fillText(text, x + padding, y + padding + FONT_SIZE);
             return;
+        case "feeder":
+            game.ctx.fillStyle = "rgba(20, 200, 20, 0.3)";
+            game.iso.fillCircle(this.X, this.Y, this.FeedRadius);
+            break;
         }
         game.ctx.fillStyle = "#fff";
         var title = this.title;

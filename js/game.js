@@ -281,14 +281,12 @@ function Game() {
     this.addCharacter = function(character) {
         this.addEntity(character);
 
-        var key = (character.IsNpc) ? character.Id : character.Name;
-        this.characters.set(key,  character);
+        this.characters.set(character.Name,  character);
 
         if (character.Name == game.playerName) {
             character.isPlayer = true;;
             game.player = character;
         }
-
     };
 
     this.addEntity = function(entity) {
