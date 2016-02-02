@@ -71,7 +71,7 @@ function Users() {
     this.updateBlacklistTab = this.tabs.tabs[2].update;
 
     this.addPlayer = function(name) {
-        if (name == game.player.Name)
+        if (name == game.playerName)
             return;
         var list = lists.OnlinePlayers;
         if (list && list.data.indexOf(name) == -1) {
@@ -81,7 +81,7 @@ function Users() {
     };
 
     this.removePlayer = function(name) {
-        if (name == game.player.Name)
+        if (name == game.playerName)
             return;
         var list = lists.OnlinePlayers;
         if (list) {

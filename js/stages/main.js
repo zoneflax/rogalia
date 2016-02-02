@@ -24,6 +24,8 @@ function mainStage(data) {
 
         data.Location && game.map.sync(data.Location);
 
+        data.BG && game.controller.updateBG(data.BG);
+
         game.controller.syncMinimap(data.RemotePlayers);
         game.controller.chat.sync(data.Chat || []);
         game.controller.skills.update();

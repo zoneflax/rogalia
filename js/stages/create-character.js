@@ -35,6 +35,7 @@ function createCharacterStage() {
     [
         {
             name: "Blacksmith",
+	    desc: "Куй железо, пока горячо! Кузнецы Рогалии создают инструменты, что так необходимы всем поселенцам: оружие, доспехи и множество прочих шедевров из металла!",
             skills: {
                 "Metalworking": 10,
                 "Mining": 5,
@@ -42,6 +43,7 @@ function createCharacterStage() {
         },
         {
             name: "Tailor",
+	    desc: "Самая романтичная профессия в Империи. Портные создают не только великолепную одежду и изделия из ткани, но и пишут восхитительной красоты картины.",
             skills: {
                 "Tailoring": 10,
                 "Leatherworking": 5,
@@ -49,6 +51,7 @@ function createCharacterStage() {
         },
         {
             name: "Alchemyst",
+	    desc: "Алхимики Рогалии — это люди, которых боятся и уважают все жители. Они способны управлять силой атомов, создавая гениальные изобретения, собирать сложные механизмы, а так же создавать магические свитки разрушительной мощи.",
             skills: {
                 Alchemy: 10,
                 Mechanics: 5,
@@ -56,7 +59,7 @@ function createCharacterStage() {
         },
         {
             name: "Farmer",
-            desc: "Пей кокосы, ешь бананы! Без фермеров жрать будет тупо нечего.",
+            desc: "Главные поставщики продовольствия. Они выращивают все, что можно вырастить в Новых Землях. Безкрайние поля, долгий и упорный труд — вот ваше ремесло.",
             skills: {
                 Farming: 10,
                 Fishing: 5,
@@ -64,6 +67,7 @@ function createCharacterStage() {
         },
         {
             name: "Carpenter",
+	    desc: "Люди, создающие великолепные конструкции из древесины, которые всегда пользуются спросом у людей.",
             skills: {
                 Carpentry: 10,
                 Lumberjacking: 5,
@@ -71,6 +75,7 @@ function createCharacterStage() {
         },
         {
             name: "Cook",
+	    desc: "Повара Рогалии способны творить великолепные блюда из простых продуктов, которые будут не только райски вкусны, но и богаты витаминами, что так необходимы поселенцам в Новых Землях.",
             skills: {
                 Cooking: 10,
                 Herbalism: 5,
@@ -78,6 +83,7 @@ function createCharacterStage() {
         },
         {
             name: "Hunter",
+	    desc: "Человек, знающий как выжить в дикой природе, найти себе ночлег и добыть еды. Ловкие и внимательные, в схватке с диким зверем выходят победителями.",
             skills: {
                 Swordsmanship: 10,
                 Survival: 5,
@@ -89,7 +95,6 @@ function createCharacterStage() {
         icon.className = "profession-tab";
         icon.src = "assets/icons/skills/" + mainSkill + ".png";
         icon.title = T(prof.name);
-
 
         var desc = document.createElement("p");
         desc.className = "profession-desc";
@@ -137,7 +142,7 @@ function createCharacterStage() {
             game.alert(T("Please select profession"));
             return false;
         }
-        game.player.Name = name.value;
+        game.playerName = name.value;
         game.network.send(
             "create-character",
             {

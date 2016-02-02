@@ -135,7 +135,7 @@ function Minimap() {
             if (!point) {
                 point = makePoint(name);
 
-                if (name == game.player.Name) {
+                if (name == game.playerName) {
                     point.id = "player-point";
                 } else if (character.Karma < 0) {
                     point.classList.add("pk");

@@ -62,11 +62,7 @@ function Game() {
         if (!time)
             return;
         game.time = time;
-        var hours = Math.floor(time / 60);
-        var minutes = time % 60;
-        if (minutes < 10)
-            minutes = '0' + minutes;
-        this.timeElement.textContent = hours + ":" + minutes;
+        this.timeElement.textContent = util.formatTime(time);
     };
 
     this.debug = debug;
