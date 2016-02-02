@@ -480,10 +480,17 @@ Character.prototype = {
             this.sprite.height = 108;
             break;
         default:
-            this.sprite.nameOffset = 100;
-            this.sprite.offset = 28;
-            this.sprite.width = 128;
-            this.sprite.height = 128;
+            this.sprite.nameOffset = 72;
+            this.sprite.offset = 2*this.Radius;
+
+            this.sprite.width = 96;
+            this.sprite.height = 96;
+            this.sprite.speed = 7000;
+
+            // this.sprite.nameOffset = 100;
+            // this.sprite.offset = 28;
+            // this.sprite.width = 128;
+            // this.sprite.height = 128;
             this.sprite.speed = 14000;
         }
         if (!this.sprite.nameOffset)
