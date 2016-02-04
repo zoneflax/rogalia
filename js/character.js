@@ -430,6 +430,7 @@ Character.prototype = {
         case "ahper":
         case "cosmas":
         case "shot":
+        case "margo":
         case "umi":
             this.sprite.nameOffset = 70;
             break;
