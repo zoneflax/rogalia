@@ -6,11 +6,11 @@ var dom = {
             this.setClassOrId(elem, classOrId);
         }
         if (cfg) {
-            if ("text" in cfg)
+            if (cfg.text !== undefined)
                 elem.textContent = cfg.text;
-            if ("onclick" in cfg)
+            if (cfg.onclick !== undefined)
                 elem.onclick = cfg.onclick;
-            if ("title" in cfg)
+            if (cfg.title !== undefined)
                 elem.title = cfg.title;
         }
 

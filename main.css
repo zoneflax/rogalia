@@ -516,24 +516,15 @@ hr {
 }
 
 #effects {
-    top: 4px;
-    left: 125px;
+    top: 2px;
+    left: 160px;
     position: absolute;
     display: inline-block;
 }
 .effect {
-    margin-left: 3px;
-    border: 1px solid #c6700e;
-    border-radius: 2px;
-    background: #7b5323;
-    padding: 1px;
     cursor: pointer;
     float: left;
     position: relative;
-}
-.effect-name {
-    position: relative;
-    z-index: 1;
 }
 .effect-bad {
     color: #fd7279;
@@ -548,14 +539,26 @@ hr {
 .effect-note {
     color: #d89f5b;
 }
-
-.effect-progress {
-    top: 0;
-    left: 0;
+.effect-stacks {
     position: absolute;
-    height: 100%;
-    opacity: 0.5;
-    background: red;
+    bottom: 5px;
+    right: 5px;
+    color: #fff;
+    font-size: 10px;
+}
+
+.effect-progress-bg, .effect-progress {
+    position: absolute;
+    width: 30px;
+    height: 6px;
+    background: #4d3314;
+}
+.effect-progress-bg {
+    top: 34px;
+    left: 1px;
+}
+.effect-progress {
+    background: #7b5323;
 }
 
 .button {
@@ -588,18 +591,13 @@ hr {
 
 .button-bar i, .button i {
     display: block;
-    font-size: smaller;
+    font-size: 10px;
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 1.25em;
-}
-
-.button-bar i:before {
-    content: "(";
-}
-.button-bar i:after {
-    content: ")";
+    right: 16px;
+    bottom: 6px;
+    font-style: normal;
+    z-index: 1;
+    line-height: 1;
 }
 
 #action-button:after {
@@ -1561,7 +1559,7 @@ big {
 #target-container {
     position: absolute;
     left: 151px;
-    top: 27px;
+    top: 40px;
 }
 #target-container > canvas {
     margin-top: 10px;

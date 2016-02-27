@@ -73,7 +73,7 @@ function Character(id) {
     }.bind(this));
     this.sprite = this.sprites.idle;
 
-    this._parts = "[]"; //defauls for npcs
+    this._parts = "{}"; //defauls for npcs
 
 }
 
@@ -82,7 +82,7 @@ Character.prototype = {
         return this.x;
     },
     get Y() {
-        return this.y;
+        return (this.mount) ? this.y + 100 : this.y; // TODO: HACK: oh my fucking god I hate you
     },
     set X(x) {
         if (this.x == x)
@@ -205,7 +205,7 @@ Character.prototype = {
         this.loadSprite();
     },
     init: function(data) {
-        this.IsNpc = (data.Type != "man");
+        this.IsNpc = (data.Type != "player");
         this.sync(data, true);
         this.loadSprite();
     },
@@ -476,23 +476,20 @@ Character.prototype = {
             this.sprite.width = 80;
             this.sprite.height = 80;
             break;
-        case "tractor":
-            this.sprite.width = 128;
-            this.sprite.height = 108;
-            break;
         default:
-            this.sprite.nameOffset = 72;
-            this.sprite.offset = 2*this.Radius;
-
-            this.sprite.width = 96;
-            this.sprite.height = 96;
-            this.sprite.speed = 7000;
-
-            // this.sprite.nameOffset = 100;
-            // this.sprite.offset = 28;
-            // this.sprite.width = 128;
-            // this.sprite.height = 128;
-            this.sprite.speed = 14000;
+            if (this.Type == "player" && this.Sex == 1) {
+                this.sprite.nameOffset = 100;
+                this.sprite.offset = 28;
+                this.sprite.width = 112;
+                this.sprite.height = 112;
+                this.sprite.speed = 14000;
+            } else {
+                this.sprite.nameOffset = 72;
+                this.sprite.offset = 2*this.Radius;
+                this.sprite.width = 96;
+                this.sprite.height = 96;
+                this.sprite.speed = 7000;
+            }
         }
         if (!this.sprite.nameOffset)
             this.sprite.nameOffset = this.sprite.height;
@@ -511,53 +508,67 @@ Character.prototype = {
 
         sprite.loading = true;
 
+        var sex = this.sex();
         var animation = sprite.name;
-        var dir = Character.spriteDir + this.Type + "/";
+        var dir = Character.spriteDir + sex + "/";
         var parts = this.getParts();
         this._parts = JSON.stringify(parts);
-        parts.forEach(function(part) {
-            var path = dir + animation + "/" + part.type + "/" + part.name + ".png";
-            part.image = loader.loadImage(path);
-        });
+
+        for (var type in parts) {
+            var part = parts[type];
+            if (part && part.name) {
+                var path = dir + animation + "/" + type + "/" + part.name + ".png";
+                parts[type].image = loader.loadImage(path);
+            } else {
+                delete parts[type];
+            }
+        }
+
         if (sprite.name == "attack") {
-            var weapon = Character.weaponSprites.sword;
-            if (weapon)
-                parts.push({image: weapon.image});
+            parts["weapon"] = {
+                name: "sword",
+                image: Character.sprites[sex].weapons.sword.image,
+            };
         }
 
         var name = this.Name;
         loader.ready(function() {
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
-            var naked = Character.nakedSprites[animation];
+            var naked = Character.sprites[sex].naked[animation];
+            naked =  ("hair" in parts) ? naked.clean : naked.default;
+
             canvas.width = naked.image.width;
             canvas.height = naked.image.height;
             ctx.drawImage(naked.image, 0, 0);
-            parts.forEach(function(part, i) {
+            for (var type in parts) {
+                var part = parts[type];;
                 var image = part.image;
                 if (image && image.width > 0) {
                     if (part.color && part.opacity) {
-                        var worker = new Worker("js/tint.js");
-                        var tmpCanvas = util.imageToCanvas(image);
-                        var tmpCtx = tmpCanvas.getContext("2d");
-                        worker.onmessage = function(e) {
-                            tmpCtx.putImageData(e.data, 0, 0);
-                            ctx.drawImage(tmpCanvas, 0, 0);
-                        };
-                        worker.postMessage({
-                            imageData: tmpCtx.getImageData(0, 0, image.width, image.height),
-                            color: part.color,
-                            opacity: part.opacity,
-                        });
+                        // TODO: wrong result when used with helmet (hair is rendered on top of helmet)
+
+                        // var worker = new Worker("js/tint.js");
+                        // var tmpCanvas = util.imageToCanvas(image);
+                        // var tmpCtx = tmpCanvas.getContext("2d");
+                        // worker.onmessage = function(e) {
+                        //     tmpCtx.putImageData(e.data, 0, 0);
+                        //     ctx.drawImage(tmpCanvas, 0, 0);
+                        // };
+                        // worker.postMessage({
+                        //     imageData: tmpCtx.getImageData(0, 0, image.width, image.height),
+                        //     color: part.color,
+                        //     opacity: part.opacity,
+                        // });
 
                         // very slow
-                        // image = ImageFilter.tint(image, part.color, part.opacity);
-                        // ctx.drawImage(image, 0, 0);
+                        image = ImageFilter.tint(image, part.color, part.opacity);
+                        ctx.drawImage(image, 0, 0);
                     } else {
                         ctx.drawImage(image, 0, 0);
                     }
                 }
-            });
+            }
 
             sprite.image = canvas;
             sprite.makeOutline();
@@ -746,7 +757,8 @@ Character.prototype = {
     getDrawPoint: function() {
         var p = this.screen();
         // var dy = (this.mount) ? this.mount.sprite.offset : 0;
-        var dy = (this.mount) ? 1 : 0;
+        // TODO: HACK: remove me plz
+        var dy = (this.mount) ? [30, 12][this.Sex] : 0;
         return {
             p: p,
             x: Math.round(p.x - this.sprite.width / 2),
@@ -816,14 +828,9 @@ Character.prototype = {
         }
         p.toScreen();
 
-        var r = 14;
-        game.ctx.fillStyle = "#000";
-        game.ctx.beginPath();
-        game.ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-        game.ctx.fill();
-        p.x -= Character.skull.width - r;
-        p.y -= Character.skull.height - r;
-        Character.skull.draw(p);
+        Character.corpse.corpse.draw(p);
+        // TODO: uncomment with pixi?
+        // Character.corpse.arrow.draw(p);
     },
     drawEffects: function() {
         var p = this.getDrawPoint();
@@ -831,7 +838,7 @@ Character.prototype = {
 
         for (var name in this.Effects) {
             name = name.toLowerCase();
-            var sprite = Character.effectSprites[name];
+            var sprite = Character.sprites.effects[name];
             if (!sprite)
                 continue;
             p.x = sp.x - sprite.width/2;
@@ -1116,8 +1123,9 @@ Character.prototype = {
             }
         }
 
+        // TODO: FIXME: HACK: after male update
         if (this.mount)
-            animation = "ride";
+            animation = ["sit", "ride"][this.Sex];
         this.sprite = this.sprites[animation];
         this.sprite.position = position;
 
@@ -1222,7 +1230,6 @@ Character.prototype = {
                 if (this.mount)
                     this.mount.rider = this;
             }
-            this.Y = this.mount.Y+1;
         } else {
             if (this.mount) {
                 this.mount.rider = null;
@@ -1426,20 +1433,19 @@ Character.prototype = {
             dom.clear(efdiv);
             clearInterval(efdiv.interval);
         } else {
-            efdiv = document.createElement("div");
-            efdiv.id = id;
+            efdiv = dom.div("#" + id);
         }
 
         efdiv.hash = hash;
 
+        var title = TS(name);
+
         var duration = effect.Duration / 1e6;
         if (duration > 0) {
-            var progress = document.createElement("div");
             var last = new Date(duration - (Date.now() - effect.Added*1000));
 
-            progress.className = "effect-progress";
-            progress.style.width = "100%";
-            efdiv.appendChild(progress);
+            var progress = dom.div("effect-progress");
+            efdiv.appendChild(dom.wrap("effect-progress-bg", progress));
 
             var tick = 66;
             efdiv.interval = setInterval(function() {
@@ -1447,7 +1453,7 @@ Character.prototype = {
                 var hours = last.getUTCHours();
                 var mins = last.getUTCMinutes();
                 var secs = last.getUTCSeconds();
-                efdiv.title = sprintf("%s: %02d:%02d:%02d\n", T("Duration"), hours, mins, secs);
+                efdiv.title = sprintf("%s %02d:%02d:%02d\n", title, hours, mins, secs);
                 progress.style.width = 100 / (duration / last) + "%";
                 if (last <= 0) {
                     clearInterval(efdiv.interval);
@@ -1455,18 +1461,23 @@ Character.prototype = {
             }, tick);
         }
 
-        var title = TS(name);
-        var ename = dom.div("effect-name", {text: title});
+        var stacks = dom.span("", "effect-stacks", T("Stacks"));
+        var effectElem = dom.wrap("effect", [
+            dom.img("assets/icons/effects/" + util.stringToSymbol(name) + ".png", "effect-name"),
+            stacks,
+        ]);
+
         if (effect.Stacks > 1)
-            ename.textContent += " x" + effect.Stacks;
+            stacks.textContent = effect.Stacks;
 
         efdiv.className  = "effect " + EffectDesc.className(name);
         efdiv.name = name;
+        efdiv.title = title;
         efdiv.onclick = function() {
             var panel = new Panel("effect-description", title, [new EffectDesc(name)]);
             panel.show();
         };
-        efdiv.appendChild(ename);
+        efdiv.appendChild(effectElem);
 
         var effects = document.getElementById("effects");
         effects.appendChild(efdiv);
@@ -1723,24 +1734,28 @@ Character.prototype = {
         return this._icon;
     },
     getParts: function() {
-        var parts = [];
+        var parts = {
+            "feet": null,
+            "legs": null,
+            "body": null,
+            "hair": null,
+            "head": null,
+        };
         Character.clothes.forEach(function(type, i) {
             if (type == "head" && this.Style && this.Style.HideHelmet)
                 return;
-            var name = this.Clothes[i];
-            if (name && name != "naked")
-                parts.push({type: type, name: name});
+            parts[type] = {
+                name: this.Clothes[i]
+            };
         }.bind(this));
 
         if (this.Style && this.Style.Hair) {
             var hairStyle = this.Style.Hair.split("#");
-            var hair = {
-                type: "hair",
+            parts["hair"] = {
                 name: hairStyle[0],
                 color: hairStyle[1],
                 opacity: hairStyle[2],
             };
-            parts.unshift(hair);
         }
         return parts;
     },

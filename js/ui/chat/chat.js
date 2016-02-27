@@ -84,10 +84,10 @@ function Chat() {
         if (game.player.IsAdmin) {
             actions.push({
                 teleport: function() {
-                    game.network.send('teleport', {name: name});
+                    game.network.send("teleport", {name: name});
                 },
                 summon: function() {
-                    game.network.send('summon', {name: name});
+                    game.network.send("summon", {name: name});
                 }
             });
         }
@@ -244,6 +244,12 @@ function Chat() {
             switch (cmd) {
             case "where":
                 game.chat.addMessage(sprintf("%d %d %d", game.player.X, game.player.Y, game.player.Z));
+                break;
+            case "lvl-down":
+                game.chat.send(sprintf("*teleport %d %d %d", game.player.X, game.player.Y, game.player.Z + 1));
+                break;
+            case "lvl-up":
+                game.chat.send(sprintf("*teleport %d %d %d", game.player.X, game.player.Y, game.player.Z - 1));
                 break;
             case "help":
                 game.chat.addMessage("global: 0, local: 1");

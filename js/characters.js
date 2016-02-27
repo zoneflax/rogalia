@@ -58,9 +58,18 @@ Character.clothesIndex = function(name) {
 
 Character.skull = null;
 
-Character.nakedSprites = {};
-Character.weaponSprites = {};
-Character.effectSprites = {};
+Character.sprites = {
+    male: {
+        naked: {},
+        weapons: {},
+    },
+    female: {
+        naked: {},
+        weapons: {},
+    },
+    effects: {
+    }
+};
 
 Character.flags = {
     Empire: null,
@@ -69,13 +78,18 @@ Character.flags = {
 
 Character.initSprites = function() {
     Character.animations.forEach(function(animation) {
-        var path = Character.spriteDir + "/man/" + animation + "/naked.png";
-        var sprite = new Sprite(path);
-        Character.nakedSprites[animation] = sprite;
+        Character.sprites.male.naked[animation] = {
+            clean: new Sprite(Character.spriteDir + "male/" + animation + "/naked.png"),
+            default: new Sprite(Character.spriteDir + "male/" + animation + "/naked.png"),
+        };
+        Character.sprites.female.naked[animation] = {
+            clean: new Sprite(Character.spriteDir + "female/" + animation + "/naked.png"),
+            default: new Sprite(Character.spriteDir + "female/" + animation + "/naked-default.png"),
+        };
     });
     ["sword"].forEach(function(weapon) {
-        var sprite = new Sprite(Character.spriteDir + "/man/weapon/" + weapon + ".png");
-        Character.weaponSprites[weapon] = sprite;
+        Character.sprites.male.weapons[weapon] = new Sprite(Character.spriteDir + "male/weapon/" + weapon + ".png");
+        Character.sprites.female.weapons[weapon] = new Sprite(Character.spriteDir + "female/weapon/" + weapon + ".png");
     });
     // shared by all characters; stupid by fast?
     [["stun", 64, 42]].forEach(function(effect) {
@@ -83,9 +97,12 @@ Character.initSprites = function() {
         var width = effect[1];
         var height = effect[2];
         var sprite = new Sprite(Character.spriteDir + "/effects/" + name + ".png", width, height);
-        Character.effectSprites[name] = sprite;
+        Character.sprites.effects[name] = sprite;
     });
-    Character.skull = new Sprite("skull.png");
+    Character.corpse = {
+        corpse: new Sprite("icons/corpse/corpse.png"),
+        arrow: new Sprite("icons/corpse/arrow.png"),
+    };
 
     Character.flags.Empire = new Sprite("icons/flags/empire.png");
     Character.flags.Confederation = new Sprite("icons/flags/confederation.png");
@@ -186,9 +203,6 @@ Character.npcActions = {
     },
     "Buy sex": function() {
         game.network.send("buy-sex", {Id: this.Id});
-    },
-    "Buy indulgence": function() {
-        game.alert("Пока не реализовано :-(");
     },
     "Show instances": function() {
         var self = this;

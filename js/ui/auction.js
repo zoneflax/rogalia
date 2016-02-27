@@ -7,7 +7,7 @@ function Auction() {
             title: T("Buy"),
             update: function(title, contents) {
                 game.network.send("auction-buy-list", {Broker: self.broker.Id}, function(data) {
-                    dom.setContents(contents, self.buyView(data.Lots));
+                    dom.setContents(contents, [self.makeSearch(), self.buyView(data.Lots)]);
                 });
             }
         },
@@ -15,7 +15,7 @@ function Auction() {
             title: T("Sell"),
             update: function(title, contents) {
                 game.network.send("auction-sell-list", {Broker: self.broker.Id}, function(data) {
-                    dom.setContents(contents, self.sellView(data.Lots));
+                    dom.setContents(contents, [self.makeSearch(), self.sellView(data.Lots)]);
                 });
             }
         }
@@ -34,6 +34,19 @@ Auction.prototype = {
         this.panel.show();
     },
     backContents: null,
+    makeSearch: function() {
+        var input = dom.tag("input");
+        input.onkeyup = function() {
+            var re = new RegExp(this.value, "i");
+            dom.forEach(".lot", function() {
+                if (re.test(this.querySelector(".lot-type").textContent))
+                    dom.show(this);
+                else
+                    dom.hide(this);
+            });
+        };
+        return input;
+    },
     listView: function(lots, cmd, tabIndex, callback) {
         var self = this;
         return dom.wrap(".lot-list", Object.keys(lots).map(function(type) {
