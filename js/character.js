@@ -1062,7 +1062,7 @@ Character.prototype = {
             position = Math.floor(index) * multiple;
         } else if (this.Effects.Sitting) {
             animation = "sit";
-            var seat = Entity.get(this.Effects.sitting.SeatId);
+            var seat = Entity.get(this.Effects.Sitting.SeatId);
             if (seat) {
                 switch (seat.Orientation) {
                 case "w":
