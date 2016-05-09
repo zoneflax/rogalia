@@ -444,6 +444,7 @@ Character.prototype = {
             this.sprite.width = 112;
             this.sprite.height = 112;
             this.sprite.speed = 14000;
+            break;
         default:
             this.sprite.nameOffset = 72;
             this.sprite.offset = 2*this.Radius;
