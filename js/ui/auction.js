@@ -7,7 +7,7 @@ function Auction() {
             title: T("Buy"),
             update: function(title, contents) {
                 game.network.send("auction-buy-list", {Broker: self.broker.Id}, function(data) {
-                    dom.setContents(contents, [self.makeSearch(), self.buyView(data.Lots)]);
+                    dom.setContents(contents, self.buyView(data.Lots));
                 });
             }
         },
@@ -15,7 +15,7 @@ function Auction() {
             title: T("Sell"),
             update: function(title, contents) {
                 game.network.send("auction-sell-list", {Broker: self.broker.Id}, function(data) {
-                    dom.setContents(contents, [self.makeSearch(), self.sellView(data.Lots)]);
+                    dom.setContents(contents, self.sellView(data.Lots));
                 });
             }
         }
@@ -48,26 +48,31 @@ Auction.prototype = {
         return input;
     },
     listView: function(lots, cmd, tabIndex, callback) {
+        if (!lots)
+            return dom.wrap("", T("No lots"));
         var self = this;
-        return dom.wrap(".lot-list", Object.keys(lots).map(function(type) {
-            var count = lots[type];
-            var lot = dom.wrap(".lot", [
-                dom.wrap("slot lot-icon", [Entity.templates[type].icon()]),
-                dom.div("lot-type", {text: TS(type)}),
-                dom.div("lot-count", {text: T("Quantity") + ": " + count}),
-            ]);
-            lot.count = count;
-            lot.onclick = function() {
-                game.network.send(cmd, {Broker: self.broker.Id, Type: type}, function(data) {
-                    var content = self.tabs[tabIndex].tab.content;
-                    self.backContents = dom.detachContents(content);
-                    dom.append(content, callback(data.Lots, type));
-                });
-            };
-            return lot;
-        }).sort(function(a, b) {
-            return b.count - a.count;
-        }));
+        return [
+            this.makeSearch(),
+            dom.wrap(".lot-list", Object.keys(lots).map(function(type) {
+                var count = lots[type];
+                var lot = dom.wrap(".lot", [
+                    dom.wrap("slot lot-icon", [Entity.templates[type].icon()]),
+                    dom.div("lot-type", {text: TS(type)}),
+                    dom.div("lot-count", {text: T("Quantity") + ": " + count}),
+                ]);
+                lot.count = count;
+                lot.onclick = function() {
+                    game.network.send(cmd, {Broker: self.broker.Id, Type: type}, function(data) {
+                        var content = self.tabs[tabIndex].tab.content;
+                        self.backContents = dom.detachContents(content);
+                        dom.append(content, callback(data.Lots, type));
+                    });
+                };
+                return lot;
+            }).sort(function(a, b) {
+                return b.count - a.count;
+            })),
+        ];
     },
     buyView: function(lots) {
         return this.listView(lots, "auction-buy-list-find", 0, this.buyFindView.bind(this));
@@ -106,7 +111,7 @@ Auction.prototype = {
                         lot.Quality,
                         Vendor.createPrice(lot.Cost),
                         dom.button(T("Buy"), "lot-buy", function(e) {
-                            if (confirm(T("Buy") + " "+ TS(type) + "?")) {
+                            game.confirm(T("Buy") + " " + TS(type) + "?", function() {
                                 game.network.send(
                                     "buy",
                                     {Id: lot.Id, VendorName: lot.Vendor, Broker: self.broker.Id},
@@ -115,8 +120,8 @@ Auction.prototype = {
                                         dom.remove(e.target.parentNode.parentNode);
                                     }
                                 );
-                            }
-                        }),
+                            });
+                        })
                     ];
                 })
             )

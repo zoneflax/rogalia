@@ -258,8 +258,10 @@ Vendor.prototype = {
     manageView: function() {
         var self = this;
         return [
+            T("Sell"),
             dom.wrap("manage-vendor-row", this.manageBuy()),
             dom.hr(),
+            T("Buy up"),
             dom.wrap("manage-vendor-row", this.manageSell()),
             dom.hr(),
             dom.button(T("Take revenue"), "", function() {

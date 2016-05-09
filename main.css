@@ -328,7 +328,6 @@ hr {
     visibility: hidden;
     z-index: 1;
     text-align: left;
-    overflow: hidden;
     max-width: 500px;
 }
 .panel.top {
@@ -368,7 +367,6 @@ hr {
     url("assets/bg/panel/border-left.png") repeat-y left,
     url("assets/bg/panel/border-right.png") repeat-y right,
     #7b5323;
-    overflow: hidden;
     padding: 10px; /* update Panel.setWidth(); pad = 2*(padding) */
 }
 .panel .close{
@@ -389,6 +387,11 @@ hr {
 
 .panel.container button {
     min-width: 130px;
+}
+
+.container-actions {
+    text-align: center;
+    height: 22px;
 }
 
 .panel > img, .panel > canvas {
@@ -761,6 +764,7 @@ hr {
 }
 #terra-bar > .contents {
     width: 270px;
+    overflow: auto;
 }
 #terra-bar img, #map img {
     max-height: none;
@@ -1764,6 +1768,9 @@ input[type=number], .lot-quantity > input, .price > input {
 #bank button+button {
     clear: none;
 }
+#bank .vault {
+    overflow: auto;
+}
 
 #action-progress-value {
     background: #ac7637;
@@ -1853,6 +1860,11 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 .claim-action-east {
     right: 3px;
+}
+
+#citizenship button {
+    display: block;
+    width: 100%;
 }
 
 @media (min-width: 1174px) {
@@ -1983,7 +1995,6 @@ input[type=number], .lot-quantity > input, .price > input {
     border-radius: 2px;
     background: #99682e;
     margin: 3px;
-    float: right;
 }
 .icon-button:hover {
     -webkit-filter: brightness(150%);
@@ -1996,6 +2007,13 @@ input[type=number], .lot-quantity > input, .price > input {
     display: flex;
     justify-content: space-around;
     min-height: 500px;
+}
+.desc p {
+    margin-top: 0;
+}
+.desc i {
+    color: #FFA41B;
+    font-style: normal;
 }
 #quest-list {
     width: 34%;
@@ -2038,7 +2056,7 @@ input[type=number], .lot-quantity > input, .price > input {
     font-size: small;
 }
 
-.alert-overlay {
+.popup-overlay {
     z-index: 100500;
     background: rgba(0, 0, 0, 0.7);
     position: fixed;
@@ -2046,6 +2064,9 @@ input[type=number], .lot-quantity > input, .price > input {
     left: 0;
     width: 100%;
     height: 100%;
+}
+#popup .contents {
+    text-align: center;
 }
 
 .poker-table > :nth-child(1),
@@ -2255,4 +2276,14 @@ input[type=number], .lot-quantity > input, .price > input {
 .red-team th > img, .blue-team th > img {
     float: left;
     margin-right: 3px;
+}
+
+.talk-avatar {
+    max-height: 300px;
+    display: block;
+    margin: auto;
+
+    position: absolute;
+    top: -299px;
+    z-index: -1;
 }

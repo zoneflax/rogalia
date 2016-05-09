@@ -361,13 +361,16 @@ Entity.prototype = {
     defaultActionSuccess: function(data) {
     },
     defaultAction: function() {
+        var self = this;
+        function use() {
+            game.network.send("entity-use", { id: self.Id }, self.defaultActionSuccess.bind(self));
+        }
         switch (this.Type) {
         case "instance-exit":
-            if (!confirm(T("You will not be able to return to this intance. Are you sure?")))
-                return;
-            break;
+            game.confirm(T("You will not be able to return to this intance. Are you sure?"), use);
+            return;
         }
-        game.network.send("entity-use", { id: this.Id }, this.defaultActionSuccess.bind(this));
+        use();
     },
     destroy: function() {
         game.network.send("entity-destroy", {id: this.Id});
@@ -383,10 +386,11 @@ Entity.prototype = {
             game.help.runHook({type: "lift"});
         });
     },
-    SetRespawn: function() {
-        if (confirm(T("Are you sure?"))) {
-            game.network.send("SetRespawn", {id: this.Id});
-        }
+    setRespawn: function() {
+        var id = this.Id;
+        game.confirm(T("Confirm?"), function() {
+            game.network.send("SetRespawn", {id: id});
+        });
     },
     actionApply: function(action) {
         var localAction = util.lcfirst(action);

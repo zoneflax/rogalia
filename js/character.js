@@ -82,7 +82,7 @@ Character.prototype = {
         return this.x;
     },
     get Y() {
-        return (this.mount) ? this.y + 100 : this.y; // TODO: HACK: oh my fucking god I hate you
+        return (this.mount) ? this.y + 100 : this.y; // TODO: remove HACK
     },
     set X(x) {
         if (this.x == x)
@@ -106,7 +106,7 @@ Character.prototype = {
         return 0;
     },
     get Name() {
-        return this.name || this.Type;
+        return this.name || util.ucfirst(this.Type);
     },
     set Name(name) {
         this.name = name;
@@ -147,7 +147,7 @@ Character.prototype = {
             this.followPath();
         }
 
-        if (this.Name == "Margo") {
+        if (this.Type == "margo") {
             this.reloadSprite();
         } else if (!init && JSON.stringify(this.getParts()) != this._parts) {
             this.reloadSprite();
@@ -206,38 +206,10 @@ Character.prototype = {
     },
     init: function(data) {
         this.IsNpc = (data.Type != "player");
+        this.IsMob = "Aggressive" in data;
+
         this.sync(data, true);
         this.loadSprite();
-    },
-    isSimpleSprite: function() { //for migration; get rid of this shit
-        switch (this.Type) {
-        case "cat":
-        case "dog":
-        case "horse":
-        case "cow":
-        case "small-spider":
-        case "spider":
-        case "wolf":
-        case "wolf-fatty":
-        case "wolf-hungry":
-        case "wolf-undead":
-        case "wolf-demonic":
-        case "chicken":
-        case "goose":
-        case "rabbit":
-        case "preved-medved":
-        case "medved":
-        case "sheep":
-        case "omsk":
-        case "omich":
-        case "kitty-pahan":
-        case "kitty-cutthroat":
-        case "kitty-robber":
-        case "kitty-junkie":
-            return false;
-        default:
-            return this.IsNpc;
-        }
     },
     initSprite: function() {
         this.sprite.speed = 14000;
@@ -300,8 +272,11 @@ Character.prototype = {
                 "run": 8,
             };
             break;
-        case "diego":
         case "charles":
+            this.sprite.width = 67;
+            this.sprite.height = 95;
+            break;
+        case "diego":
             this.sprite.width = 73;
             this.sprite.height = 88;
             this.sprite.angle = Math.PI*2;
@@ -420,20 +395,6 @@ Character.prototype = {
         case "ded-moroz":
             this.sprite.nameOffset = 100;
             break;
-        case "vendor":
-        case "cirno":
-        case "moroz":
-        case "boris":
-        case "bertran":
-        case "bruno":
-        case "scrooge":
-        case "ahper":
-        case "cosmas":
-        case "shot":
-        case "margo":
-        case "umi":
-            this.sprite.nameOffset = 70;
-            break;
         case "small-spider":
             this.sprite.width = 64;
             this.sprite.height = 64;
@@ -467,6 +428,7 @@ Character.prototype = {
             this.sprite.width = 100;
             this.sprite.height = 100;
             this.sprite.offset = 45;
+            this.sprite.nameOffset = 45;
             break;
         case "wolf-fatty":
             this.sprite.width = 120;
@@ -476,20 +438,18 @@ Character.prototype = {
             this.sprite.width = 80;
             this.sprite.height = 80;
             break;
+        case "player":
+            this.sprite.nameOffset = 80;
+            this.sprite.offset = 28;
+            this.sprite.width = 112;
+            this.sprite.height = 112;
+            this.sprite.speed = 14000;
         default:
-            if (this.Type == "player" && this.Sex == 1) {
-                this.sprite.nameOffset = 100;
-                this.sprite.offset = 28;
-                this.sprite.width = 112;
-                this.sprite.height = 112;
-                this.sprite.speed = 14000;
-            } else {
-                this.sprite.nameOffset = 72;
-                this.sprite.offset = 2*this.Radius;
-                this.sprite.width = 96;
-                this.sprite.height = 96;
-                this.sprite.speed = 7000;
-            }
+            this.sprite.nameOffset = 72;
+            this.sprite.offset = 2*this.Radius;
+            this.sprite.width = 96;
+            this.sprite.height = 96;
+            this.sprite.speed = 7000;
         }
         if (!this.sprite.nameOffset)
             this.sprite.nameOffset = this.sprite.height;
@@ -500,6 +460,11 @@ Character.prototype = {
             return;
 
         this.initSprite();
+
+        if (this.IsMob) {
+            this.loadMobSprite();
+            return;
+        }
 
         if (this.IsNpc) {
             this.loadNpcSprite();
@@ -585,25 +550,18 @@ Character.prototype = {
         var type = this.Type;
         switch (type) {
         case "margo":
-            var name = (this.Owner == game.player.Id) ? "margo-" + util.rand(0, 1) : "margo";
-            this.sprite.load(Character.spriteDir + name + ".png");
-            return;
-        default:
-            if (!this.isSimpleSprite()) {
-                this._loadNpcSprites();
-                return;
-            }
-            if (type == "vendor") {
-                type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
-                    return hash + c.charCodeAt(0);
+            type = (this.Owner == game.player.Id) ? "margo-naked" : "margo";
+            break;
+        case "vendor":
+            type = "vendor-" + ([].reduce.call(this.Name, function(hash, c) {
+                return hash + c.charCodeAt(0);
                 }, 0) % 3 + 1);
-                break;
-            }
+            break;
         }
-        this.sprite.load(Character.spriteDir + type + ".png");
+        this.sprite.load(Character.npcSpriteDir + type + ".png");
     },
-    _loadNpcSprites: function() {
-        this.sprite.load(Character.spriteDir + this.Type + "/" + this.sprite.name + ".png");
+    loadMobSprite: function() {
+        this.sprite.load(Character.mobSpriteDir + this.Type + "/" + this.sprite.name + ".png");
     },
     getActions: function() {
         var actions = {};
@@ -645,6 +603,9 @@ Character.prototype = {
             };
             common.ComeToMe = function() {
                 game.chat.send("*come-to-me " + this.Id);
+            };
+            common.Summon = function() {
+                game.chat.send("*summon " + this.Id);
             };
             if (this.Type == "vendor") {
                 common.RemoveVendor = function() {
@@ -756,9 +717,7 @@ Character.prototype = {
     },
     getDrawPoint: function() {
         var p = this.screen();
-        // var dy = (this.mount) ? this.mount.sprite.offset : 0;
-        // TODO: HACK: remove me plz
-        var dy = (this.mount) ? [30, 12][this.Sex] : 0;
+        var dy = (this.mount) ? this.mount.sprite.offset : 0;
         return {
             p: p,
             x: Math.round(p.x - this.sprite.width / 2),
@@ -859,7 +818,7 @@ Character.prototype = {
             this.drawBox();
         }
 
-        //else drawn in controller
+        // else drawn in controller
         if (this != game.controller.world.hovered && this != game.player.target) {
             this.drawName(undefined, !!marker);
         }
@@ -868,7 +827,7 @@ Character.prototype = {
             info.draw();
         });
 
-        if(game.debug.player.position) {
+        if (game.debug.player.position) {
             game.ctx.fillStyle = "#fff";
             var text = "(" + Math.floor(this.X) + " " + Math.floor(this.Y) + ")";
             var x = this.X - game.ctx.measureText(text).width / 2;
@@ -1069,7 +1028,6 @@ Character.prototype = {
         return this.Dx == 0 && this.Dy == 0 && this.Action.Name == "";
     },
     animate: function() {
-        var simpleSprite = this.isSimpleSprite();
         var animation = "idle";
         var self = (this.mount) ? this.mount : this;
         var position = self.sprite.position;
@@ -1090,42 +1048,36 @@ Character.prototype = {
             index %= sectors;
             var multiple = sector / this.sprite.angle;
             position = Math.floor(index) * multiple;
-        } else if (!simpleSprite) {
-            var sitting = this.Effects.Sitting;
-            if (sitting) {
-                animation = "sit";
-                var seat = Entity.get(sitting.SeatId);
-                if (seat) {
-                    switch (seat.Orientation) {
-                    case "w":
-                        position = 1; break;
-                    case "s":
-                        position = 3; break;
-                    case "e":
-                        position = 5; break;
-                    case "n":
-                        position = 7; break;
-                    }
+        } else if (this.Effects.Sitting) {
+            animation = "sit";
+            var seat = Entity.get(this.Effects.sitting.SeatId);
+            if (seat) {
+                switch (seat.Orientation) {
+                case "w":
+                    position = 1; break;
+                case "s":
+                    position = 3; break;
+                case "e":
+                    position = 5; break;
+                case "n":
+                    position = 7; break;
                 }
-            } else {
-                switch (this.Action.Name) {
-                case "attack":
-                case "dig":
-                    animation = this.Action.Name;
-                    break;
-                case "defecate":
-                case "":
-                    animation = "idle";
-                    break;
-                default:
-                    animation = (this.IsNpc) ? "attack" : "craft";
-                }
+            }
+        } else {
+            switch (this.Action.Name) {
+            case "attack":
+            case "dig":
+                animation = this.Action.Name;
+                break;
+            case "defecate":
+            case "":
+                animation = "idle";
+                break;
+            default:
+                animation = (this.IsNpc) ? "attack" : "craft";
             }
         }
 
-        // TODO: FIXME: HACK: after male update
-        if (this.mount)
-            animation = ["sit", "ride"][this.Sex];
         this.sprite = this.sprites[animation];
         this.sprite.position = position;
 
@@ -1140,12 +1092,13 @@ Character.prototype = {
         if (animation == "run")
             speed *= this.speedFactor;
 
-        if(now - this.sprite.lastUpdate > (this.sprite.speed / speed)) {
+        if (now - this.sprite.lastUpdate > (this.sprite.speed / speed)) {
             this.sprite.frame++;
             this.sprite.lastUpdate = now;
         }
 
-        if (simpleSprite) {
+        // TODO: remove after sprites update
+        if (false) {
             var start = 0, end = 0;
             var current = this.sprite.frames[animation];
             if (Array.isArray(current)) {
@@ -1248,8 +1201,8 @@ Character.prototype = {
             this.updateBar();
         }
 
-        this.info.map(function(info) {
-            info.update(k);
+        this.info = this.info.filter(function(info) {
+            return info.update(k);
         });
 
         if (this.ballon) {
@@ -1734,6 +1687,8 @@ Character.prototype = {
         return this._icon;
     },
     getParts: function() {
+        if (this.IsNpc)
+            return {};
         var parts = {
             "feet": null,
             "legs": null,
@@ -1763,9 +1718,15 @@ Character.prototype = {
         var self = this;
         game.player.interactTarget = this;
         game.network.send("follow", {Id: this.Id}, function interact() {
-            // TODO: remove margo hack
-            if (self.Type == "vendor" && self.Owner != 0 && self.Name != "Margo") {
+            switch (self.Type) {
+            case "vendor":
                 game.controller.vendor.open(self);
+                return;
+            }
+
+            var talks = self.getTalks();
+            if (talks.talks.length == 0) {
+                Character.npcActions.Quest.call(self);
                 return;
             }
 
@@ -1774,7 +1735,7 @@ Character.prototype = {
             if (self.getQuests().length > 0)
                 actions.push("Quest");
 
-            actions = actions.concat(Object.keys(self.getTalks().actions));
+            actions = actions.concat(Object.keys(talks.actions));
 
             var panel = new Panel(
                 "interraction",
@@ -1802,7 +1763,13 @@ Character.prototype = {
         return Character.sex(this.Sex);
     },
     isInteractive: function() {
-        return (this.Type.toLowerCase() in game.talks.npcs) || (this.Type == "vendor");
+        if (this.Type == "vendor")
+            return true;
+        if (this.getAvailableQuests().length > 0)
+            return true;
+        if (this.Type.toLowerCase() in game.talks.npcs)
+            return true;
+        return false;
     },
     use: function(entity) {
         switch (entity.Group) {

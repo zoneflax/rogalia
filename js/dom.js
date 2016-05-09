@@ -52,7 +52,7 @@ var dom = {
     img: function(src, classOrId) {
         var img = new Image();
         img.src = src;
-        this.setClassOrId(img, classOrId);
+        this.setClassOrId(img, classOrId || "");
         return img;
     },
     link: function(url, text) {

@@ -154,7 +154,7 @@ Container.prototype = {
         this.panel = new Panel(
             "container-" + this.id,
             this.name,
-            [slots, this.fuel, dom.hr(), moveAll, sort, openAll],
+            [slots, this.fuel, dom.hr(), dom.wrap(".container-actions", [moveAll, sort, openAll])],
             {
                 mousedown: function(e) {
                     game.controller.highlight("inventory", false);

@@ -64,7 +64,6 @@ Journal.prototype = {
                 this.view.appendChild(dom.hr());
                 this.view.appendChild(start);
 
-
                 quest.getDescContents().forEach(this.view.appendChild.bind(this.view));
             }.bind(this);
             this.list.appendChild(name);

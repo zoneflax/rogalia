@@ -59,7 +59,7 @@ function createCharacterStage() {
         },
         {
             name: "Farmer",
-            desc: "Главные поставщики продовольствия. Они выращивают все, что можно вырастить в Новых Землях. Безкрайние поля, долгий и упорный труд — вот ваше ремесло.",
+            desc: "Главные поставщики продовольствия. Они выращивают все, что можно вырастить в Новых Землях. Бескрайние поля, долгий и упорный труд — вот ваше ремесло.",
             skills: {
                 Farming: 10,
                 Fishing: 5,
@@ -183,7 +183,7 @@ function createCharacterStage() {
 
     this.sync = function(data) {
         if (data.Warning)
-            game.alert(data.Warning);
+            game.alert(T(data.Warning));
         else
             game.setStage("loading", data);
     };

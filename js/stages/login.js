@@ -171,7 +171,7 @@ function loginStage() {
         if (data.Warning) {
             localStorage.removeItem("password");
             if (!autoLogin)
-                game.alert(data.Warning);
+                game.alert(T(data.Warning));
             panel.show();
             autoLogin = false;
         }

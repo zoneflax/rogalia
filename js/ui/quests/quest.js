@@ -57,18 +57,23 @@ Quest.prototype = {
         ];
     },
     makeDesc: function(ready) {
-        var desc = document.createElement("div");
         var source = (ready) ? this.data.final : this.data.desc;
-        desc.textContent = source[game.lang];
-        return desc;
+        var desc = source[game.lang] || this.data.desc[game.lang];
+        return dom.wrap("desc", util.mklist(desc).map(function(html) {
+            var p = dom.tag("p");
+            p.innerHTML = html;
+            return p;
+        }));
     },
     makeGoal: function() {
         var goal = document.createElement("div");
 
         var end = document.createElement("div");
-        end.textContent = T("Quest ender") + ": " + T(this.End);
+        end.textContent = T("Quest ender") + ": " + TS(this.End);
         goal.appendChild(end);
-        goal.appendChild(dom.hr());
+
+        if (this.Goal.HaveItems || this.Goal.BringItems || this.Goal.Cmd)
+            goal.appendChild(dom.hr());
 
         if (this.Goal.HaveItems) {
             goal.appendChild(document.createTextNode(T("You need to have these items") + ":"));

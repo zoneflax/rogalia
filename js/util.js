@@ -373,6 +373,12 @@ var util = new function() {
             minutes = '0' + minutes;
         return hours + ":" + minutes;;
     };
+
+    this.mklist = function(x) {
+        if (x instanceof Array)
+            return x;
+        return [x];
+    };
 };
 
 if (!Math.hypot) {

@@ -228,7 +228,6 @@ function Map() {
         // this.each(function(w, h, p, x, y) {
         //     this.drawTile(game.ctx, w, h, p);
         // });
-        // return;
         var layers = this.makeLayers();
 
         var scr = game.screen;

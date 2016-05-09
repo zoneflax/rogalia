@@ -37,8 +37,8 @@ dict.init = function() {
 
     if (game.lang != "ru") {
         dict.update = function(){};
-        window.T = function(text) {
-            return text;
+        window.T = function(text, symbol) {
+            return (symbol) ? util.symbolToString(text) : text;
         };
 
         return;

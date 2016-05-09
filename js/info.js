@@ -138,7 +138,6 @@ function Info(message, character) {
     if (!this.text)
         return;
 
-
     if (game.chat)
         game.chat.addMessage(this.text);
     else
@@ -156,8 +155,7 @@ function Info(message, character) {
 Info.prototype = {
     update: function(k) {
         if (this.time + this.duration < Date.now()) {
-            this.character.info.splice(this.character.info.indexOf(this), 1);
-            return;
+            return false;
         }
         switch(this.type) {
         case "text":
@@ -165,6 +163,7 @@ Info.prototype = {
         default:
             this.y -= 20 * k;
         }
+        return true;
     },
     draw: function() {
         if (!this.target) //on teleport/death can be empty
@@ -275,10 +274,10 @@ Info.prototype = {
         case "murder":
         case "miss":
         case "block":
-            return game.characters.get(this.data);
+            return game.entities.get(this.data);
         case "combo":
         case "attack":
-            return game.characters.get(this.data.Target);
+            return game.entities.get(this.data.Id);
         }
         return this.character;
     },

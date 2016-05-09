@@ -1,7 +1,7 @@
 "use strict";
 
-function Exchange() {
-    game.network.send("get-exchange-info", {}, function callback(data) {
+function Exchange(npc) {
+    game.network.send("get-exchange-info", {Id: npc.Id}, function callback(data) {
         var table = document.createElement("table");
         table.id = "exchange-rates-table";
         table.innerHTML = "<tr>" +
@@ -24,7 +24,7 @@ function Exchange() {
                 var buttonBuy = dom.button(T("Buy"));
                 buttonBuy.onclick = function() {
                     game.network.send(
-                        "exchange", {Assignation: assignation, Amount: +inputBuy.value}
+                        "exchange", {Id: npc.Id, Assignation: assignation, Amount: +inputBuy.value}
                     );
                 };
                 var rateBuy = dom.make("td", [
@@ -38,7 +38,7 @@ function Exchange() {
                 var buttonSell = dom.button(T("Sell"));
                 buttonSell.onclick = function() {
                     game.network.send(
-                        "exchange", {Assignation: assignation, Amount: -inputSell.value}
+                        "exchange", {Id: npc.Id, Assignation: assignation, Amount: -inputSell.value}
                     );
                 };
                 var rateSell = dom.make("td", [
@@ -54,6 +54,7 @@ function Exchange() {
                 buttonIngots.onclick = function() {
                     game.network.send(
                         "exchange", {
+                            Id: npc.Id,
                             Assignation: assignation,
                             Amount: +inputIngots.value,
                             Ingot: true,

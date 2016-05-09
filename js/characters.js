@@ -48,6 +48,9 @@ Character.drawActions = function() {
 };
 
 Character.spriteDir = "characters/";
+Character.mobSpriteDir = "characters/mobs/";
+Character.npcSpriteDir = "characters/npcs/";
+Character.npcAvatarSpriteDir = "characters/npcs/avatars/";
 
 Character.animations = ["idle", "run", "dig", "craft", "attack", "sit", "ride"];
 Character.clothes = ["feet", "legs", "body", "head"];
@@ -92,6 +95,7 @@ Character.initSprites = function() {
         Character.sprites.female.weapons[weapon] = new Sprite(Character.spriteDir + "female/weapon/" + weapon + ".png");
     });
     // shared by all characters; stupid by fast?
+    // TODO: 99% of the time we don't need it.
     [["stun", 64, 42]].forEach(function(effect) {
         var name = effect[0];
         var width = effect[1];
@@ -125,12 +129,12 @@ Character.npcActions = {
                 game.network.send("set-citizenship", {Id: id, Name: name});
             };
         };
-        var citizenships = {
-            "I choose Empire": set("Empire"),
-            "I choose Confederation": set("Confederation"),
-            "I want to be free": set(""),
-        };
-        game.menu.show(citizenships);
+        new Panel("citizenship", "Citizenship", [
+            dom.button(T("Empire"), "", set("Empire")),
+            dom.button(T("Confederation"), "", set("Confederation")),
+            dom.hr(),
+            dom.button(T("I want to be free"), "", set("")),
+        ]).show();
     },
     "Get claim": function() {
         game.network.send("get-claim", {Id: this.Id});
@@ -141,10 +145,10 @@ Character.npcActions = {
             game.network.send("get-village-claim", {Id: this.Id, Name: name});
     },
     "Bank": function() {
-        new Bank();
+        new Bank(this);
     },
     "Exchange": function() {
-        new Exchange();
+        new Exchange(this);
     },
     "Quest": function() {
         var quests = this.getQuests();
@@ -170,10 +174,12 @@ Character.npcActions = {
     "Talk": function() {
         var self = this;
         var info = this.getTalks();
+        var avatar = dom.img(Character.npcAvatarSpriteDir + self.Type + ".png", "talk-avatar");
         var panel = new Panel(
             "interaction",
             this.Name,
             [
+                avatar,
                 dom.wrap("", info.talks.map(function(text) {
                     return dom.tag("p", "", {text: text});
                 })),
@@ -206,7 +212,7 @@ Character.npcActions = {
     },
     "Show instances": function() {
         var self = this;
-        game.network.send("instance-list", {}, function(data) {
+        game.network.send("instance-list", {Id: this.Id}, function(data) {
             if (!data.Instances) {
                 game.alert(T("No available instances"));
                 return;
@@ -217,7 +223,7 @@ Character.npcActions = {
                 data.Instances.map(function(instance) {
                     var enter = dom.button(T("Enter"));
                     enter.onclick = function() {
-                        game.network.send("instance", {Name: instance.Name});
+                        game.network.send("instance", {Id: self.Id, Name: instance.Name});
                     };
                     return [
                         TS(instance.Name),

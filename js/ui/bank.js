@@ -1,19 +1,19 @@
 "use strict";
 
-function Bank() {
+function Bank(npc) {
     var balance = document.createElement("label");
     var price = Vendor.createPriceInput();
 
     var deposit = document.createElement("button");
     deposit.textContent = T("Deposit");
     deposit.onclick = function() {
-        game.network.send("deposit", {"Cost": price.cost()}, callback);
+        game.network.send("deposit", {Id: npc.Id, Cost: price.cost()}, callback);
     };
 
     var withdraw = document.createElement("button");
     withdraw.textContent = T("Withdraw");
     withdraw.onclick = function() {
-        game.network.send("withdraw", {"Cost": price.cost()}, callback);
+        game.network.send("withdraw", {Id: npc.Id, Cost: price.cost()}, callback);
     };
 
     var claimRent = document.createElement("label");
@@ -23,7 +23,7 @@ function Bank() {
     claimPay.textContent = T("Pay");
     claimPay.onclick = function() {
         if (confirm(T("Confirm?"))) {
-            game.network.send("pay-for-claim", {}, callback);
+            game.network.send("pay-for-claim", {Id: npc.Id}, callback);
         }
     };
 
@@ -34,7 +34,7 @@ function Bank() {
     // claim.appendChild(claimLastPaid);
     claim.appendChild(claimPay);
 
-    var vault = document.createElement("div");
+    var vault = dom.div("vault");
 
     var contents = [
         balance,
@@ -49,8 +49,9 @@ function Bank() {
     ];
     var panel = new Panel("bank", "Bank", contents);
     panel.hide();
+    panel.entity = npc;
 
-    game.network.send("get-bank-info", {}, callback);
+    game.network.send("get-bank-info", {id: npc.Id}, callback);
 
     function date(unixtime) {
         var span = document.createElement("span");
@@ -78,9 +79,8 @@ function Bank() {
         // claimLastPaid.appendChild(date(claim.LastPaid));
 
         dom.clear(vault);
-        data.Bank.Vault.forEach(function(vaultSlot, i) {
-            var slot = document.createElement("div");
-            slot.className = "slot";
+        dom.setContents(vault, data.Bank.Vault.map(function(vaultSlot, i) {
+            var slot = dom.div("slot");
             if (vaultSlot.Unlocked) {
                 var entity = Entity.get(vaultSlot.Id);
                 slot.appendChild(entity.icon());
@@ -92,13 +92,12 @@ function Bank() {
                 slot.onclick = function() {
                     var cost = Math.pow(100, i);
                     if (confirm(TT("Buy slot {cost} gold?", {cost: cost}))) {
-                        game.network.send("buy-bank-vault-slot", {}, callback);
+                        game.network.send("buy-bank-vault-slot", {id: npc.Id}, callback);
                     };
                 };
             }
-            vault.appendChild(slot);
-
-        });
+            return slot;
+        }));
         // //TODO: remove items on panel close?
 
 

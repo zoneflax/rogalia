@@ -277,7 +277,7 @@ function Game() {
     this.addCharacter = function(character) {
         this.addEntity(character);
 
-        this.characters.set(character.Name,  character);
+        this.characters.set(character.name || character.Id, character);
 
         if (character.Name == game.playerName) {
             character.isPlayer = true;;
@@ -307,7 +307,7 @@ function Game() {
     this.removeCharacterById = function(id) {
         var c = game.entities.get(id);
         game.sortedEntities.remove(c);
-        var name = c.Name;
+        var name = c.name || c.Id;
         game.entities.remove(id);
         game.characters.remove(name);
     };
@@ -333,7 +333,9 @@ function Game() {
         this.setStage("exit", message);
     };
 
-    this.alert = new Alert();
+    var popup = new Popup();
+    this.alert = popup.alert;
+    this.confirm = popup.confirm;
 
     this.sendError = function(msg) {
         game.network.send("error", {msg: msg});

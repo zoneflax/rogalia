@@ -58,7 +58,6 @@ function mainStage(data) {
     var cam = game.camera;
     function isVisible(t) {
         var p = t.getDrawPoint();
-
         return util.rectIntersects(
             p.x, p.y, t.sprite.width, t.sprite.height,
             cam.x, cam.y, scr.width, scr.height
@@ -97,16 +96,20 @@ function mainStage(data) {
 
 
         game.sortedEntities.traverse(drawObject);
+
+
         // this.drawOrder();
         // this.drawTopologic();
         // this.drawAdaptive();
+
+
         snow.draw();
 
         if (debug.map.darkness)
             game.map.drawDarkness();
+
         game.characters.forEach(drawUI);
         game.controller.draw();
-        // game.iso.fillRect(game.player.Location.X)
         // this.debug();
         game.ctx.restore();
     };
