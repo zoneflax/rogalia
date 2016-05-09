@@ -9,6 +9,7 @@
 (in-package :rogalia-test)
 
 (defparameter *root* "http://localhost/?server=localhost")
+(setf selenium-utils:*timeout* 1)
 
 (defmacro with-login ((&optional (login "Tester") (password "qwerty")) &body body)
   `(with-session ()
@@ -25,6 +26,6 @@
 
 (subtest "login-not-found"
   (with-login ((format nil "nonexistent~a" (random 100)))
-     (sleep 10)))
+    (is (text (wait-for ".popup-message")) "Not found")))
 
 (finalize)

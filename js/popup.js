@@ -35,12 +35,12 @@ function Popup(buttons) {
         },
         confirm: function(message, callback) {
             panel.setContents([
-                dom.div("", {text: message}),
-                dom.button(T("Ok"), "", function() {
+                dom.div("popup-message", {text: message}),
+                dom.button(T("Ok"), "popup-ok", function() {
                     panel.hide();
                     callback();
                 }),
-                dom.button(T("Cancel"), "", panel.hide.bind(panel))
+                dom.button(T("Cancel"), "popup-cancel", panel.hide.bind(panel))
             ]);
             panel.show();
             panel.center();

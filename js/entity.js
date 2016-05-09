@@ -567,7 +567,7 @@ Entity.prototype = {
         return this.Durability.Max > 0 && this.Durability.Current <= 0.1*this.Durability.Max;
     },
     drawable: function() {
-        if (!this.inWorld())
+        if (this.Location != Entity.LOCATION_ON_GROUND)
             return false;
        if (game.player.inBuilding && this.Disposition == "roof")
             return false;
@@ -587,9 +587,6 @@ Entity.prototype = {
 
         var p = this.getDrawPoint();
 
-        if (this.Id && this.Id == game.player.Burden) {
-            p.y -= game.player.sprite.height/2;
-        }
         if (this.Disposition == "roof" && game.controller.hideStatic()) {
             return;
         }

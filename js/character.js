@@ -412,6 +412,8 @@ Character.prototype = {
             this.sprite.width = 150;
             this.sprite.height = 150;
             this.sprite.offset = 43;
+            this.sprite.nameOffset = 90;
+            this.sprite.mount = 16;
             break;
         case "preved-medved":
             this.sprite.width = 210;
@@ -718,7 +720,7 @@ Character.prototype = {
     },
     getDrawPoint: function() {
         var p = this.screen();
-        var dy = (this.mount) ? this.mount.sprite.offset : 0;
+        var dy = (this.mount) ? this.mount.sprite.mount : 0;
         return {
             p: p,
             x: Math.round(p.x - this.sprite.width / 2),
@@ -772,6 +774,9 @@ Character.prototype = {
 
         if (this != game.controller.world.hovered && this == game.player.target)
             this.drawHovered(true);
+
+        if (this.burden)
+            this.drawBurden(this.burden);
     },
     drawCorpsePointer: function() {
         if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
@@ -791,6 +796,13 @@ Character.prototype = {
         Character.corpse.corpse.draw(p);
         // TODO: uncomment with pixi?
         // Character.corpse.arrow.draw(p);
+    },
+    drawBurden: function(burden) {
+        var point = this.getDrawPoint();
+        var sprite = burden.sprite;
+        point.x += this.sprite.width/2 - sprite.width/2;
+        point.y -= sprite.height/2;
+        burden.sprite.draw(point);
     },
     drawEffects: function() {
         var p = this.getDrawPoint();
@@ -897,9 +909,8 @@ Character.prototype = {
         if (this.dst.time + 33 > now) {
             game.ctx.strokeStyle = "#fff";
             game.ctx.beginPath();
-            var p = new Point(this.dst.x, this.dst.y).toScreen();
-            game.ctx.arc(p.x, p.y, this.dst.radius--, 0, Math.PI * 2);
-            game.ctx.stroke();
+            var {x, y} = this.dst;
+            game.iso.strokeCircle(x, y, this.dst.radius--);
             this.dst.time = now;
         }
     },
@@ -1079,6 +1090,9 @@ Character.prototype = {
             }
         }
 
+        if (this.mount)
+            animation = "ride";
+
         this.sprite = this.sprites[animation];
         this.sprite.position = position;
 
@@ -1189,8 +1203,8 @@ Character.prototype = {
                 this.mount.rider = null;
                 this.mount = null;
             }
-            this.updatePosition(k);
         }
+        this.updatePosition(k);
 
         if (this.isPlayer) {
             // clear target if one is disappeared
@@ -1511,21 +1525,12 @@ Character.prototype = {
                 this.stop();
         }
 
-        if (this.rider) {
-            this.rider.X = this.x;
-            this.rider.Y = this.y+1;
-            this.rider.updateBurden();
-        }
-
-
         if (this.isPlayer) {
             game.controller.updateVisibility();
             game.controller.minimap.update();
         }
 
-        this.updateBurden();
         this.updatePlow();
-
     },
     followPath: function() {
         if (this.Path && this.Path.length > 0) {
@@ -1534,11 +1539,6 @@ Character.prototype = {
             return true;
         }
         return false;
-    },
-    updateBurden: function() {
-        if (this.burden) {
-            this.burden.setPoint(this);
-        }
     },
     updatePlow: function() {
         if (!this.plow)
@@ -1578,7 +1578,6 @@ Character.prototype = {
         if (this.burden)
             game.controller.creatingCursor(this.burden, "lift-stop");
     },
-
     updateCamera: function() {
         var camera = game.camera;
         var screen = game.screen;

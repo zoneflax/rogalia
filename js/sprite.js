@@ -96,8 +96,8 @@ Sprite.prototype = {
             this.position * this.height,
             this.width,
             this.height,
-            p.x,
-            p.y + this.dy,
+            p.x | 0,
+            (p.y + this.dy) | 0,
             this.width,
             this.height
         );
