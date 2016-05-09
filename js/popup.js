@@ -25,8 +25,8 @@ function Popup(buttons) {
     return {
         alert: function(message, onclose) {
             panel.setContents([
-                dom.div("", {text: message}),
-                dom.button(T("Ok"), "", panel.hide.bind(panel)),
+                dom.div("popup-message", {text: message}),
+                dom.button(T("Ok"), "popup-ok", panel.hide.bind(panel)),
             ]);
             panel.show();
             panel.center();

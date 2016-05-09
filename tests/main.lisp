@@ -19,13 +19,16 @@
      (send-keys ,password)
      (send-key :tab)
      (click)
-
      ,@body))
 
 (plan nil)
 
+(subtest "empty-login"
+  (with-login ("")
+    (is (text ".popup-message") "Please enter login")))
+
 (subtest "login-not-found"
   (with-login ((format nil "nonexistent~a" (random 100)))
-    (is (text (wait-for ".popup-message")) "Not found")))
+    (is (text ".popup-message") "Login not found")))
 
 (finalize)

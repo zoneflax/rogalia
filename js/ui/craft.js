@@ -304,7 +304,7 @@ Craft.prototype = {
 
         var clear = document.createElement("button");
         clear.className = "recipe-search-clear";
-        clear.textContent = "❌";
+        clear.textContent = "×";
         clear.title = T("Clear search");
         clear.onclick = function() {
             this.search("");
