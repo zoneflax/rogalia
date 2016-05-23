@@ -32,7 +32,7 @@ var config = {
         // low: false,
         fullscreen: false,
         autoHighlightDoors: false,
-        snowflakes: true,
+        snowflakes: false,
         centerScreen: true,
     },
     sound: {

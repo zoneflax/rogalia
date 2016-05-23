@@ -17,7 +17,11 @@ html, body {
     color: white;
     overflow: hidden;
     background: url("assets/bg/bg.png") repeat;
-    cursor: url("assets/cursors/default.gif"), auto;
+    cursor: url("assets/cursors/default.png"), auto;
+}
+
+a:hover {
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 
 :-webkit-full-screen {
@@ -119,6 +123,7 @@ button {
     text-decoration: none;
     border-radius: 5px;
     outline: none;
+    cursor: url("assets/cursors/default.png"), auto;
 }
 
 /* Remove button padding in FF */
@@ -235,7 +240,7 @@ hr {
 }
 #menu .action:hover {
     color: lightgreen;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 #vendor > .contents {
     min-width: 250px;
@@ -251,7 +256,7 @@ hr {
     white-space: nowrap;
     margin: 1px;
     float: left;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     overflow: hidden;
     position: relative;
 }
@@ -350,7 +355,7 @@ hr {
     url("assets/bg/panel/header-left.png") no-repeat top left,
     url("assets/bg/panel/header-right.png") no-repeat top right,
     url("assets/bg/panel/header.png") repeat-x;
-    cursor: default;
+    cursor: url("assets/cursors/default.png"), auto;
     width: 100%;
     height: 14px;
     box-sizing: border-box;
@@ -390,7 +395,7 @@ hr {
     bottom: 0;
 }
 .panel .close:hover {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     -webkit-filter: brightness(150%);
     filter: brightness(150%);
 }
@@ -535,7 +540,7 @@ hr {
     display: inline-block;
 }
 .effect {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     float: left;
     position: relative;
 }
@@ -583,7 +588,7 @@ hr {
     height: 45px;
     line-height: 45px;
     position: relative;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     margin: -1px -9px;
 }
 
@@ -733,7 +738,7 @@ hr {
 }
 .recipe-list >  li {
     list-style-type: none;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 .group-toggle {
     padding-left: 16px;
@@ -755,7 +760,7 @@ hr {
 }
 #recipe-details .item-link {
     margin-left: 3px;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 #recipe-slots {
     overflow: auto;
@@ -853,7 +858,7 @@ hr {
     padding-left: 15px;
     box-sizing: border-box;
     position: relative;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 .tabs > hr {
     margin: -2px 2px 0 0;
@@ -955,21 +960,26 @@ hr {
     white-space: nowrap;
     color: #fff;
 }
-.message .body .lmb, .message .body .rmb {
+.lmb, .rmb {
     width: 14px;
     height: 16px;
     display: inline-block;
     position: relative;
     top: 4px;
 }
-.message .body .lmb {
-    background: url("assets/bg/lmb.png");
+lmb, .lmb {
+    background: url("assets/bg/lmb.png") no-repeat 0 0;
 }
-.message .body .rmb {
-    background: url("assets/bg/rmb.png");
+rmb, .rmb {
+    background: url("assets/bg/rmb.png") no-repeat 0 0;
 }
+lmb, rmb {
+    padding-left: 16px;
+    color: #ffb151;
+}
+
 .message .body .recipe-link,  .message .body .marker-link{
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     text-decoration: underline;
     color: lightgreen;
 }
@@ -978,13 +988,13 @@ hr {
 }
 #users li {
     list-style-type: square;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 #users li:hover {
     color: lightgreen;
 }
 #users a {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     margin-left: 0.5em;
 }
 #users a:hover {
@@ -1010,7 +1020,7 @@ hr {
     height: 8px;
     box-shadow: 0 0 1px 3px #000;
     background: #0f0;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 #map #player-point {
     background: #0ff;
@@ -1271,7 +1281,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     background: url("assets/bg/main-button.png") no-repeat;
     width: 105px;
     height: 86px;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     display: inline-block;
     margin-right: 3px;
     position: relative;
@@ -1302,7 +1312,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     width: 230px;
 }
 #create-character .profession-tab {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     padding: 3px 5px;
     border-radius: 4px 4px 0 0;
     margin-bottom: 2px;
@@ -1368,7 +1378,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     margin-top: -2px;
 }
 #skills .skill {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 #skills .skill.capped {
     color: #f7b56d;
@@ -1390,7 +1400,7 @@ ol li{
 }
 ol li a:hover {
     text-decoration: underline;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 
 .unavailable {
@@ -1407,7 +1417,7 @@ ol li a:hover {
     top: 3px;
     border-radius: 2px;
     padding: 2px;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     background: #99682e;
     z-index: 2;
 }
@@ -1563,7 +1573,7 @@ big {
 .character-avatar-not-available {
     line-height: 60px;
     font-size: 19px;
-    cursor: help;
+    cursor: url("assets/cursors/help.png"), auto;
 }
 .character-avatar-container > img {
     margin-left: -30px;
@@ -1820,12 +1830,12 @@ input[type=number], .lot-quantity > input, .price > input {
     max-width: 500px;
 }
 .talk-link:hover {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     color: lightgreen;
 }
 
 #adsence-explanation {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     text-decoration: underline;
 }
 #ad-jimmy {
@@ -2000,7 +2010,7 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 .icon-button {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     padding: 2px;
     border-radius: 2px;
     background: #99682e;
@@ -2031,7 +2041,7 @@ input[type=number], .lot-quantity > input, .price > input {
     padding: 0 0 0 18px;
 }
 #quest-list li:hover, #quest-list li.selected {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     color: lightgreen;
 }
 #quest-desc {
@@ -2130,7 +2140,7 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 #settings label {
     display: block;
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
 }
 #settings label:hover {
     color: lightgreen;
@@ -2183,7 +2193,7 @@ input[type=number], .lot-quantity > input, .price > input {
     padding-top: 3px;
 }
 .letter {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     min-height: 32px;
     position: relative;
 }
@@ -2213,7 +2223,7 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 #auction .lot:hover {
-    cursor: pointer;
+    cursor: url("assets/cursors/pointer.png"), auto;
     background-color: #99682e;
 }
 #auction {

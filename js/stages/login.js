@@ -60,12 +60,12 @@ function loginStage() {
 
     var loginInput = dom.input(T("Login"), login);
     var passwordInput = dom.input(T("Password"), "", "password");
-    var signinButton = dom.button(T("Sign in"));
+    var signinButton = dom.button(T("Sign in"), "#sign-in");
 
     var emailInput = dom.input(T("Email"));
     dom.hide(emailInput.label);
 
-    var signupButton = dom.button(T("Sign up"));
+    var signupButton = dom.button(T("Sign up"), "#sign-up");
     signupButton.onclick = function() {
         if (registering)
             return true;

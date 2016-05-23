@@ -281,7 +281,7 @@ var util = new function() {
         element.addEventListener('mousedown', function(e) {
             // if (!e.target.classList.contains("contents") && !e.target.classList.contains("title-text"))
             //     return;
-	    if(getComputedStyle(e.target).cursor == "pointer")
+	    if(getComputedStyle(e.target).cursor.indexOf("pointer") != -1)
 	        return;
 	    var checking = e.target;
 	    while(checking && checking != element) {

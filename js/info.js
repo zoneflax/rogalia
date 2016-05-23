@@ -128,13 +128,11 @@ function Info(message, character) {
         return;
     }
     this.value = util.toFixed(this.value, (this.value < 1) ? 2 : 0);
-
     var formatter = this.formatters[this.type];
     if (formatter)
         this.text = formatter.call(this);
     else if (message.Text)
         this.text = TT(message.Text);
-
     if (!this.text)
         return;
 
@@ -145,6 +143,7 @@ function Info(message, character) {
 
     if (!this.data) {
         var record = dom.div("info-message", {text: this.text});
+
         document.getElementById("messages").appendChild(record);
         setTimeout(function() {
             dom.remove(record);
@@ -172,6 +171,7 @@ Info.prototype = {
         var big = 20;
         var bigger = 30;
         var huge = 50;
+
         switch(this.type) {
         case "heal":
             this.drawValue(
@@ -255,7 +255,7 @@ Info.prototype = {
         game.ctx.fillStyle = color;
 
         var p = target.screen();
-        p.y -= target.sprite.nameOffset + 2*FONT_SIZE;
+        p.y -= target.nameOffset() + 2*FONT_SIZE;
         p.x += this.x - game.ctx.measureText(text).width / 2;
 
         if (size) {

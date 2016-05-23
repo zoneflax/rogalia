@@ -165,6 +165,11 @@ Character.prototype = {
             this.updateParty(data.Party);
         }
     },
+    avatar: function() {
+        if (this.isPlayer)
+            return loader.loadImage("avatars/" + member.sex() + ".png");
+        return dom.img("assets/" + Character.npcAvatarSpriteDir + this.Type + ".png", "talk-avatar");
+    },
     updateParty: function(members) {
         var party = game.controller.party;
         dom.clear(party);
@@ -176,7 +181,7 @@ Character.prototype = {
                 return;
             var member = game.characters.get(name);
             if (member) {
-                var avatar = loader.loadImage("avatars/" + member.sex() + ".png");
+                var avatar = member.avatar();
             } else {
                 avatar = dom.div(".character-avatar-not-available", {text: "?"});
                 avatar.title = T("Out of sight");
@@ -215,6 +220,7 @@ Character.prototype = {
         this.sprite.speed = 14000;
         this.sprite.offset = this.Radius;
         this.sprite.angle = Math.PI/4;
+
         switch (this.Type) {
         case "cat":
             this.sprite.width = 90;
@@ -391,10 +397,6 @@ Character.prototype = {
                 "run": 3,
             };
             break;
-        case "snegurochka":
-        case "ded-moroz":
-            this.sprite.nameOffset = 100;
-            break;
         case "small-spider":
             this.sprite.width = 64;
             this.sprite.height = 64;
@@ -412,14 +414,12 @@ Character.prototype = {
             this.sprite.width = 150;
             this.sprite.height = 150;
             this.sprite.offset = 43;
-            this.sprite.nameOffset = 90;
             this.sprite.mount = 16;
             break;
         case "preved-medved":
             this.sprite.width = 210;
             this.sprite.height = 210;
             this.sprite.offset = 44;
-            this.sprite.nameOffset = 150;
             this.sprite.speed = 20000;
             break;
         case "cow":
@@ -430,7 +430,6 @@ Character.prototype = {
             this.sprite.width = 100;
             this.sprite.height = 100;
             this.sprite.offset = 45;
-            this.sprite.nameOffset = 45;
             break;
         case "wolf-fatty":
             this.sprite.width = 120;
@@ -440,22 +439,21 @@ Character.prototype = {
             this.sprite.width = 80;
             this.sprite.height = 80;
             break;
+        case "training-dummy":
+            this.sprite.width = 80;
+            this.sprite.height = 80;
+            this.sprite.angle = 0;
+            break;
         case "player":
-            this.sprite.nameOffset = 80;
             this.sprite.offset = 28;
             this.sprite.width = 112;
             this.sprite.height = 112;
             this.sprite.speed = 14000;
             break;
         default:
-            this.sprite.nameOffset = 72;
             this.sprite.offset = 2*this.Radius;
-            this.sprite.width = 96;
-            this.sprite.height = 96;
             this.sprite.speed = 7000;
         }
-        if (!this.sprite.nameOffset)
-            this.sprite.nameOffset = this.sprite.height;
     },
     loadSprite: function() {
         var sprite = this.sprite;
@@ -474,6 +472,7 @@ Character.prototype = {
             return;
         }
 
+        // emulate loading, because we will load sprite ourselves
         sprite.loading = true;
 
         var sex = this.sex();
@@ -561,6 +560,7 @@ Character.prototype = {
                 }, 0) % 3 + 1);
             break;
         }
+
         this.sprite.load(Character.npcSpriteDir + type + ".png");
     },
     loadMobSprite: function() {
@@ -639,6 +639,15 @@ Character.prototype = {
             }
         }
     },
+    nameOffset: function() {
+        switch (this.Type) {
+        case "player":
+            return 80;
+        case "horse":
+            return 100;
+        }
+        return this.sprite.height;
+    },
     drawAction: function() {
         if(this.Action.Duration) {
             var progress = Math.min(this.action.progress, 1);
@@ -650,7 +659,7 @@ Character.prototype = {
                 var h = FONT_SIZE * 0.5;
                 var p = this.screen();
                 var x = p.x - w/2;
-                var y = p.y - this.sprite.nameOffset + h + 1;
+                var y = p.y - this.nameOffset() + h + 1;
                 h -= 2;
 
                 if (!config.ui.simpleFonts) {
@@ -781,18 +790,12 @@ Character.prototype = {
     drawCorpsePointer: function() {
         if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
             return;
-        var p = new Point(this.Corpse);
-        var X = this.X - p.x;
-        var Y = this.Y - p.y;
-        var L = Math.hypot(X, Y);
-
-        var l = Math.min(game.screen.width, game.screen.height)/3;
-        if (L > l) {
-            p.x = this.X - X*l/L;
-            p.y = this.Y - Y*l/L;
-        }
-        p.toScreen();
-
+        var dir = new Point(1, 1);
+        var p = new Point(this.mount ? this.mount : this);
+        var diff = new Point(this.Corpse).sub(p);
+        var angle = Math.atan2(diff.y, diff.x);
+        dir.rotate(angle).mul(100);
+        p.toScreen().add(dir).round();
         Character.corpse.corpse.draw(p);
         // TODO: uncomment with pixi?
         // Character.corpse.arrow.draw(p);
@@ -867,7 +870,7 @@ Character.prototype = {
         var height = width * marker.height / marker.width;
         var p = this.screen();
         p.x -= width / 2;
-        p.y -= this.sprite.nameOffset + height + FONT_SIZE;
+        p.y -= this.nameOffset() + height + FONT_SIZE;
 
         game.ctx.drawImage(marker, p.x, p.y, width, height);
     },
@@ -907,7 +910,7 @@ Character.prototype = {
             return;
         var now = Date.now();
         if (this.dst.time + 33 > now) {
-            game.ctx.strokeStyle = "#fff";
+            game.ctx.strokeStyle = "#ff0";
             game.ctx.beginPath();
             var {x, y} = this.dst;
             game.iso.strokeCircle(x, y, this.dst.radius--);
@@ -960,7 +963,7 @@ Character.prototype = {
         }
 
         var p = this.screen();
-        var y = p.y - this.sprite.nameOffset;
+        var y = p.y - this.nameOffset();
         var dy = FONT_SIZE * 0.5;
 
         if (this.isInteractive())
@@ -1039,27 +1042,29 @@ Character.prototype = {
     idle: function() {
         return this.Dx == 0 && this.Dy == 0 && this.Action.Name == "";
     },
+    sector: function(angle, x, y) {
+        var sectors = 2*Math.PI / angle;
+        var alpha = Math.atan2(-y, x);
+        var sector = Math.round(alpha / angle);
+        return (sector + sectors + 1) % sectors;
+    },
     animate: function() {
         var animation = "idle";
         var self = (this.mount) ? this.mount : this;
         var position = self.sprite.position;
 
-        if (self.sprite.angle == Math.PI/2 && position > 4) {
+        if (self.sprite.angle == 0) {
+            position = 0;
+        } else if (self.sprite.angle == Math.PI/2 && position > 4) {
             position = (position / 2)<<0;
         }
 
-        if (this.sprite.angle == 0) {
-            position = 0; //omsk hack
-        } else if (self.Dx || self.Dy) {
+        if (self.Dx || self.Dy) {
             animation = "run";
-            var sector = self.sprite.angle;
-            var sectors = 2*Math.PI / sector;
-            var angle = Math.atan2(-self.Dy, self.Dx);
-            var index = Math.round(angle / sector);
-            index += sectors + 1;
-            index %= sectors;
-            var multiple = sector / this.sprite.angle;
-            position = Math.floor(index) * multiple;
+            var angle = self.sprite.angle;
+            var sector = this.sector(angle, self.Dx, self.Dy);
+            var multiple = angle / this.sprite.angle;
+            position = sector * multiple;
         } else if (this.Effects.Sitting) {
             animation = "sit";
             var seat = Entity.get(this.Effects.Sitting.SeatId);
@@ -1138,9 +1143,9 @@ Character.prototype = {
                 this.sprite.lastUpdate = now + util.rand(5, 60) * 60;
         }
     },
-    drawAttackRadius: function() {
+    drawAttackRadius: function(position) {
         var p = new Point(this);
-        var sector = (this.sprite.position - 1);
+        var sector = (position || this.sprite.position) - 1;
         var offset = new Point(CELL_SIZE, 0).rotate(2*Math.PI - sector * Math.PI/4);
         p.add(offset);
         game.ctx.fillStyle = (this.isPlayer) ? "rgba(255, 255, 255, 0.4)" : "rgba(255, 0, 0, 0.2)";
@@ -1673,13 +1678,12 @@ Character.prototype = {
         return false;
     },
     equippedWith: function(group) {
-        return this.Equip.filter(function(eid) {
-            return (eid != 0);
-        }).map(function(eid) {
-            return Entity.get(eid);
-        }).filter(function(item) {
-            return (item.Group == group);
-        }).length;
+        return this.Equip
+            .filter(Number)
+            .map(Entity.get)
+            .some(function(item) {
+                return (item.Group == group);
+            });
     },
     icon: function() {
         if (!this._icon)
@@ -1765,7 +1769,7 @@ Character.prototype = {
     isInteractive: function() {
         if (this.Type == "vendor")
             return true;
-        if (this.getAvailableQuests().length > 0)
+        if (this.getQuests().length > 0)
             return true;
         if (this.Type.toLowerCase() in game.talks.npcs)
             return true;

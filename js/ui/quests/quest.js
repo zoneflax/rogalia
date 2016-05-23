@@ -1,9 +1,10 @@
 "use strict";
-function Quest(q) {
+function Quest(q, npc) {
     for (var i in q) {
         this[i] = q[i];
     }
     this.data = game.quests[q.Id];
+    this.npc = npc;
 }
 
 Quest.prototype = {
@@ -49,6 +50,7 @@ Quest.prototype = {
     },
     getDescContents: function(ready) {
         return [
+            this.npc && this.npc.avatar(),
             this.makeDesc(ready),
             dom.hr(),
             this.makeGoal(),
@@ -88,8 +90,10 @@ Quest.prototype = {
         }
 
         if (this.data.tip) {
-            var tip = this.data.tip[game.lang];
-            goal.appendChild(document.createTextNode(tip));
+            var tip = dom.tag("p");
+            tip.innerHTML = this.data.tip[game.lang];
+            goal.appendChild(dom.hr());
+            goal.appendChild(tip);
         }
         if ("wiki" in this.data) {
             var links = this.data.wiki[game.lang] || [];
@@ -129,7 +133,7 @@ Quest.prototype = {
         var button = document.createElement("button");
         button.textContent = T(action);
 
-        var nearEndNpc = game.player.interactTarget.Type == this.End;
+        var nearEndNpc = this.npc && this.npc.Type == this.End;
         var canEnd = this.ready() && nearEndNpc;
 
         if (canEnd || canStart) {

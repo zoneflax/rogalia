@@ -375,19 +375,19 @@ function Game() {
         vk: function() {
             var vk = document.createElement("button");
             var vkLogo = document.createElement("img");
-            vkLogo.src = "http://vk.com/favicon.ico";
+            vkLogo.src = "//vk.com/favicon.ico";
             vk.appendChild(vkLogo);
             vk.appendChild(document.createTextNode(T("Group")));
-            vk.onclick = openLink("http://vk.com/rogalia");
+            vk.onclick = openLink("//vk.com/rogalia");
             return vk;
         },
         twitter: function() {
             var twitter = document.createElement("button");
             var twitterLogo = document.createElement("img");
-            twitterLogo.src = "http://twitter.com/favicon.ico";
+            twitterLogo.src = "//twitter.com/favicon.ico";
             twitter.appendChild(twitterLogo);
             twitter.appendChild(document.createTextNode(T("Twitter")));
-            twitter.onclick = openLink("http://twitter.com/Tatrics");
+            twitter.onclick = openLink("//twitter.com/Tatrics");
             return twitter;
         },
         wiki: function() {
@@ -515,6 +515,7 @@ function Game() {
 
     this.stage = new Stage();
     this.setStage("connecting");
+
 
     window.onerror = function(msg, url, line) {
         window.onerror = null;

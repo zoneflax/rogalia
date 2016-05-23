@@ -160,7 +160,7 @@ Character.npcActions = {
         var self = this;
         var talks = {};
         quests.forEach(function(q) {
-            var quest = new Quest(q);
+            var quest = new Quest(q, self);
             var name = quest.getName() + " (" + quest.getStatusMarker() + ")";
             talks[name] = function() {
                 var panel = new Panel("quest", "Quest", quest.getContents());
@@ -174,12 +174,11 @@ Character.npcActions = {
     "Talk": function() {
         var self = this;
         var info = this.getTalks();
-        var avatar = dom.img(Character.npcAvatarSpriteDir + self.Type + ".png", "talk-avatar");
         var panel = new Panel(
             "interaction",
             this.Name,
             [
-                avatar,
+                self.avatar(),
                 dom.wrap("", info.talks.map(function(text) {
                     return dom.tag("p", "", {text: text});
                 })),

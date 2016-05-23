@@ -26,6 +26,9 @@ function Controller(game) {
             return controller.targetInWorld() &&
                 this.world.x > 0 && this.world.y > 0 &&
                 this.world.x < game.screen.width && this.world.y < game.screen.height;
+        },
+        point: function() {
+            return new Point(this.x, this.y);
         }
     };
 
@@ -236,11 +239,6 @@ function Controller(game) {
         },
     };
 
-    // TODO: was controller.cursor getter; check usage and remove
-    this.getCursor = function() {
-        return this.world.cursor || this.cursor.firstChild;
-    };
-
     this.highlight = function(name, enable) {
         if (!(name in this))
             return;
@@ -260,7 +258,7 @@ function Controller(game) {
     };
 
     this.update = function() {
-        if (this.world.cursor || this.cursor.entity)
+        if (this.world.cursor instanceof Entity || this.cursor.entity)
             document.body.classList.add("cursor-hidden");
         else
             document.body.classList.remove("cursor-hidden");
@@ -655,6 +653,21 @@ function Controller(game) {
         };
     };
 
+    this.setClick = function(callback, draw) {
+        this.callback[this.LMB] = function() {
+            callback();
+            this.clearCursors();
+            return true;
+        };
+        if (draw) {
+            this.world.cursor = {
+                setPoint: function() {},
+                alignedData: function(){},
+                draw: draw,
+            };
+        }
+    };
+
     this.processActionQueue = function process(data) {
         var action = game.controller.actionQueue.shift();
         if (!action)
@@ -843,7 +856,7 @@ function Controller(game) {
 
 
     this.updateHovered = function() {
-        if (this.world.menuHovered)
+        if (this.world.menuHovered || this.world.cursor)
             return;
         if (this.cursor.isActive()) {
             this.cursor.updateHovered();

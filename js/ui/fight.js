@@ -9,14 +9,14 @@ function Fight() {
     var buttons = actions.map(function(action) {
         var button = document.getElementById(action + "-button");
         button.onclick = function() {
-            apply(action);
+            apply(action, true);
         };
         return button;
     });
 
     var hotbar = game.controller.actionHotbar;
 
-    function apply(action) {
+    function apply(action, prepare) {
         var now = Date.now();
         if (now - lastSend < GCD) {
             game.controller.showWarning(T("Cooldown"));
@@ -24,11 +24,23 @@ function Fight() {
         }
         lastSend = now;
 
-        if (!game.controller.mouse.isValid())
+        if (!prepare && !game.controller.mouse.isValid())
             return;
 
         switch (action) {
         case "irimi":
+            if (prepare) {
+                game.controller.setClick(
+                    function() {
+                        apply(action);
+                    },
+                    function() {
+                        game.ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+                        var p = game.controller.world.point;
+                        game.iso.fillCircle(p.x, p.y, 8);
+                    });
+                return;
+            }
         case "kaiten":
         case "tenkan":
             break;
@@ -38,6 +50,18 @@ function Fight() {
             }
             if (!(game.player.target instanceof Character)) {
                 game.controller.showWarning("You have no target");
+                return;
+            }
+            if (prepare) {
+                game.controller.setClick(
+                    function() {
+                        apply(action);
+                    },
+                    function() {
+                        var p = new Point(game.controller.world.point).sub(new Point(game.player));
+                        var sector = game.player.sector(Math.PI/4, p.x, p.y);
+                        game.player.drawAttackRadius(sector);
+                    });
                 return;
             }
         }

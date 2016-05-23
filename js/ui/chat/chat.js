@@ -871,7 +871,7 @@ function Chat() {
                 p.x - character.sprite.width / 2 + "px";
 
             ballon.style.top = game.offset.y - game.camera.y +
-                (p.y - 1.2 * character.sprite.nameOffset - ballon.offsetHeight) + "px";
+                (p.y - 1.2 * character.nameOffset() - ballon.offsetHeight) + "px";
         };
         ballon.update();
 

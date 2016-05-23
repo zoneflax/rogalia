@@ -31,42 +31,29 @@ Journal.prototype = {
         }
         dom.clear(this.list);
 
+        var self = this;
         Object.keys(game.player.ActiveQuests).forEach(function(id) {
             var quest = new Quest(game.player.ActiveQuests[id].Quest);
             var name = document.createElement("li");
             name.className = "quest";
 
 
-            if (id == this.selected)
+            if (id == self.selected)
                 name.classList.add("selected");
 
             name.textContent = quest.getName();
             name.onclick = function() {
                 dom.removeClass(".quest", "selected");
-                this.selected = id;
+                self.selected = id;
                 name.classList.add("selected");
-                dom.clear(this.view);
 
-                var title = document.createElement("div");
-                title.className = "quest-title";
-                title.textContent = quest.getName();
-
-                // switch (quest.Period) {
-                // case "day":
-                //     title.textContent += " (" + T("daily") + ")";
-                // }
-
-                var start = document.createElement("div");
-                start.className = "quest-start";
-                start.textContent = quest.Start + ":";
-
-                this.view.appendChild(title);
-                this.view.appendChild(dom.hr());
-                this.view.appendChild(start);
-
-                quest.getDescContents().forEach(this.view.appendChild.bind(this.view));
-            }.bind(this);
-            this.list.appendChild(name);
-        }.bind(this));
+                dom.setContents(self.view, [
+                    dom.wrap("quest-title", quest.getName()),
+                    dom.hr(),
+                    dom.wrap("quest-start", util.ucfirst(T(quest.Start)) + ":"),
+                ].concat(quest.getDescContents()));
+            };
+            self.list.appendChild(name);
+        });
     },
 };
