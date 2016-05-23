@@ -283,8 +283,8 @@ Character.prototype = {
             this.sprite.height = 95;
             break;
         case "diego":
-            this.sprite.width = 73;
-            this.sprite.height = 88;
+            this.sprite.width = 74;
+            this.sprite.height = 95;
             this.sprite.angle = Math.PI*2;
             this.sprite.frames = {
                 "idle": 1,
