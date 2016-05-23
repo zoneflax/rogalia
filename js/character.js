@@ -602,7 +602,10 @@ Character.prototype = {
         };
         if (game.player.IsAdmin) {
             common.Kill = function() {
-                game.chat.send("*kill " + this.Id);
+                if (this.IsNpc)
+                    game.chat.send("*remove-npc " + this.Id);
+                else
+                    game.chat.send("*kill " + this.Id);
             };
             common.ComeToMe = function() {
                 game.chat.send("*come-to-me " + this.Id);
@@ -938,7 +941,7 @@ Character.prototype = {
         var name = this.Name;
         if (this.Type == "vendor") {
 
-            return (this.Owner) ? name : T(name);
+            return (this.Owner) ? name.substring(1) : T(name);
             // return TT("Vendor of {name}", {name: name});
         }
 
