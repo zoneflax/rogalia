@@ -602,7 +602,7 @@ Character.prototype = {
         };
         if (game.player.IsAdmin) {
             common.Kill = function() {
-                if (this.IsNpc)
+                if (this.IsNpc && !this.IsMob)
                     game.chat.send("*remove-npc " + this.Id);
                 else
                     game.chat.send("*kill " + this.Id);
