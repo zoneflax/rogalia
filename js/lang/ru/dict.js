@@ -1436,6 +1436,7 @@ var dict = {
     "No lots": "Нет лотов",
     "Domination": "Доминирование",
     "Kitties den": "Кошачье логово",
+    "Kitties cave": "Кошачье пещера",
     "Valley of heroes": "Долина героев",
     "Dead castle": "Мертвый замок",
     "Damned village": "Проклятая деревня",
