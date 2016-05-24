@@ -444,6 +444,11 @@ Character.prototype = {
             this.sprite.height = 80;
             this.sprite.angle = 0;
             break;
+        case "blue-chopper":
+        case "red-chopper":
+            this.sprite.width = 96;
+            this.sprite.height = 96;
+            break;
         case "player":
             this.sprite.offset = 28;
             this.sprite.width = 112;

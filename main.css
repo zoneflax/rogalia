@@ -1909,18 +1909,25 @@ input[type=number], .lot-quantity > input, .price > input {
     padding: 3px;
     z-index: 10;
     position: absolute;
-    border-radius: 3px;
+    border-radius: 4px;
     color: #fff;
     background: #99682e;
-    border: 1px solid #a57031;
+    border: 1px solid #4e3313;
     display: none;
     bottom: 110%;
     left: -10%;
     line-height: 1.25;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.tooltip > span > small {
+    color: #cdcdcd;
+    display: block;
 }
 
 .tooltip:hover > span {
-    display: inline-block;
+    display: block;
 }
 
 #controls-bar, #action-hotbar-container{

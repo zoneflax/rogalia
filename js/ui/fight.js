@@ -49,7 +49,7 @@ function Fight() {
                 game.player.selectNextTarget();
             }
             if (!(game.player.target instanceof Character)) {
-                game.controller.showWarning("You have no target");
+                game.controller.showWarning("Select target");
                 return;
             }
             if (prepare) {

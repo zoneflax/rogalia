@@ -1444,4 +1444,5 @@ var dict = {
     "Max": "Макс",
     "Kill": "Убить",
     "Training dummy": "Тренировочный манекен",
+    "Select target": "Выберите цель",
 };
