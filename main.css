@@ -1449,6 +1449,9 @@ ol li a:hover {
     top: 6px;
     right: 125px;
 }
+#build-warning-details > hr{
+    margin: 5px -5px;
+}
 #bg-state {
     right: 0;
     left: 0;
