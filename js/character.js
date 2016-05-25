@@ -945,9 +945,7 @@ Character.prototype = {
     getName: function() {
         var name = this.Name;
         if (this.Type == "vendor") {
-
-            return (this.Owner) ? name.substring(1) : T(name);
-            // return TT("Vendor of {name}", {name: name});
+            return name.substring(1);
         }
 
         if (this.IsNpc) {
