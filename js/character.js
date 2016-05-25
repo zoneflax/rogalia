@@ -508,7 +508,7 @@ Character.prototype = {
             var canvas = document.createElement("canvas");
             var ctx = canvas.getContext("2d");
             var naked = Character.sprites[sex].naked[animation];
-            naked =  ("hair" in parts) ? naked.clean : naked.default;
+            naked = ("hair" in parts || parts.head) ? naked.clean : naked.default;
 
             canvas.width = naked.image.width;
             canvas.height = naked.image.height;
@@ -1708,17 +1708,16 @@ Character.prototype = {
             "hair": null,
             "head": null,
         };
+        var hideHelmet = this.Style && this.Style.HideHelmet;
         Character.clothes.forEach(function(type, i) {
-            if (type == "head" && this.Style && this.Style.HideHelmet)
-                return;
             parts[type] = {
-                name: this.Clothes[i]
+                name: (type == "head" && hideHelmet) ? "" : this.Clothes[i]
             };
         }.bind(this));
 
-        if (this.Style && this.Style.Hair) {
+        if (!parts.head.name && this.Style && this.Style.Hair) {
             var hairStyle = this.Style.Hair.split("#");
-            parts["hair"] = {
+            parts.hair = {
                 name: hairStyle[0],
                 color: hairStyle[1],
                 opacity: hairStyle[2],
