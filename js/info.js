@@ -32,11 +32,13 @@ function Info(message, character) {
                 name: "lvl-up",
                 width: 100,
                 height: 220,
+                dy: -18
             },
             down: {
                 name: "lvl-up",
                 width: 100,
                 height: 60,
+                dy: -18
             }
         });
         game.sound.playSound("lvl-up");
@@ -72,13 +74,13 @@ function Info(message, character) {
                     name: "heal",
                     width: 96,
                     height: 128,
-                    dy: -8
+                    dy: -28
                 },
                 down: {
                     name: "heal",
                     width: 96,
                     height: 128,
-                    dy: -8
+                    dy: -28
                 }
             });
             game.sound.playSound("heal");
