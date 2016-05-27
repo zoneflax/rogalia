@@ -28,6 +28,12 @@ Quest.prototype = {
             return "…";
         return "!";
     },
+    showPanel: function(entity) {
+        var panel = new Panel("quest", "Quest", this.getContents());
+        panel.quest = this;
+        panel.entity = entity;
+        panel.show();
+    },
     makeList: function(items) {
         var list = document.createElement("div");
         for (var item in items) {

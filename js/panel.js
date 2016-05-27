@@ -78,17 +78,13 @@ function Panel(name, title, elements, listeners, hooks) {
         this.show();
     }
 
-    var position = {
-        x: game.offset.x + game.screen.width / 2 - this.width / 2,
-        y: game.offset.y + game.screen.height / 2 - this.height / 2,
-    };
 
     if("position" in config) {
-        position = config.position;
+        this.x = config.position.x;
+        this.y = config.position.y;
+    } else {
+        this._forcePositionReset = true;
     }
-
-    this.x = position.x;
-    this.y = position.y;
 
     this.entity = null;
 }
@@ -121,6 +117,10 @@ Panel.prototype = {
     },
     get height() {
         return parseInt(getComputedStyle(this.element).height);
+    },
+    resetPosition: function() {
+        this.x = game.offset.x + (game.screen.width - this.width) / 2;
+        this.y = game.offset.y + (game.screen.height - this.height) / 2;
     },
     toTop: function() {
         if (Panel.top && Panel.top != this)
@@ -186,20 +186,27 @@ Panel.prototype = {
             this.button.classList.add("active");
         }
 
-        if (x !== undefined)
-            this.x = x;
-        if (y !== undefined)
-            this.y = y;
-
         this.visible = true;
-        // protection from window going offscreen?
-        if (!util.rectIntersects(
+
+
+        if (x === undefined && y === undefined) {
+            if (this._forcePositionReset) {
+                this.resetPosition();
+                this._forcePositionReset = false;
+            }
+        } else {
+            this.x = x;
+            this.y = y;
+        }
+
+        // protection from window going offscreen
+        var valid = util.rectIntersects(
             this.x, this.y, this.width, this.height,
             0, 0, window.innerWidth, window.innerHeight
-        )) {
-            this.x = 0;
-            this.y = 0;
-        }
+        );
+        if (!valid)
+            this.resetPosition();
+
 
         this.hooks.show && this.hooks.show.call(this);
         window.scrollTo(0, 0);

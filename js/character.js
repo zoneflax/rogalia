@@ -650,8 +650,12 @@ Character.prototype = {
     nameOffset: function() {
         switch (this.Type) {
         case "player":
+            if (this.mount)
+                return 100;
             return 80;
         case "horse":
+            if (this.rider)
+                return 130;
             return 100;
         }
         return this.sprite.height;

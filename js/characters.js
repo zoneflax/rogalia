@@ -163,10 +163,7 @@ Character.npcActions = {
             var quest = new Quest(q, self);
             var name = quest.getName() + " (" + quest.getStatusMarker() + ")";
             talks[name] = function() {
-                var panel = new Panel("quest", "Quest", quest.getContents());
-                panel.quest = quest;
-                panel.entity = self;
-                panel.show();
+                quest.showPanel(self);
             };
         });
         game.menu.show(talks);
