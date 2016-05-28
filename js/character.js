@@ -106,6 +106,9 @@ Character.prototype = {
         return 0;
     },
     get Name() {
+        // TODO: remove fix
+        if (this.IsMob && this.name.match(/-\d+/))
+            return util.ucfirst(this.Type);
         return this.name || util.ucfirst(this.Type);
     },
     set Name(name) {
