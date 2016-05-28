@@ -4,7 +4,7 @@ function Stats() {
     var contents = this.initSections();
     this.panel = new Panel(
         "stats",
-        "Stats",
+        "Characteristics",
         contents,
         {
             mousedown: this.equipContainer.onmousedown.bind(this.equipContainer),

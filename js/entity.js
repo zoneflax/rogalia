@@ -171,12 +171,16 @@ Entity.prototype = {
         return this.point.toScreen();
     },
     getDrawDx: function() {
+        // switch (this.Type) {
+        // case "stake-claim":
+        //     return 30;
+        // }
         return this.Sprite.Dx || this.sprite.width/2;
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "bookshelf":
-        //     return 80;
+        // case "stake-claim":
+        //     return 103;
         // }
 
         if (this.Sprite.Dy)

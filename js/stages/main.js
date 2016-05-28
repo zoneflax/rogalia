@@ -22,7 +22,7 @@ function mainStage(data) {
         Character.sync(data.Mobs || [], data.RemoveMobs || null);
         Character.sync(data.NPCs || [], data.RemoveNPCs || null);
 
-        data.Location && game.map.sync(data.Location);
+        data.Location && game.map.sync(data.Location, data.Map);
 
         data.BG && game.controller.updateBG(data.BG);
 

@@ -4,7 +4,8 @@
     "browser"
   ],
   "loadEagerly": [
-    "**/*.js"
+      "*.js",
+      "**/*.js"
   ],
   "dontLoad": [
     "lang/*"

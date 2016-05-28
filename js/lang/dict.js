@@ -59,6 +59,9 @@ dict.init = function() {
 
     dict.update = function(elem) {
         function update(elem) {
+            if (elem.title)
+                elem.title = T(elem.title);
+
             if (elem.nodeType == 3) {
                 var text = elem.textContent;
                 elem.textContent = T(text);

@@ -55,10 +55,14 @@ function Map() {
         return data;
     };
 
-    this.sync = function(data) {
+    this.sync = function(data, map) {
         var img = new Image;
         img.onload = sync.bind(this, img);
         img.src = "data:image/png;base64," + data;
+        if (map) {
+            this.full.width = map.Width;
+            this.full.height = map.Height;
+        }
     };
 
     function sync(img) {

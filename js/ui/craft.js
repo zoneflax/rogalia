@@ -702,7 +702,7 @@ Craft.prototype = {
         if (recipe.Skill) {
             var skill = document.createElement("li");
             var lvl = (recipe.Lvl > 0) ? recipe.Lvl : "";
-            skill.textContent = sprintf("%s: %s %s", T("Skill"), util.lcfirst(T(recipe.Skill)), lvl);
+            skill.textContent = sprintf("%s: %s %s", T("Skill"), T(recipe.Skill), lvl);
 
             if (!this.safeToCreate(recipe)) {
                 skill.className = "unavailable";
@@ -761,7 +761,7 @@ Craft.prototype = {
         this.requirements = requirements;
     },
     makeLink: function(item)  {
-        var name = util.lcfirst(TS(item));
+        var name = TS(item);
         var link = dom.link("", name);
         link.className = "item-link";
         link.onclick = this.search.bind(this, name);
