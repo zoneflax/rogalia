@@ -335,6 +335,7 @@ Entity.prototype = {
             };
         }
         actions[2]["Destroy"] =  this.destroy;
+        actions[2]["Drop"] =  this.drop;
         actions[2]["Info"] = this.showInfo;
         return actions;
     },
