@@ -133,26 +133,34 @@ Quest.prototype = {
         return reward;
     },
     getContents: function() {
+        var self = this;
         var canStart = !this.active();
+        var canEnd = canEndTest();
+
+        function canEndTest() {
+            return self.ready() && nearEndNpc();
+        }
+
+        function nearEndNpc() {
+            return self.npc
+                && self.npc.Type == self.End
+                && game.player.canUse(self.npc);
+        }
+
         var action = (canStart) ? "Accept" : "Finish";
+        var button = dom.button(T(action));
 
-        var button = document.createElement("button");
-        button.textContent = T(action);
 
-        var nearEndNpc = this.npc && this.npc.Type == this.End;
-        var canEnd = this.ready() && nearEndNpc;
-
-        if (canEnd || canStart) {
-            var self = this;
+        if (canStart || canEnd) {
             button.onclick = function() {
                 game.network.send(
                     "quest",
                     {Id: game.player.interactTarget.Id, QuestId: self.Id},
                     function update(data) {
-                        if (canEnd || !nearEndNpc)
-                            game.panels.quest.close();
-                        else
+                        if (canEndTest())
                             game.panels.quest.setContents(self.getContents());
+                        else
+                            game.panels.quest.close();
                         return null;
                     });
             };

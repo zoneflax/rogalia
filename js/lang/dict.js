@@ -13,7 +13,7 @@ dict.init = function() {
         text = text.replace(/{(.*?)(?:=(.*?))?}/g, function(_, name, value) {
             if (name in args)
                 value = args[name];
-            substs[name] = T(value);
+            substs[name] = TS(value);
             return "{" + name + "}";
         });
         text = T(text);

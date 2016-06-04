@@ -74,6 +74,7 @@ function Network() {
             console.log(data);
 
         if (data.Error) {
+            this.queue = [];
             game.controller.showError(data.Error);
             return;
         }

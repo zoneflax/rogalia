@@ -338,8 +338,12 @@ Entity.prototype = {
                 game.network.send("rotate", {id: this.Id});
             };
         }
-        actions[2]["Destroy"] =  this.destroy;
-        actions[2]["Drop"] =  function() { game.network.send("entity-drop", {id: this.Id}); };
+        if (!(game.player.Instance && game.player.Instance.match(/^tutorial-/)) || game.player.IsAdmin)
+            actions[2]["Destroy"] =  this.destroy;
+
+        if (this.Location == Entity.LOCATION_IN_CONTAINER || this.Location == Entity.LOCATION_EQUIPPED)
+            actions[2]["Drop"] =  function() { game.network.send("entity-drop", {id: this.Id}); };
+
         actions[2]["Info"] = this.showInfo;
         return actions;
     },

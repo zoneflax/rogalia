@@ -18,8 +18,7 @@ function loginStage() {
                 Login: login,
                 Password: password,
                 // Captcha: captcha,
-            },
-            enterLobby
+            }
         );
     }
 
@@ -33,17 +32,9 @@ function loginStage() {
                 // Captcha: captcha,
                 Referrer: document.referrer,
                 UA: navigator.userAgent,
-            },
-            enterLobby
+            }
         );
     }
-
-    function enterLobby(data) {
-        game.setPassword(password);
-        document.getElementById("version").textContent = data.Version;
-        game.setStage("lobby", data);
-    }
-
 
     if(login && password && !game.inVK()) {
         autoLogin = true;
@@ -152,7 +143,7 @@ function loginStage() {
                     var token = match && match[1];
                     if (token) {
                         panel.hide();
-                        game.network.send("oauth", {Token: token}, enterLobby);
+                        game.network.send("oauth", {Token: token});
                     } else {
                         panel.show();
                     }
@@ -174,7 +165,12 @@ function loginStage() {
                 game.alert(T(data.Warning));
             panel.show();
             autoLogin = false;
+            return;
         }
+
+        game.setPassword(password);
+        document.getElementById("version").textContent = data.Version;
+        game.setStage("lobby", data);
     };
 
     this.end = function() {
