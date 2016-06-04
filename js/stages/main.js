@@ -94,14 +94,11 @@ function mainStage(data) {
         game.characters.forEach(drawAura);
         game.claims.forEach(drawClaim);
 
-
         game.sortedEntities.traverse(drawObject);
-
 
         // this.drawOrder();
         // this.drawTopologic();
         // this.drawAdaptive();
-
 
         snow.draw();
 

@@ -1753,6 +1753,11 @@ Character.prototype = {
 
             actions = actions.concat(Object.keys(talks.actions));
 
+            if (actions.length == 1) {
+                Character.npcActions.Talk.call(self);
+                return;
+            }
+
             var panel = new Panel(
                 "interraction",
                 self.Name,

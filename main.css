@@ -284,6 +284,7 @@ hr {
     font-size: 9px;
     letter-spacing: -1px;
     right: 0;
+    pointer-events: none;
 }
 .slot > .quality {
     top: 1px;
