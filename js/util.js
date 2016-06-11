@@ -30,6 +30,17 @@ var util = new function() {
 	oReq.send(null);
     };
 
+    this.loadScript = function(url, callback)
+    {
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = url;
+        if (callback)
+            script.onload = callback;
+        var head = document.getElementsByTagName("head")[0];
+        head.appendChild(script);
+    };
+
     this.clone = function clone(o) {
 	if(!o || 'object' !== typeof o)  {
 	    return o;

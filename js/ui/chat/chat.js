@@ -298,9 +298,6 @@ function Chat() {
                     })
                 ).show();
                 break;
-            case "get-translations":
-                dict.getTranslations();
-                break;
             default:
                 local = false;
             }
@@ -736,13 +733,14 @@ function Chat() {
         var sendNotification = !game.focus;
         var contents = [];
 
-        this.addBallon(message);
         switch(message.Channel) {
         case 8:
             message.From = SERVER;
-            game.controller.showAnouncement(message.Body);
+            message.Body = TT(message.Body);
+            game.controller.showAnnouncement(message.Body);
             break;
         }
+        this.addBallon(message);
 
         if (message.From && message.Channel != 6) {
             var fromElement = document.createElement("span");

@@ -5,12 +5,10 @@
 // 2."from {name}" : "to {name}"
 //   {name} will be processed via 1.
 //
-// 3. "from {name}": function(args) { return "to " + args.name }
-//
-// 4. "from {name}": "to {sel one two} {name}"
+// 3. "from {name}": "to {sel one two} {name}"
 // sexp {atom val1 val2} will select index by evaluating args[sel] and take [val1, val2][index]
 
-var dict = {
+T.dict = {
     "Spiced wolf meat": "Волчатина с пряностями",
     "Paprika": "Паприка",
     "Wolf meat": "Волчатина",
@@ -1452,4 +1450,9 @@ var dict = {
     "Kill": "Убить",
     "Training dummy": "Тренировочный манекен",
     "Select target": "Выберите цель",
+    "minute": "минута",
+    "minutes": "минуты",
+    "second": "секунда",
+    "seconds": "секунды",
+    "Server restart in {time}": "Рестарт сервера через {time}",
 };

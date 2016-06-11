@@ -158,7 +158,7 @@ Entity.prototype = {
         return util.toFixed(this.Damage * (Math.pow(this.Quality, 1.5) / 5000 + 1), 0);
     },
     makeDescription: function() {
-        var text = Items[this.Type] || Items[this.Group] || T("No description yet");
+        var text = T.items[this.Type] || T.items[this.Group] || T("No description yet");
         return dom.div("item-descr", {text: text});
     },
     leftTopX: function() {

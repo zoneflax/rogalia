@@ -1,7 +1,8 @@
 "use strict";
-function Game() {
+function Game(lang) {
     window.game = this;
 
+    this.lang = lang;
     this.world = document.getElementById("world");
     this.interface = document.getElementById("interface");
     this.canvas = document.getElementById("canvas");
@@ -67,17 +68,6 @@ function Game() {
 
     this.debug = debug;
     this.config = config;
-
-    //TODO:FIXME: remove bool flag and use select{lang1, lang2, ...}
-    function defaultLang() {
-        if (document.location.search.indexOf("en") != -1)
-            return "en";
-        if (navigator.language.substring(0, 2) == "en")
-            return "en";
-        return "ru";
-    }
-    this.lang = localStorage.getItem("lang") || defaultLang();
-    dict.init();
 
     this.talks = new Talks();
     this.sound = new Sound();
@@ -541,5 +531,6 @@ function Game() {
         requestAnimationFrame(tick);
     };
 
+    T.update();
     tick();
 };

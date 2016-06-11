@@ -927,7 +927,8 @@ Character.prototype = {
         if (this.dst.time + 33 > now) {
             game.ctx.strokeStyle = "#ff0";
             game.ctx.beginPath();
-            var {x, y} = this.dst;
+            var x = this.dst.x;
+            var y = this.dst.y;
             game.iso.strokeCircle(x, y, this.dst.radius--);
             this.dst.time = now;
         }

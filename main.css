@@ -535,7 +535,7 @@ hr {
 }
 
 #effects {
-    top: 2px;
+    top: 28px;
     left: 160px;
     position: absolute;
     display: inline-block;
@@ -629,7 +629,7 @@ hr {
     bottom: -14px;
 }
 
-#warning, #messages, #anouncement {
+#warning, #messages, #announcement {
     position: relative;
     top: 7em;
     text-align: center;
@@ -643,7 +643,7 @@ hr {
     border: 1px solid #a57031;
     border-radius: 4px;
 }
-#anouncement {
+#announcement {
     background: rgba(33, 33, 33, 0.5);
     font-size: 32px;
     padding: 2em;
@@ -1587,7 +1587,7 @@ big {
 #target-container {
     position: absolute;
     left: 151px;
-    top: 40px;
+    top: 66px;
 }
 #target-container > canvas {
     margin-top: 10px;

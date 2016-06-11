@@ -962,18 +962,18 @@ function Controller(game) {
         this.showMessage(message, "warning");
     };
 
-    this.showAnouncement = function(message) {
-        var anouncement = document.getElementById("anouncement");
-        anouncement.textContent = message;
-        if(anouncement.timeout)
-            clearTimeout(anouncement.timeout);
-        anouncement.style.display = "inline-block";
-        anouncement.timeout = setTimeout(function() {
+    var announcement = document.getElementById("announcement");
+    this.showAnnouncement = function(message) {
+        announcement.textContent = message;
+        if(announcement.timeout)
+            clearTimeout(announcement.timeout);
+        announcement.style.display = "inline-block";
+        announcement.timeout = setTimeout(function() {
             if (game.stage.name != "main")
                 return;
-            anouncement.style.display = "none";
-            clearTimeout(anouncement.timeout);
-            anouncement.timeout = null;
+            announcement.style.display = "none";
+            clearTimeout(announcement.timeout);
+            announcement.timeout = null;
         }, 5000);
     };
 
@@ -1050,7 +1050,7 @@ function Controller(game) {
             else if (data.Blue > data.Red)
                 result = "blue team wins!";
 
-            controller.showAnouncement(TT("Match ended: {result}", {result: result}));
+            controller.showAnnouncement(TT("Match ended: {result}", {result: result}));
         } else {
             timer = dom.div("remaining", {text: util.formatTime(data.Remaining)});
             setInterval(function() {
