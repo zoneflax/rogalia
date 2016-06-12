@@ -1761,6 +1761,15 @@ input[type=number], .lot-quantity > input, .price > input {
     padding: 7px;
 }
 
+#fishing meter {
+    position: relative;
+}
+
+#fishing img {
+    display: block;
+    margin: auto;
+}
+
 #wiki {
     max-width: none;
 }
@@ -2069,6 +2078,10 @@ input[type=number], .lot-quantity > input, .price > input {
     float: left;
     font-style: italic;
     margin-right: 0.5em;
+}
+
+.quest-goal ul {
+    padding: 0 20px;
 }
 
 .quest-wiki-link {

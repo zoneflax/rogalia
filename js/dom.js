@@ -55,8 +55,8 @@ var dom = {
         this.setClassOrId(img, classOrId || "");
         return img;
     },
-    link: function(url, text) {
-        var link = document.createElement("a");
+    link: function(url, text, classOrId) {
+        var link = dom.tag("a", classOrId);
         if (url) {
             link.target = "_blank";
             link.href = url;

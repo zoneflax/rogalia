@@ -12,7 +12,7 @@ T.time = function(time) {
 
     if (minutes) {
         txt = minutes + " ";
-        txt += (minutes, ["секунду", "секунды", "секунд"]);
+        txt += num(minutes, ["минуту", "минуты", "минут"]);
     }
     var seconds = time % 60;
     if (seconds) {

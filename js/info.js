@@ -5,15 +5,18 @@ function Info(message, character) {
     this.text = null;
     this.type = message.Type;
     this.time = Date.now();
-    this.x = 0;
-    this.y = 0;
     this.duration = 2500;
     this.value = null;
 
     this.target = this.getTarget();
 
+
+
     if (!this.target) // target disappared (tp or death)
         return;
+
+    this.x = 0;
+    this.y = this.target.info.length % 3 * 1.2 * FONT_SIZE;
 
     this.targetType = "other";
 

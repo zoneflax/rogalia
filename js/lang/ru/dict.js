@@ -1455,4 +1455,11 @@ T.dict = {
     "second": "секунда",
     "seconds": "секунды",
     "Server restart in {time}": "Рестарт сервера через {time}",
+    "drink something": "выпить что-нибудь",
+    "eat something": "съесть что-нибудь",
+    "hit a training dummy": "ударить тренировочный манекен",
+    "Cold": "Холодно",
+    "Colder": "Холоднее",
+    "Hot": "Тепло",
+    "Hotter": "Теплее",
 };

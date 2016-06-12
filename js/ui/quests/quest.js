@@ -36,21 +36,15 @@ Quest.prototype = {
     },
     makeList: function(items) {
         var list = document.createElement("div");
+        var craft = game.controller.craft;
         for (var item in items) {
-            var slot = document.createElement("div");
-            slot.classList.add("slot");
-            slot.appendChild(Entity.getPreview(item));
-            slot.onclick = game.controller.craft.search.bind(game.controller.craft, item, true);
+            var slot = dom.wrap("slot", Entity.getPreview(item));
+            slot.onclick = craft.search.bind(craft, item, true);
 
-            var desc = document.createElement("div");
             var count = (items[item] instanceof Object) ? items[item].Count : items[item];
-            desc.textContent = TS(item) + ": x" + count;
+            var desc = dom.make("div", TS(item) + ": x" + count);
 
-            var li = document.createElement("div");
-            li.className = "quest-item";
-            li.appendChild(slot);
-            li.appendChild(desc);
-            list.appendChild(li);
+            list.appendChild(dom.wrap("quest-item", [slot, desc]));
         }
         return list;
     },
@@ -74,63 +68,94 @@ Quest.prototype = {
         }));
     },
     makeGoal: function() {
-        var goal = document.createElement("div");
+        var self = this;
+        var goal = this.Goal;
 
-        var end = document.createElement("div");
-        end.textContent = T("Quest ender") + ": " + TS(this.End);
-        goal.appendChild(end);
+        return dom.wrap("quest-goal", [
+            end(),
+            delimiter(),
+            goals(),
+            tip(),
+            wiki(),
 
-        if (this.Goal.HaveItems || this.Goal.BringItems || this.Goal.Cmd)
-            goal.appendChild(dom.hr());
+        ]);
 
-        if (this.Goal.HaveItems) {
-            goal.appendChild(document.createTextNode(T("You need to have these items") + ":"));
-            goal.appendChild(this.makeList(this.Goal.HaveItems));
-        }
-        if (this.Goal.BringItems) {
-            goal.appendChild(document.createTextNode(T("You need to bring these items") + ":"));
-            goal.appendChild(this.makeList(this.Goal.BringItems));
-        }
-        if (this.Goal.Cmd) {
-            goal.appendChild(document.createTextNode(T("You need to") + ": " + TS(this.Goal.Cmd)));
+        function end() {
+            return dom.make("div", T("Quest ender") + ": " + TS(self.End));
         }
 
-        if (this.data.tip) {
+        function delimiter() {
+            return (goal.HaveItems || goal.BringItems || goal.Cmd)
+                ? dom.hr()
+                : null;
+        }
+
+        function goals() {
+            return dom.make("ul", [
+                haveItems(),
+                bringItems(),
+                cmd(),
+            ]);
+
+            function cmd() {
+                if (!goal.Cmd)
+                    return null;
+                var goals = {
+                    drink: "drink something",
+                    eat: "eat something",
+                    waza: "hit a training dummy",
+                };
+                var what = goals[goal.Cmd] || goal.Cmd;
+                return dom.make("li", T("You need to") + " " + T(what) + "");
+            }
+
+            function bringItems() {
+                return (goal.HaveItems)
+                    ? dom.make("li", [
+                        dom.text(T("You need to have these items") + ":"),
+                        self.makeList(goal.HaveItems),
+                    ])
+                    : null;
+            }
+
+            function haveItems() {
+                return (goal.Bringitems)
+                    ? dom.make("li", [
+                        dom.text(T("You need to bring these items") + ":"),
+                        self.makeList(goal.BringItems),
+                    ])
+                    : null;
+            }
+        }
+
+        function tip() {
+            if (!self.data.tip)
+                return null;
             var tip = dom.tag("p");
-            tip.innerHTML = this.data.tip[game.lang];
-            goal.appendChild(dom.hr());
-            goal.appendChild(tip);
-        }
-        if ("wiki" in this.data) {
-            var links = this.data.wiki[game.lang] || [];
-            links.forEach(function(name) {
-                var link = document.createElement("a");
-                link.className = "quest-wiki-link";
-                link.target = "_blank";
-                link.href = "/wiki/" + name;
-                link.textContent = name;
-                goal.appendChild(link);
-            });
+            tip.innerHTML = self.data.tip[game.lang];
+            return dom.make("div", [
+                dom.hr(),
+                tip,
+            ]);
         }
 
-        return goal;
+        function wiki() {
+            if (!self.data.wiki)
+                return null;
+            var links = self.data.wiki[game.lang] || [];
+            return dom.make("div", links.map(function(name) {
+                return dom.link("/wiki/" + name, name, "quest-wiki-link");
+            }));
+        }
     },
     makeReward: function() {
-        var reward = document.createElement("div");
-        reward.appendChild(document.createTextNode(T("Rewards") + ": "));
-        if (this.Reward.Xp) {
-            var xp = document.createElement("div");
-            xp.textContent = "+" + this.Reward.Xp + "xp";
-            reward.appendChild(xp);
-        }
-        if (this.Reward.Currency) {
-            reward.appendChild(Vendor.createPrice(this.Reward.Currency));
-        }
-        if (this.Reward.Items) {
-            reward.appendChild(this.makeList(this.Reward.Items));
-        }
-
-        return reward;
+        var reward = this.Reward;
+        return dom.make("div", [
+            T("Rewards") + ": ",
+            reward.Xp && dom.make("div", "+" + reward.Xp + "xp"),
+            reward.Currency && Vendor.createPrice(reward.Currency),
+            reward.Items && this.makeList(reward.Items),
+        ]);
     },
     getContents: function() {
         var self = this;

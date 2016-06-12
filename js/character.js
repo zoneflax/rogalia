@@ -1375,17 +1375,26 @@ Character.prototype = {
                 };
                 buttons.appendChild(button);
             });
+            var playerIcon = dom.img("assets/icons/fishing/player.png");
             var playerMeter = document.createElement("meter");
             playerMeter.max = 300;
             playerMeter.style.width = "100%";
             playerMeter.title = T("Player");
 
+            var fishIcon = dom.img("assets/icons/fishing/fish.png");
             var fishMeter = document.createElement("meter");
             fishMeter.max = 300;
             fishMeter.style.width = "100%";
             fishMeter.title = T("Fish");
 
-            panel = new Panel("fishing", "Fishing", [rating, playerMeter, fishMeter, buttons]);
+            panel = new Panel("fishing", "Fishing", [
+                rating,
+                fishIcon,
+                fishMeter,
+                playerIcon,
+                playerMeter,
+                buttons,
+            ]);
             panel.player = playerMeter;
             panel.fish = fishMeter;
             panel.rating = rating;
