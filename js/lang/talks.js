@@ -303,7 +303,7 @@ function Talks() {
                 ],
             },
         },
-        "platon": {
+        "plato": {
             "default": {
                 "male": [
                     "Добрый день, друг.",
