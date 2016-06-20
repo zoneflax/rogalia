@@ -13,11 +13,12 @@ Menu.prototype = {
         if (item)
             item.click();
     },
-    show: function(object, x, y, reuse, defaultAction) {
+    show: function(object, reuse, addDefaultAction) {
         if (game.player.acting)
             return false;
         if (!object)
             return false;
+
         var actions = object;
 
         if ("getActions" in object)
@@ -26,6 +27,7 @@ Menu.prototype = {
         if (!actions)
             return false;
 
+        var x, y;
         if (reuse && this.container) {
             x = this.container.x;
             y = this.container.y;
@@ -37,7 +39,7 @@ Menu.prototype = {
         if (!Array.isArray(actions))
             actions = [actions];
 
-        if (defaultAction)
+        if (addDefaultAction)
             actions[0]["Use"] = object.defaultAction;
 
         this.length = 0;
@@ -47,8 +49,13 @@ Menu.prototype = {
             return this.createMenu(actions, object);
         }.bind(this));
 
-        this.container = new Panel("menu", "Menu", contents);
-        this.container.hideTitle();
+        if (this.container && reuse) {
+            this.container.fixHeight();
+            this.container.setContents(contents);
+        } {
+            this.container = new Panel("menu", "Menu", contents);
+            this.container.hideTitle();
+        }
         this.container.show(x, y);
 
         this.visible = true;

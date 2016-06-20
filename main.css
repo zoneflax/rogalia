@@ -402,7 +402,8 @@ hr {
 }
 
 .panel.container button {
-    min-width: 130px;
+    margin-top: 3px;
+    vertical-align: top;
 }
 
 .container-actions {
@@ -2137,6 +2138,12 @@ input[type=number], .lot-quantity > input, .price > input {
 .poker-table > :nth-child(56) {
     -webkit-filter: hue-rotate(191deg);
     filter: hue-rotate(191deg);
+}
+.chess-toggle {
+    transform: scaleY(-1);
+}
+.chess-toggle > .slot {
+    transform: scaleY(-1);
 }
 .chess-table > .slot > sup {
     display: none;

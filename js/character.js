@@ -605,9 +605,10 @@ Character.prototype = {
             }
         }
 
-        var common = {
-            Select: game.player.setTarget.bind(game.player, this)
-        };
+        var common = {};
+        if (!this.IsNpc) {
+            common.Select = game.player.setTarget.bind(game.player, this);
+        }
         if (game.player.IsAdmin) {
             common.Kill = function() {
                 if (this.IsNpc && !this.IsMob)

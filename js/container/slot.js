@@ -51,6 +51,14 @@ ContainerSlot.prototype = {
             this.update();
             return;
         }
+        switch (this.container.entity.Type) {
+        case "chess-table":
+            if (entity.Type.split("-")[0] == "white")
+                this.container.panel.setTitle("Black move");
+            else
+                this.container.panel.setTitle("White move");
+            break;
+        }
         this.spriteVersion = entity.spriteVersion();
         this.clear();
         this.entity = entity;

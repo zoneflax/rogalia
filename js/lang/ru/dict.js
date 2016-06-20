@@ -1462,4 +1462,7 @@ T.dict = {
     "Colder": "Холоднее",
     "Hot": "Тепло",
     "Hotter": "Теплее",
+    "Toggle color": "Поменять цвет",
+    "White move": "Ход белых",
+    "Black move" : "Ход черных",
 };

@@ -929,7 +929,7 @@ function Controller(game) {
             actions[name] = {
                 item: item,
                 callback: function() {
-                    game.menu.show(item, 0, 0, false, true);
+                    game.menu.show(item, false, true);
                 }
             };
         });

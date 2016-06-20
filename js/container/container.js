@@ -151,10 +151,20 @@ Container.prototype = {
             });
         }.bind(this);
 
+        var buttons = [moveAll, sort, openAll];
+
+        switch (this.entity.Type) {
+        case "chess-table":
+            buttons.push(dom.button(T("Toggle color"), "", function() {
+                slots.classList.toggle("chess-toggle");
+            }));
+            break;
+        }
+
         this.panel = new Panel(
             "container-" + this.id,
             this.name,
-            [slots, this.fuel, dom.hr(), dom.wrap(".container-actions", [moveAll, sort, openAll])],
+            [slots, this.fuel, dom.hr(), dom.wrap(".container-actions", buttons)],
             {
                 mousedown: function(e) {
                     game.controller.highlight("inventory", false);

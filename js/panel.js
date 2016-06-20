@@ -239,6 +239,9 @@ Panel.prototype = {
         this.element.style.width = w + pad + "px";
         this.element.style.maxWidth = w + pad + "px";
     },
+    fixHeight: function(h) {
+        this.contents.style.minHeight = (h || this.height) + "px";
+    },
     updateVisibility: function() {
         if (!this.visible || !this.entity)
             return;
