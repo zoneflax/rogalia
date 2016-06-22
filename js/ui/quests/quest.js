@@ -34,18 +34,31 @@ Quest.prototype = {
         panel.entity = entity;
         panel.show();
     },
-    makeList: function(items) {
+    update: function(){},
+    makeList: function makeList(items) {
+        var updater = [];
+        this.update = function() {
+            var found = game.player.findItems(Object.keys(items));
+            updater.forEach(function(update) {
+                update(found);
+            });
+        };
+
         var list = document.createElement("div");
         var craft = game.controller.craft;
-        for (var item in items) {
+        var kinds = Object.keys(items);
+        var found = game.player.findItems(kinds);
+        updater = kinds.map(function(item) {
             var slot = dom.wrap("slot", Entity.getPreview(item));
             slot.onclick = craft.search.bind(craft, item, true);
 
             var count = (items[item] instanceof Object) ? items[item].Count : items[item];
-            var desc = dom.make("div", TS(item) + ": x" + count);
-
+            var desc = dom.wrap("quest-slot-desc", TS(item) + ": " + found[item].length + "/" + count);
             list.appendChild(dom.wrap("quest-item", [slot, desc]));
-        }
+            return function(found) {
+                desc.textContent = TS(item) + ": " + found[item].length + "/" + count;
+            };
+        });
         return list;
     },
     getDescContents: function(ready) {

@@ -2072,6 +2072,11 @@ input[type=number], .lot-quantity > input, .price > input {
     content: "(!) ";
     color: yellow;
 }
+.quest-slot-desc {
+    line-height: 48px;
+    margin-left: 3px;
+    float: left;
+}
 .quest-item {
     overflow: auto;
 }

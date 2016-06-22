@@ -107,7 +107,7 @@ Auction.prototype = {
                 [T("Vendor"), T("Quality"), T("Cost"), , ""],
                 lots.sort(Vendor.sort.byQuality).map(function(lot) {
                     return [
-                        lot.Vendor,
+                        lot.Vendor.substring(1),
                         lot.Quality,
                         Vendor.createPrice(lot.Cost),
                         dom.button(T("Buy"), "lot-buy", function(e) {
@@ -188,7 +188,7 @@ Auction.prototype = {
                     });
                     button.disabled = (canBeSold.length == 0);
                     return [
-                        lot.Vendor,
+                        lot.Vendor.substring(1),
                         quantity,
                         Vendor.createPrice(lot.Cost),
                         slot,

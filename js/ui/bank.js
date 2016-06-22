@@ -63,6 +63,8 @@ function Bank(npc) {
     }
 
     function callback(data) {
+        if (!data.Bank)
+            return callback;
         //TODO: add price.set()
         balance.innerHTML = T("Balance") + ": ";
         balance.appendChild(Vendor.createPrice(data.Bank.Balance));

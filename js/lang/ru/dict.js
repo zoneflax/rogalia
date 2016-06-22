@@ -1169,6 +1169,7 @@ T.dict = {
     "Athena": "Афина",
     "Ivan": "Иван",
     "Bertran": "Бертран",
+    "Angelina": "Ангелина",
     "Blue Chopper": "Синий Чоппер",
     "Red Chopper": "Красный Чоппер",
     "Ded Moroz": "Дед Мороз",

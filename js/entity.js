@@ -26,7 +26,7 @@ Entity.prototype = {
     MoveType: Entity.MT_PORTABLE,
     Creator: 0,
     Owner: 0,
-    Sprite: null,
+    Sprite: {},
     State: "",
     Variant: 0,
     Orientation: "",

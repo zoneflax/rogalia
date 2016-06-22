@@ -10,15 +10,32 @@ function Journal() {
         this.view,
     ]);
     this.update();
-    this.panel.hooks.show = this.update.bind(this);
     this.hash = "";
     this.selected = null;
+    this.selectedQuest = null;
+
+    var self = this;
+    this.panel.hooks.show = function() {
+        self.update();
+        selectFirst();
+    };
+
+    selectFirst();
+
+    function selectFirst() {
+        if (!self.selected && self.list.firstChild) {
+            self.list.firstChild.click();
+        }
+    }
 }
 
 Journal.prototype = {
     update: function() {
         if (this.panel && !this.panel.visible)
             return;
+
+        if (this.selectedQuest)
+            this.selectedQuest.update();
 
         var hash = JSON.stringify(game.player.ActiveQuests);
         if (hash == this.hash)
@@ -45,6 +62,7 @@ Journal.prototype = {
             name.onclick = function() {
                 dom.removeClass(".quest", "selected");
                 self.selected = id;
+                self.selectedQuest = quest;
                 name.classList.add("selected");
 
                 dom.setContents(self.view, [

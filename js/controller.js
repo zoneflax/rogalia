@@ -1084,4 +1084,10 @@ function Controller(game) {
             ])
         ]);
     };
+
+    this.updateActiveQuest = function() {
+        var questPanel = game.panels.quest;
+        if (questPanel)
+            questPanel.quest.update();
+    };
 };
