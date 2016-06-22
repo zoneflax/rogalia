@@ -63,11 +63,13 @@ Skills.prototype = {
                 );
                 if (skill.Value.Current == max) {
                     item.getElementsByClassName("meter-title")[0].textContent = "max";
+                } else if (game.player.Attr[util.ucfirst(attr)].Current <= skill.Value.Current) {
+                    item.classList.add("attr-" + attr);
                 }
                 item.name = name;
                 item.skill = skill;
                 item.classList.add("skill");
-                item.title = TT("This skill depends on {attr}", {attr: attr});
+                item.title = TT("This skill cannot be greater then {attr}", {attr: attr});
                 dom.insert(dom.span("◾ ", "attr-" + attr), item);
                 if (skill.Value.Current == skill.Value.Max && skill.Value.Max != max) {
                     item.classList.add("capped");

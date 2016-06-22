@@ -1371,7 +1371,7 @@ T.dict = {
     "Mattress": "Матрасс",
     "Search by ingredient": "Поиск по ингредиенту",
     "search": "поиск",
-    "This skill depends on {attr}": "Этот навык зависит от атрибута {attr}",
+    "This skill cannot be greater then {attr}": "Навык не может быть больше значения атрибута {attr}",
     "Wooden stool": "Деревянная табуретка",
     "Sell ingots": "Продать слитки",
     "Silver assignation": "Серебряные ассигнации",
