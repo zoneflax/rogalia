@@ -397,6 +397,10 @@ Entity.prototype = {
     },
     setRespawn: function() {
         var id = this.Id;
+        if (this.Creator && this.Creator != game.player.id) {
+            game.alert(T("It's not your respawn"));
+            return;
+        }
         game.confirm(T("Confirm?"), function() {
             game.network.send("SetRespawn", {id: id});
         });
