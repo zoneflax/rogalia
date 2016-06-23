@@ -1087,7 +1087,7 @@ function Controller(game) {
 
     this.updateActiveQuest = function() {
         var questPanel = game.panels.quest;
-        if (questPanel)
+        if (questPanel && questPanel.visible)
             questPanel.quest.update();
     };
 };

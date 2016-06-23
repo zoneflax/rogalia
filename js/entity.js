@@ -397,7 +397,7 @@ Entity.prototype = {
     },
     setRespawn: function() {
         var id = this.Id;
-        if (this.Creator && this.Creator != game.player.id) {
+        if (this.Creator && this.Creator != game.player.Id) {
             game.alert(T("It's not your respawn"));
             return;
         }
@@ -732,6 +732,9 @@ Entity.prototype = {
         game.drawStrokedText(title, x, y);
     },
     canIntersect: function(noignore) {
+        if (this.Location == Entity.LOCATION_BURDEN) {
+            return false;
+        }
         switch (this.Group) {
         case "respawn":
             return true;
