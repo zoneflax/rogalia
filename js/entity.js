@@ -396,11 +396,11 @@ Entity.prototype = {
         });
     },
     setRespawn: function() {
-        var id = this.Id;
         if (this.Creator && this.Creator != game.player.Id) {
             game.alert(T("It's not your respawn"));
             return;
         }
+        var id = this.Id;
         game.confirm(T("Confirm?"), function() {
             game.network.send("SetRespawn", {id: id});
         });
