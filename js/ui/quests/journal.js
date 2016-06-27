@@ -23,8 +23,8 @@ function Journal() {
     selectFirst();
 
     function selectFirst() {
-        if (!self.selected && self.list.firstChild) {
-            self.list.firstChild.click();
+        if (!self.selected && self.list.firstElementChild) {
+            self.list.firstElementChild.click();
         }
     }
 }
@@ -43,7 +43,7 @@ Journal.prototype = {
         this.hash = hash;
 
         if (Object.keys(game.player.ActiveQuests).length == 0) {
-            this.list.innerHTML = T("No quests") ;
+            dom.setContents(this.list, T("No quests"));
             return;
         }
         dom.clear(this.list);

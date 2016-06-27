@@ -1240,6 +1240,7 @@ T.dict = {
     "Cost must be greater or equal then zero" : "Сумма должна быть больше или равна нулю",
     "Quest cannot be finished yet" : "Квест ещё не окончен",
     "Cannot end quest yet" : "Нельзя завершить квест",
+    "No quests": "Нет квестов",
     "Can be used only on arena" : "Можно использовать только на арене",
     "Too far" : "Слишком далеко",
     "Email cannot be empty" : "Email не должен быть пустым",

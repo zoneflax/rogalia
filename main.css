@@ -1043,6 +1043,11 @@ a.extern {
 .param {
     display: block;
 }
+.param-label {
+    display: inline-block;
+    max-width: 110px;
+    text-overflow: ellipsis;
+}
 .param > .value {
     float: right;
 }

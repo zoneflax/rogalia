@@ -50,12 +50,10 @@ Stats.prototype = {
             meterWrapper.appendChild(titleElem);
         }
 
-        var labelElem = document.createElement("label");
-        labelElem.classList.add("param");
-        labelElem.textContent = T(label);
-        labelElem.appendChild(meterWrapper);
-        return labelElem;
-
+        return dom.wrap(".param", [
+            dom.wrap("param-label", T(label)),
+            meterWrapper
+        ]);
     },
     createValue: function(label, value, digits, icon) {
         var valueElem = document.createElement("span");
