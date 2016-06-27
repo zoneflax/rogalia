@@ -123,19 +123,19 @@ Quest.prototype = {
             }
 
             function bringItems() {
-                return (goal.HaveItems)
+                return (goal.BringItems)
                     ? dom.make("li", [
                         dom.text(T("You need to have these items") + ":"),
-                        self.makeList(goal.HaveItems),
+                        self.makeList(goal.BringItems),
                     ])
                     : null;
             }
 
             function haveItems() {
-                return (goal.Bringitems)
+                return (goal.HaveItems)
                     ? dom.make("li", [
                         dom.text(T("You need to bring these items") + ":"),
-                        self.makeList(goal.BringItems),
+                        self.makeList(goal.HaveItems),
                     ])
                     : null;
             }
