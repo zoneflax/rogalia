@@ -679,6 +679,11 @@ hr {
     justify-content: space-around;
     height: 500px;
 }
+#craft .param-label {
+    max-width: 150px;
+    text-overflow: ellipsis;
+}
+
 #recipe-list-wrapper {
     width: 34%;
 }
@@ -1045,8 +1050,6 @@ a.extern {
 }
 .param-label {
     display: inline-block;
-    max-width: 110px;
-    text-overflow: ellipsis;
 }
 .param > .value {
     float: right;
