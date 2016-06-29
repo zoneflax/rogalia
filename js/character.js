@@ -255,6 +255,9 @@ Character.prototype = {
             this.sprite.speed = 7000;
             break;
         case "butterfly":
+            this.sprite.width = 43;
+            this.sprite.height = 43;
+            break;
         case "zombie":
             this.sprite.width = 32;
             this.sprite.height = 32;
