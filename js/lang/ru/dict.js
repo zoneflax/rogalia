@@ -1467,4 +1467,5 @@ T.dict = {
     "Toggle color": "Поменять цвет",
     "White move": "Ход белых",
     "Black move" : "Ход черных",
+    "Rags": "Тряпье",
 };
