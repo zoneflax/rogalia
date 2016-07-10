@@ -4,7 +4,7 @@ function Sound() {
     var self = this;
     var soundDir = "assets/sound/";
     var musicDir = "assets/music/";
-    var tracksNum = 14;
+    var tracksNum = 3;
     var firstTrackId = 1;
     var trackId = firstTrackId;
 

@@ -1,104 +1,103 @@
 ﻿Settings.descriptions = {
     character: {
         pathfinding: [
-            "Поиск пути",
-            "Активирует поиск пути для этого персонажа.",
+            "Pathfinding",
+            "Activates pathfinding for this character.",
         ],
         hideHelmet: [
-            "Спрятать шлем",
-            "Не показывать шлем. Другие игроки так же не увидят ваш шлем.",
+            "Hide helmet",
+            "Hide your helmet for you and others.",
         ],
     },
     ui: {
         language: [
-            "Русский",
-            "Переключает язык между русским и английским.",
+            "Russian",
+            "Switch game language between russian and english.",
         ],
         hp: [
-            "Полоска здоровья",
-            "Показывать полоску здоровья над персонажем.",
+            "Health bar",
+            "Show health bar above the character.",
         ],
         name: [
-            "Ник",
-            "Показывать ники персонажей.",
+            "Nickname",
+            "Show characters' nicknames.",
         ],
         npc: [
             "NPC",
-            "Включить настройки ник/полоска здоровья для NPC",
+            "Show nicknames and health bars above NPCs.",
         ],
         simpleFonts: [
-            "Простые шрифты",
-            "Отрисовка шрифтов без темной обводки. (Включение может увеличить производительность)",
+            "Simple fonts",
+            "Render fonts without dark border (Enabling this setting may increase perfomance).",
         ],
         minimapObjects: [
-            "Объекты миникарты",
-            "Показывать объекты на миникарте.",
+            "Minimap items",
+            "Show items on minimap.",
         ],
         allowSelfSelection: [
-            "Выделение персонажа",
-            "Разрешить взаимодействовать с персонажем мышкой. Правая кнопка активирует действие с большой кнопки.",
+            "Charaster selection",
+            "Allows character selection and mouse interaction. Right button activates action.",
         ],
         showMeterValues: [
-            "Показывать цифры",
-            "Показывает точные значения на полосках, например, ХП. (применяется при обновлении значений на полосках)",
+            "Show numbers",
+            "Show the exact values of your bars (like the health bar). Will work when value updates.",
         ],
         fillClaim: [
-            "Закрашивать клейм",
-            "Закрашивает область клейма.",
+            "Fill the claim area",
+            "Fill claims areas.",
         ],
         strokeClaim: [
-            "Границы клейма",
-            "Отображает границы клеймов.",
+            "Claim borders",
+            "Stroke claim borders.",
         ],
         chatAttached: [
-            "Прикрепить чат",
-            "Прикрепить чат или сделать отдельным окошком.",
+            "Pin the chat window",
+            "Pin the chat window or make it separate.",
         ],
         chatBalloons: [
-            "Пузыри сообщений",
-            "Показывает пузыри с сообщениями над головами персонажей.",
+            "Message bubbles",
+            "Show message bubbles above character's head.",
         ],
         showAttackRadius: [
-            "Радиус атаки",
-            "Показывать радиус атаки персонажей.",
+            "Attack area",
+            "Show character's attack area.",
         ],
         chatNotifications: [
-            "Оповещения чата",
-            "Показывать оповещения чата в трее",
+            "Chat notifications",
+            "Show tray chat notifications",
         ]
     },
     graphics: {
         snowflakes: [
-            "Снежинки",
-            "Рисовать падающий снег",
+            "Snowflakes",
+            "Show falling snow.",
         ],
         fullscreen: [
-            "Полноэкранный режим",
-            "Включить полноэкранный режим",
+            "Fullscreen",
+            "Enable fullscreen",
         ],
         autoHighlightDoors: [
-            "Подсвечивать дверь",
-            "Позволяет подсвечивать дверь при наведении курсора. При отключенной опции через ctlr.",
+            "Highlight doors",
+            "Highlight doors on mouse hover. If disabled, highlights door with Ctrl pressed.",
         ],
         centerScreen: [
-            "Центрировать экран",
-            "При включенной опции игровая область располагается по центру экрана",
-            "При выключенной — у левого края.",
+            "Center screen",
+            "If enabled, game area centers on screen center.",
+            "If disabled, game area is placed on the left.",
         ],
     },
     sound:  {
         playSound: [
-            "Звуки",
-            "Включить звуки игры.",
+            "Sound",
+            "Play game sounds.",
         ],
         playMusic: [
-            "Музыка",
-            "Включить музыку в игре.",
+            "Ambient",
+            "Play ambient.",
         ],
         jukebox: [
-            "Музыкальный автомат",
-            "Включить музыку из музыкальных автоматов.",
+            "Jukebox",
+            "Play jukeboxes music.",
         ],
     }
 };
-
