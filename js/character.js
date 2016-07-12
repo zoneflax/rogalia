@@ -1819,7 +1819,7 @@ Character.prototype = {
         });
     },
     getTalks: function() {
-        return game.talks.get(
+        return Talks.get(
             this.Type,
             game.player.Citizenship.Faction.toLowerCase(),
             game.player.sex()
@@ -1833,7 +1833,7 @@ Character.prototype = {
             return true;
         if (this.getQuests().length > 0)
             return true;
-        if (this.Type.toLowerCase() in game.talks.npcs)
+        if (this.Type.toLowerCase() in Talks.npcs)
             return true;
         return false;
     },

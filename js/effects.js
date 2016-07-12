@@ -1,3 +1,5 @@
+"use strict";
+
 function EffectDesc(name) {
     var effect = EffectDesc.effects[name];
     if (!effect) {

@@ -56,6 +56,7 @@ T.init = function(lang, callback) {
         "effects",
         "craft",
         "settings",
+        "talks"
     ];
     var loaded = 0;
     scripts.forEach(function(script) {

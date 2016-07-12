@@ -68,8 +68,6 @@ function Game(lang) {
 
     this.debug = debug;
     this.config = config;
-
-    this.talks = new Talks();
     this.sound = new Sound();
 
     this.offset = {
