@@ -174,13 +174,9 @@ function Chat() {
     var defaultPrefix = "";
     var privateRegexp = /^\*to (\S+) /;
     this.send = function(message) {
-        if (message[0] != "*" && defaultPrefix) {
+        if (message[0] != "*" && defaultPrefix)
             message = "*" + channels[defaultPrefix] + " " + message;
-        } else {
-            var match = privateRegexp.exec(message);
-            if (match)
-                lastPrivate = match[1];
-        }
+
         game.network.send("chat-message", {message: message});
     };
 
@@ -297,6 +293,13 @@ function Chat() {
                         );
                     })
                 ).show();
+                break;
+            case "to" :
+                game.chat.send(message);
+                var name = arg.substring(0, arg.indexOf(" "));
+                e.target.value = "*to " + name + " ";
+                lastPrivate = name;
+                return true;
                 break;
             default:
                 local = false;
