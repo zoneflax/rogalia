@@ -167,8 +167,7 @@ function Chat() {
         element.scrollTop = element.scrollHeight;
     }
 
-    this.newMessageElement = document.createElement("input");
-    this.newMessageElement.id = "new-message";
+    this.newMessageElement = dom.tag("input", "#new-message");
     this.newMessageElement.type = "text";
 
     var defaultPrefix = "";

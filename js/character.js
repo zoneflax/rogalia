@@ -511,8 +511,9 @@ Character.prototype = {
 
         var name = this.Name;
         loader.ready(function() {
-            var canvas = document.createElement("canvas");
-            var ctx = canvas.getContext("2d");
+	    
+	    var canvas = dom.canvas();
+	    var ctx = canvas.ctx;
             var naked = Character.sprites[sex].naked[animation];
             naked = ("hair" in parts || parts.head) ? naked.clean : naked.default;
 
@@ -527,7 +528,7 @@ Character.prototype = {
                         // TODO: wrong result when used with helmet (hair is rendered on top of helmet)
 
                         // var worker = new Worker("js/tint.js");
-                        // var tmpCanvas = util.imageToCanvas(image);
+                        // var tm2pCanvas = util.imageToCanvas(image);
                         // var tmpCtx = tmpCanvas.getContext("2d");
                         // worker.onmessage = function(e) {
                         //     tmpCtx.putImageData(e.data, 0, 0);
@@ -1360,31 +1361,35 @@ Character.prototype = {
         var repeat = fish.bind(this);
         var panel = game.panels["fishing"];
         if (!panel) {
-            var rating = document.createElement("div");
-            rating.className = "rating";
-            var buttons = document.createElement("div");
-            buttons.id = "fishing-buttons";
+	    
+	    var rating = dom.div("rating");
+	    var buttons = dom.div("#fishing-buttons");
+	    
             var actions = [">", ">>", ">>>", "<", "<<", "<<<"];
             actions.forEach(function(action, index) {
+		var button = dom.buttons(
+		    T(action), ,
+		    function() {
+		       game.network.send("fishing-move", {move: this.move});
+                       dom.forEach("#fishing-buttons > button", function() {
+                        this.disabled = true;
+                    });
+                });  
+		    
+		    
                 var button = document.createElement("button");
                 button.textContent = T(action);
                 button.move = index;
                 button.style.width = "100px";
                 button.disabled = true;
-                button.onclick = function() {
-                    game.network.send("fishing-move", {move: this.move});
-                    dom.forEach("#fishing-buttons > button", function() {
-                        this.disabled = true;
-                    });
-                };
                 buttons.appendChild(button);
-            });
+            });	  
             var playerIcon = dom.img("assets/icons/fishing/player.png");
             var playerMeter = document.createElement("meter");
             playerMeter.max = 300;
             playerMeter.style.width = "100%";
             playerMeter.title = T("Player");
-
+		  
             var fishIcon = dom.img("assets/icons/fishing/fish.png");
             var fishMeter = document.createElement("meter");
             fishMeter.max = 300;
