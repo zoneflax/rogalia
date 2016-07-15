@@ -2,28 +2,19 @@
 function System() {
     this.fps = new FpsStats();
 
-    var fps = document.createElement("div");
-    fps.id = "fps-stats";
-    fps.appendChild(this.fps.domElement);
+    var fps = dom.wrap("#fps-stats", this.fps.domElement);
 
-    this.ping = document.createElement("span");
-    this.ping.textContent = "Ping: -";
+    this.ping = dom.span("Ping: -");
 
     this.users = new Users();
     this.help = new Help();
     this.settings = new Settings();
 
-    var users = document.createElement("button");
-    users.textContent = T("Users");
-    users.onclick = this.users.panel.toggle.bind(this.users.panel);
+    var users = dom.button(T("Users"), "", this.users.panel.toggle.bind(this.users.panel));
 
-    var help = document.createElement("button");
-    help.textContent = T("Help");
-    help.onclick = this.help.panel.toggle.bind(this.help.panel);
+    var help = dom.button(T("Help"), "", this.help.panel.toggle.bind(this.help.panel));
 
-    var settings = document.createElement("button");
-    settings.textContent = T("Settings");
-    settings.onclick = this.settings.panel.toggle.bind(this.settings.panel);
+    var settings = dom.button(T("Settings"),"", this.settings.panel.toggle.bind(this.settings.panel));
 
     var links = dom.button(T("Links"));
     links.onclick = function() {

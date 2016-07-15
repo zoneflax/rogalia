@@ -19,55 +19,34 @@ Vendor.createPrice = function(cost) {
     cost /= 100;
     var p = cost;
 
-    var silver = document.createElement("span");
-    silver.className = "silver";
-    silver.textContent = s + "s";
-    silver.title = T("Silver");
+    var silver = dom.span(s + "s", "silver", T("Silver"));
 
-    var gold = document.createElement("span");
-    gold.className = "gold";
-    gold.textContent = g + "g";
-    gold.title = T("Gold");
+    var gold = dom.span(g + "g", "gold", T("Gold"));
 
-    var platinum = document.createElement("span");
-    platinum.className = "platinum";
-    platinum.textContent = p + "p";
-    platinum.title = T("Platinum");
-
-    var price = document.createElement("span");
-    price.className = "price";
+    var platinum = dom.span(p + "p", "platinum", T("Platinum"));
+    
+    var price = dom.span("", "price");
     if (negative)
         price.classList.add("negative");
-    price.appendChild(platinum);
-    price.appendChild(gold);
-    price.appendChild(silver);
+    dom.append(price, [platinum, gold, silver]);
     return price;
 };
 
 Vendor.createPriceInput = function() {
-    var platinum = document.createElement("input");
-    platinum.className = "platinum";
+    var platinum = dom.tag("input", "platinum");
     platinum.title = T("Platinum");
     platinum.value = 0;
 
-    var gold = document.createElement("input");
-    gold.className = "gold";
+    var gold = dom.tag("input", "gold");
     gold.title = T("gold");
     gold.value = 0;
 
-    var silver = document.createElement("input");
-    silver.className = "silver";
+    var silver = dom.tag("input", "silver");
     silver.title = T("Silver");
     silver.value = 0;
 
-    var price = document.createElement("div");
-    price.className = "price";
-    price.appendChild(platinum);
-    price.appendChild(document.createTextNode("p"));
-    price.appendChild(gold);
-    price.appendChild(document.createTextNode("g"));
-    price.appendChild(silver);
-    price.appendChild(document.createTextNode("s"));
+    var price = dom.div("price");
+    dom.append(price, [platinum, "p", gold, "g", silver, "s"]);
 
     price.cost = function() {
         return parseInt(platinum.value || 0) * 10000 +

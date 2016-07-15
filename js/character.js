@@ -1368,7 +1368,7 @@ Character.prototype = {
             var actions = [">", ">>", ">>>", "<", "<<", "<<<"];
             actions.forEach(function(action, index) {
 		var button = dom.buttons(
-		    T(action), ,
+		    T(action),"" ,
 		    function() {
 		       game.network.send("fishing-move", {move: this.move});
                        dom.forEach("#fishing-buttons > button", function() {
@@ -1376,22 +1376,19 @@ Character.prototype = {
                     });
                 });  
 		    
-		    
-                var button = document.createElement("button");
-                button.textContent = T(action);
                 button.move = index;
                 button.style.width = "100px";
                 button.disabled = true;
-                buttons.appendChild(button);
+                dom.append(buttons,button);
             });	  
             var playerIcon = dom.img("assets/icons/fishing/player.png");
-            var playerMeter = document.createElement("meter");
+            var playerMeter = dom.tag("meter");
             playerMeter.max = 300;
             playerMeter.style.width = "100%";
             playerMeter.title = T("Player");
 		  
             var fishIcon = dom.img("assets/icons/fishing/fish.png");
-            var fishMeter = document.createElement("meter");
+            var fishMeter = dom.tag("meter");
             fishMeter.max = 300;
             fishMeter.style.width = "100%";
             fishMeter.title = T("Fish");
@@ -1941,10 +1938,8 @@ Character.prototype = {
         if (cnt.dataset.targetId == target.Id)
             return;
 
-        var name = document.createElement("div");
-        name.id = "target-name";
+        var name = dom.div("#target-name");
         name.textContent = target.getName();
-
         cnt.dataset.targetId = target.Id;
         dom.clear(cnt);
         cnt.appendChild(target.sprite.icon());

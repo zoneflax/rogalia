@@ -498,15 +498,14 @@ function Chat() {
 
     this.format = function(body) {
         var matches = body.match(/\${[^}]+}|https?:\/\/\S+|#\S+|^>.*/g);
-        var content = document.createElement("span");
-        content.className = "body";
+        var content = dom.span("", "body");
         if (matches) {
             matches.forEach(function(match) {
                 body = parseMatch(content, body, match);
             });
 
             if (body.length)
-                content.appendChild(document.createTextNode(body));
+                dom.appendText(content, body);
         } else {
             content.textContent = body;
         }
@@ -518,7 +517,7 @@ function Chat() {
         var index = body.indexOf(match);
         if (index > 0) {
             var plain = body.substr(0, index);
-            content.appendChild(document.createTextNode(plain));
+            dom.appendText(content, plain);
         }
 
         var element = null;
@@ -535,7 +534,7 @@ function Chat() {
             simple.tag = "hr";
             break;
         case "${triforce}":
-            element = document.createElement("pre");
+            element = dom.tag("pre");
             element.style.lineHeight = 1;
             element.innerHTML = " ▲\n▲ ▲";
             break;
@@ -551,11 +550,9 @@ function Chat() {
         }
 
         if (!element) {
-            element =  document.createElement(simple.tag);
-            element.className = simple.className;
-            element.textContent = simple.content;
+            element = dom.tag(simple.tag, simple.className, {text : simple.content});
         }
-        content.appendChild(element);
+        dom.append(content, [element]);
 
         return body.substr(index + match.length);
     };
@@ -588,7 +585,7 @@ function Chat() {
             }
         }
         var text = T(match.substr(startIndex, len));
-        var common = document.createElement("code");
+        var common = dom.tag("code");
         var maxLen = 40;
         if (text.length > maxLen) {
             common.title = text;
@@ -602,35 +599,29 @@ function Chat() {
     function makeLinkParser(proto) {
         return function(data) {
             var url = proto + "://" + data;
-            var link = document.createElement("a");
-            link.target = "_blank";
-            link.href = url;
-            link.textContent = decodeURI(url);
+            var link = dom.link(url, decodeURI(url));
             return link;
         };
     }
 
     function makeTagParser(tag) {
         return function(data) {
-            var elem = document.createElement(tag);
+            var elem = dom.tag(tag);
             elem.textContent = data;
             return elem;
         };
     }
 
     function recipeParser(data) {
-        var link = document.createElement("a");
-        link.textContent = T("Recipe") + ": " + TS(data);
-        link.className = "recipe-link";
+        var link = dom.link("", T("Recipe") + ":" + TS(data), "recipe-link");
         link.dataset.recipe = data;
         return link;
     }
 
     function markerParser(data) {
-        var link = document.createElement("a");
+        var link = dom.link("", "", "marker-link");
         var title = data.split(" ").slice(2).join(" ") || T("Marker");
         link.textContent = title;
-        link.className = "marker-link";
         link.dataset.marker = data;
         return link;
     }
@@ -638,13 +629,9 @@ function Chat() {
     function imgParser(data) {
         var img = Entity.getPreview(data);
         img.className = "";
-        var title = T(data);
-
-        var code = document.createElement("code");
-        code.textContent = title;
-
-        var cnt = document.createElement("span");
-        cnt.appendChild(code);
+        var code = dom.tag("code", "", {text : title, title : T(data)});
+        var cnt = dom.make("span", code);
+        
         if (img.width) {
             cnt.appendChild(img);
         }
@@ -745,8 +732,7 @@ function Chat() {
         this.addBallon(message);
 
         if (message.From && message.Channel != 6) {
-            var fromElement = document.createElement("span");
-            fromElement.className = "from";
+            var fromElement = dom.span("", "from");
             var color = null;
             switch(message.From) {
             case "TatriX":
@@ -782,7 +768,7 @@ function Chat() {
                 var now = new Date();
                 fromElement.title = '[' + now.getHours() + ':' + now.getMinutes() + ']';
                 contents.push(fromElement);
-                contents.push(document.createTextNode(": "));
+                contents.push(dom.text(": "));
             }
         }
 
@@ -844,7 +830,7 @@ function Chat() {
             character.ballon.remove();
         }
 
-        var ballon = document.createElement("div");
+        var ballon = dom.div("ballon");
         character.ballon = ballon;
 
         ballon.remove = function() {
@@ -852,7 +838,6 @@ function Chat() {
             character.ballon = null;
         };
 
-        ballon.className = "ballon";
         var maxLen = 30;
         var text = message.Body.substr(0, maxLen).replace(/\${[^}]+}?/g, "[..]");
         if (text.length > maxLen)
