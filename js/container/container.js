@@ -308,9 +308,8 @@ Container.prototype = {
             return;
         }
 
-        this.fuel = document.createElement("div");
+        this.fuel = dom.div("fuel-wrapper");
         this.fuel.title = T("Fuel");
-        this.fuel.className = "fuel-wrapper";
 
         var current = dom.div("fuel-current");
         var max = dom.div("fuel-max");

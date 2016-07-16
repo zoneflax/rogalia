@@ -524,10 +524,8 @@ function Controller(game) {
             button.classList.add("active");
         panel.button = button;
         button.onclick = makeToggle(button, panel);
-
-        var icon = document.createElement("div");
-        icon.className = "icon";
-        button.appendChild(icon);
+	
+	dom.append(button, dom.div("icon"));
     };
 
     this.terraCursor = function(tile) {
