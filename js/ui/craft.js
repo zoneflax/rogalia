@@ -20,9 +20,8 @@ function Craft() {
         this.list
     ]);
 
-    this.titleElement = document.createElement("div");
-    this.ingredientsList = document.createElement("ul");
-    this.ingredientsList.className = "ingredients-list";
+    this.titleElement = dom.div();
+    this.ingredientsList = dom.tag("ul", "ingredients-list");
 
     this.recipeDetails = this.createRecipeDetails();
 
@@ -123,19 +122,16 @@ Craft.prototype = {
         this.blank.entity = blank;
         this.blank.panel.entity = blank;
 
-        var slotHelp = document.createElement("div");
-        slotHelp.textContent = T("Drop ingredients here") + ":";
+        var slotHelp = dom.div("", {text :  T("Drop ingredients here") + ":"});
 
-        this.slot = document.createElement("div");
+        this.slot = dom.div();
         this.slot.classList.add("slot");
         this.slot.build = true;
 
-        var auto = document.createElement("button");
-        auto.className = "build-auto";
-        auto.textContent = T("Auto");
         var self = this;
         var recipe = this.recipe(blank.Props.Type);
-        auto.onclick = function() {
+        var auto = dom.button(T("Auto"), "build-auto",
+        function() {
             var list = [];
             var items = [];
             this.auto(function(item) {
@@ -160,19 +156,16 @@ Craft.prototype = {
             }
             if (list.length > 0)
                 game.network.send("build-add", {Blank: blank.Id, List: list});
-        }.bind(this);
+        }.bind(this));
 
-        var buildButton = document.createElement("button");
-        buildButton.textContent = T("Build");
-        buildButton.className = "build-button";
-        buildButton.onclick = function(e) {
+        this.buildButton = dom.button(T("Build"), "build-button",
+        function(e) {
             game.network.send("build", {id: blank.Id}, function() {
                 game.help.actionHook("build-"+blank.Props.Type);
             });
             this.blank.panel.hide();
-        }.bind(this);
-        this.buildButton = buildButton;
-
+        }.bind(this));
+        
         this.blank.panel.setContents([
             this.titleElement,
             dom.hr(),
@@ -181,7 +174,7 @@ Craft.prototype = {
             dom.hr(),
             this.ingredientsList,
             auto,
-            buildButton,
+            this.buildButton,
         ]);
 
         this.render(blank);
@@ -215,7 +208,7 @@ Craft.prototype = {
         this.slots[index].used = true;
         this.slots[index].unlock = slot.unlock.bind(slot);
         dom.clear(to);
-        to.appendChild(ingredient);
+        dom.append(to, ingredient);
         to.onmousedown = this.cancel.bind(this, from, to);
         return true;
     },
@@ -226,8 +219,7 @@ Craft.prototype = {
         }
     },
     createList: function() {
-        var list = document.createElement("ul");
-        list.className = "recipe-list no-drag";
+        var list = dom.tag("ul", "recipe-list no-drag");
         var groups = {};
         for (var group in game.player.Skills) {
             groups[group] = {};
@@ -240,14 +232,12 @@ Craft.prototype = {
 
         for (var group in groups) {
             var recipes = groups[group];
-            var subtree = document.createElement("ul");
-            subtree.className =  (this.visibleGroups[group]) ? "" : "hidden";
+            var subtree = dom.tag("ul", (this.visibleGroups[group]) ? "" : "hidden");
             subtree.group = group;
 
             for (var type in recipes) {
                 var recipe = recipes[type];
-                var item = document.createElement("li");
-                item.className = "recipe";
+                var item = dom.tag("li", "recipe");
                 item.classList.add(["portable", "liftable", "static"][Entity.templates[type].MoveType]);
                 item.recipe = recipe;
                 item.title = TS(type);
@@ -262,18 +252,16 @@ Craft.prototype = {
                 if (!this.safeToCreate(recipe))
                     item.classList.add("unavailable");
 
-                subtree.appendChild(item);
+                dom.append(subtree, item);
                 this.recipes[type] = item;
             }
 
             if (subtree.children.length == 0)
                 continue;
 
-            var subtreeLi = document.createElement("li");
-            var groupToggle = document.createElement("span");
+            var subtreeLi = dom.tag("li");
+            var groupToggle = dom.span(T(group), "group-toggle");
             var visibleGroups = this.visibleGroups;
-            groupToggle.className = "group-toggle";
-            groupToggle.textContent = T(group);
             groupToggle.subtree = subtree;
             groupToggle.onclick = function() {
                 dom.toggle(this);
@@ -283,10 +271,8 @@ Craft.prototype = {
             var icon = new Image();
             icon.src = "assets/icons/skills/" + group.toLowerCase() + ".png";
 
-            subtreeLi.appendChild(icon);
-            subtreeLi.appendChild(groupToggle);
-            subtreeLi.appendChild(subtree);
-            list.appendChild(subtreeLi);
+            dom.append(subtreeLi, [icon, groupToggle, subtree]);
+            dom.append(list, subtreeLi);
         }
 
         if (list.children.length == 0)
@@ -295,27 +281,23 @@ Craft.prototype = {
         return list;
     },
     createSearchField: function() {
-        var input = document.createElement("input");
+        var input = dom.tag("input");
         input.placeholder = T("search");
         input.addEventListener("keyup", this.searchHandler.bind(this));
         input.value = localStorage.getItem("craft.search") || "";
 
         this.searchInput = input;
 
-        var clear = document.createElement("button");
-        clear.className = "recipe-search-clear";
-        clear.textContent = "×";
-        clear.title = T("Clear search");
-        clear.onclick = function() {
+        var clear = dom.button("×", "recipe-search-clear", 
+        function() {
             this.search("");
             input.value = "";
             input.focus();
-        }.bind(this);
+        }.bind(this));
+        clear.title = T("Clear search");
 
-        var label = document.createElement("label");
-        label.className = "recipe-search";
-        label.appendChild(input);
-        label.appendChild(clear);
+        var label = dom.tag("label", "recipe-search");
+        dom.append(label, [input, clear]);
 
         return label;
     },
@@ -362,12 +344,11 @@ Craft.prototype = {
         return slot;
     },
     createFilters: function() {
-        var filters = document.createElement("div");
+        var filters = dom.div();
         var recipeList = this.list;
         ["portable", "liftable", "static", "unavailable"].forEach(function(name) {
-            var label = document.createElement("label");
-            var checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
+            var label = dom.tag("label", "", {title: T(name)});
+            var checkbox = dom.checkbox();
             var saved = localStorage.getItem("craft.filter." + name);
             checkbox.checked = (saved) ? JSON.parse(saved) : (name != "unavailable");
             if (!checkbox.checked)
@@ -377,9 +358,8 @@ Craft.prototype = {
                 var checked = !recipeList.classList.toggle("filter-"+name);
                 localStorage.setItem("craft.filter." + name, checked);
             };
-            label.appendChild(checkbox);
-            label.title = T(name);
-            filters.appendChild(label);
+            dom.append(label, checkbox);
+            dom.append(filters, label);
         });
         return filters;
     },
@@ -440,9 +420,7 @@ Craft.prototype = {
         }
     },
     createRecipeDetails: function() {
-        var recipeDetails = document.createElement("div");
-        recipeDetails.id = "recipe-details";
-        recipeDetails.textContent = T("Select recipe");
+        var recipeDetails = dom.div("#recipe-details", {text : T("Select recipe")});
         return recipeDetails;
     },
     clickListener: function(e) {
@@ -495,24 +473,21 @@ Craft.prototype = {
 
         var recipe = this.current.recipe;
 
-        var title = document.createElement("span");
-        title.className = "recipe-title";
-        title.textContent = T(this.current.title);
+        var title = dom.span(T(this.current.title), "recie-title");
         if (recipe.Output)
             title.textContent += " x" + recipe.Output;
         this.type = this.current.type;
-        var ingredients = document.createElement("ul");
+        var ingredients = dom.tag("ul");
         var slots = [];
 
         for(var group in recipe.Ingredients) {
             var groupTitle = TS(group);
             var required = T(recipe.Ingredients[group]);
             var ingredient = dom.make("li", [required, "x ", this.makeLink(groupTitle)]);
-            ingredients.appendChild(ingredient);
+            dom.append(ingredients, ingredient);
 
             for(var j = 0; j < required; j++) {
-                var slot = document.createElement("div");
-                slot.className = "slot";
+                var slot = dom.div("slot");
                 if (group in Craft.help) {
                     var help = dom.span(Craft.help[group]);
                     slot.onclick = function() {
@@ -541,29 +516,20 @@ Craft.prototype = {
             }
         }
 
-        var slotsWrapper = document.createElement("div");
-        slotsWrapper.id = "recipe-slots";
+        var slotsWrapper = dom.div("#recipe-slots");
+        
         for(var i = 0, l = slots.length; i < l; i++) {
-            slotsWrapper.appendChild(slots[i]);
+            dom.append(slotsWrapper, slots[i]);
             this.slots.push(slots[i]);
         }
 
-        var auto = document.createElement("button");
-        auto.className = "recipe-auto";
-        auto.textContent = T("Auto");
-        auto.onclick = function() {
+        var auto = dom.button(T("Auto"), "recipe-auto", function() {
             this.auto();
-        }.bind(this);
+        }.bind(this));
 
-        var create = document.createElement("button");
-        create.className = "recipe-create";
-        create.textContent = T("Create");
-        create.onclick = this.create.bind(this);
+        var create = dom.button(T("Create"), "recipe-create", this.create.bind(this));
 
-        var all = document.createElement("button");
-        all.className = "recipe-craft-all";
-        all.textContent = T("Craft all");
-        all.onclick = this.craftAll.bind(this);
+        var all = dom.button(T("Craft all"), "recipe-craft-all", this.craftAll.bind(this));
 
         var buttons = dom.wrap("#recipe-buttons", [all, auto, create]);
 
@@ -590,9 +556,7 @@ Craft.prototype = {
         var recipe = target.recipe;
         dom.clear(this.recipeDetails);
 
-        var title = document.createElement("span");
-        title.className = "recipe-title";
-        title.textContent = target.title;
+        var title = dom.span(target.title, "recipe-title");
 
         this.blank.type = target.type;
 

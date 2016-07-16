@@ -443,7 +443,7 @@ Entity.prototype = {
     },
     //used by sign
     read: function() {
-        var text = document.createElement("textarea");
+        var text = dom.tag("textarea");
         text.readonly = true;
         if (this.Props.Text[0] == "$") {
             util.ajax("books/ru/" + this.Props.Text.substr(1) + ".txt", function(data) {
@@ -971,23 +971,24 @@ Entity.prototype = {
 
         var id = this.Id;
         function makeButtons(action) {
-            var div = document.createElement("div");
-            div.className = "claim-actions";
+            var div = dom.div("claim-actions");
+            var buttons = [];
             ["north", "west", "south", "east"].forEach(function(dir) {
-                var button = document.createElement("button");
-                button.className = "claim-action-" + dir;
-                button.textContent = T(action + " " + dir);
-                button.onclick = function() {
-                    var cmd = action + util.ucfirst(dir);
-                    game.network.send(cmd, {Id: id});
-                };
-                div.appendChild(button);
+                var button = dom.button(
+                    T(action + " " + dir),
+                    "claim-action" + dir,
+                    function () {
+                        var cmd = action + util.ucfirst(dir);
+                        game.network.send(cmd, {Id: id});
+                    });
+                buttons.push(button);
             });
+            dom.wrap(div, buttons);
             return div;
         }
 
-        var enlarge = document.createElement("div");
-        var shrink = document.createElement("div");
+        var enlarge = dom.div();
+        var shrink = dom.div();
         var panel = new Panel("claim", "Claim", [makeButtons("Extend"), dom.hr(), makeButtons("Shrink")]);
         panel.temporary = true;
         panel.show();

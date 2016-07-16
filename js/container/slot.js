@@ -64,8 +64,7 @@ ContainerSlot.prototype = {
         this.entity = entity;
         this.element.classList.add("has-item");
 
-        var quality = document.createElement("sup");
-        quality.className = "quality";
+        var quality = dom.tag("sup", "quality");
         quality.textContent = entity.Quality;
         if (entity.almostBroken())
             quality.classList.add("almost-broken");
@@ -73,16 +72,15 @@ ContainerSlot.prototype = {
         var icon = entity.icon();
         icon.classList.add("item");
         icon.slot = this;
-
-        this.element.appendChild(icon);
-        this.element.appendChild(quality);
+        
+        dom.append(this.element, [icon, quality]);
 
         this.update();
     },
     setSub: function(text) {
         if (this.sub == null) {
-            this.sub = document.createElement("sub");
-            this.element.appendChild(this.sub);
+            this.sub = dom.tag("sub");
+            dom.append(this.element, this.sub);
         }
         this.sub.textContent = text;
     },

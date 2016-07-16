@@ -63,13 +63,11 @@ Sprite.prototype = {
     makeOutline: function() {
         if (!this.image.width)
             return;
-        var canvas = document.createElement("canvas");
-        var ctx = canvas.getContext("2d");
+
         var w = this.image.width;
         var h = this.image.height;
-        canvas.width = w;
-        canvas.height = h;
-        canvas.ctx = ctx;
+        var canvas = dom.canvas(w, h)
+        var ctx = canvas.ctx;
 
         ctx.drawImage(this.image, 0, 0);
         this.imageData = ctx.getImageData(0, 0, w, h);
@@ -143,7 +141,7 @@ Sprite.prototype = {
         }
     },
     icon: function() {
-        var canvas = document.createElement("canvas");
+        var canvas = dom.canvas(0, 0, "canvas");
         if (this.ready) {
             this.renderIcon(canvas);
         } else {
@@ -152,9 +150,9 @@ Sprite.prototype = {
         return canvas;
     },
     renderIcon: function(canvas) {
-        canvas.width = this.width;
-        canvas.height = this.height;
-        var ctx = canvas.getContext("2d");
+	canvas.width = this.width;
+	canvas.height = this.height;
+        var ctx = canvas.ctx;
         try {
             ctx.drawImage(
                 this.image,

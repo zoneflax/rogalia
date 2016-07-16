@@ -157,6 +157,13 @@ var dom = {
             }))
         ]);
     },
+    canvas: function (w, h, classOrId) {
+        var canvas = dom.tag("canvas", classOrId);
+        canvas.ctx = canvas.getContext("2d");
+        canvas.width = w || 0;
+        canvas.height = h || 0;
+        return canvas;
+    },
     /* * * * * */
     remove: function(element) {
         element.parentNode.removeChild(element);
