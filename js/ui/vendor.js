@@ -20,11 +20,9 @@ Vendor.createPrice = function(cost) {
     var p = cost;
 
     var silver = dom.span(s + "s", "silver", T("Silver"));
-
     var gold = dom.span(g + "g", "gold", T("Gold"));
-
     var platinum = dom.span(p + "p", "platinum", T("Platinum"));
-    
+
     var price = dom.span("", "price");
     if (negative)
         price.classList.add("negative");
@@ -33,16 +31,13 @@ Vendor.createPrice = function(cost) {
 };
 
 Vendor.createPriceInput = function() {
-    var platinum = dom.tag("input", "platinum");
-    platinum.title = T("Platinum");
+    var platinum = dom.tag("input", "platinum", {title: T("Platinum")});
     platinum.value = 0;
 
-    var gold = dom.tag("input", "gold");
-    gold.title = T("gold");
+    var gold = dom.tag("input", "gold", {title: T("gold")});
     gold.value = 0;
 
-    var silver = dom.tag("input", "silver");
-    silver.title = T("Silver");
+    var silver = dom.tag("input", "silver", {title: T("Silver")});
     silver.value = 0;
 
     var price = dom.div("price");

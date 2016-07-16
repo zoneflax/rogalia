@@ -985,14 +985,15 @@ lmb, rmb {
     color: #ffb151;
 }
 
-.message .body .recipe-link,  .message .body .marker-link{
+.recipe-link, .marker-link {
     cursor: url("assets/cursors/pointer.png"), auto;
     text-decoration: underline;
-    color: lightgreen;
+    color: #6cf96c;
 }
-.message .body .marker-link {
+.marker-link {
     color: #f166f1;
 }
+
 #users li {
     list-style-type: square;
     cursor: url("assets/cursors/pointer.png"), auto;

@@ -1,6 +1,19 @@
 "use strict";
 function Chat() {
     var self = this;
+    this.newMessageElement = dom.tag("input", "#new-message");
+    this.newMessageElement.type = "text";
+
+    var defaultPrefix = "";
+    var privateRegexp = /^\*to (\S+) /;
+
+    this.send = function(message) {
+        if (message[0] != "*" && defaultPrefix)
+            message = "*" + channels[defaultPrefix] + " " + message;
+
+        game.network.send("chat-message", {message: message});
+    };
+
     this.useNotifications = false;
 
     this.initNotifications = function() {
@@ -167,18 +180,6 @@ function Chat() {
         element.scrollTop = element.scrollHeight;
     }
 
-    this.newMessageElement = dom.tag("input", "#new-message");
-    this.newMessageElement.type = "text";
-
-    var defaultPrefix = "";
-    var privateRegexp = /^\*to (\S+) /;
-    this.send = function(message) {
-        if (message[0] != "*" && defaultPrefix)
-            message = "*" + channels[defaultPrefix] + " " + message;
-
-        game.network.send("chat-message", {message: message});
-    };
-
     this.linkEntity = function(entity) {
         if (!entity)
             return;
@@ -188,7 +189,7 @@ function Chat() {
         if ("getName" in entity)
             text = entity.getName();
         else
-             text = entity.name || entity.Name;
+            text = entity.name || entity.Name;
 
         this.send("${" + text + "}", true);
         if (game.player.IsAdmin || entity.Group == "portal") {
@@ -498,11 +499,11 @@ function Chat() {
 
     this.format = function(body) {
         var matches = body.match(/\${[^}]+}|https?:\/\/\S+|#\S+|^>.*/g);
-        var content = dom.span("", "body");
+        var content = dom.tag("span", "body");
         if (matches) {
-            matches.forEach(function(match) {
-                body = parseMatch(content, body, match);
-            });
+            body = matches.reduce(function(body, match) {
+                return parseMatch(content, body, match);
+            }, body);
 
             if (body.length)
                 dom.appendText(content, body);
@@ -516,8 +517,7 @@ function Chat() {
     function parseMatch (content, body, match) {
         var index = body.indexOf(match);
         if (index > 0) {
-            var plain = body.substr(0, index);
-            dom.appendText(content, plain);
+            dom.appendText(content, body.substr(0, index));
         }
 
         var element = null;
@@ -549,10 +549,10 @@ function Chat() {
             }
         }
 
-        if (!element) {
-            element = dom.tag(simple.tag, simple.className, {text : simple.content});
-        }
-        dom.append(content, [element]);
+        dom.append(
+            content,
+            element || dom.tag(simple.tag, simple.className, {text : simple.content})
+        );
 
         return body.substr(index + match.length);
     };
@@ -599,21 +599,18 @@ function Chat() {
     function makeLinkParser(proto) {
         return function(data) {
             var url = proto + "://" + data;
-            var link = dom.link(url, decodeURI(url));
-            return link;
+            return dom.link(url, decodeURI(url));
         };
     }
 
     function makeTagParser(tag) {
         return function(data) {
-            var elem = dom.tag(tag);
-            elem.textContent = data;
-            return elem;
+            return dom.tag(tag, "", {text: data});
         };
     }
 
     function recipeParser(data) {
-        var link = dom.link("", T("Recipe") + ":" + TS(data), "recipe-link");
+        var link = dom.link("", T("Recipe") + ": " + TS(data), "recipe-link");
         link.dataset.recipe = data;
         return link;
     }
@@ -631,7 +628,7 @@ function Chat() {
         img.className = "";
         var code = dom.tag("code", "", {text : title, title : T(data)});
         var cnt = dom.make("span", code);
-        
+
         if (img.width) {
             cnt.appendChild(img);
         }
@@ -732,7 +729,7 @@ function Chat() {
         this.addBallon(message);
 
         if (message.From && message.Channel != 6) {
-            var fromElement = dom.span("", "from");
+            var fromElement = dom.tag("span", "from");
             var color = null;
             switch(message.From) {
             case "TatriX":
@@ -842,6 +839,7 @@ function Chat() {
         var text = message.Body.substr(0, maxLen).replace(/\${[^}]+}?/g, "[..]");
         if (text.length > maxLen)
             text += '...';
+
         ballon.textContent = text;
 
         dom.insert(ballon);

@@ -15,28 +15,21 @@ function Panel(name, title, elements, listeners, hooks) {
     this.lsKey = "panels." + this.name;
     var config = JSON.parse(localStorage.getItem(this.lsKey)) || {};
 
-    this.element = dom.div("panel");
-    this.element.id = name;
-
     this.contents = dom.div("contents");
 
     this.title = dom.div("title-text");
     this.setTitle(title);
 
-
-    this.titleBar = document.createElement("header");
-    this.titleBar.className = "title-bar";
-    this.titleBar.appendChild(this.title);
-
-    this.closeButton = document.createElement("span");
-    this.closeButton.className = "close";
+    this.closeButton = dom.tag("span", "close");
     this.closeButton.panel = this;
     this.closeButton.onclick = this.hide.bind(this);
-    this.titleBar.appendChild(this.closeButton);
+
+    this.titleBar = dom.wrap("title-bar", [this.title, this.closeButton]);
+
+    this.element = dom.wrap("panel", this.titleBar);
+    this.element.id = name;
 
     this.button = null;
-
-    this.element.appendChild(this.titleBar);
 
     hooks = hooks || {};
     this.hooks = {
@@ -178,6 +171,9 @@ Panel.prototype = {
     setEntity: function(entity) {
         this.entity = entity;
         return this;
+    },
+    setTemporary: function(temporary) {
+        this.temporary = temporary;
     },
     show: function(x, y) {
         this.toTop();

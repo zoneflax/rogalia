@@ -23,7 +23,7 @@ function Craft() {
     this.titleElement = dom.div();
     this.ingredientsList = dom.tag("ul", "ingredients-list");
 
-    this.recipeDetails = this.createRecipeDetails();
+    this.recipeDetails = dom.div("#recipe-details", {text : T("Select recipe")});
 
     this.history = [];
 
@@ -130,11 +130,10 @@ Craft.prototype = {
 
         var self = this;
         var recipe = this.recipe(blank.Props.Type);
-        var auto = dom.button(T("Auto"), "build-auto",
-        function() {
+        var auto = dom.button(T("Auto"), "build-auto", function() {
             var list = [];
             var items = [];
-            this.auto(function(item) {
+            self.auto(function(item) {
                 items.push(item.entity);
             });
             for (var group in blank.Props.Ingredients) {
@@ -156,16 +155,15 @@ Craft.prototype = {
             }
             if (list.length > 0)
                 game.network.send("build-add", {Blank: blank.Id, List: list});
-        }.bind(this));
+        });
 
-        this.buildButton = dom.button(T("Build"), "build-button",
-        function(e) {
+        this.buildButton = dom.button(T("Build"), "build-button", function(e) {
             game.network.send("build", {id: blank.Id}, function() {
                 game.help.actionHook("build-"+blank.Props.Type);
             });
-            this.blank.panel.hide();
-        }.bind(this));
-        
+            self.blank.panel.hide();
+        });
+
         this.blank.panel.setContents([
             this.titleElement,
             dom.hr(),
@@ -190,7 +188,7 @@ Craft.prototype = {
 
         var from = Container.getEntityContainer(entity);
         if (!from)
-            return;
+            return false;
 
         if (this.slots.some(function(slot) {
             return slot.firstChild.id == entity.id;
@@ -288,12 +286,12 @@ Craft.prototype = {
 
         this.searchInput = input;
 
-        var clear = dom.button("×", "recipe-search-clear", 
-        function() {
-            this.search("");
+        var reset = this.search.bind(this, "");
+        var clear = dom.button("×", "recipe-search-clear", function() {
+            reset();
             input.value = "";
             input.focus();
-        }.bind(this));
+        });
         clear.title = T("Clear search");
 
         var label = dom.tag("label", "recipe-search");
@@ -344,9 +342,8 @@ Craft.prototype = {
         return slot;
     },
     createFilters: function() {
-        var filters = dom.div();
         var recipeList = this.list;
-        ["portable", "liftable", "static", "unavailable"].forEach(function(name) {
+        return dom.wrap("craft-filters", ["portable", "liftable", "static", "unavailable"].map(function(name) {
             var label = dom.tag("label", "", {title: T(name)});
             var checkbox = dom.checkbox();
             var saved = localStorage.getItem("craft.filter." + name);
@@ -359,12 +356,14 @@ Craft.prototype = {
                 localStorage.setItem("craft.filter." + name, checked);
             };
             dom.append(label, checkbox);
-            dom.append(filters, label);
-        });
-        return filters;
+            return label;
+        }));
     },
     searchHandler: function(e) {
-        var input = e.target;
+        // skip selection
+        if (e.shiftKey && e.keyCode < 65 || e.key == "Shift") {
+            return true;
+        }
         return this.search(e.target.value);
     },
     makeSearch: function(slot) {
@@ -419,10 +418,6 @@ Craft.prototype = {
             this.openRecipe(matching, false);
         }
     },
-    createRecipeDetails: function() {
-        var recipeDetails = dom.div("#recipe-details", {text : T("Select recipe")});
-        return recipeDetails;
-    },
     clickListener: function(e) {
         if (!e.target.recipe)
             return;
@@ -473,7 +468,7 @@ Craft.prototype = {
 
         var recipe = this.current.recipe;
 
-        var title = dom.span(T(this.current.title), "recie-title");
+        var title = dom.span(T(this.current.title), "recipe-title");
         if (recipe.Output)
             title.textContent += " x" + recipe.Output;
         this.type = this.current.type;
@@ -487,7 +482,7 @@ Craft.prototype = {
             dom.append(ingredients, ingredient);
 
             for(var j = 0; j < required; j++) {
-                var slot = dom.div("slot");
+                var slot = dom.slot();
                 if (group in Craft.help) {
                     var help = dom.span(Craft.help[group]);
                     slot.onclick = function() {
@@ -516,27 +511,18 @@ Craft.prototype = {
             }
         }
 
-        var slotsWrapper = dom.div("#recipe-slots");
-        
-        for(var i = 0, l = slots.length; i < l; i++) {
-            dom.append(slotsWrapper, slots[i]);
-            this.slots.push(slots[i]);
-        }
+        this.slots = slots;
 
-        var auto = dom.button(T("Auto"), "recipe-auto", function() {
-            this.auto();
-        }.bind(this));
-
+        var auto = dom.button(T("Auto"), "recipe-auto", this.auto.bind(this, null));
         var create = dom.button(T("Create"), "recipe-create", this.create.bind(this));
-
         var all = dom.button(T("Craft all"), "recipe-craft-all", this.craftAll.bind(this));
-
         var buttons = dom.wrap("#recipe-buttons", [all, auto, create]);
 
         var hr = function() {
             this.recipeDetails.appendChild(dom.hr());
         }.bind(this);
 
+        // TODO: use dom
         this.recipeDetails.appendChild(this.makePreview(this.current.type));
         this.recipeDetails.appendChild(title);
         hr();
@@ -544,7 +530,7 @@ Craft.prototype = {
         hr();
         this.recipeDetails.appendChild(document.createTextNode(T("Ingredients") + ":"));
         this.recipeDetails.appendChild(ingredients);
-        this.recipeDetails.appendChild(slotsWrapper);
+        this.recipeDetails.appendChild(dom.wrap("#recipe-slots", slots));
         hr();
         this.recipeDetails.appendChild(buttons);
         hr();
@@ -571,11 +557,8 @@ Craft.prototype = {
         var hr = function() {
             this.recipeDetails.appendChild(dom.hr());
         }.bind(this);
-        var create = document.createElement("button");
-        create.className = "recipe-create";
-        create.textContent = T("Create");
-        create.onclick = this.build.bind(this);
 
+        // TODO: use dom
         this.recipeDetails.appendChild(this.makePreview(this.blank.type));
         this.recipeDetails.appendChild(title);
         hr();
@@ -583,7 +566,7 @@ Craft.prototype = {
         this.renderRequirements(recipe);
         this.recipeDetails.appendChild(ingredients);
         hr();
-        this.recipeDetails.appendChild(create);
+        this.recipeDetails.appendChild(dom.button(T("Create"), "recipe-create", this.build.bind(this)));
 
         this.renderBackButton();
     },
@@ -591,12 +574,14 @@ Craft.prototype = {
         if (this.history.length == 0)
             return;
 
-        var button = dom.button(T("Back"), "craft-history-back");
-        button.onclick = function() {
-            this.openRecipe(this.history.pop(), false, true);
-        }.bind(this);
+        var self = this;
 
-        dom.append(this.recipeDetails, [dom.hr(), button]);
+        dom.append(this.recipeDetails, [
+            dom.hr(),
+            dom.button(T("Back"), "craft-history-back", function() {
+                self.openRecipe(self.history.pop(), false, true);
+            }),
+        ]);
     },
     auto: function(callback) {
         callback = callback || function(slot, container) {

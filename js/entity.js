@@ -971,27 +971,20 @@ Entity.prototype = {
 
         var id = this.Id;
         function makeButtons(action) {
-            var div = dom.div("claim-actions");
-            var buttons = [];
-            ["north", "west", "south", "east"].forEach(function(dir) {
-                var button = dom.button(
+            return dom.wrap("claim-actions", ["north", "west", "south", "east"].map(function(dir) {
+                return dom.button(
                     T(action + " " + dir),
                     "claim-action" + dir,
                     function () {
                         var cmd = action + util.ucfirst(dir);
                         game.network.send(cmd, {Id: id});
-                    });
-                buttons.push(button);
-            });
-            dom.wrap(div, buttons);
-            return div;
+                    }
+                );
+            }));
         }
-
-        var enlarge = dom.div();
-        var shrink = dom.div();
-        var panel = new Panel("claim", "Claim", [makeButtons("Extend"), dom.hr(), makeButtons("Shrink")]);
-        panel.temporary = true;
-        panel.show();
+        new Panel("claim", "Claim", [makeButtons("Extend"), dom.hr(), makeButtons("Shrink")])
+            .setTemporary(true)
+            .show();
     },
     applyAdminCmd: function() {
         var id = this.Id;

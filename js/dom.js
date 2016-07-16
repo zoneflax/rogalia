@@ -111,6 +111,7 @@ var dom = {
     wrap: function(classOrId, elements, cfg) {
         return this.append(dom.div(classOrId, cfg), elements);
     },
+    // TODO: use dom.append() instead?
     appendText: function(element, text) {
         element.appendChild(document.createTextNode(text));
     },

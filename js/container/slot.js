@@ -64,15 +64,14 @@ ContainerSlot.prototype = {
         this.entity = entity;
         this.element.classList.add("has-item");
 
-        var quality = dom.tag("sup", "quality");
-        quality.textContent = entity.Quality;
+        var quality = dom.tag("sup", "quality", {text: entity.Quality});
         if (entity.almostBroken())
             quality.classList.add("almost-broken");
 
         var icon = entity.icon();
         icon.classList.add("item");
         icon.slot = this;
-        
+
         dom.append(this.element, [icon, quality]);
 
         this.update();

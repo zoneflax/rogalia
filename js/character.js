@@ -511,9 +511,8 @@ Character.prototype = {
 
         var name = this.Name;
         loader.ready(function() {
-	    
-	    var canvas = dom.canvas();
-	    var ctx = canvas.ctx;
+            var canvas = dom.canvas();
+            var ctx = canvas.ctx;
             var naked = Character.sprites[sex].naked[animation];
             naked = ("hair" in parts || parts.head) ? naked.clean : naked.default;
 
@@ -1364,32 +1363,34 @@ Character.prototype = {
         var repeat = fish.bind(this);
         var panel = game.panels["fishing"];
         if (!panel) {
-	    
-	    var rating = dom.div("rating");
-	    var buttons = dom.div("#fishing-buttons");
-	    
+
+            var rating = dom.div("rating");
+            var buttons = dom.div("#fishing-buttons");
+
             var actions = [">", ">>", ">>>", "<", "<<", "<<<"];
-            actions.forEach(function(action, index) {
-		var button = dom.buttons(
-		    T(action),"" ,
-		    function() {
-		       game.network.send("fishing-move", {move: this.move});
-                       dom.forEach("#fishing-buttons > button", function() {
-                        this.disabled = true;
-                    });
-                });  
-		    
+            dom.append(buttons, actions.map(function(action, index) {
+                var button = dom.button(
+                    T(action),
+                    "",
+                    function() {
+                        game.network.send("fishing-move", {move: this.move});
+                        dom.forEach("#fishing-buttons > button", function() {
+                            this.disabled = true;
+                        });
+                    }
+                );
+
                 button.move = index;
                 button.style.width = "100px";
                 button.disabled = true;
-                dom.append(buttons,button);
-            });	  
+                return button;
+            }));
             var playerIcon = dom.img("assets/icons/fishing/player.png");
             var playerMeter = dom.tag("meter");
             playerMeter.max = 300;
             playerMeter.style.width = "100%";
             playerMeter.title = T("Player");
-		  
+
             var fishIcon = dom.img("assets/icons/fishing/fish.png");
             var fishMeter = dom.tag("meter");
             fishMeter.max = 300;

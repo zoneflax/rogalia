@@ -308,8 +308,7 @@ Container.prototype = {
             return;
         }
 
-        this.fuel = dom.div("fuel-wrapper");
-        this.fuel.title = T("Fuel");
+        this.fuel = dom.div("fuel-wrapper", {title: T("Fuel")});
 
         var current = dom.div("fuel-current");
         var max = dom.div("fuel-max");

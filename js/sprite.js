@@ -66,7 +66,7 @@ Sprite.prototype = {
 
         var w = this.image.width;
         var h = this.image.height;
-        var canvas = dom.canvas(w, h)
+        var canvas = dom.canvas(w, h);
         var ctx = canvas.ctx;
 
         ctx.drawImage(this.image, 0, 0);
@@ -150,11 +150,10 @@ Sprite.prototype = {
         return canvas;
     },
     renderIcon: function(canvas) {
-	canvas.width = this.width;
-	canvas.height = this.height;
-        var ctx = canvas.ctx;
+        canvas.width = this.width;
+        canvas.height = this.height;
         try {
-            ctx.drawImage(
+            canvas.ctx.drawImage(
                 this.image,
                 0, 0, this.width, this.height,
                 0, 0, this.width, this.height
