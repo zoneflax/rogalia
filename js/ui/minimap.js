@@ -164,16 +164,16 @@ function Minimap() {
                 if (game.controller.modifier.shift) {
                     sendPoint(point);
                 } else {
-                    var title = prompt(T("Description") + ":");
-                    if (title)
+                    game.prompt(T("Description") + ":", "", function(title) {
                         point.title = title;
+                    });
                 }
                 break;
             case game.controller.RMB:
                 removePointByName(name);
                 break;
             }
-        }
+        };
         return point;
     };
 

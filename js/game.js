@@ -324,6 +324,7 @@ function Game(lang) {
     var popup = new Popup();
     this.alert = popup.alert;
     this.confirm = popup.confirm;
+    this.prompt = popup.prompt;
 
     this.sendError = function(msg) {
         game.network.send("error", {msg: msg});

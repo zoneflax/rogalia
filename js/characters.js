@@ -140,9 +140,10 @@ Character.npcActions = {
         game.network.send("get-claim", {Id: this.Id});
     },
     "Get village claim": function() {
-        var name = prompt("Name?", "");
-        if (name)
-            game.network.send("get-village-claim", {Id: this.Id, Name: name});
+        var id = this.Id;
+        game.prompt(T("Name") + "?", "", function(name) {
+            game.network.send("get-village-claim", {Id: id, Name: name});
+        });
     },
     "Bank": function() {
         new Bank(this);

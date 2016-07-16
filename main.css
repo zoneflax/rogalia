@@ -2131,6 +2131,19 @@ input[type=number], .lot-quantity > input, .price > input {
 #popup .contents {
     text-align: center;
 }
+.popup-input {
+    display: block;
+    margin: 3px 0 6px;
+    padding: 3px;
+}
+#popup textarea {
+    width: 250px;
+    height: 120px;
+}
+
+#popup input {
+    width: 130px;
+}
 
 .poker-table > :nth-child(1),
 .poker-table > :nth-child(2) {

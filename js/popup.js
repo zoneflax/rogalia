@@ -20,16 +20,13 @@ function Popup(buttons) {
         callback = nop;
     };
 
-
-
     return {
         alert: function(message, onclose) {
             panel.setContents([
                 dom.div("popup-message", {text: message}),
                 dom.button(T("Ok"), "popup-ok", panel.hide.bind(panel)),
             ]);
-            panel.show();
-            panel.center();
+            show();
             if (onclose)
                 callback = onclose;
         },
@@ -42,8 +39,28 @@ function Popup(buttons) {
                 }),
                 dom.button(T("Cancel"), "popup-cancel", panel.hide.bind(panel))
             ]);
-            panel.show();
-            panel.center();
+            show();
+        },
+        prompt: function(message, value, callback) {
+            var input = dom.tag(typeof value == "string" ? "textarea" : "input", "popup-input");
+            input.value = value;
+            panel.setContents([
+                dom.div("popup-message", {text: message}),
+                input,
+                dom.button(T("Ok"), "popup-ok", function() {
+                    panel.hide();
+                    callback(input.value);
+                }),
+                dom.button(T("Cancel"), "popup-cancel", panel.hide.bind(panel))
+
+            ]);
+            show();
+            input.focus();
         },
     };
+
+    function show() {
+        panel.show();
+        panel.center();
+    }
 }

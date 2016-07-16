@@ -456,10 +456,10 @@ Entity.prototype = {
     },
     //used by sign
     edit: function() {
-        var text = prompt("Edit message", this.Props.Text);
-        if (text) {
-            game.network.send("sign-edit", {Id: this.Id, Text: text});
-        }
+        var id = this.Id;
+        game.prompt(T("Edit"), this.Props.Text, function(text) {
+            game.network.send("sign-edit", {Id: id, Text: text});
+        });
     },
     //used by container
     open: function(data) {
@@ -480,11 +480,10 @@ Entity.prototype = {
     split: function() {
         var args = {Id: this.Id};
         if (this.Group == "currency") {
-            var amount = prompt("How many?", 1);
-            if (!amount)
-                return;
-            args.Amount = +amount;
-            game.network.send("split", args);
+            game.prompt(T("How many?"), 1, function(amount) {
+                args.Amount = +amount;
+                game.network.send("split", args);
+            });
         } else {
             game.network.send("Split", args);
         }
@@ -1031,9 +1030,10 @@ Entity.prototype = {
             },
             "$prompt": function() {
                 var lastCmd = Entity.lastPromptCmd || "set-quality";
-                var cmd = prompt("cmd?", lastCmd);
-                Entity.lastPromptCmd = cmd;
-                game.chat.append("*" + cmd + " " + id);
+                game.prompt("cmd?", lastCmd, function(cmd) {
+                    Entity.lastPromptCmd = cmd;
+                    game.chat.append("*" + cmd + " " + id);
+                });
             },
         });
     },
