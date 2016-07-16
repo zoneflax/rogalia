@@ -1132,11 +1132,15 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     color: #99f;
 }
 
-#stats {
+#inspect {
+    width: 220px;
+}
+
+.stats-panel {
     width: 300px;
 }
 
-#stats .summary {
+.stats-panel .summary {
     background: url("assets/bg/strip/center.png") repeat-x;
     height: 32px;
     line-height: 32px;
@@ -1146,29 +1150,29 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     text-align: center;
 }
 
-#stats .summary:before,
-#stats .summary:after {
+.stats-panel .summary:before,
+.stats-panel .summary:after {
     position: absolute;
     top: -5px;
 }
-#stats .summary:before {
+.stats-panel .summary:before {
     content: url("assets/bg/strip/left.png");
     left: -60px;
 }
-#stats .summary:after {
+.stats-panel .summary:after {
     content: url("assets/bg/strip/right.png");
     right: -60px;
 }
-#stats .faction {
+.stats-panel .faction {
     margin-top: -7px;
     margin-bottom: -7px;
 }
-#stats .main {
+.stats-panel .main {
     position: relative;
     display: flex;
     justify-content: space-around;
 }
-#stats .attributes, #stats .health {
+.stats-panel .attributes, .stats-panel .health {
     width: 50%;
 }
 

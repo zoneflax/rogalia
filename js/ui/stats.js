@@ -10,7 +10,28 @@ function Stats() {
             mousedown: this.equipContainer.onmousedown.bind(this.equipContainer),
         }
     );
+    this.panel.element.classList.add("stats-panel");
 }
+
+function Doll(player){
+    var doll = dom.div("doll");
+    this.update.call(doll, null, player);
+    return doll;
+}
+
+Doll.prototype.update = function(self, player) {
+    var sex = player.sex();
+    this.classList.add(sex);
+    var worn =  ["feet", "legs", "body", "head"].filter(function(name) {
+        return !!player.equipSlot(name);
+    });
+    worn.push("naked");
+    var dollStyle = worn.map(function(name) {
+        return "url('assets/bg/doll/" + sex + "/" + name + ".png')";
+    }).join(",");
+    this.style.backgroundImage = dollStyle;
+};
+
 
 Stats.formatParam = function(param, digits) {
     var current = (param.Current == 0) ? "0" : util.toFixed(param.Current, digits);
@@ -108,18 +129,7 @@ Stats.prototype = {
         },
         {
             name: "doll",
-            update: function(self, player) {
-                var sex = player.sex();
-                this.classList.add(sex);
-                var worn =  ["feet", "legs", "body", "head"].filter(function(name) {
-                    return !!player.equipSlot(name);
-                });
-                worn.push("naked");
-                var dollStyle = worn.map(function(name) {
-                    return "url('assets/bg/doll/" + sex + "/" + name + ".png')";
-                }).join(",");
-                this.style.backgroundImage = dollStyle;
-            },
+            update: Doll.prototype.update,
         },
         {
             name: "equip",

@@ -611,6 +611,9 @@ Character.prototype = {
         var common = {};
         if (!this.IsNpc) {
             common.Select = game.player.setTarget.bind(game.player, this);
+            if (!this.IsMob) {
+                common.Inspect = game.player.inspect.bind(game.player, this);
+            }
         }
         if (game.player.IsAdmin) {
             common.Kill = function() {
@@ -1945,6 +1948,33 @@ Character.prototype = {
         cnt.appendChild(target.sprite.icon());
         cnt.appendChild(name);
         dom.show(cnt);
+    },
+    inspect: function(target) {
+        game.network.send("inspect", {Id: target.Id}, function(data) {
+            target.Equip = data.Equip;
+            var panel = new Panel(
+                "inspect",
+                target.Name,
+                [
+                    new Doll(target),
+                    dom.wrap("equip", data.Equip.map(function(item, i) {
+                        var title = Character.equipSlots[i];
+                        var slot = new ContainerSlot({panel: panel, entity: {}}, i);
+                        if (item) {
+                            var entity = new Entity(item.Type);
+                            entity.sync(item);
+                            slot.set(entity);
+                        }
+                        var elem = slot.element;
+                        elem.classList.add("equip-" + title);
+                        return elem;
+                    })),
+                ]
+            );
+            panel.element.classList.add("stats-panel");
+            panel.temporary = true;
+            panel.show();
+        });
     },
     getAvailableQuests: function() {
         return game.player.AvailableQuests[this.Type] || [];
