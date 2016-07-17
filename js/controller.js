@@ -1088,4 +1088,13 @@ function Controller(game) {
         if (questPanel && questPanel.visible)
             questPanel.quest.update();
     };
+
+    this.updateMail = function(newMail) {
+        if (newMail) {
+            dom.show(document.getElementById("new-mail"));
+            this.mail && this.mail.update();
+            return;
+        }
+        dom.hide(document.getElementById("new-mail"));
+    };
 };

@@ -167,6 +167,9 @@ Character.prototype = {
         if ("Party" in data) {
             this.updateParty(data.Party);
         }
+
+        if (this.isPlayer)
+            game.controller.updateMail(this.NewMail);
     },
     avatar: function() {
         if (this.isPlayer)

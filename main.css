@@ -1426,44 +1426,76 @@ ol li a:hover {
     color: #ccc;
 }
 
-#time, #maximize, #mute, #build-warning, #bg-state {
+#world-icons, #bg-state {
     position: absolute;
     right: 3px;
     top: 3px;
+    z-index: 2;
+}
+
+.icon-button, #build-warning, #bg-state {
+    display: inline-block;
     border-radius: 2px;
     padding: 2px;
     cursor: url("assets/cursors/pointer.png"), auto;
     background: #99682e;
-    z-index: 2;
 }
+
 #time {
     right: 28px;
     display: none!important;
 }
-#maximize, #mute {
+
+#world-icons .icon-button {
+    width: 22px;
+    height: 22px;
+}
+
+.icon-button {
     background-position: center;
     background-repeat: no-repeat;
     width: 18px;
     height: 18px;
+    box-sizing: border-box;
+    margin: 3px;
 }
+
+.icon-button:hover {
+    -webkit-filter: brightness(150%);
+    filter: brightness(150%);
+}
+
+
 #maximize {
-    background-image: url("assets/bg/maximize.png");
+    background-image: url("assets/icons/maximize.png");
 }
 #maximize.maximized {
-    background-image: url("assets/bg/minimize.png");
+    background-image: url("assets/icons/minimize.png");
 }
 #mute {
     right: 28px;
-    background-image: url("assets/bg/mute.png");
+    background-image: url("assets/icons/mute.png");
 }
 
 #mute.unmute {
-    background-image: url("assets/bg/unmute.png");
+    background-image: url("assets/icons/unmute.png");
 }
+
+#new-mail {
+    background-image: url("assets/icons/new-mail.png");
+    position: absolute;
+    left: 3px;
+    top: 3px;
+    width: 22px;
+    height: 22px;
+}
+
 #build-warning {
+    position: absolute;
     top: 6px;
-    right: 125px;
+    right: 150px;
 }
+
 #build-warning-details > hr{
     margin: 5px -5px;
 }
@@ -1622,6 +1654,7 @@ big {
 }
 
 #minimap-container {
+    top: 28px;
     right: 0;
 }
 
@@ -2043,17 +2076,6 @@ input[type=number], .lot-quantity > input, .price > input {
     margin: 1px 3px;
 }
 
-.icon-button {
-    cursor: url("assets/cursors/pointer.png"), auto;
-    padding: 2px;
-    border-radius: 2px;
-    background: #99682e;
-    margin: 3px;
-}
-.icon-button:hover {
-    -webkit-filter: brightness(150%);
-    filter: brightness(150%);
-}
 #journal {
     width: 500px;
 }
@@ -2251,6 +2273,9 @@ input[type=number], .lot-quantity > input, .price > input {
     justify-content: space-between;
     align-items: center;
 }
+#mail .contents {
+    width: 304px;
+}
 #mail .tab-content {
     padding-top: 3px;
 }
@@ -2276,8 +2301,12 @@ input[type=number], .lot-quantity > input, .price > input {
     top: 26px;
     right: 2px;
 }
-.letters .letter-subject {
+.letter-subject, .letter-created {
     font-size: smaller;
+}
+.letter-attachment {
+    overflow: auto;
+    height: 50px;
 }
 
 #instances {
@@ -2292,9 +2321,19 @@ input[type=number], .lot-quantity > input, .price > input {
     min-width: 250px;
 }
 
-#auction .back-button, #mail .back-button {
+#auction .back-button, {
     float: right;
 }
+
+#mail .back-button, #mail .take-button  {
+    position: absolute;
+    right: 0
+}
+
+#mail .take-button {
+    bottom: 25px;
+}
+
 /* vendors, lots */
 .lot-table, .lot-list {
     height: 500px;
@@ -2316,7 +2355,7 @@ input[type=number], .lot-quantity > input, .price > input {
 .lot:last-child, .letter:last-child {
     background-image: none;
 }
-.lot-icon, .letter-avatar {
+.lot-icon {
     margin-right: 5px;
 }
 .lot-info, .lot-buy, .lot-sell, .lot-cancel {
@@ -2368,4 +2407,8 @@ input[type=number], .lot-quantity > input, .price > input {
     position: absolute;
     top: -299px;
     z-index: -1;
+}
+
+.add-entity-button {
+    display: block;
 }

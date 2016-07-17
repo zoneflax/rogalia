@@ -344,13 +344,19 @@ var util = new function() {
 
     this.date = {
         human: function(date) {
-            return date.toLocaleDateString("ru-RU");
+            return date.toLocaleDateString("ru-RU"); // TODO: use user's locale
         },
         iso: function(date) {
             return date.toISOString().slice(0, 10);
         },
         format: function(format, date) {
             throw "not imlemented"; //TODO: implement date.format
+        },
+    };
+
+    this.time = {
+        human: function(date) {
+            return date.toLocaleTimeString("ru-RU"); // TODO: use user's locale
         },
     };
 
@@ -389,6 +395,12 @@ var util = new function() {
         if (x instanceof Array)
             return x;
         return [x];
+    };
+
+    this.map = function(object, callback) {
+        for (var key in object) {
+            callback(object[key], key);
+        }
     };
 };
 

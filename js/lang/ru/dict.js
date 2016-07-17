@@ -436,6 +436,8 @@ T.dict = {
     "Harvest": "Собрать",
     "Fir tree plant": "Саженец ели",
     "Protein drug": "Препарат протеина",
+    "Magnesium drug": "Препарат магния",
+    "Phosphorus drug": "Препарат фосфора",
     "Inject": "Ввести",
     "Iron chest": "Железный сундук",
     "Open": "Открыть",
@@ -1471,4 +1473,9 @@ T.dict = {
     "Rags": "Тряпье",
     "Inspect": "Осмотреть",
     "How many?": "Сколько?",
+    "Letter sent": "Письмо отправлено",
+    "New mail": "Новая почта",
+    "Delete": "Удалить",
+    "Date": "Дата",
+    "Take": "Забрать",
 };

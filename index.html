@@ -23,8 +23,10 @@
       <canvas id="canvas"></canvas>
 
       <div id="build-warning" class="hidden"></div>
-      <div id="maximize" class="icon-button" title="Maximize"></div>
-      <div id="mute" class="icon-button" title="Mute"></div>
+      <div id="world-icons">
+          <div id="mute" class="icon-button" title="Mute"></div>
+          <div id="maximize" class="icon-button" title="Maximize"></div>
+      </div>
 
       <div id="interface">
 	  <div id="avatar-container">
@@ -35,6 +37,7 @@
 		  <div id="stamina"><div></div><div></div></div>
 	      </div>
 	  </div>
+          <div id="new-mail" class="icon-button hidden" title="New mail"></div>
           <div id="party"></div>
 	  <div id="target-container" class="hidden character-avatar-container"></div>
           <div id="bg-state" class="hidden"></div>
@@ -104,6 +107,7 @@
     <script src="js/lib/sprintf.min.js"></script>
     <script src="js/lib/binary-search-tree.js"></script>
     <script src="js/lib/image-filters.js"></script>
+    <script src="js/lib/lodash.min.js"></script>
     <script src="js/polyfill.js"></script>
     <script src="js/hashtable.js"></script>
     <script src="js/config.js"></script>

@@ -1,6 +1,17 @@
 "use strict";
 function Chat() {
     var self = this;
+    var channels = {
+        global       : 0,
+        local        : 1,
+        party        : 2,
+        server       : 5,
+        private      : 6,
+        system       : 7,
+        announcement : 8,
+        npc          : 9,
+    };
+
     this.newMessageElement = dom.tag("input", "#new-message");
     this.newMessageElement.type = "text";
 
@@ -239,16 +250,16 @@ function Chat() {
             var arg = match[2];
             switch (cmd) {
             case "where":
-                game.chat.addMessage(sprintf("%d %d %d", game.player.X, game.player.Y, game.player.Z));
+                self.addMessage(sprintf("%d %d %d", game.player.X, game.player.Y, game.player.Z));
                 break;
             case "lvl-down":
-                game.chat.send(sprintf("*teleport %d %d %d", game.player.X, game.player.Y, game.player.Z + 1));
+                self.send(sprintf("*teleport %d %d %d", game.player.X, game.player.Y, game.player.Z + 1));
                 break;
             case "lvl-up":
-                game.chat.send(sprintf("*teleport %d %d %d", game.player.X, game.player.Y, game.player.Z - 1));
+                self.send(sprintf("*teleport %d %d %d", game.player.X, game.player.Y, game.player.Z - 1));
                 break;
             case "help":
-                game.chat.addMessage("global: 0, local: 1");
+                self.addMessage("global: 0, local: 1");
                 break;
             case "friend-add":
             case "friend-remove":
@@ -262,19 +273,23 @@ function Chat() {
                     e.target.blur();
                     break;
                 }
+                new Panel(
+                    "add",
+                    arg,
+                    _.filter(Entity.templates, function(entity, type) {
+                        return entity.Type.contains(arg) || entity.title.contains(arg);
+                    }).map(function(entity) {
+                        return dom.button(entity.title + " / " + entity.Type, "add-entity-button", function() {
+                            game.controller.newCreatingCursor(entity.Type);
+                        });
+                    })
+                ).setTemporary(true).show();
+                break;
             case "clear-equip-slot":
                 var args = message.split(" ");
                 args[2] = Character.equipSlots.indexOf(args[2]);
                 message = args.join(" ");
                 local = false;
-                break;
-            case "list":
-                for (var i in Entity.templates) {
-                    var t = Entity.templates[i];
-                    if (t.Type.contains(arg)) {
-                        game.chat.addMessage(t.Type);
-                    }
-                }
                 break;
             case "terra":
                 new Panel(
@@ -295,7 +310,7 @@ function Chat() {
                 ).show();
                 break;
             case "to" :
-                game.chat.send(message);
+                self.send(message);
                 var name = arg.substring(0, arg.indexOf(" "));
                 e.target.value = "*to " + name + " ";
                 lastPrivate = name;
@@ -310,7 +325,7 @@ function Chat() {
             }
             break;
         }
-        game.chat.send(message);
+        self.send(message);
         e.target.value = "";
         return true;
     };
@@ -372,16 +387,6 @@ function Chat() {
         this.panel.contents.classList.toggle("semi-hidden");
     }.bind(this);
 
-    var channels = {
-        global       : 0,
-        local        : 1,
-        party        : 2,
-        server       : 5,
-        private      : 6,
-        system       : 7,
-        announcement : 8,
-        npc          : 9,
-    };
     var tabs = [
         {
             name: "general",
@@ -634,7 +639,7 @@ function Chat() {
         }
 
         return cnt;
-    };
+    }
 
     function fromMe(message) {
         return !message.From || message.From == game.playerName;
@@ -711,7 +716,7 @@ function Chat() {
         if (typeof message == 'string') {
             message = {
                 From: null,
-                Channel: 7,
+                Channel: channels.system,
                 Body: message
             };
         }
@@ -720,7 +725,7 @@ function Chat() {
         var contents = [];
 
         switch(message.Channel) {
-        case 8:
+        case channels.announcement:
             message.From = SERVER;
             message.Body = TT(message.Body);
             game.controller.showAnnouncement(message.Body);
@@ -728,7 +733,7 @@ function Chat() {
         }
         this.addBallon(message);
 
-        if (message.From && message.Channel != 6) {
+        if (message.From && message.Channel != channels.private) {
             var fromElement = dom.tag("span", "from");
             var color = null;
             switch(message.From) {
@@ -747,7 +752,7 @@ function Chat() {
                 processServerMessage(message);
                 break;
             default:
-                if (message.Channel == 9) {
+                if (message.Channel == channels.npc) {
                     color = "#ccc";
                     sendNotification = false;
                 }
@@ -805,7 +810,7 @@ function Chat() {
         for(var i = 0, l = data.length; i < l; i++) {
             this.addMessage(data[i]);
             if (data[i].From != game.playerName) {
-                if (data[i].Channel != 9)
+                if (data[i].Channel != channels.npc)
                     needAlert = true;
             }
         }

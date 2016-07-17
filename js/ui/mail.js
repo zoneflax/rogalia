@@ -5,12 +5,12 @@ function Mail() {
         {
             title: T("Inbox"),
             update: function(title, contents) {
-                if (self.mail) {
+                if (self.mail && !self.updateRequired) {
                     dom.setContents(contents, self.listView(self.mail));
-                    self.mail = null;
                     return;
                 }
                 game.network.send("entity-use", {Id: self.mailbox.Id}, function(data) {
+                    self.mail = data.Mail;
                     dom.setContents(contents, self.listView(data.Mail));
                 });
             },
@@ -27,7 +27,10 @@ function Mail() {
 Mail.prototype = {
     mailbox: null,
     mail: null,
-    backContents: null,
+    updateRequired: false,
+    update: function() {
+        this.updateRequired = true;
+    },
     open: function(mailbox, mail) {
         this.mailbox = mailbox;
         this.mail = mail || [];
@@ -37,46 +40,73 @@ Mail.prototype = {
         this.panel.entity = mailbox;
         this.panel.show();
     },
+    formatDate: function(letter) {
+        var created = new Date(letter.Created * 1000);
+        return util.date.human(created) + " " + util.time.human(created);
+    },
+    hasAttachment: function(letter) {
+        return letter.Items && letter.Items.length > 0;
+    },
+    letterId: function(letter) {
+        return this.mail.indexOf(letter);
+    },
     listView: function(mail) {
-        if (!mail)
+        if (!mail || mail.length == 0)
             return T("No mail");
 
         var self = this;
-        return dom.wrap("letters", mail.map(function(letter, id) {
-            console.log(letter);
+        return dom.wrap("letters", mail.map(function(letter) {
             var del = dom.button("x", "letter-delete");
             var row = dom.wrap("letter", [
-                dom.wrap("letter-avatar slot", game.player.icon()),
                 dom.div("letter-from", {text: letter.From}),
                 dom.div("letter-subject", {text: letter.Subject}),
-                (letter.Items.length > 0) ? dom.div("letter-has-attachment") : null,
-                // dom.div("letter-sent", {// TODO: ext: util.date.human(letter.Created * 1000)})
+                self.hasAttachment(letter) ? dom.div("letter-has-attachment") : null,
+                dom.wrap("letter-created", self.formatDate(letter)),
                 del,
             ]);
-            del.onclick = function() {
-                game.network.send("delete-letter", {Id: self.mailbox.Id, Letter: id}, function() {
-                    dom.remove(row);
+            del.onclick = function(event) {
+                event.stopPropagation();
+                game.confirm(T("Delete") + "?", function() {
+                    game.network.send(
+                        "delete-letter",
+                        {Id: self.mailbox.Id, Letter: self.letterId(letter)},
+                        function() {
+                            self.mail = _.pull(self.mail, letter);
+                            var parent = row.parentNode;
+                            dom.remove(row);
+                            if (parent.children.length == 0) {
+                                parent.textContent = T("No mail");
+                            }
+                        }
+                    );
                 });
             };
             row.onclick = function() {
                 var content = self.tabs[0].tab.content;
-                self.backContents = dom.detachContents(content);
-                dom.append(content, self.letterView(letter));
+                dom.setContents(content, self.letterView(letter));
             };
             return row;
         }));
     },
     letterView: function(letter) {
         var self = this;
+        var attachment = makeAttachment(letter);
+        var take = self.hasAttachment(letter) && dom.button(T("Take"), "take-button", function() {
+            game.network.send(
+                "take-attachment",
+                {Id: self.mailbox.Id, Letter: self.letterId(letter)},
+                function() {
+                    dom.remove(attachment);
+                    dom.remove(take);
+                    letter.Items = null;
+                })
+            ;
+        });
         return [
             dom.button(T("Back"), "back-button", function() {
-                if (self.backContents) {
-                    dom.setContents(self.tabs[0].tab.content, self.backContents);
-                    self.backContents = null;
-                } else {
-                    self.tabs[0].update();
-                }
+                self.tabs[0].update();
             }),
+            take,
             dom.wrap("letter-from", [
                 T("From") + ": ",
                 letter.From,
@@ -85,11 +115,32 @@ Mail.prototype = {
                 T("Subject") + ": ",
                 letter.Subject,
             ]),
+            dom.wrap("letter-created", [
+                T("Date") + ": ",
+                self.formatDate(letter),
+            ]),
             dom.hr(),
             dom.wrap("letter-body", [
                 letter.Body,
-            ])
+            ]),
+            attachment,
         ];
+
+        function makeAttachment() {
+            if (!self.hasAttachment(letter))
+                return null;
+            var attachment = dom.div("letter-attachment");
+            game.network.send("get-letter", {Id: self.mailbox.Id, Letter: self.letterId(letter)}, function(data) {
+                dom.setContents(attachment, data.Items.map(function(item) {
+                    var slot = new ContainerSlot({panel: self.panel, entity: {}}, 0);
+                    var entity = new Entity(item.Type);
+                    entity.sync(item);
+                    slot.set(entity);
+                    return slot.element;
+                }));
+            });
+            return attachment;
+        }
     },
     composeView: function() {
         var to = dom.input(T("To:"));

@@ -174,6 +174,7 @@ Panel.prototype = {
     },
     setTemporary: function(temporary) {
         this.temporary = temporary;
+        return this;
     },
     show: function(x, y) {
         this.toTop();
