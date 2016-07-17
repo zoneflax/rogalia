@@ -34,8 +34,10 @@ Mail.prototype = {
     open: function(mailbox, mail) {
         this.mailbox = mailbox;
         this.mail = mail || [];
-        if (!this.panel)
+        if (!this.panel) {
             this.panel = new Panel("mail", "Mail", [dom.tabs(this.tabs)]);
+            this.panel.hooks.hide = this.update.bind(this);
+        }
         this.panel.temporary = true;
         this.panel.entity = mailbox;
         this.panel.show();
@@ -169,24 +171,29 @@ Mail.prototype = {
 
         var self = this;
         send.onclick = function() {
-            game.network.send("compose", {
-                Id: self.mailbox.Id,
-                To: to.value,
-                Subject: subject.value,
-                Body: body.value,
-                Items: slots.filter(function(slot) {
-                    return slot.entity != null;
-                }).map(function(slot) {
-                    return slot.entity.Id;
-                })
-            }, function() {
-                to.value = "";
-                subject.value = "";
-                body.value = "";
-                slots.forEach(function(slot) {
-                    slot.cleanup();
-                });
-            });
+            game.network.send(
+                "compose",
+                {
+                    Id: self.mailbox.Id,
+                    To: to.value,
+                    Subject: subject.value,
+                    Body: body.value,
+                    Items: slots.filter(function(slot) {
+                        return slot.entity != null;
+                    }).map(function(slot) {
+                        return slot.entity.Id;
+                    })
+                },
+                function() {
+                    console.log("IN");
+                    to.value = "";
+                    subject.value = "";
+                    body.value = "";
+                    slots.forEach(function(slot) {
+                        slot.cleanup();
+                    });
+                }
+            );
         };
         return [
             dom.wrap("mail-to", [
