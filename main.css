@@ -2279,6 +2279,9 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 #mail .tab-content {
     padding-top: 3px;
+    max-height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .letter {
     cursor: url("assets/cursors/pointer.png"), auto;
