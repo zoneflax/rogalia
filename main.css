@@ -1494,6 +1494,7 @@ ol li a:hover {
     position: absolute;
     top: 6px;
     right: 150px;
+    z-index: 2;
 }
 
 #build-warning-details > hr{
