@@ -115,7 +115,7 @@ Craft.prototype = {
         this.list = list;
         this.list.scrollTop = st;
         if (this.current.recipe) {
-            this.renderRequirements(this.current.recipe);
+            dom.append(this.recipeDetails, this.makeRequirements(this.current.recipe));
         }
     },
     open: function(blank, burden) {
@@ -393,7 +393,7 @@ Craft.prototype = {
         pattern = pattern.toLowerCase().replace(" ", "-");
         try {
             var selector = id + ".recipe[type*='" + pattern + "']," +
-                id + ".recipe[data-search*='" + pattern + "']";
+                    id + ".recipe[data-search*='" + pattern + "']";
             dom.addClass(selector, "found");
         } catch(e) {
             return;
@@ -518,14 +518,13 @@ Craft.prototype = {
         var all = dom.button(T("Craft all"), "recipe-craft-all", this.craftAll.bind(this));
         var buttons = dom.wrap("#recipe-buttons", [all, auto, create]);
 
-        var require = dom.div();
         dom.append(this.recipeDetails, [
             this.makePreview(this.current.type),
             title,
             dom.hr(),
-            this.renderRequirements(recipe),
+            this.makeRequirements(recipe),
             dom.hr(),
-            dom.text(T("Ingredients") + ":"),
+            T("Ingredients") + ":",
             ingredients,
             dom.wrap("#recipe-slost", slots),
             dom.hr(),
@@ -551,18 +550,18 @@ Craft.prototype = {
             var ingredient = dom.make("li", [required, "x ", this.makeLink(groupTitle)]);
             dom.append(ingredients, ingredient);
         }
-        dom.append(this.recipeDetails, [
-            this.makePreview(this.blank.type),
-            title,
-            dom.hr(),
-            this.renderRequirements(recipe),
-            ingredients,
-            dom.hr(),
-            dom.button(
-                T("Create"),
-                "recipe-create",
-                this.build.bind(this))
-        ]);
+        dom.append(
+            this.recipeDetails,
+            [
+                this.makePreview(this.blank.type),
+                title,
+                dom.hr(),
+                this.makeRequirements(recipe),
+                ingredients,
+                dom.hr(),
+                dom.button(T("Create"), "recipe-create", this.build.bind(this))
+            ]
+        );
         this.renderBackButton();
     },
     renderBackButton: function() {
@@ -637,103 +636,98 @@ Craft.prototype = {
             game.error("Skill %s not found", recipe.Skill);
         return skill.Value.Current >= recipe.Lvl;
     },
-    renderRequirements: function(recipe) {
+    makeRequirements: function(recipe) {
         return dom.wrap("", [
-            dom.text(T("Requirements") + ": "),
-            this.requireSkill(recipe),
-            this.requireTool(recipe),
-            this.requireEquipment(recipe),
-            this.requireLiquid(recipe)
+            T("Requirements") + ": ",
+            dom.make("ul", [
+                this.makeSkill(recipe),
+                this.makeTool(recipe),
+                this.makeEquipment(recipe),
+                this.makeLiquid(recipe),
+            ]),
         ]);
     },
-    requireSkill: function (recipe) {
-        var skill  = "";
+    makeSkill: function (recipe) {
         if (!recipe.Skill) {
-            return skill
+            return null;;
         }
 
-        var lvl = (recipe.Lvl > 0) ? recipe.Lvl : "";
-        var className = "";
+        var safeToCreate = this.safeToCreate(recipe);
 
-        if (!this.safeToCreate(recipe)) {
-            className =  "unavailable";
-            var title;
+        var title = "";
+        if (!safeToCreate) {
             if (recipe.IsBuilding)
                 title = T("Cannot complete building");
             else
                 title = T("High chance of failing");
         }
 
-        skill = dom.tag("li", className, {
-            title : title,
-            text : sprintf(
-                "%s: %s %s",
-                T("Skill"),
-                T(recipe.Skill),
-                lvl)
-        });
+        var lvl = (recipe.Lvl > 0) ? recipe.Lvl : "";
 
-        return skill;
+        return dom.tag(
+            "li",
+            (safeToCreate) ? "" : "unavailable",
+            {
+                title : title,
+                text : sprintf("%s: %s %s", T("Skill"), T(recipe.Skill), lvl),
+            }
+        );
     },
-    requireTool : function (recipe) {
-        var tool = "";
+    makeTool : function (recipe) {
         if (!recipe.Tool) {
-            return tool;
+            return null;
         }
-        var tool = dom.tag("li", "", {
-            text : T("Tool") + ": ",
-            title : T("Must be equipped")
-        });
-        var links = this.makeLinks(recipe.Tool);
-        dom.append(tool, links);
-        return tool
+        return dom.append(
+            dom.tag("li", "", {text : T("Tool") + ": ", title : T("Must be equipped")}),
+            this.makeLinks(recipe.Tool)
+        );
     },
-    requireEquipment: function (recipe) {
-        var equipment = "";
+    makeEquipment: function (recipe) {
         if (!recipe.Equipment) {
-            return equipment;
+            return null;
         }
-        var equipment = dom.tag("li", "", {
-            text : T("Equipment") + ": ",
-            title : T("You must be near equipment")
-        });
-        var links = this.makeLinks(recipe.Equipment);
-        dom.append(equipment, links);
-
-        return equipment;
+        return dom.append(
+            dom.tag(
+                "li",
+                "",
+                {
+                    text : T("Equipment") + ": ",
+                    title : T("You must be near equipment")
+                }
+            ),
+            this.makeLinks(recipe.Equipment)
+        );
     },
-    requireLiquid: function (recipe) {
-        var liquid = "";
+    makeLiquid: function (recipe) {
         if (!recipe.Liquid) {
-            return liquid;
+            return null;
         }
-        var liquid = dom.tag("li", "", {
-            text : TS(recipe.Liquid.Type) + " : " + recipe.Liquid.Volume
-        });
-        return liquid;
+        return dom.tag(
+            "li",
+            "",
+            {
+                text : TS(recipe.Liquid.Type) + " : " + recipe.Liquid.Volume
+            }
+        );
     },
-    makeLink : function (item) {
-        var link = "";
+    makeLink: function(item) {
         if(!item) {
-            return link;
+            return null;
         }
-        link = dom.link("", TS(item), "link-item");
-        link.onclick = this.search.bind(this, TS(item));
+        var title = TS(item);
+        var link = dom.link("", title, "link-item");
+        var self = this;
+        link.onclick = function() {
+            self.search(title);
+        };
         return link;
     },
     makeLinks: function (s) {
         if (!s)
             return [];
         var self = this;
-        var links = [];
-        s.split(",").map(function (item, i) {
-            var link = self.makeLink(item);
-            if(i > 0 && i < s.length) {
-                links.push(dom.text(", "));
-            }
-            links.push(link);
-        });
-        return links;
+
+        return util.intersperse(s.split(",").map(this.makeLink.bind(this)), ", ");
     },
     makePreview: function(type) {
         var preview = Entity.templates[type].icon();

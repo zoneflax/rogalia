@@ -211,7 +211,7 @@ var util = new function() {
     }
     var msort = function(arr, compare) {
         var length = arr.length,
-        middle = Math.floor(length / 2);
+            middle = Math.floor(length / 2);
 
         if (!compare) {
             compare = function(left, right) {
@@ -397,11 +397,35 @@ var util = new function() {
         return [x];
     };
 
-    this.map = function(object, callback) {
-        for (var key in object) {
-            callback(object[key], key);
+    /**
+     * Creates an array in which the contents of the given array are interspersed
+     * with... something. If that something is a function, it will be called on each
+     * insertion.
+     */
+    this.intersperse = function(array, something) {
+        if (array.length < 2) {
+            return array;
         }
+        var result = [], i = 0, l = array.length;
+        if (typeof something == 'function') {
+            for (; i < l; i ++) {
+                if (i !== 0) {
+                    result.push(something());
+                }
+                result.push(array[i]);
+            }
+        }
+        else {
+            for (; i < l; i ++) {
+                if (i !== 0) {
+                    result.push(something);
+                }
+                result.push(array[i]);
+            }
+        }
+        return result;
     };
+
 };
 
 if (!Math.hypot) {
