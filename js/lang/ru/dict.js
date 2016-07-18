@@ -1478,4 +1478,5 @@ T.dict = {
     "Delete": "Удалить",
     "Date": "Дата",
     "Take": "Забрать",
+    "Subject and body required": "Тема и текст обязательны",
 };

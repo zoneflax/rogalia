@@ -71,8 +71,8 @@ function Quests() {
                 "ru": "Теперь я научу тебя, как добывать еду и воду. В следующей комнате ты найдешь небольшой водоем. Сорви кору с дерева и сделай кружку, затем наполни ее водой из источника. Не волнуйся, вода здесь чистая.",
             },
             tip: {
-                "en": "<rmb>Drink</rmb> on a mug will increase your stamina. <br>You should stay in a shallow water to fill a mug.<br> Right click on your avatar in the upper left corner to get character's data.",
-                "ru": "<rmb>Пить</rmb> по кружке увеличит вашу выносливость. <br>Чтобы наполнить кружку, встаньте в мелкую воду.<br>Чтобы получить информацию по персонажу, кликните правой кнопкой мыши по иконке персонажа в верхнем левом углу.",
+                "en": "<rmb>Drink</rmb> on a mug will increase your stamina. <br>You should stay in a shallow water to fill a mug.<br> Click on your avatar in the upper left corner to get character's data.",
+                "ru": "<rmb>Пить</rmb> по кружке увеличит вашу выносливость. <br>Чтобы наполнить кружку, встаньте в мелкую воду.<br>Чтобы получить информацию по персонажу, кликните по иконке персонажа в верхнем левом углу.",
             },
             final: {
                 "en": "",
