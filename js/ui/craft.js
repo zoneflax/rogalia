@@ -393,7 +393,7 @@ Craft.prototype = {
         pattern = pattern.toLowerCase().replace(" ", "-");
         try {
             var selector = id + ".recipe[type*='" + pattern + "']," +
-                    id + ".recipe[data-search*='" + pattern + "']";
+                id + ".recipe[data-search*='" + pattern + "']";
             dom.addClass(selector, "found");
         } catch(e) {
             return;
@@ -518,24 +518,21 @@ Craft.prototype = {
         var all = dom.button(T("Craft all"), "recipe-craft-all", this.craftAll.bind(this));
         var buttons = dom.wrap("#recipe-buttons", [all, auto, create]);
 
-        var hr = function() {
-            this.recipeDetails.appendChild(dom.hr());
-        }.bind(this);
-
-        // TODO: use dom
-        this.recipeDetails.appendChild(this.makePreview(this.current.type));
-        this.recipeDetails.appendChild(title);
-        hr();
-        this.renderRequirements(recipe);
-        hr();
-        this.recipeDetails.appendChild(document.createTextNode(T("Ingredients") + ":"));
-        this.recipeDetails.appendChild(ingredients);
-        this.recipeDetails.appendChild(dom.wrap("#recipe-slots", slots));
-        hr();
-        this.recipeDetails.appendChild(buttons);
-        hr();
-        this.recipeDetails.appendChild(Entity.templates[this.current.type].makeDescription());
-
+        var require = dom.div();
+        dom.append(this.recipeDetails, [
+            this.makePreview(this.current.type),
+            title,
+            dom.hr(),
+            this.renderRequirements(recipe),
+            dom.hr(),
+            dom.text(T("Ingredients") + ":"),
+            ingredients,
+            dom.wrap("#recipe-slost", slots),
+            dom.hr(),
+            buttons,
+            dom.hr(),
+            Entity.templates[this.current.type].makeDescription()
+        ]);
         this.renderBackButton();
     },
     renderBuildRecipe: function(target) {
@@ -546,28 +543,26 @@ Craft.prototype = {
 
         this.blank.type = target.type;
 
-        var ingredients = document.createElement("ul");
+        var ingredients = dom.tag("ul");
         var slots = [];
         for(var name in recipe.Ingredients) {
             var required = recipe.Ingredients[name];
             var groupTitle = TS(name.replace("meta-", ""));
             var ingredient = dom.make("li", [required, "x ", this.makeLink(groupTitle)]);
-            ingredients.appendChild(ingredient);
+            dom.append(ingredients, ingredient);
         }
-        var hr = function() {
-            this.recipeDetails.appendChild(dom.hr());
-        }.bind(this);
-
-        // TODO: use dom
-        this.recipeDetails.appendChild(this.makePreview(this.blank.type));
-        this.recipeDetails.appendChild(title);
-        hr();
-        this.requirements = null; //force renderRequirements append new requirements
-        this.renderRequirements(recipe);
-        this.recipeDetails.appendChild(ingredients);
-        hr();
-        this.recipeDetails.appendChild(dom.button(T("Create"), "recipe-create", this.build.bind(this)));
-
+        dom.append(this.recipeDetails, [
+            this.makePreview(this.blank.type),
+            title,
+            dom.hr(),
+            this.renderRequirements(recipe),
+            ingredients,
+            dom.hr(),
+            dom.button(
+                T("Create"),
+                "recipe-create",
+                this.build.bind(this))
+        ]);
         this.renderBackButton();
     },
     renderBackButton: function() {
@@ -643,86 +638,108 @@ Craft.prototype = {
         return skill.Value.Current >= recipe.Lvl;
     },
     renderRequirements: function(recipe) {
-        var requirements = document.createElement("div");
-
-        requirements.appendChild(document.createTextNode(T("Requirements") + ":"));
-        var deps = document.createElement("ul");
-
-        if (recipe.Skill) {
-            var skill = document.createElement("li");
-            var lvl = (recipe.Lvl > 0) ? recipe.Lvl : "";
-            skill.textContent = sprintf("%s: %s %s", T("Skill"), T(recipe.Skill), lvl);
-
-            if (!this.safeToCreate(recipe)) {
-                skill.className = "unavailable";
-                if (recipe.IsBuilding)
-                    skill.title = T("Cannot complete building");
-                else
-                    skill.title = T("High chance of failing");
-            }
-            deps.appendChild(skill);
-        }
-
-        var self = this;
-        function makeLinks(s) {
-            if (!s)
-                return [];
-            return s.split(",").map(self.makeLink.bind(self));
-        }
-
-        function appendLinks(links, to) {
-            for (var i = 0, l = links.length; i < l; i++) {
-                to.appendChild(links[i]);
-                if (i + 1 < l)
-                    to.appendChild(dom.text(","));
-            }
-        }
-
-        if (recipe.Tool) {
-            var tool = document.createElement("li");
-            tool.appendChild(dom.text(T("Tool") + ":"));
-            appendLinks(makeLinks(recipe.Tool), tool);
-            tool.title = T("Must be equipped");
-            deps.appendChild(tool);
-        }
-
-        if (recipe.Equipment) {
-            var equipment = document.createElement("li");
-            equipment.textContent = T("Equipment") + ":";
-            appendLinks(makeLinks(recipe.Equipment), equipment);
-            equipment.title = T("You must be near equipment");
-            deps.appendChild(equipment);
-        }
-
-        if (recipe.Liquid) {
-            var liquid = document.createElement("li");
-            liquid.textContent = TS(recipe.Liquid.Type) + ": " + recipe.Liquid.Volume;
-            deps.appendChild(liquid);
-        }
-
-        requirements.appendChild(deps);
-
-        if (this.requirements)
-            dom.replace(this.requirements, requirements);
-        else
-            this.recipeDetails.appendChild(requirements);
-
-        this.requirements = requirements;
+        return dom.wrap("", [
+            dom.text(T("Requirements") + ": "),
+            this.requireSkill(recipe),
+            this.requireTool(recipe),
+            this.requireEquipment(recipe),
+            this.requireLiquid(recipe)
+        ]);
     },
-    makeLink: function(item)  {
-        var name = TS(item);
-        var link = dom.link("", name);
-        link.className = "item-link";
-        link.onclick = this.search.bind(this, name);
+    requireSkill: function (recipe) {
+        var skill  = "";
+        if (!recipe.Skill) {
+            return skill
+        }
+
+        var lvl = (recipe.Lvl > 0) ? recipe.Lvl : "";
+        var className = "";
+
+        if (!this.safeToCreate(recipe)) {
+            className =  "unavailable";
+            var title;
+            if (recipe.IsBuilding)
+                title = T("Cannot complete building");
+            else
+                title = T("High chance of failing");
+        }
+
+        skill = dom.tag("li", className, {
+            title : title,
+            text : sprintf(
+                "%s: %s %s",
+                T("Skill"),
+                T(recipe.Skill),
+                lvl)
+        });
+
+        return skill;
+    },
+    requireTool : function (recipe) {
+        var tool = "";
+        if (!recipe.Tool) {
+            return tool;
+        }
+        var tool = dom.tag("li", "", {
+            text : T("Tool") + ": ",
+            title : T("Must be equipped")
+        });
+        var links = this.makeLinks(recipe.Tool);
+        dom.append(tool, links);
+        return tool
+    },
+    requireEquipment: function (recipe) {
+        var equipment = "";
+        if (!recipe.Equipment) {
+            return equipment;
+        }
+        var equipment = dom.tag("li", "", {
+            text : T("Equipment") + ": ",
+            title : T("You must be near equipment")
+        });
+        var links = this.makeLinks(recipe.Equipment);
+        dom.append(equipment, links);
+
+        return equipment;
+    },
+    requireLiquid: function (recipe) {
+        var liquid = "";
+        if (!recipe.Liquid) {
+            return liquid;
+        }
+        var liquid = dom.tag("li", "", {
+            text : TS(recipe.Liquid.Type) + " : " + recipe.Liquid.Volume
+        });
+        return liquid;
+    },
+    makeLink : function (item) {
+        var link = "";
+        if(!item) {
+            return link;
+        }
+        link = dom.link("", TS(item), "link-item");
+        link.onclick = this.search.bind(this, TS(item));
         return link;
     },
+    makeLinks: function (s) {
+        if (!s)
+            return [];
+        var self = this;
+        var links = [];
+        s.split(",").map(function (item, i) {
+            var link = self.makeLink(item);
+            if(i > 0 && i < s.length) {
+                links.push(dom.text(", "));
+            }
+            links.push(link);
+        });
+        return links;
+    },
     makePreview: function(type) {
-        var previewWrapper = document.createElement("div");
-        previewWrapper.className = "preview-wrapper";
         var preview = Entity.templates[type].icon();
         preview.id = "item-preview";
-        previewWrapper.appendChild(preview);
-        return previewWrapper;
+        return dom.wrap("preview-wrapper", preview);
+
     },
     dwim: function(slot) {
         var self = this;
