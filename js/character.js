@@ -245,6 +245,7 @@ Character.prototype = {
             this.sprite.width = 110;
             this.sprite.height = 110;
             this.sprite.offset = 30;
+            this.sprite.nameOffset = 80;
             break;
         case "goose":
             this.sprite.width = 70;
@@ -463,7 +464,7 @@ Character.prototype = {
             this.sprite.offset = 28;
             this.sprite.width = 112;
             this.sprite.height = 112;
-            this.sprite.speed = 6500;
+            this.sprite.speed = 14000;
             break;
         default:
             this.sprite.offset = 2*this.Radius;
@@ -673,7 +674,7 @@ Character.prototype = {
                 return 130;
             return 100;
         }
-        return this.sprite.height;
+        return this.sprite.nameOffset || this.sprite.height;
     },
     drawAction: function() {
         if(this.Action.Duration) {
@@ -1135,10 +1136,15 @@ Character.prototype = {
         var now = Date.now();
         var speed = (this.Speed && this.Speed.Current || 100);
 
-        if (animation == "run")
+        var spriteSpeed = this.sprite.speed;
+        if (animation == "run") {
+            if (this.Type == "player") {
+                spriteSpeed = 6500;
+            }
             speed *= this.speedFactor;
+        }
 
-        if (now - this.sprite.lastUpdate > (this.sprite.speed / speed)) {
+        if (now - this.sprite.lastUpdate > (spriteSpeed / speed)) {
             this.sprite.frame++;
             this.sprite.lastUpdate = now;
         }

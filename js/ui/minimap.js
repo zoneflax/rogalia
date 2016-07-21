@@ -25,7 +25,6 @@ function Minimap() {
     var wrapper = dom.wrap("wrapper no-drag", this.mapImage);
 
     var lvl = 0;
-    var self = this;
     var zoom = dom.button(T("Zoom"), "", function() {
         switch (lvl++) {
         case 0:

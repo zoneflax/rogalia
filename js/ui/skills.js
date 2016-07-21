@@ -3,7 +3,6 @@ function Skills() {
     this.current = null;
 
     this.skills = dom.div("#skill-list");
-
     this.description = dom.div("description", {text : T("Select skill to see it's description")});
 
     this.learnButton = dom.button(T("Learn"), "", this.learn.bind(this));

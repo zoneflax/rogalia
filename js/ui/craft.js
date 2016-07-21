@@ -217,17 +217,19 @@ Craft.prototype = {
         }
     },
     createList: function() {
-        var list = dom.tag("ul", "recipe-list no-drag");
+
         var groups = {};
-        for (var group in game.player.Skills) {
+        _.flatMap(Skills.byAttr).forEach(function(group) {
             groups[group] = {};
-        }
+        });
+
         Entity.getSortedRecipeTuples().forEach(function(tuple) {
             var type = tuple[0];
             var recipe = tuple[1];
             groups[recipe.Skill][type] = recipe;
         });
 
+        var list = dom.tag("ul", "recipe-list no-drag");
         for (var group in groups) {
             var recipes = groups[group];
             var subtree = dom.tag("ul", (this.visibleGroups[group]) ? "" : "hidden");
