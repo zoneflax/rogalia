@@ -2,16 +2,11 @@
 function Skills() {
     this.current = null;
 
-    this.skills = document.createElement("div");
-    this.skills.id = "skill-list";
+    this.skills = dom.div("#skill-list");
 
-    this.description = document.createElement("div");
-    this.description.classList.add("description");
-    this.description.textContent = T("Select skill to see it's description");
+    this.description = dom.div("description", {text : T("Select skill to see it's description")});
 
-    this.learnButton = document.createElement("button");
-    this.learnButton.textContent = T("Learn");
-    this.learnButton.onclick = this.learn.bind(this);
+    this.learnButton = dom.button(T("Learn"), "", this.learn.bind(this));
     this.learnButton.disabled = true;
 
     this.panel = new Panel(

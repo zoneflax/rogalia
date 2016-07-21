@@ -2,8 +2,7 @@
 
 function Exchange(npc) {
     game.network.send("get-exchange-info", {Id: npc.Id}, function callback(data) {
-        var table = document.createElement("table");
-        table.id = "exchange-rates-table";
+        var table = dom.tag("table", "#exchange-rates-table");
         table.innerHTML = "<tr>" +
             "<th>" + T("Name") + "</th>" +
             "<th>" + T("Buy rate") + "</th>" +
@@ -13,20 +12,22 @@ function Exchange(npc) {
         Object.keys(data.Rates).forEach(function(assignation) {
             var rate = data.Rates[assignation];
             {
-                var name = document.createElement("td");
-                name.textContent = TS(assignation);
-                name.title = T("Sold") + ": " + rate.Stats.Sold + "\n" +
-                    T("Bought") + ": " + rate.Stats.Bought;
-            }
-            {
+                var name = dom.tag("td", "", {
+                    text :  TS(assignation),
+                    title : T("Sold") + ": " + rate.Stats.Sold + "\n" + T("Bought") + ": " + rate.Stats.Bought
+                });
 
                 var inputBuy = dom.input();
-                var buttonBuy = dom.button(T("Buy"));
-                buttonBuy.onclick = function() {
+                var buttonBuy = dom.button(T("Buy"), "", function() {
                     game.network.send(
-                        "exchange", {Id: npc.Id, Assignation: assignation, Amount: +inputBuy.value}
+                        "exchange",
+                        {
+                            Id: npc.Id,
+                            Assignation: assignation,
+                            Amount: +inputBuy.value
+                        }
                     );
-                };
+                });
                 var rateBuy = dom.make("td", [
                     Vendor.createPrice(rate.Buy),
                     inputBuy,
@@ -35,12 +36,11 @@ function Exchange(npc) {
             }
             {
                 var inputSell = dom.input();
-                var buttonSell = dom.button(T("Sell"));
-                buttonSell.onclick = function() {
+                var buttonSell = dom.button(T("Sell"), "" , function() {
                     game.network.send(
                         "exchange", {Id: npc.Id, Assignation: assignation, Amount: -inputSell.value}
                     );
-                };
+                });
                 var rateSell = dom.make("td", [
                     Vendor.createPrice(rate.Sell),
                     inputSell,
@@ -48,10 +48,8 @@ function Exchange(npc) {
                 ]);
             }
             {
-                var inputIngots = document.createElement("input");
-                var buttonIngots = document.createElement("button");
-                buttonIngots.textContent = T("Sell");
-                buttonIngots.onclick = function() {
+                var inputIngots = dom.input();
+                var buttonIngots = dom.button(T("Sell"), "", function() {
                     game.network.send(
                         "exchange", {
                             Id: npc.Id,
@@ -60,18 +58,12 @@ function Exchange(npc) {
                             Ingot: true,
                         }
                     );
-                };
-                var ingots = document.createElement("td");
-                ingots.appendChild(inputIngots);
-                ingots.appendChild(buttonIngots);
+                });
+                var ingots = dom.make("td", [inputIngots, buttonIngots]);
             }
 
-            var tr = document.createElement("tr");
-            tr.appendChild(name);
-            tr.appendChild(rateBuy);
-            tr.appendChild(rateSell);
-            tr.appendChild(ingots);
-            table.appendChild(tr);
+            var tr = dom.make("tr", [name, rateBuy, rateSell, ingots]);
+            dom.append(table, [tr]);
         });
         var panel = new Panel("exchange", "Exchange", [table]);
         panel.show();
