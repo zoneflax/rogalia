@@ -22,14 +22,11 @@ function Minimap() {
     this.points = {};
     this.characters = [];
 
-    var wrapper = document.createElement("div");
-    wrapper.className = "wrapper no-drag";
-    wrapper.appendChild(this.mapImage);
+    var wrapper = dom.wrap("wrapper no-drag", this.mapImage);
 
     var lvl = 0;
-    var zoom = document.createElement("button");
-    zoom.textContent = T("Zoom");
-    zoom.onclick = function() {
+    var self = this;
+    var zoom = dom.button(T("Zoom"), "", function() {
         switch (lvl++) {
         case 0:
             width.current *= 2;
@@ -44,9 +41,9 @@ function Minimap() {
             lvl = 0;
             break;
         }
-        this.rescale();
-        this.mapImage.width = width.current;
-    }.bind(this);
+        self.rescale();
+        self.mapImage.width = width.current;
+    });
 
     function pointFromEvent(e) {
         var rect = e.target.getBoundingClientRect();

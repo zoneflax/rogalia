@@ -1,6 +1,6 @@
 "use strict";
 function Wiki() {
-    var iframe = document.createElement("iframe");
+    var iframe = dom.tag("iframe");
     iframe.resize = true;
     this.panel = new Panel("wiki", "Wiki", [iframe]);
     this.panel.hooks.show = function() {
