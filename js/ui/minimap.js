@@ -59,10 +59,10 @@ function Minimap() {
             game.network.send("teleport", p.json());
             return;
         }
-        var p = pointFromEvent(e)
+        var p = pointFromEvent(e);
         var point = this.addMarker(p.x, p.y);
         if (game.controller.modifier.shift)
-            sendPoint(point)
+            sendPoint(point);
     }.bind(this);
 
     this.panel = new Panel(

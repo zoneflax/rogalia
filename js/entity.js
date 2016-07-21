@@ -110,6 +110,14 @@ Entity.prototype = {
                 title = this.Name;
         }
 
+        switch (this.Type) {
+        case "steel-pike":
+            var head = Entity.get(_.head(this.Props.Slot));
+            if (head) {
+                return head.Name;
+            }
+            break;
+        }
         if (this.Type.contains("-corpse") || this.Type == "head")
             return T(title);
 
@@ -172,15 +180,15 @@ Entity.prototype = {
     },
     getDrawDx: function() {
         // switch (this.Type) {
-        // case "stake-claim":
-        //     return 30;
+        // case "beehive":
+        //     return window.x || 55;
         // }
         return this.Sprite.Dx || this.sprite.width/2;
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "stake-claim":
-        //     return 103;
+        // case "beehive":
+        //     return window.y || 103;
         // }
 
         if (this.Sprite.Dy)
@@ -251,9 +259,10 @@ Entity.prototype = {
         case "steel-pike":
         case "stack-of-wood":
         case "stack-of-boards":
+        case "beehive":
             if (!this.Props.Slots)
                 break;
-            if (this.Props.Slots.some(function(id){ return id != 0 }))
+            if (this.Props.Slots.some(function(id){ return id != 0; }))
                 path += "-full";
         }
 

@@ -31,8 +31,8 @@ function Quests() {
                 "ru": "Сбор ресурсов",
             },
             desc: {
-                "en": "You need some tools to survive this wild lands; and for tools you need resources. Pick eight stones, three boughs and a couple of branches.",
-                "ru": "Для выживания в этих диких землях тебе необходимы инструменты, а чтобы их создать, нужны ресурсы. Собери камней, штук 8, 3 сучка и 2 ветки.",
+                "en": "You need some tools to survive this wild lands; and for tools you need resources. Pick four stones, two boughs and a branch.",
+                "ru": "Для выживания в этих диких землях тебе необходимы инструменты, а чтобы их создать, нужны ресурсы. Собери четыре камня, два сучка и веточку.",
             },
             tip: {
                 "en": "Right click on a tree and pick <rmb>Get a bough/a branch</rmb>. Right click and <rmb>Break</rmb> on a bough gives a stick, and breaking a branch gives a twig. Pick stones from the ground <lmb></lmb>.",
@@ -45,16 +45,30 @@ function Quests() {
         },
         "craft-2": {
             name: {
-                "en": "Needed things",
-                "ru": "Крафт необходимого",
+                "en": "Making a knife",
+                "ru": "Делаем нож",
             },
             desc: {
-                "en": "All right, everything is gathered. With all of these, you have to craft a minimal set of tools: a knife, a pickaxe and a sharp stick.",
-                "ru": "Отлично, все необходимое собрано. Из этого всего тебе нужно сделать минимальный набор инструментов - кирку, нож и острую палку.",
+                "en": "All right, everything is gathered. With all of these, you have to craft a  knife.",
+                "ru": "Отлично, все необходимое собрано. Из этого всего тебе нужно сделать нож.",
             },
             tip: {
-                "en": "<lmb></lmb> on a quest item opens a craft dialog and finds the recipe.",
-                "ru": "<lmb></lmb> по иконке квестового предмета откроет окно крафта и найдет нужный рецепт.",
+                "en": "<lmb></lmb> on a quest item opens a craft dialog and finds the recipe. <lmb></lmb> on an ingredient will find it in the craft list.",
+                "ru": "<lmb></lmb> по иконке квестового предмета откроет окно крафта и найдет нужный рецепт. <lmb></lmb> по ингредиенту найдет его в списке крафта.",
+            },
+            final: {
+                "en": "",
+                "ru": "",
+            },
+        },
+        "craft-3": {
+            name: {
+                "en": "Making a weapon",
+                "ru": "Делаем оружие",
+            },
+            desc: {
+                "en": "Ok, now we are going to craft a sharp stick — your first weapon.",
+                "ru": "Ок, теперь будем крафтить острую палку — твое первое оружие.",
             },
             final: {
                 "en": "",
@@ -85,8 +99,8 @@ function Quests() {
                 "ru": "Голод",
             },
             desc: {
-                "en": "It's the time to get some food and have it. Catch a chicken and gut it, or pick some apples from a tree. Be careful, don't eat more you need, otherwise, food won't help you with vitamins. You need vitamins to improve your stats and skills. By the way, if you've overate, use the toilet next to me.",
-                "ru": "Самое время добыть еды и поесть. Поймай и разделай курицу, либо нарви яблок с дерева. Будь внимателен, не переедай, иначе еда не принесет тебе пользы в виде витаминов. Витамины нужны для улучшения твоих характеристик, а характеристики влияют на твои навыки. Если ты вдруг переел, туалет тут рядом, воспользуйся им. ",
+                "en": "It's the time to get some food and have it. Kill a chicken and gut it, or pick some apples from a tree. Be careful, don't eat more you need, otherwise, food won't help you with vitamins. You need vitamins to improve your stats and skills. By the way, if you've overate, use the toilet next to me.",
+                "ru": "Самое время добыть еды и поесть. Убей и разделай курицу, либо нарви яблок с дерева. Будь внимателен, не переедай, иначе еда не принесет тебе пользы в виде витаминов. Витамины нужны для улучшения твоих характеристик, а характеристики влияют на твои навыки. Если ты вдруг переел, туалет тут рядом, воспользуйся им. ",
             },
             tip: {
                 "en": "Vitamins amount displays in the \"Stats\" dialog. You cannot level your skill upper than the stat related to it. You shall also check your skill level in the \"Skills\" dialog. New skills levels open with your learning points.",

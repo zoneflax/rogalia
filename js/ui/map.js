@@ -474,12 +474,24 @@ function Map() {
             } else if (!e.inWorld()) {
                 return;
             } else if (e.Creator == game.player.Id) {
-                mctx.fillStyle = "#9f9";
+                setEntityColor("#9f9");
             } else if (e.Creator){
-                mctx.fillStyle = "#999";
+                setEntityColor("#999");
             }
 
             mctx.fillRect(x, y, w, h);
+
+            function setEntityColor(defaultColor) {
+                switch (e.Group) {
+                case "respawn":
+                    mctx.fillStyle = (e.Creator == game.player.Id) ? "#0ff" : "gold";
+                    w = 3;
+                    h = 3;
+                    break;
+                default:
+                    mctx.fillStyle = defaultColor;
+                }
+            };
         });
     };
 }

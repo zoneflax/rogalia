@@ -212,7 +212,7 @@ Vendor.prototype = {
                 var cancel = dom.button("×", "lot-cancel", function() {
                     game.network.send(
                         "undo-buy",
-                        {Type: lot.type, Vendor: self.vendor.Id},
+                        {Type: lot.Type, Vendor: self.vendor.Id},
                         cleanup
                     );
                 });

@@ -258,6 +258,7 @@ Character.prototype = {
             this.sprite.speed = 7000;
             break;
         case "butterfly":
+        case "bee":
             this.sprite.width = 43;
             this.sprite.height = 43;
             break;
@@ -462,7 +463,7 @@ Character.prototype = {
             this.sprite.offset = 28;
             this.sprite.width = 112;
             this.sprite.height = 112;
-            this.sprite.speed = 14000;
+            this.sprite.speed = 6500;
             break;
         default:
             this.sprite.offset = 2*this.Radius;
@@ -592,6 +593,7 @@ Character.prototype = {
             break;
         case "rabbit":
         case "chicken":
+        case "bee":
             actions = {
                 "Catch": function() {
                     game.network.send("catch-animal", {Id: this.Id});

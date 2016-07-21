@@ -1113,6 +1113,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     width: 100%;
     text-align: center;
     color: #fff;
+    white-space: nowrap;
 }
 .attr-strength, .vitamin-protein {
     color: #f99;
@@ -1481,11 +1482,27 @@ ol li a:hover {
     background-image: url("assets/icons/unmute.png");
 }
 
+@keyframes newMail {
+    0%   {
+	filter: initial;
+	-webkit-filter: initial;
+    }
+    50%  {
+	filter: brightness(125%);
+	-webkit-filter: brightness(125%);
+    }
+    100% {
+	filter: initial;
+	-webkit-filter: initial;
+    }
+}
+
 #new-mail {
+    animation: newMail 2s infinite;
     background-image: url("assets/icons/new-mail.png");
     position: absolute;
-    left: 3px;
-    top: 3px;
+    right: 15px;
+    top: 141px;
     width: 22px;
     height: 22px;
 }
@@ -2415,4 +2432,29 @@ input[type=number], .lot-quantity > input, .price > input {
 
 .add-entity-button {
     display: block;
+}
+
+.combo {
+    width: 32px;
+    line-height: 32px;
+    bottom: 30px;
+    z-index: 1;
+    background: #7b5323;
+    padding: 3px;
+    border-radius: 3px;
+    margin-top: 3px;
+}
+
+.combo-first {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
+    border: 1px solid gold;
+}
+
+.combo-continuation {
+    position: absolute;
+    left: 50px;
+    bottom: 0;
 }
