@@ -35,7 +35,10 @@ function createCharacterStage() {
     [
         {
             name: "Blacksmith",
-	    desc: "Куй железо, пока горячо! Кузнецы Рогалии создают инструменты, что так необходимы всем поселенцам: оружие, доспехи и множество прочих шедевров из металла!",
+	    desc: {
+                ru: "Куй железо, пока горячо! Кузнецы Рогалии создают инструменты, что так необходимы всем поселенцам: оружие, доспехи и множество прочих шедевров из металла!",
+                en: "Blacksmiths make tools every settler need: armor, gear and other brilliant masterpieces of smithy!",
+            },
             skills: {
                 "Metalworking": 10,
                 "Mining": 5,
@@ -43,7 +46,10 @@ function createCharacterStage() {
         },
         {
             name: "Tailor",
-	    desc: "Самая романтичная профессия в Империи. Портные создают не только великолепную одежду и изделия из ткани, но и пишут восхитительной красоты картины.",
+	    desc: {
+                ru: "Самая романтичная профессия в Империи. Портные создают не только великолепную одежду и изделия из ткани, но и пишут восхитительной красоты картины.",
+                en: "The most romantic job in the whole Empire. Tailors make majestic clothes and paint beautiful pictures.",
+            },
             skills: {
                 "Tailoring": 10,
                 "Leatherworking": 5,
@@ -51,7 +57,10 @@ function createCharacterStage() {
         },
         {
             name: "Alchemyst",
-	    desc: "Алхимики Рогалии — это люди, которых боятся и уважают все жители. Они способны управлять силой атомов, создавая гениальные изобретения, собирать сложные механизмы, а так же создавать магические свитки разрушительной мощи.",
+	    desc: {
+                ru: "Алхимики Рогалии — это люди, которых боятся и уважают все жители. Они способны управлять силой атомов, создавая гениальные изобретения, собирать сложные механизмы, а так же создавать магические свитки разрушительной мощи.",
+                en: "Almost everyone respects Rogalia's alchemists. These mighty people can control the atomic powers, invent ingenious machinery and enchant a magic scrolls of destructive power.",
+            },
             skills: {
                 Alchemy: 10,
                 Mechanics: 5,
@@ -59,7 +68,10 @@ function createCharacterStage() {
         },
         {
             name: "Farmer",
-            desc: "Главные поставщики продовольствия. Они выращивают все, что можно вырастить в Новых Землях. Бескрайние поля, долгий и упорный труд — вот ваше ремесло.",
+            desc: {
+                ru: "Главные поставщики продовольствия. Они выращивают все, что можно вырастить в Новых Землях. Бескрайние поля, долгий и упорный труд — вот ваше ремесло.",
+                en: "The primary food suppliers. They grow everything that grows in the New Lands. Hard and patient workers.",
+            },
             skills: {
                 Farming: 10,
                 Fishing: 5,
@@ -67,7 +79,10 @@ function createCharacterStage() {
         },
         {
             name: "Carpenter",
-	    desc: "Люди, создающие великолепные конструкции из древесины, которые всегда пользуются спросом у людей.",
+	    desc: {
+                ru: "Люди, создающие великолепные конструкции из древесины, которые всегда пользуются спросом у людей.",
+                en: "People who make a beautiful and robust carpentry everyone need.",
+            },
             skills: {
                 Carpentry: 10,
                 Lumberjacking: 5,
@@ -75,7 +90,10 @@ function createCharacterStage() {
         },
         {
             name: "Cook",
-	    desc: "Повара Рогалии способны творить великолепные блюда из простых продуктов, которые будут не только райски вкусны, но и богаты витаминами, что так необходимы поселенцам в Новых Землях.",
+	    desc: {
+                ru: "Повара Рогалии способны творить великолепные блюда из простых продуктов, которые будут не только райски вкусны, но и богаты витаминами, что так необходимы поселенцам в Новых Землях.",
+                en: "Rogalia's cooks make delicious meals, tasty, juicy and full of vitamins.",
+            },
             skills: {
                 Cooking: 10,
                 Herbalism: 5,
@@ -83,7 +101,10 @@ function createCharacterStage() {
         },
         {
             name: "Hunter",
-	    desc: "Человек, знающий как выжить в дикой природе, найти себе ночлег и добыть еды. Ловкие и внимательные, в схватке с диким зверем выходят победителями.",
+	    desc: {
+                ru: "Человек, знающий как выжить в дикой природе, найти себе ночлег и добыть еды. Ловкие и внимательные, в схватке с диким зверем выходят победителями.",
+                en: "A men who know how to survive the wild lands, find a safe place to sleep and food to eat. Careful and agile, they win every battle with the beast.",
+            },
             skills: {
                 Swordsmanship: 10,
                 Survival: 5,
@@ -96,25 +117,23 @@ function createCharacterStage() {
         icon.src = "assets/icons/skills/" + mainSkill + ".png";
         icon.title = T(prof.name);
 
-        var desc = document.createElement("p");
-        desc.className = "profession-desc";
-        desc.appendChild(document.createTextNode(T(prof.desc || "No description")));
-        desc.appendChild(dom.br());
-        desc.appendChild(dom.br());
-        desc.appendChild(document.createTextNode(T("Main skills") + ":"));
+        var desc = dom.make("p", [
+            T(prof.desc[game.lang] || "No description"),
+            dom.br(),
+            dom.br(),
+            T("Main skills") + ":",
+        ]);
         for (var skill in prof.skills) {
             var sli = document.createElement("li");
             sli.textContent = T(skill);
             desc.appendChild(sli);
         }
 
-        var name = document.createElement("div");
-        name.textContent = T(prof.name);
-
-        var li = document.createElement("div");
-        li.className = "profession hidden";
-        li.appendChild(name);
-        li.appendChild(desc);
+        var li = dom.wrap("profession hidden", [
+            dom.wrap("", T(prof.name)),
+            desc,
+            dom.make("p", T("Picking a profession gives you a little bonus of learning points. But you still can learn all the skills you need."))
+        ]);
 
         professions.appendChild(li);
         tabs.appendChild(icon);

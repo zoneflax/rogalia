@@ -1497,4 +1497,5 @@ T.dict = {
     "Birthday cake": "Именинный пирог",
     "Collect": "Собрать",
     "Fuel": "Топливо",
+    "Picking a profession gives you a little bonus of learning points. But you still can learn all the skills you need.": "Выбор профессии дает вам небольшой бонус в очках обучения. Но вы по прежнему можете выучить все доступные навыки",
 };
