@@ -994,6 +994,11 @@ lmb, rmb {
     color: #f166f1;
 }
 
+#users .tab-content {
+    max-height: 300px;
+    overflow: auto;
+}
+
 #users li {
     list-style-type: square;
     cursor: url("assets/cursors/pointer.png"), auto;

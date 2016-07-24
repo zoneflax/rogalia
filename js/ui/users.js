@@ -3,23 +3,21 @@ function Users() {
     var lists = {};
 
     function renderList(content, list, empty) {
-        dom.clear(content);
-        if (list) {
-            var ul = dom.tag("ul");
-            list.sort().forEach(function(name) {
-                var li = dom.tag("li", "", {text: name});
-                li.onmousedown = function(e) {
-                    return game.chat.nameMenu(e, name);
-                };
-                ul.appendChild(li);
-            });
-            var total = dom.div("", {text: T("Total") + ": " + list.length});
-            content.appendChild(ul);
-            content.appendChild(total);
-        } else {
-            content.textContent = T(empty);
-        }
-
+        dom.setContents(
+            content,
+            (list)
+                ? [
+                    dom.make("p", T("Total") + ": " + list.length),
+                    dom.make("ul", list.sort().map(function(name) {
+                        var li = dom.tag("li", "", {text: name});
+                        li.onmousedown = function(e) {
+                            return game.chat.nameMenu(e, name);
+                        };
+                        return li;
+                    })),
+                ]
+            : T(empty)
+        );
     }
 
     function render(content, data, selector, empty) {
