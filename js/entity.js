@@ -259,7 +259,6 @@ Entity.prototype = {
         case "steel-pike":
         case "stack-of-wood":
         case "stack-of-boards":
-        case "beehive":
             if (!this.Props.Slots)
                 break;
             if (this.Props.Slots.some(function(id){ return id != 0; }))
@@ -729,8 +728,9 @@ Entity.prototype = {
             game.ctx.fillText(text, x + padding, y + padding + FONT_SIZE);
             return;
         case "feeder":
+        case "beehive":
             game.ctx.fillStyle = "rgba(20, 200, 20, 0.3)";
-            game.iso.fillCircle(this.X, this.Y, this.FeedRadius);
+            game.iso.fillCircle(this.X, this.Y, this.WorkRadius);
             break;
         }
         game.ctx.fillStyle = "#fff";

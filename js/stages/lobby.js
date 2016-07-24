@@ -1,6 +1,6 @@
 "use strict";
 function lobbyStage(data) {
-    util.ajax("build-warning.html", function(warn) {
+    util.ajax("news/" + game.lang + ".html", function(warn) {
         if (!warn) {
             return;
         }

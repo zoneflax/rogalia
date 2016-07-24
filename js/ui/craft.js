@@ -204,10 +204,9 @@ Craft.prototype = {
 
         var index = this.slots.indexOf(to);
         this.slots[index].used = true;
+        this.slots[index].from = from;
         this.slots[index].unlock = slot.unlock.bind(slot);
-        dom.clear(to);
-        dom.append(to, ingredient);
-        to.onmousedown = this.cancel.bind(this, from, to);
+        dom.setContents(to, ingredient);
         return true;
     },
     cleanUp: function() {
@@ -368,14 +367,6 @@ Craft.prototype = {
         }
         return this.search(e.target.value);
     },
-    makeSearch: function(slot) {
-        return function() {
-            // if there is an ingredint in this slot, skip search
-            if (slot.firstChild && slot.firstChild.id)
-                return;
-            this.search(slot.group, true);
-        }.bind(this);
-    },
     search: function(pattern, selectMatching) {
         // we do not want to show on load
         if (game.stage.name == "main")
@@ -494,7 +485,13 @@ Craft.prototype = {
                         panel.show();
                     }.bind(help);
                 } else {
-                    slot.onclick = self.makeSearch(slot);
+                    slot.onclick = function() {
+                        if (this.from) {
+                            self.cancel(this.from, this);
+                        } else {
+                            self.search(this.group, true);
+                        }
+                    }.bind(slot);
                 }
                 var image = Entity.getPreview(group);
 
@@ -580,9 +577,7 @@ Craft.prototype = {
         ]);
     },
     auto: function(callback) {
-        callback = callback || function(slot, container) {
-            this.dwim(slot);
-        }.bind(this);
+        callback = callback || this.dwim.bind(this);
 
         // prepare player's inventory
         // because we want to check it contents even if it's closed
@@ -626,6 +621,7 @@ Craft.prototype = {
         var index = this.slots.indexOf(to);
         var slot = this.slots[index];
         slot.used = false;
+        slot.from = null;
         slot.unlock && slot.unlock();
         dom.clear(to);
         to.appendChild(to.image);
@@ -735,7 +731,6 @@ Craft.prototype = {
         var preview = Entity.templates[type].icon();
         preview.id = "item-preview";
         return dom.wrap("preview-wrapper", preview);
-
     },
     dwim: function(slot) {
         var self = this;
@@ -748,6 +743,11 @@ Craft.prototype = {
             return false;
         }
         var entity = slot.entity;
+
+        // skip non-empty containers
+        if (entity.isContainer() && _.some(entity.Props.Slots))
+            return false;
+
         return this.slots.some(function(slot) {
             if (slot.used || !entity.is(slot.group))
                 return false;

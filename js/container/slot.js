@@ -95,6 +95,10 @@ ContainerSlot.prototype = {
                 this.setSub(util.toFixed(100*rd.Current / rd.Max) + "%");
             return;
         }
+        if ("Generate" in this.container.entity && "Progress" in this.container.entity.Generate) {
+            this.setSub(this.container.entity.Generate.Progress + "%");
+            return;
+        }
         //TODO: make generic `progress' @server-side
         var cnt = this.container.entity;
         if (!("HideAdded" in cnt))

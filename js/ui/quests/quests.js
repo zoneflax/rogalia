@@ -151,8 +151,8 @@ function Quests() {
                 "ru": "Клейм - твоя крепость",
             },
             desc: {
-                "en": "Anyone can attack you. You need to build a claim to keep your property. With a claim, you will protect a tiny patch of land on which you can build and garden with no fear of being robbed or attacked. If you're 10 lvl and higher, you may obtain a claim license from Charles for 8 gold.",
-                "ru": "Помимо всего, на тебя может напасть и другой человек. Чтобы не потерять нажитое тобой имущество, тебе необходимо построить клейм. С его помощью ты оградишь для себя небольшой участок, на нем можно строить, возделывать землю, не боясь, что на тебя нападут или украдут все нажитое. Лицензию на клейм ты можешь получить у Чарльза за 8 золотых, когда достигнешь 10 уровня.",
+                "en": "Anyone can attack you. You need to build a claim to keep your property. With a claim, you will protect a tiny patch of land on which you can build and garden with no fear of being robbed or attacked. You may obtain a claim license from Charles for 8 gold.",
+                "ru": "Помимо всего, на тебя может напасть и другой человек. Чтобы не потерять нажитое тобой имущество, тебе необходимо построить клейм. С его помощью ты оградишь для себя небольшой участок, на нем можно строить, возделывать землю, не боясь, что на тебя нападут или украдут все нажитое. Лицензию на клейм ты можешь получить у Чарльза за 8 золотых.",
             },
             tip: {
                 "en": "Experience gained when you craft items and kill enemies. Some enemies loot money; you may also trade stuff in the town.",

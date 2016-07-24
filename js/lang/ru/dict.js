@@ -1493,6 +1493,8 @@ T.dict = {
     "Candle": "Свеча",
     "Propolis": "Прополис",
     "Mead": "Медовуха",
-    "Insect net": "Сачок",
+    "Linen insect net": "Льяной сачок",
     "Birthday cake": "Именинный пирог",
+    "Collect": "Собрать",
+    "Fuel": "Топливо",
 };

@@ -321,10 +321,7 @@ Container.prototype = {
         };
         update(fuel);
         this.fuel.update = update;
-
-        this.fuel.appendChild(current);
-        this.fuel.appendChild(max);
-        this.fuel.appendChild(slot);
+        dom.append(this.fuel, [current, max, slot]);
     },
     hasSpace: function() {
         return this._slots.find(function(id) { return id == 0; }) !== undefined;
