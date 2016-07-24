@@ -73,6 +73,7 @@ function Fight() {
         args.X = game.controller.world.x;
         args.Y = game.controller.world.y;
 
+        // updateCombo(action);
         game.network.send("waza", args);
 
         hotbar.classList.add("cooldown");
@@ -91,4 +92,51 @@ function Fight() {
         var action = actions[key-1];
         apply(action);
     };
+
+
+    var combos = {
+        irimi : {
+            tsuki: {
+                tsuki: {name:  "ikkyo"},
+                name: "de",
+            },
+            shomen: {
+                name: "su",
+            }
+        },
+    };
+
+    var comboFirst = dom.div("combo combo-first");
+    var combo = [];
+    var comboTimeout = null;
+    function updateCombo(action) {
+        switch (combo.length) {
+        case 0:
+            combo.push(action);
+            dom.setContents(comboFirst, [
+                action,
+                dom.wrap("combo-continuation", _.map(combos[action], function(continuation) {
+                    return dom.wrap("combo", continuation.name);
+                })),
+            ]);
+            dom.insert(comboFirst, game.world);
+            break;
+            // comboTimeout = setTimeout(function() {
+            //     dom.remove(comboStart);
+            // }, 15000);
+        case 1:
+            var next = combos[combo[0]][action];
+            if (next) {
+                combo.push(action);
+                dom.setContents(comboFirst, [
+                    combo.join(" "),
+                    dom.wrap("combo-continuation", _.map(_.filter(next, _.isString), function(buff) {
+                        return dom.wrap("combo", buff);
+                    })),
+                ]);
+            } else {
+            }
+            break;
+        }
+    }
 }
