@@ -1,38 +1,27 @@
 "use strict";
 
 function Bank(npc) {
-    var balance = document.createElement("label");
+    var balance = dom.tag("label");
     var price = Vendor.createPriceInput();
 
-    var deposit = document.createElement("button");
-    deposit.textContent = T("Deposit");
-    deposit.onclick = function() {
+    var deposit = dom.button(T("Deposit"), "", function() {
         game.network.send("deposit", {Id: npc.Id, Cost: price.cost()}, callback);
-    };
+    });
 
-    var withdraw = document.createElement("button");
-    withdraw.textContent = T("Withdraw");
-    withdraw.onclick = function() {
+    var withdraw = dom.button(T("Withdraw"), "", function() {
         game.network.send("withdraw", {Id: npc.Id, Cost: price.cost()}, callback);
-    };
+    });
 
-    var claimRent = document.createElement("label");
-    var claimPaidTill = document.createElement("label");
+    var claimRent = dom.tag("label");
+    var claimPaidTill = dom.tag("label");
     // var claimLastPaid = document.createElement("label");
-    var claimPay = document.createElement("button");
-    claimPay.textContent = T("Pay");
-    claimPay.onclick = function() {
+    var claimPay = dom.button(T("Pay"), "", function() {
         if (confirm(T("Confirm?"))) {
             game.network.send("pay-for-claim", {Id: npc.Id}, callback);
         }
-    };
+    });
 
-    var claim = document.createElement("div");
-    claim.appendChild(document.createTextNode(T("Claim")));
-    claim.appendChild(claimRent);
-    claim.appendChild(claimPaidTill);
-    // claim.appendChild(claimLastPaid);
-    claim.appendChild(claimPay);
+    var claim = dom.wrap("", [dom.text(T("Claim")), claimRent, claimPaidTill, claimPay]);
 
     var vault = dom.div("vault");
 
@@ -54,12 +43,11 @@ function Bank(npc) {
     game.network.send("get-bank-info", {id: npc.Id}, callback);
 
     function date(unixtime) {
-        var span = document.createElement("span");
+        var text = "-";
         if (unixtime > 0)
-            span.textContent = util.date.human(new Date(unixtime * 1000));
-        else
-            span.textContent = "-";
-        return span;
+            text = util.date.human(new Date(unixtime * 1000));
+
+        return dom.span(text);
     }
 
     function callback(data) {
@@ -67,25 +55,25 @@ function Bank(npc) {
             return callback;
         //TODO: add price.set()
         balance.innerHTML = T("Balance") + ": ";
-        balance.appendChild(Vendor.createPrice(data.Bank.Balance));
+        dom.append(balance, Vendor.createPrice(data.Bank.Balance));
 
         var claim = data.Bank.Claim;
         claimRent.innerHTML = T("Rent") + ": ";
-        claimRent.appendChild(Vendor.createPrice(claim.Cost));
+        dom.append(claimRent, Vendor.createPrice(claim.Cost));
 
 
         claimPaidTill.innerHTML = T("Paid till") + ": ";
-        claimPaidTill.appendChild(date(claim.PaidTill));
+        dom.append(claimPaidTill, date(claim.PaidTill));
 
         // claimLastPaid.innerHTML = T("Last paid") + ": ";
         // claimLastPaid.appendChild(date(claim.LastPaid));
 
         dom.clear(vault);
         dom.setContents(vault, data.Bank.Vault.map(function(vaultSlot, i) {
-            var slot = dom.div("slot");
+            var slot = dom.slot();
             if (vaultSlot.Unlocked) {
                 var entity = Entity.get(vaultSlot.Id);
-                slot.appendChild(entity.icon());
+                dom.append(slot, entity.icon());
                 slot.onclick = function() {
                     Container.show(entity);
                 };

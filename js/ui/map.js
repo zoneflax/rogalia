@@ -79,7 +79,7 @@ function Map() {
             for(var w = 0; w < this.cells_x; w++) {
                 var id = data[h * this.cells_x + w];
                 var biom = this.bioms[id];
-	        this.data[h].push({
+                this.data[h].push({
                     x: w,
                     y: h,
                     id: id,
@@ -107,9 +107,9 @@ function Map() {
                         var dx = x + cx - (i & 0x1);
                         var dy = y + cy - ((i >> 1) & 0x1);
                         var other =
-                                this.data[dy] &&
-                                this.data[dy][dx] &&
-                                this.data[dy][dx].id;
+                            this.data[dy] &&
+                            this.data[dy][dx] &&
+                            this.data[dy][dx].id;
                         if (other >= id) {
                             offset |= 1 << i;
                         }
@@ -130,25 +130,25 @@ function Map() {
     };
 
     this.drawGrid = function() {
-	game.ctx.strokeStyle = gridColor;
+        game.ctx.strokeStyle = gridColor;
         var sw = game.player.Location.X;
         var sh = game.player.Location.Y;
-	for(var w = sw; w <= sw + this.width; w += CELL_SIZE) {
+        for(var w = sw; w <= sw + this.width; w += CELL_SIZE) {
             var sp = new Point(w, sh).toScreen();
             var ep = new Point(w, sh + this.height).toScreen();
-	    game.ctx.beginPath();
-	    game.ctx.moveTo(sp.x, sp.y);
-	    game.ctx.lineTo(ep.x, ep.y);
-	    game.ctx.stroke();
-	}
-	for(var h = sh; h <= sh + this.height; h += CELL_SIZE) {
+            game.ctx.beginPath();
+            game.ctx.moveTo(sp.x, sp.y);
+            game.ctx.lineTo(ep.x, ep.y);
+            game.ctx.stroke();
+        }
+        for(var h = sh; h <= sh + this.height; h += CELL_SIZE) {
             var sp = new Point(sw, h).toScreen();
             var ep = new Point(sw + this.width, h).toScreen();
-	    game.ctx.beginPath();
-	    game.ctx.moveTo(sp.x, sp.y);
-	    game.ctx.lineTo(ep.x, ep.y);
-	    game.ctx.stroke();
-	}
+            game.ctx.beginPath();
+            game.ctx.moveTo(sp.x, sp.y);
+            game.ctx.lineTo(ep.x, ep.y);
+            game.ctx.stroke();
+        }
     };
 
     this.each = function(draw) {
@@ -204,7 +204,7 @@ function Map() {
 
                 case  7: if (i != 3) return; break;
                 case 11: if (i != 2) return; break;
-                // case 13: if (i != 1) return; break; //TODO: fixme
+                    // case 13: if (i != 1) return; break; //TODO: fixme
                 case 14: if (i != 0) return; break;
 
                 case 15: if (i != 0) return; break;
@@ -334,10 +334,11 @@ function Map() {
                 if (x < 0 || x > CHUNK_SIZE || y < 0 || y > CHUNK_SIZE)
                     return;
                 if (!canvas) {
-                    canvas = document.createElement("canvas");
-                    canvas.width = 2*ISO_CHUNK_SIZE;
-                    canvas.height = ISO_CHUNK_SIZE;
-                    ctx = canvas.getContext("2d");
+                    canvas = dom.canvas(
+                        2 * ISO_CHUNK_SIZE,
+                        ISO_CHUNK_SIZE
+                    );
+                    ctx = canvas.ctx;
                     ctx.translate(CHUNK_SIZE, 0);
                 }
                 var p = new Point(x, y).toScreen();

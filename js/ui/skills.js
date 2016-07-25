@@ -4,7 +4,6 @@ function Skills() {
 
     this.skills = dom.div("#skill-list");
     this.description = dom.div("description", {text : T("Select skill to see it's description")});
-
     this.learnButton = dom.button(T("Learn"), "", this.learn.bind(this));
     this.learnButton.disabled = true;
 
@@ -30,7 +29,7 @@ Skills.byAttr = {
     dexterity: ["Pottery", "Tailoring", "Swordsmanship"],
     intellect: ["Mechanics", "Alchemy"],
     perception: ["Survival", "Farming", "Fishing"],
-    wisdom: ["Herbalism", "Cooking", "Leadership"],
+    wisdom: ["Herbalism", "Cooking", "Leadership"]
 };
 
 Skills.prototype = {

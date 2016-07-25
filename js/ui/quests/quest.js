@@ -44,7 +44,6 @@ Quest.prototype = {
             });
         };
 
-        var list = document.createElement("div");
         var craft = game.controller.craft;
         var kinds = Object.keys(items);
         var found = game.player.findItems(kinds);
@@ -54,7 +53,7 @@ Quest.prototype = {
 
             var count = (items[item] instanceof Object) ? items[item].Count : items[item];
             var desc = dom.wrap("quest-slot-desc", TS(item) + ": " + found[item].length + "/" + count);
-            list.appendChild(dom.wrap("quest-item", [slot, desc]));
+            var list = dom.wrap("", dom.wrap("quest-item", [slot, desc]));
             return function(found) {
                 desc.textContent = TS(item) + ": " + found[item].length + "/" + count;
             };
