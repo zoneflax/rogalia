@@ -1,2 +1,2 @@
-Rogalik mmo client
+Rogalia mmo client
 http://rogalia.ru/play
