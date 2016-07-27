@@ -26,7 +26,6 @@ var config = {
         showAttackRadius: true,
         fillClaim: false,
         strokeClaim: true,
-        chatNotifications: false,
     },
     graphics: {
         // low: false,
@@ -39,6 +38,7 @@ var config = {
         playSound: true,
         playMusic: true,
         jukebox: true,
+        chatNotifications: false,
     },
 };
 var debug = {

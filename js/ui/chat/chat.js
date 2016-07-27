@@ -28,10 +28,6 @@ function Chat() {
     this.useNotifications = false;
 
     this.initNotifications = function() {
-        if (!config.ui.chatNotifications) {
-            return;
-        }
-
         if (!("Notification" in window))
             return;
         switch(Notification.permission) {
@@ -702,10 +698,12 @@ function Chat() {
             case "logon":
                 game.controller.addPlayer(event.Name);
                 message.Body = TT("{name} logged in", {name: event.Name});
+                message.Channel = channels.system;
                 break;
             case "logoff":
                 game.controller.removePlayer(event.Name);
                 message.Body = TT("{name} disconnected", {name: event.Name});
+                message.Channel = channels.system;
                 break;
             }
         }
@@ -781,7 +779,6 @@ function Chat() {
         if (fromMe(message) || !sendNotification)
             return;
 
-        game.sound.playSound("beep");
 
         var config = {
             icon : "assets/rogalik-64.png",
@@ -794,8 +791,10 @@ function Chat() {
             subject = message.Body;
         }
 
-        if (!this.useNotifications)
+        if (!this.useNotifications || !game.config.sound.chatNotifications)
             return;
+
+        game.sound.playSound("beep");
 
         var notification = new Notification(subject, config);
         notification.onclick = function() {

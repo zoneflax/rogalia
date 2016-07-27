@@ -88,6 +88,7 @@ Talks.npcs = {
         },
         "actions": {
             "Auction": "I wanna take a look.",
+            "Get vendor license": "I want to get a vendor license."
         },
     },
     "shot": {
@@ -195,7 +196,8 @@ Talks.npcs = {
         },
         "actions": {
             "Trade": "I wanna see your goods.",
-        }
+            "Barbershop": "I want to make a haircut.",
+        },
     },
     "ahper": {
         "default": {

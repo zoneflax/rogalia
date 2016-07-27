@@ -17,7 +17,7 @@ function Sound() {
         localStorage.setItem(lastTrackLsKey, trackId);
     };
 
-    var volume = 0.3;
+    var volume = 0.2;
     var currentTrack = null;
     var nextTrack = null;
 

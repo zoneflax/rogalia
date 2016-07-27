@@ -62,10 +62,6 @@
             "Attack area",
             "Show character's attack area.",
         ],
-        chatNotifications: [
-            "Chat notifications",
-            "Show tray chat notifications",
-        ]
     },
     graphics: {
         snowflakes: [
@@ -98,6 +94,10 @@
         jukebox: [
             "Jukebox",
             "Play jukeboxes music.",
+        ],
+        chatNotifications: [
+            "Chat notifications",
+            "Show tray chat notifications",
         ],
     }
 };

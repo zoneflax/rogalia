@@ -36,9 +36,6 @@ function Settings() {
         "settings.map.world": function() {
             dom.toggle(game.world);
         },
-        "settings.ui.chatNotifications": function(attach) {
-            game.chat.initNotifications();
-        },
         "settings.ui.chatAttached": function(attach) {
             if (attach)
                 game.chat.attach();

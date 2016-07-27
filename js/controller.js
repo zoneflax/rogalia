@@ -474,6 +474,7 @@ function Controller(game) {
         this.auction = new Auction();
         this.vendor = new Vendor();
         this.mail = new Mail();
+        this.shop = new Shop();
         this.fpsStats = this.system.fps;
         this.inventory = {panel: {}};
 

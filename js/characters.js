@@ -145,8 +145,34 @@ Character.npcActions = {
             game.network.send("get-village-claim", {Id: id, Name: name});
         });
     },
+    "Get vendor license": function() {
+        var id = this.Id;
+        new Panel(
+            "vendor-license",
+            T("Vendor license"),
+            [
+                T("The license will allow you to set up a vendor post in your claim."),
+                dom.br(),
+                dom.hr(),
+                dom.wrap("slot", Entity.templates["vendor-license"].icon()),
+                T("Cost") + ": ",
+                Vendor.createPrice(10 * 100 * 100),
+                dom.br(),
+                dom.button(T("Buy"), "", function() {
+                    game.network.send("get-vendor-license", {Id: id});
+                }),
+                dom.button(T("Recipe"), "", function() {
+                    game.controller.craft.search("vendor-post", true);
+                }),
+            ]
+        ).setTemporary(true).show();
+    },
+
     "Bank": function() {
         new Bank(this);
+    },
+    "Barbershop": function() {
+        new Barbershop(this);
     },
     "Exchange": function() {
         new Exchange(this);

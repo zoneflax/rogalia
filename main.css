@@ -1577,12 +1577,16 @@ big {
 
 #avatar-container, #minimap-container {
     position: absolute;
-    background-image: url("assets/bg/rhombus.png");
     width: 154px;
     height: 90px;
 }
 
+#minimap-container {
+    background-image: url("assets/bg/minimap.png");
+}
+
 #avatar-container {
+    background-image: url("assets/bg/rhombus.png");
     left: 0;
 }
 #avatar {
@@ -2462,4 +2466,61 @@ input[type=number], .lot-quantity > input, .price > input {
     position: absolute;
     left: 50px;
     bottom: 0;
+}
+
+#barbershop .contents {
+    width: 192px;
+    overflow: auto;
+}
+
+.haircut {
+    float: left;
+}
+
+.haircut .preview {
+    cursor: url("assets/cursors/pointer.png"), auto;
+}
+
+.haircut, .haircut .preview {
+    width: 48px;
+    height: 48px;
+    background-position: -30px 560px;
+}
+
+.haircut:hover, .haircut.active {
+    background-color: #99682e;
+}
+
+.color-picker {
+    display: flex;
+    position: relative;
+    margin: 5px;
+}
+
+.color-preview {
+    width: 25px;
+    height: 20px;
+    position: absolute;
+    right: 80px;
+}
+
+#barbershop label {
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;
+}
+
+#barbershop input {
+    background-image: none;
+    width: 60px;
+    text-align: center;
+}
+
+#barbershop .buy {
+    float: right;
+}
+
+#vendor-license .contents {
+    width: 250px;
+    overflow: auto;
 }
