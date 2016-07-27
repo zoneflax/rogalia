@@ -1508,4 +1508,5 @@ T.dict = {
     "The license will allow you to set up a vendor post in your claim.": "Лицензия позволит вам установить торговую точку на вашем клейме.",
     "Blue team portal": "Портал синей команды",
     "Red team portal": "Портал красной команды",
+    "Too many items on sale": "Слишком много предметов на продаже",
 };

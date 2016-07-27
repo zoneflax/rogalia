@@ -476,23 +476,6 @@ Craft.prototype = {
 
             for(var j = 0; j < required; j++) {
                 var slot = dom.slot();
-                if (group in Craft.help) {
-                    var help = dom.span(Craft.help[group]);
-                    slot.onclick = function() {
-                        if (game.controller.cursor.isActive() || slot.firstChild.id)
-                            return;
-                        var panel = new Panel("craft-help", T("Help"), [this]);
-                        panel.show();
-                    }.bind(help);
-                } else {
-                    slot.onclick = function() {
-                        if (this.from) {
-                            self.cancel(this.from, this);
-                        } else {
-                            self.search(this.group, true);
-                        }
-                    }.bind(slot);
-                }
                 var image = Entity.getPreview(group);
 
                 image.title = groupTitle;
@@ -507,6 +490,23 @@ Craft.prototype = {
                 slot.check = function(cursor) {
                     return cursor.entity.is(this.group);
                 };
+                slot.onmousedown = function() {
+                    var slot = this;
+                    if (game.controller.cursor.isActive())
+                        return;
+
+                    if (slot.from) {
+                        self.cancel(this.from, slot);
+                        return;
+                    }
+
+                    if (slot.group in Craft.help) {
+                        var panel = new Panel("craft-help", T("Help"), [dom.span(Craft.help[slot.group])]);
+                        panel.show();
+                    } else {
+                        self.search(slot.group, true);
+                    }
+                }.bind(slot);
             }
         }
 
