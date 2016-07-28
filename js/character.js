@@ -82,7 +82,7 @@ Character.prototype = {
         return this.x;
     },
     get Y() {
-        return (this.mount) ? this.y + 1000 : this.y; // TODO: remove HACK
+        return this.y;
     },
     set X(x) {
         if (this.x == x)
@@ -765,26 +765,18 @@ Character.prototype = {
                 break;
             case "red-chopper":
             case "blue-chopper":
-                dy = [
-                    30,
-                    20,
-                    13,
-                    5,
-                    0,
-                    5,
-                    15,
-                    25,
-                ][this.sprite.position] || window.dy || 0;
-                dx = [
-                    0,
-                    20,
-                    25,
-                    20,
-                    0,
-                    -20,
-                    -30,
-                    -25,
-                ][this.sprite.position] || window.dx || 0;
+                var offset = [
+                    [0, 30],
+                    [20, 20],
+                    [25, 13],
+                    [20, 5],
+                    [0, 0],
+                    [-20, 5],
+                    [-30, 15],
+                    [-25, 25],
+                ][this.sprite.position];
+                dx = offset[0];
+                dy = offset[1];
                 break;
             }
         }
@@ -794,8 +786,11 @@ Character.prototype = {
             y: Math.round(p.y - this.sprite.height + this.sprite.offset) - dy
         };
     },
-    draw: function() {
+    draw: function(force) {
         if ("Sleeping" in this.Effects)
+            return;
+
+        if (this.mount && !force)
             return;
 
         this.drawDst();
@@ -844,6 +839,10 @@ Character.prototype = {
 
         if (this.burden)
             this.drawBurden(this.burden);
+
+        if (this.rider) {
+            this.rider.draw(true);
+        }
     },
     drawCorpsePointer: function() {
         if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
@@ -1279,7 +1278,6 @@ Character.prototype = {
                 this.setTarget(null);
 
             this.updateBuilding();
-            this.updateCamera();
             this.updateBar();
         }
 
@@ -1541,11 +1539,13 @@ Character.prototype = {
             }
         }
 
-        for (var name in this.Effects) {
+        for (name in this.Effects) {
             this.updateEffect(name, this.Effects[name]);
         }
     },
     updatePosition: function(k) {
+        if (this.mount)
+            return;
         if (this.Dx == 0 && this.Dy == 0) {
             return;
         }
@@ -1656,13 +1656,6 @@ Character.prototype = {
     liftStop: function() {
         if (this.burden)
             game.controller.creatingCursor(this.burden, "lift-stop");
-    },
-    updateCamera: function() {
-        var camera = game.camera;
-        var screen = game.screen;
-        var p = this.screen();
-        camera.x = (p.x - screen.width / 2) << 0;
-        camera.y = (p.y - screen.height / 2) << 0;
     },
     willCollide: function(new_x, new_y) {
         return false; //TODO: fix StandUp problems

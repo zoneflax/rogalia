@@ -258,6 +258,7 @@ function Controller(game) {
     };
 
     this.update = function() {
+        this.updateCamera();
         if (this.world.cursor instanceof Entity || this.cursor.entity)
             document.body.classList.add("cursor-hidden");
         else
@@ -272,6 +273,15 @@ function Controller(game) {
         }
         this.minimap.update();
     };
+
+    this.updateCamera = function() {
+        var camera = game.camera;
+        var screen = game.screen;
+        var p = game.player.screen();
+        camera.x = (p.x - screen.width / 2) << 0;
+        camera.y = (p.y - screen.height / 2) << 0;
+    };
+
 
     this.toggleBag = function() {
         var cnt = Container.bag();
