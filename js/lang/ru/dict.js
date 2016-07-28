@@ -1509,4 +1509,5 @@ T.dict = {
     "Blue team portal": "Портал синей команды",
     "Red team portal": "Портал красной команды",
     "Too many items on sale": "Слишком много предметов на продаже",
+    "To get a vendor you need level {level}": "Чтобы получить торговца вам нужен {level} уровень",
 };

@@ -28,10 +28,10 @@ Quest.prototype = {
             return "…";
         return "!";
     },
-    showPanel: function(entity) {
+    showPanel: function() {
         var panel = new Panel("quest", "Quest", this.getContents());
         panel.quest = this;
-        panel.entity = entity;
+        panel.entity = this.npc;
         panel.show();
     },
     update: function(){},
@@ -185,6 +185,15 @@ Quest.prototype = {
                 && game.player.canUse(self.npc);
         }
 
+        function hasNextQuest() {
+            return nearEndNpc() && self.npc.getQuests().length > 0;
+        }
+
+        function showNextQuest() {
+            var quest = new Quest(self.npc.getQuests()[0], self.npc);
+            quest.showPanel();
+        }
+
         var action = (canStart) ? "Accept" : "Finish";
         var button = dom.button(T(action));
 
@@ -197,6 +206,8 @@ Quest.prototype = {
                     function update(data) {
                         if (canEndTest())
                             game.panels.quest.setContents(self.getContents());
+                        else if (hasNextQuest())
+                            showNextQuest();
                         else
                             game.panels.quest.close();
                         return null;

@@ -888,7 +888,8 @@ Character.prototype = {
             this.drawQuestMarker(marker);
 
         if (game.debug.player.box || game.controller.hideStatic()) {
-            this.drawBox();
+            if (!this.mount)
+                this.drawBox();
         }
 
         // else drawn in controller
@@ -1560,10 +1561,11 @@ Character.prototype = {
 
         var cell = game.map.getCell(new_x, new_y);
         if (cell) {
-            if (cell.biom.Blocked) {
-                this.stop();
-                return;
-            }
+            // this fails sometimes due to difference between client *k* and server's
+            // if (cell.biom.Blocked) {
+            //     this.stop();
+            //     return;
+            // }
             this.speedFactor = cell.biom.Speed;
             dx *= this.speedFactor;
             dy *= this.speedFactor;
@@ -1587,11 +1589,6 @@ Character.prototype = {
             new_y = this.Radius;
         } else if (new_y > game.map.full.height - this.Radius) {
             new_y = game.map.full.height - this.Radius;
-        }
-
-        if (this.willCollide(new_x, new_y)) {
-            this.stop();
-            return;
         }
 
         game.sortedEntities.remove(this);
@@ -1656,12 +1653,6 @@ Character.prototype = {
     liftStop: function() {
         if (this.burden)
             game.controller.creatingCursor(this.burden, "lift-stop");
-    },
-    willCollide: function(new_x, new_y) {
-        return false; //TODO: fix StandUp problems
-        return game.entities.some(function(e) {
-            return (e instanceof Entity && e.collides(new_x, new_y, this.Radius));
-        }.bind(this));
     },
     stop: function() {
         this.Dx = 0;
@@ -1825,6 +1816,13 @@ Character.prototype = {
                 return;
             }
 
+            var quests = self.getQuests();
+            if (quests.length > 0 && self.Type == "plato") {
+                var quest = new Quest(quests[0], self);
+                quest.showPanel();
+                return;
+            }
+
             var talks = self.getTalks();
             if (talks.talks.length == 0) {
                 Character.npcActions.Quest.call(self);
@@ -1833,7 +1831,7 @@ Character.prototype = {
 
             var actions = ["Talk"];
 
-            if (self.getQuests().length > 0)
+            if (quests.length > 0)
                 actions.push("Quest");
 
             actions = actions.concat(Object.keys(talks.actions));
