@@ -82,7 +82,7 @@ Character.prototype = {
         return this.x;
     },
     get Y() {
-        return (this.mount) ? this.y + 100 : this.y; // TODO: remove HACK
+        return (this.mount) ? this.y + 1000 : this.y; // TODO: remove HACK
     },
     set X(x) {
         if (this.x == x)
@@ -425,7 +425,6 @@ Character.prototype = {
             this.sprite.width = 150;
             this.sprite.height = 150;
             this.sprite.offset = 43;
-            this.sprite.mount = 16;
             break;
         case "preved-medved":
             this.sprite.width = 210;
@@ -757,10 +756,41 @@ Character.prototype = {
     },
     getDrawPoint: function() {
         var p = this.screen();
-        var dy = (this.mount) ? this.mount.sprite.mount : 0;
+        var dx = 0;
+        var dy = 0;
+        if (this.mount)  {
+            switch (this.mount.Type) {
+            case "horse":
+                dy = 16;
+                break;
+            case "red-chopper":
+            case "blue-chopper":
+                dy = [
+                    30,
+                    20,
+                    13,
+                    5,
+                    0,
+                    5,
+                    15,
+                    25,
+                ][this.sprite.position] || window.dy || 0;
+                dx = [
+                    0,
+                    20,
+                    25,
+                    20,
+                    0,
+                    -20,
+                    -30,
+                    -25,
+                ][this.sprite.position] || window.dx || 0;
+                break;
+            }
+        }
         return {
             p: p,
-            x: Math.round(p.x - this.sprite.width / 2),
+            x: Math.round(p.x - this.sprite.width / 2) - dx,
             y: Math.round(p.y - this.sprite.height + this.sprite.offset) - dy
         };
     },
