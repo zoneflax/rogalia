@@ -203,7 +203,7 @@ function Map() {
                 case 12: if (i != 1) return; break;
 
                 case  7: if (i != 3) return; break;
-                case 11: if (i != 2) return; break;
+                // case 11: if (i != 2) return; break;
                 // case 13: if (i != 1) return; break; //TODO: fixme
                 case 14: if (i != 0) return; break;
 
@@ -225,13 +225,28 @@ function Map() {
                 CELL_SIZE * 2,
                 CELL_SIZE
             );
-        }.bind(this));
+        });
     };
 
     this.draw = function() {
         // this.each(function(w, h, p, x, y) {
-        //     this.drawTile(game.ctx, w, h, p);
+        //     var cell = this.data[h][w];
+        //     var tile = this.tiles[cell.id];
+        //     game.ctx.drawImage(
+        //         tile,
+        //         2*CELL_SIZE,
+        //         15 * CELL_SIZE,
+        //         CELL_SIZE * 2,
+        //         CELL_SIZE,
+        //         p.x,
+        //         p.y,
+        //         CELL_SIZE * 2,
+        //         CELL_SIZE
+
+        //     );
+        //     //     this.drawTile(game.ctx, w, h, p);
         // });
+        // return;
         var layers = this.makeLayers();
 
         var scr = game.screen;
@@ -274,7 +289,6 @@ function Map() {
                 //     continue;
                 // if (p.y > cam.y + scr.height)
                 //     continue;
-
                 var key = x + "." + y;
                 var chunk = this.chunks[key];
                 if (!chunk) {
@@ -294,7 +308,6 @@ function Map() {
                 });
             }
         }
-
         layers.forEach(function(layer) {
             layer.forEach(function(tile) {
                 game.ctx.drawImage(tile.canvas, tile.p.x, tile.p.y);
