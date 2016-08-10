@@ -295,7 +295,7 @@ function Map() {
                     chunk = this.makeChunk(p, c);
                     this.chunks[key] = chunk;
                 }
-                chunk.layers.forEach(function(tile) {
+                _.forEach(chunk.layers, function(tile) {
                     if (!layers[tile.layer]) {
                         game.sendErrorf(
                             "layers[tile.layer] is null; layers: %j; tile.layer: %j",
@@ -308,8 +308,8 @@ function Map() {
                 });
             }
         }
-        layers.forEach(function(layer) {
-            layer.forEach(function(tile) {
+        _.forEach(layers, function(layer) {
+            _.forEach(layer, function(tile) {
                 game.ctx.drawImage(tile.canvas, tile.p.x, tile.p.y);
                 // var p = tile.p.clone().add({x: CHUNK_SIZE, y: 0}).toWorld();
                 // game.ctx.strokeStyle = "#000";
@@ -338,12 +338,13 @@ function Map() {
     this.makeChunk = function(p, c) {
         p.x -= CHUNK_SIZE;
         var chunk = {layers:[]};
-        this.layers.forEach(function(layer, lvl) {
+        let self = this;
+        _.forEach(this.layers, function(layer, lvl) {
             var canvas = null;
             var ctx = null;
-            layer.forEach(function(tile) {
-                var x = tile.x*CELL_SIZE - (c.x - this.location.x);
-                var y = tile.y*CELL_SIZE - (c.y - this.location.y);
+            _.forEach(layer, function(tile) {
+                var x = tile.x*CELL_SIZE - (c.x - self.location.x);
+                var y = tile.y*CELL_SIZE - (c.y - self.location.y);
                 if (x < 0 || x > CHUNK_SIZE || y < 0 || y > CHUNK_SIZE)
                     return;
                 if (!canvas) {
@@ -355,12 +356,12 @@ function Map() {
                 }
                 var p = new Point(x, y).toScreen();
                 p.x -= CELL_SIZE;
-                this.drawTile(ctx, tile.x, tile.y, p);
-            }.bind(this));
+                self.drawTile(ctx, tile.x, tile.y, p);
+            });
             if (canvas) {
                 chunk.layers.push({canvas: canvas, p: p, layer: lvl});
             }
-        }.bind(this));
+        });
         return chunk;
     };
 

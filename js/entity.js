@@ -158,6 +158,10 @@ Entity.prototype = {
         }
 
         elements.push(dom.hr());
+        if (this.Comment) {
+            elements.push(this.Comment);
+            elements.push(dom.hr());
+        }
         elements.push(this.makeDescription());
 
         new Panel("item-info", TS(this.Name), elements).setEntity(this).show();

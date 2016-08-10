@@ -52,7 +52,6 @@ Stats.prototype = {
         meter.max = (max == 0) ? 100 : max;
         meter.value = util.toFixed(param.Current, digits);
         meter.title = text;
-        meter.textContent = text;
 
         var meterWrapper = document.createElement("div");
         meterWrapper.className = "meter-wrapper value";

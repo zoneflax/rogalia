@@ -741,9 +741,6 @@ function Chat() {
             case "Nanalli":
                 color = "#f16980";
                 break;
-            case "Аморал":
-                color = "#28ad28";
-                break;
             case SERVER:
                 color = "yellow";
                 message.From = "[" + T("server") + "]";
