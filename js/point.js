@@ -87,7 +87,7 @@ Point.prototype = {
         return this;
     },
     json: function() {
-        return {x: this.x, y: this.y};
+        return {X: this.x, Y: this.y};
     },
     toString: function() {
         return "(" + this.x + ", " + this.y + ")";
@@ -147,5 +147,19 @@ Point.prototype = {
             this.y = to.x * Math.floor((this.y + to.y/2) / to.y);
         }
         return this;
-    }
-}
+    },
+    clamp: function() {
+        if (this.x > 1)
+            this.x = 1;
+        else if (this.x < -1)
+            this.x = -1;
+        if (this.y > 1)
+            this.y = 1;
+        else if (this.y < -1)
+            this.y = -1;
+        return this;
+    },
+    isZero: function() {
+        return this.x == 0 && this.y == 0;
+    },
+};

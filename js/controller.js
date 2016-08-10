@@ -325,11 +325,47 @@ function Controller(game) {
         avatar.src = "assets/avatars/" + game.player.sex() + ".png";
     };
 
+    this.wasd = function(x, y, up) {
+        var p = this.wasd.point;
+        if (p.isZero() && up)
+            return;
+        let v = p.clone().add({x: x, y: y}).clamp();
+        if (p.equals(v))
+            return;
+
+        p.fromPoint(v);
+        v.x = p.y + p.x;
+        v.y = p.y - p.x;
+        game.network.send("wasd", v.clamp().json());
+    };
+
+    this.wasd.point = new Point();
+
     this.initHotkeys = function() {
         function toggle(panel) {
             return panel.toggle.bind(panel);
         }
         this.hotkeys = {
+            W: {
+                callback: function() {
+                    this.wasd(0, -1);
+                },
+            },
+            S: {
+                callback: function() {
+                    this.wasd(0, +1);
+                },
+            },
+            A: {
+                callback: function() {
+                    this.wasd(-1, 0);
+                },
+            },
+            D: {
+                callback: function() {
+                    this.wasd(+1, 0);
+                },
+            },
             R: {
                 callback: function() {
                     if (this.lastCreatingType)
@@ -355,7 +391,7 @@ function Controller(game) {
             F: {
                 callback: toggle(game.panels.craft)
             },
-            S: {
+            N: {
                 callback: toggle(game.panels.skills)
             },
             M: {
@@ -367,7 +403,7 @@ function Controller(game) {
                     game.player.pickUp();
                 },
             },
-            "A": {
+            "L": {
                 "button": "lift",
                 callback: function() {
                     game.player.liftStart();
@@ -848,6 +884,20 @@ function Controller(game) {
             this.modifier.alt = e.altKey;
             var c = String.fromCharCode(e.keyCode);
             this.keys[c] = false;
+            switch (c) {
+            case "W":
+                this.wasd(0, +1, true);
+                break;
+            case "S":
+                this.wasd(0, -1, true);
+                break;
+            case "A":
+                this.wasd(+1, 0, true);
+                break;
+            case "D":
+                this.wasd(-1, 0, true);
+                break;
+            }
             return true;
         },
     };
