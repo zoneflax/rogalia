@@ -528,23 +528,21 @@ Character.prototype = {
                 var image = part.image;
                 if (image && image.width > 0) {
                     if (part.color && part.opacity) {
-                        // TODO: wrong result when used with helmet (hair is rendered on top of helmet)
-
-                        // var worker = new Worker("js/tint.js");
-                        // var tm2pCanvas = util.imageToCanvas(image);
-                        // var tmpCtx = tmpCanvas.getContext("2d");
-                        // worker.onmessage = function(e) {
-                        //     tmpCtx.putImageData(e.data, 0, 0);
-                        //     ctx.drawImage(tmpCanvas, 0, 0);
-                        // };
-                        // worker.postMessage({
-                        //     imageData: tmpCtx.getImageData(0, 0, image.width, image.height),
-                        //     color: part.color,
-                        //     opacity: part.opacity,
-                        // });
+                        var worker = new Worker("js/tint.js");
+                        var tmpCanvas = util.imageToCanvas(image);
+                        var tmpCtx = tmpCanvas.getContext("2d");
+                        worker.onmessage = function(e) {
+                            tmpCtx.putImageData(e.data, 0, 0);
+                            ctx.drawImage(tmpCanvas, 0, 0);
+                        };
+                        worker.postMessage({
+                            imageData: tmpCtx.getImageData(0, 0, image.width, image.height),
+                            color: part.color,
+                            opacity: part.opacity,
+                        });
 
                         // very slow
-                        image = ImageFilter.tint(image, part.color, part.opacity);
+                        // image = ImageFilter.tint(image, part.color, part.opacity);
                         ctx.drawImage(image, 0, 0);
                     } else {
                         ctx.drawImage(image, 0, 0);

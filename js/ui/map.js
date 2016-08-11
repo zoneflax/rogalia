@@ -65,9 +65,8 @@ function Map() {
         }
     };
 
+    var worker = new Worker("js/map-parser.js");
     this.parseWorker = function(img) {
-        var worker = new Worker("js/map-parser.js");
-
         this.minimapCanvas.width = 2*img.width;
         this.minimapCanvas.height = img.height;
 
