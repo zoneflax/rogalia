@@ -334,8 +334,10 @@ function Controller(game) {
             return;
 
         p.fromPoint(v);
-        v.x = p.y + p.x;
-        v.y = p.y - p.x;
+        if (!config.character.alternativeWasd) {
+            v.x = p.y + p.x;
+            v.y = p.y - p.x;
+        }
         game.network.send("wasd", v.clamp().json());
     };
 
