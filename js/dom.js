@@ -295,7 +295,6 @@ var dom = {
         if (cfg[0].update) {
             cfg[0].update.call(tabs, active.title, active.content);
         }
-
         return tabs;
     }
 };

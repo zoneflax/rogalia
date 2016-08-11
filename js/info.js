@@ -25,9 +25,6 @@ function Info(message, character) {
     else if (this.character == game.player)
         this.targetType = "target";
 
-    if (game.help)
-        game.help.runHook(this);
-
     switch(this.type) {
     case "lvl-up":
         this.character.playAnimation({

@@ -158,9 +158,7 @@ Craft.prototype = {
         });
 
         this.buildButton = dom.button(T("Build"), "build-button", function(e) {
-            game.network.send("build", {id: blank.Id}, function() {
-                game.help.actionHook("build-"+blank.Props.Type);
-            });
+            game.network.send("build", {id: blank.Id});
             self.blank.panel.hide();
         });
 

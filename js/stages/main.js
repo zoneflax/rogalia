@@ -50,7 +50,6 @@ function mainStage(data) {
         game.entities.forEach(function(e) {
             e.update(game.epsilon);
         });
-        game.help.update();
         game.controller.update();
         snow.update();
     };

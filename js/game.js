@@ -184,8 +184,6 @@ function Game(lang) {
         Container.save();
         game.controller.craft && game.controller.craft.save();
         game.chat && game.chat.save();
-        if (game.help)
-            game.help.save();
     };
 
     this.addEventListeners = function() {
@@ -390,13 +388,6 @@ function Game(lang) {
             forum.textContent = T("Forum");
             forum.onclick = openLink("$/forum/");
             return forum;
-        },
-        bugtracker: function() {
-            var bugtracker = document.createElement("button");
-            bugtracker.textContent = T("Bugs");
-            // bugtracker.onclick = openLink("http://github.com/TatriX/rogalik/issues");
-            bugtracker.onclick = openLink("https://docs.google.com/document/d/1d7_odTtimjbG9sgGHj_B7aZBmgGR_CBSS330D0qvw68/edit");
-            return bugtracker;
         },
         lobby: function() {
             var lobby = document.createElement("button");

@@ -1732,40 +1732,6 @@ Character.prototype = {
 
         return found;
     },
-    hasItems: function(items) {
-        // TODO: deprecated (used only in help.js)
-        var found = {};
-        var bag = this.bag();
-        if (!bag)
-            return false;
-        var equals = function(items, foundItems) {
-            for(var item in items) {
-                if (!foundItems || foundItems[item] < items[item])
-                    return false;
-            }
-            return true;
-        };
-
-        for(var item in items)
-            found[item] = 0;
-
-        for(var i = 0, l = bag.Props.Slots.length; i < l; i++) {
-            var eid = bag.Props.Slots[i];
-            if (!eid)
-                continue;
-            var entity = Entity.get(eid);
-            if (!entity) {
-                game.sendErrorf("hasItems: cannot find %d", eid);
-                continue;
-            }
-            if (items[entity.Group]) {
-                found[entity.Group]++;
-                if (equals(items, found))
-                    return true;
-            }
-        }
-        return false;
-    },
     equippedWith: function(group) {
         return this.Equip
             .filter(Number)

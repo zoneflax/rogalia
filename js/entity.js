@@ -403,9 +403,7 @@ Entity.prototype = {
         game.network.send("entity-pick-up", {id: this.Id});
     },
     lift: function() {
-        game.network.send("lift-start", {id: this.Id}, function() {
-            game.help.runHook({type: "lift"});
-        });
+        game.network.send("lift-start", {id: this.Id});
     },
     setRespawn: function() {
         if (this.Creator && this.Creator != game.player.Id) {
@@ -425,7 +423,6 @@ Entity.prototype = {
                 return;
             }
 
-            game.help.actionHook(action);
             game.network.send(action, {
                 id: this.Id
             });

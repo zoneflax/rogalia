@@ -341,110 +341,132 @@ function Controller(game) {
 
     this.wasd.point = new Point();
 
-    this.initHotkeys = function() {
-        function toggle(panel) {
-            return panel.toggle.bind(panel);
-        }
-        this.hotkeys = {
-            W: {
-                callback: function() {
-                    this.wasd(0, -1);
-                },
+    this.hotkeys = {
+        W: {
+            callback: function() {
+                this.wasd(0, -1);
             },
-            S: {
-                callback: function() {
-                    this.wasd(0, +1);
-                },
+            help: "Go up",
+        },
+        S: {
+            callback: function() {
+                this.wasd(0, +1);
             },
-            A: {
-                callback: function() {
-                    this.wasd(-1, 0);
-                },
+            help: "Go down",
+        },
+        A: {
+            callback: function() {
+                this.wasd(-1, 0);
             },
-            D: {
-                callback: function() {
-                    this.wasd(+1, 0);
-                },
+            help: "Go left",
+        },
+        D: {
+            callback: function() {
+                this.wasd(+1, 0);
             },
-            R: {
-                callback: function() {
-                    if (this.lastCreatingType)
-                        this.newCreatingCursor(this.lastCreatingType, this.lastCreatingCommand);
+            help: "Go right",
+        },
+        R: {
+            callback: function() {
+                if (this.lastCreatingType)
+                    this.newCreatingCursor(this.lastCreatingType, this.lastCreatingCommand);
+            },
+            help: "Repeat last action",
+        },
+        Z: {
+            allowedModifiers: ["shift"],
+            callback: function() {
+                if (this.modifier.shift)
+                    this._hideStatic = !this._hideStatic;
+            },
+            help: "Hide big objects",
+        },
+        B: {
+            callback: this.toggleBag,
+            help: "Open bag",
+        },
+        I: {
+            callback: this.toggleBag,
+            help: "Open bag",
+        },
+        C: {
+            toggle: "stats",
+        },
+        F: {
+            toggle: "craft",
+        },
+        N: {
+            toggle: "skills",
+        },
+        M: {
+            toggle: "map",
+        },
+        H: {
+            toggle: "help",
+        },
+        X: {
+            button: "pick-up",
+            callback: function() {
+                game.player.pickUp();
+            },
+            help: "Pick up nearest item",
+        },
+        "L": {
+            "button": "lift",
+            callback: function() {
+                game.player.liftStart();
+            },
+            help: "Lift nearest item",
+        },
+        9: { //tab
+            callback: function() {
+                game.player.selectNextTarget();
+            },
+            help: "Select next target",
+        },
+        13: { //enter
+            callback: function() {
+                game.controller.chat.activate();
+            },
+            help: "Open chat",
+        },
+        27: { //esc
+            callback: function() {
+                if (Panel.top) {
+                    Panel.top.hide();
                 }
+                game.player.setTarget(null);
             },
-            Z: {
-                allowedModifiers: ["shift"],
-                callback: function() {
-                    if (this.modifier.shift)
-                        this._hideStatic = !this._hideStatic;
-                }
+            help: "Close top window or unselect current target",
+        },
+        32: { //space
+            allowedModifiers: ["shift"],
+            button: "action",
+            callback: function(e) {
+                game.player.defaultAction();
             },
-            B: {
-                callback: this.toggleBag
-            },
-            I: {
-                callback: this.toggleBag
-            },
-            C: {
-                callback: toggle(game.panels.stats)
-            },
-            F: {
-                callback: toggle(game.panels.craft)
-            },
-            N: {
-                callback: toggle(game.panels.skills)
-            },
-            M: {
-                callback: toggle(game.panels.map)
-            },
-            X: {
-                button: "pick-up",
-                callback: function() {
-                    game.player.pickUp();
-                },
-            },
-            "L": {
-                "button": "lift",
-                callback: function() {
-                    game.player.liftStart();
-                },
-            },
-            9: { //tab
-                callback: function() {
-                    game.player.selectNextTarget();
-                }
-            },
-            13: { //enter
-                callback: function() {
-                    game.controller.chat.activate();
-                }
-            },
-            27: { //esc
-                callback: function() {
-                    if (Panel.top) {
-                        Panel.top.hide();
-                    }
-                    game.player.setTarget(null);
-                }
-            },
-            32: { //space
-                allowedModifiers: ["shift"],
-                button: "action",
-                callback: function(e) {
-                    game.player.defaultAction();
-                }
-            },
-            37: { // left
-                callback: function() {
-                    this.rotate(-1);
-                }
-            },
-            39: { // right
-                callback: function() {
-                    this.rotate(+1);
-                }
+            help: "Use item in hands"
+        },
+        37: { // left
+            callback: function() {
+                this.rotate(-1);
             }
-        };
+        },
+        39: { // right
+            callback: function() {
+                this.rotate(+1);
+            }
+        }
+    };
+
+    this.initHotkeys = function() {
+        _.forEach(this.hotkeys, function(hotkey, key, hotkeys) {
+            if (hotkey.toggle) {
+                hotkeys[key].callback = function() {
+                    game.panels[hotkey.toggle].toggle();
+                };
+            }
+        });
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(function(key) {
             this.hotkeys[String(key).charCodeAt(0)] = {
                 callback: function() {
@@ -516,7 +538,7 @@ function Controller(game) {
         this.minimap = new Minimap();
         this.journal = new Journal();
         this.system = new System();
-        this.wiki = new Wiki();
+        this.help = new Help();
         this.auction = new Auction();
         this.vendor = new Vendor();
         this.mail = new Mail();
@@ -532,7 +554,7 @@ function Controller(game) {
         this.createButton(this.journal.panel, "journal");
         this.createButton(this.minimap.panel, "map");
 
-        this.createButton(this.wiki.panel, "wiki");
+        this.createButton(this.help.panel, "help");
         this.createButton(this.system.panel, "system");
 
         this.inventory.panel.button.onclick = this.toggleBag;
@@ -543,7 +565,6 @@ function Controller(game) {
 
         Container.load();
 
-        game.help = this.system.help;
         this.ready = true;
 
         if (document.location.hash.indexOf("noui") != -1) {
@@ -557,20 +578,15 @@ function Controller(game) {
     };
 
     this.createButton = function(panel, buttonName) {
-        function makeToggle(button, panel) {
-            return function() {
-                if (!panel.visible)
-                    game.help.runHook({type: button.id});
-                panel.toggle();
-            };
-        };
         buttonName = buttonName || panel.name;
         var button = document.getElementById(buttonName + "-button");
         button.style.display = "block";
         if (panel.visible)
             button.classList.add("active");
         panel.button = button;
-        button.onclick = makeToggle(button, panel);
+        button.onclick = function() {
+            panel.toggle();
+        };
 
         dom.append(button, dom.div("icon"));
     };

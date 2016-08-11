@@ -462,10 +462,10 @@ hr {
     background-image: url("assets/icons/controls/stats-active.png");
 }
 
-#wiki-button > .icon {
+#help-button > .icon {
     background-image: url("assets/icons/controls/wiki.png");
 }
-#wiki-button.active > .icon {
+#help-button.active > .icon {
     background-image: url("assets/icons/controls/wiki-active.png");
 }
 
@@ -1844,15 +1844,16 @@ input[type=number], .lot-quantity > input, .price > input {
     margin: auto;
 }
 
-#wiki {
+#help {
     max-width: none;
 }
-#wiki .contents {
-    resize: both;
-}
-#wiki iframe {
-    width: 900px;
+#help .contents {
+    width: 1000px;
     height: 600px;
+}
+#help iframe {
+    width: 1000px;
+    height: 580px;
 }
 
 #bank > .contents {

@@ -21,7 +21,6 @@ function exitStage(message) {
     reset.addEventListener('click', game.controller.reset);
     document.body.appendChild(reset);
 
-    help.appendChild(game.button.bugtracker());
     help.appendChild(game.button.vk());
     help.appendChild(reset);
     help.appendChild(game.button.logout());
