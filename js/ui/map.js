@@ -65,12 +65,50 @@ function Map() {
         }
     };
 
+    this.parseWorker = function(img) {
+        var worker = new Worker("js/map-parser.js");
+
+        this.minimapCanvas.width = 2*img.width;
+        this.minimapCanvas.height = img.height;
+
+        var ctx = this.minimapCanvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        var self = this;
+        worker.onmessage = function(e) {
+            var data = e.data;
+            if (data.error) {
+                game.error(data.error);
+                return;
+            }
+
+
+            self.data = data.data;
+            self.layers = data.layers;
+            var loc = game.player.Location;
+            self.location.set(loc.X, loc.Y);
+            self.reset();
+            self.ready = true;
+        };
+
+        worker.postMessage({
+            bioms: this.bioms,
+            pixels: ctx.getImageData(0, 0, img.width, img.height).data,
+            cells_x: this.cells_x,
+            cells_y: this.cells_y,
+        });
+    };
+
+
     function sync(img) {
         this.cells_x = img.width;
         this.cells_y = img.height;
 
         this.width = img.width * CELL_SIZE;
         this.height = img.height * CELL_SIZE;
+
+        this.parseWorker(img);
+        return;
 
         var data = this.parse(img);
         this.data = [];
