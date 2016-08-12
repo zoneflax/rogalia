@@ -8,6 +8,11 @@
             "Hide helmet",
             "Hide your helmet for you and others.",
         ],
+        rotateWasd: [
+            "Rotate WASD",
+            "Movemovent based on the map coordinates",
+        ],
+
     },
     ui: {
         language: [

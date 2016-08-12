@@ -334,7 +334,7 @@ function Controller(game) {
             return;
 
         p.fromPoint(v);
-        if (!config.character.alternativeWasd) {
+        if (!config.character.rotateWasd) {
             v.x = p.y + p.x;
             v.y = p.y - p.x;
         }

@@ -3,7 +3,7 @@ function Settings() {
     Settings.instance = this;
     var tabs = this.makeSettingsTabs(game.config, "Config");
     if (game.player.IsAdmin) {
-        Settings.load(game.debug)
+        Settings.load(game.debug);
         this.makeSettingsTabs(game.debug, "Debug").forEach(function(tab) {
             tabs.push(tab);
         });
@@ -23,7 +23,7 @@ function Settings() {
     };
 
     this.triggers = {
-        "settings.character.alternativeWasd": function() {
+        "settings.character.rotateWasd": function() {
             game.controller.wasd.point.set(0, 0);
         },
         "settings.ui.language": function() {

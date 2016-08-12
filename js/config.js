@@ -10,7 +10,7 @@ var config = {
     character: {
         pathfinding: function() { return game.player.Settings.Pathfinding; },
         hideHelmet: function() { return game.player.Style.HideHelmet; },
-        alternativeWasd: false,
+        rotateWasd: false,
     },
     ui: {
         language: function() {
