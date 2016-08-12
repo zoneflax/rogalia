@@ -413,7 +413,7 @@ function Controller(game) {
             },
             help: "Pick up nearest item",
         },
-        "L": {
+        V: {
             "button": "lift",
             callback: function() {
                 game.player.liftStart();

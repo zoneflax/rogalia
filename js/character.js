@@ -543,7 +543,7 @@ Character.prototype = {
 
                         // very slow
                         // image = ImageFilter.tint(image, part.color, part.opacity);
-                        ctx.drawImage(image, 0, 0);
+                        // ctx.drawImage(image, 0, 0);
                     } else {
                         ctx.drawImage(image, 0, 0);
                     }

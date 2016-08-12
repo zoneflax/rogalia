@@ -23,6 +23,9 @@ function Settings() {
     };
 
     this.triggers = {
+        "settings.character.alternativeWasd": function() {
+            game.controller.wasd.point.set(0, 0);
+        },
         "settings.ui.language": function() {
             localStorage.setItem("lang", (game.lang == "ru") ? "en" : "ru");
             game.reload();
