@@ -1747,11 +1747,11 @@ Character.prototype = {
         if (this.IsNpc)
             return {};
         var parts = {
-            "feet": null,
-            "legs": null,
-            "body": null,
-            "hair": null,
-            "head": null,
+            feet: null,
+            legs: null,
+            body: null,
+            hair: null,
+            head: null,
         };
         var hideHelmet = this.Style && this.Style.HideHelmet;
         Character.clothes.forEach(function(type, i) {

@@ -23,7 +23,7 @@ function Users() {
     function render(content, data, selector, empty) {
         var list = {
             content: content,
-            data: data[selector],
+            data: data[selector] || [],
             empty: empty,
         };
         lists[selector] = list;

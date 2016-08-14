@@ -186,6 +186,9 @@ Info.prototype = {
             );
             break;
         case "currency-gain":
+            // medal of honor etc
+            if (this.data == 0)
+                break;
             this.drawValue(
                 "$" + this.data,
                 {

@@ -53,7 +53,7 @@ Vendor.createPriceInput = function() {
         platinum.value = plt;
         gold.value = gld;
         silver.value = slv;
-    }
+    };
     return price;
 };
 

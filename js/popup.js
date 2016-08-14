@@ -11,8 +11,7 @@ function Popup(buttons) {
 
 
     panel.hooks.show = function() {
-            window.addEventListener("keydown", onkeydown);
-
+        window.addEventListener("keydown", onkeydown);
         dom.show(overlay);
     };
     var nop = function(){};
@@ -63,9 +62,14 @@ function Popup(buttons) {
         },
     };
 
-    function onkeydown() {
-        var button = overlay.getElementsByTagName("button")[0];
-        button.click();
+    function onkeydown(event) {
+        switch (event.key) {
+        case "Enter":
+        case " ":
+            var button = overlay.getElementsByTagName("button")[0];
+            button.click();
+            break;
+        }
     }
 
     function show() {
