@@ -9,12 +9,16 @@ function Popup(buttons) {
     panel.temporary = true;
     dom.move(panel.element, overlay);
 
+
     panel.hooks.show = function() {
+            window.addEventListener("keydown", onkeydown);
+
         dom.show(overlay);
     };
     var nop = function(){};
     var callback = nop;
     panel.hooks.hide = function() {
+        window.removeEventListener("keydown", onkeydown);
         dom.hide(overlay);
         callback();
         callback = nop;
@@ -58,6 +62,11 @@ function Popup(buttons) {
             input.focus();
         },
     };
+
+    function onkeydown() {
+        var button = overlay.getElementsByTagName("button")[0];
+        button.click();
+    }
 
     function show() {
         panel.show();
