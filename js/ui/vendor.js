@@ -49,10 +49,10 @@ Vendor.createPriceInput = function() {
             parseInt(silver.value || 0);
     };
 
-    price.set = function(platinum, gold, silver) {
-        platinum.value = platinum;
-        gold.value = gold;
-        silver.value = silver;
+    price.set = function(plt, gld, slv) {
+        platinum.value = plt;
+        gold.value = gld;
+        silver.value = slv;
     }
     return price;
 };
