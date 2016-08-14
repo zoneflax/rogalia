@@ -7,7 +7,9 @@ function Barbershop(npc) {
     };
     style.color.label.title = T("hex or rgba");
     style.opacity.label.title = "0-1";
-
+    style.opacity.onchange = function() {
+        update();
+    };
 
     var haircuts = {
         male: [
@@ -45,6 +47,22 @@ function Barbershop(npc) {
         game.player.reloadSprite();
     };
 
+    var update = _.throttle(function update(haircut) {
+        if (haircut) {
+            currentHaircut = haircut;
+        } else {
+            haircut = currentHaircut;
+        }
+
+        game.player.Style.Hair = [
+            haircut,
+            style.color.value,
+            "#" + style.opacity.value,
+        ].join("");
+        game.player.reloadSprite();
+    }, 1500);
+
+
     function makeHaircuts() {
         var sex = game.player.sex();
         return dom.wrap("haircuts", haircuts[sex].map(function(haircut) {
@@ -60,22 +78,6 @@ function Barbershop(npc) {
             return wrapper;
         }));
     }
-
-    function update(haircut) {
-        if (haircut) {
-            currentHaircut = haircut;
-        } else {
-            haircut = currentHaircut;
-        }
-
-        game.player.Style.Hair = [
-            haircut,
-            style.color.value,
-            "#" + style.opacity.value,
-        ].join("");
-        game.player.reloadSprite();
-    }
-
 
     function makeColorPicker() {
         var colorPreview = dom.div("color-preview");

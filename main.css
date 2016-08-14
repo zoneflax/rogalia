@@ -1074,11 +1074,7 @@ a.extern {
     position: relative;
 }
 meter {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
     background: #99682e;
-
 }
 
 meter::-webkit-meter-bar {
