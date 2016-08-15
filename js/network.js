@@ -23,12 +23,10 @@ function Network() {
 
     this.queue = [];
 
-    this.run = function() {
+    this.run = function(onopen) {
         this.socket = new WebSocket(this.proto + this.addr);
         this.socket.binaryType = "arraybuffer";
-        this.socket.onopen = function() {
-            game.setStage("login");
-        };
+        this.socket.onopen = onopen;
 
         function onDisconnect() {
             window.onerror = null;
@@ -41,7 +39,7 @@ function Network() {
         this.socket.onclose = onDisconnect;
 
         this.socket.onerror = function(error) {
-	    console.log(error);
+            console.log(error);
             onDisconnect();
         };
         this.socket.onmessage = onmessage.bind(this);
