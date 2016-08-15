@@ -12,10 +12,10 @@ function Minimap() {
 
     this.mapImage = new Image();
     this.mapImage.onload = function() {
-        width.original = this.mapImage.width;
+        width.original = self.mapImage.width;
         width.current = width.default;
-        this.mapImage.width = width.default;
-    }.bind(this);
+        self.mapImage.width = width.default;
+    };
 
     this.mapImage.src = window.location.protocol + "//" + game.network.addr + "/map";
 

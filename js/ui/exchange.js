@@ -2,13 +2,14 @@
 
 function Exchange(npc) {
     game.network.send("get-exchange-info", {Id: npc.Id}, function callback(data) {
-        var table = dom.tag("table", "#exchange-rates-table");
-        table.innerHTML = "<tr>" +
-            "<th>" + T("Name") + "</th>" +
-            "<th>" + T("Buy rate") + "</th>" +
-            "<th>" + T("Sell rate") + "</th>" +
-            "<th>" + T("Sell ingots") + "</th>" +
-            "</tr>";
+        var table = dom.table([
+            T("Name"),
+            T("Buy rate"),
+            T("Sell rate"),
+            T("Sell ingots")
+        ]);
+        dom.setClassOrId(table, "#exchange-rates-table");
+
         Object.keys(data.Rates).forEach(function(assignation) {
             var rate = data.Rates[assignation];
             {

@@ -19,76 +19,40 @@ function Map() {
     this.minimapContainer = document.getElementById("minimap-container");
     this.minimap = document.getElementById("minimap");
     this.minimapCanvas = document.getElementById("minimap-canvas");
+    this.minimapCanvas.ctx = this.minimapCanvas.getContext("2d");
     this.location = new Point();
 
     this.tiles = [];
 
-    this.parse = function(img) {
-        this.minimapCanvas.width = 2*img.width;
-        this.minimapCanvas.height = img.height;
-
-        var ctx = this.minimapCanvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-
-        var pixels = ctx.getImageData(0, 0, img.width, img.height).data;
-
-        var data = [];
-        var i = 0;
-        var color = 0;
-        var bioms = this.bioms.map(function(biom) {
-            return biom.Color;
-        });
-        [].forEach.call(pixels, function(colorComponent, px) {
-            if (i < 3) {
-                color |=  colorComponent << ((2 - i) * 8);
-                i++;
-            } else {
-                var id = bioms.indexOf(color);
-                if (id == -1)
-                    game.error("Cannot find biom for px #%d=%s", px, color);
-                data.push(id);
-                color = 0;
-                i = 0;
-            }
-        });
-
-        return data;
-    };
-
-    this.sync = function(data, map) {
-        var img = new Image;
-        img.onload = sync.bind(this, img);
-        img.src = "data:image/png;base64," + data;
-        if (map) {
-            this.full.width = map.Width;
-            this.full.height = map.Height;
-        }
-    };
-
     var worker = new Worker("js/map-parser.js");
-    this.parseWorker = function(img) {
+    worker.onmessage = function(e) {
+        var data = e.data;
+        if (data.error) {
+            game.error(data.error);
+            return;
+        }
+
+        this.data = data.data;
+        this.layers = data.layers;
+        var loc = game.player.Location;
+        this.location.set(loc.X, loc.Y);
+        this.reset();
+        this.ready = true;
+    }.bind(this);
+
+    var img = new Image;
+    img.onload = function() {
+        this.cells_x = img.width;
+        this.cells_y = img.height;
+
+        this.width = img.width * CELL_SIZE;
+        this.height = img.height * CELL_SIZE;
+
         this.minimapCanvas.width = 2*img.width;
         this.minimapCanvas.height = img.height;
 
-        var ctx = this.minimapCanvas.getContext("2d");
+        var ctx = this.minimapCanvas.ctx;
         ctx.drawImage(img, 0, 0);
-
-        var self = this;
-        worker.onmessage = function(e) {
-            var data = e.data;
-            if (data.error) {
-                game.error(data.error);
-                return;
-            }
-
-
-            self.data = data.data;
-            self.layers = data.layers;
-            var loc = game.player.Location;
-            self.location.set(loc.X, loc.Y);
-            self.reset();
-            self.ready = true;
-        };
 
         worker.postMessage({
             bioms: this.bioms,
@@ -96,69 +60,14 @@ function Map() {
             cells_x: this.cells_x,
             cells_y: this.cells_y,
         });
-    };
+    }.bind(this);
 
-
-    function sync(img) {
-        this.cells_x = img.width;
-        this.cells_y = img.height;
-
-        this.width = img.width * CELL_SIZE;
-        this.height = img.height * CELL_SIZE;
-
-        this.parseWorker(img);
-        return;
-
-        var data = this.parse(img);
-        this.data = [];
-        for(var h = 0; h < this.cells_y; h++) {
-            this.data.push([]);
-            for(var w = 0; w < this.cells_x; w++) {
-                var id = data[h * this.cells_x + w];
-                var biom = this.bioms[id];
-	        this.data[h].push({
-                    x: w,
-                    y: h,
-                    id: id,
-                    corners: new Array(4),
-                    transition: new Array(4),
-                    biom: biom,
-                });
-            }
+    this.sync = function(data, map) {
+        img.src = "data:image/png;base64," + data;
+        if (map) {
+            this.full.width = map.Width;
+            this.full.height = map.Height;
         }
-
-        var loc = game.player.Location;
-        this.location.set(loc.X, loc.Y);
-
-        this.layers = this.makeLayers();
-        this.reset();
-
-        for(var y = 0; y < this.cells_y; y++) {
-            for(var x = 0; x < this.cells_x; x++) {
-                var id = this.data[y][x].id;
-                for (var c = 0; c < 4; c++) {
-                    var offset = 0;
-                    var cx = 1 - (c & 0x1);
-                    var cy = 1 - ((c >> 1) & 0x1);
-                    for (var i = 0; i < 4; i++) {
-                        var dx = x + cx - (i & 0x1);
-                        var dy = y + cy - ((i >> 1) & 0x1);
-                        var other =
-                                this.data[dy] &&
-                                this.data[dy][dx] &&
-                                this.data[dy][dx].id;
-                        if (other >= id) {
-                            offset |= 1 << i;
-                        }
-                        if (other !== id)
-                            this.data[y][x].transition[4-c] = true;
-                    }
-                    this.data[y][x].corners[c] = offset;
-                }
-                this.layers[id].push(this.data[y][x]);
-            }
-        }
-        this.ready = true;
     };
 
     this.reset = function() {
@@ -167,25 +76,25 @@ function Map() {
     };
 
     this.drawGrid = function() {
-	game.ctx.strokeStyle = gridColor;
+        game.ctx.strokeStyle = gridColor;
         var sw = game.player.Location.X;
         var sh = game.player.Location.Y;
-	for(var w = sw; w <= sw + this.width; w += CELL_SIZE) {
+        for(var w = sw; w <= sw + this.width; w += CELL_SIZE) {
             var sp = new Point(w, sh).toScreen();
             var ep = new Point(w, sh + this.height).toScreen();
-	    game.ctx.beginPath();
-	    game.ctx.moveTo(sp.x, sp.y);
-	    game.ctx.lineTo(ep.x, ep.y);
-	    game.ctx.stroke();
-	}
-	for(var h = sh; h <= sh + this.height; h += CELL_SIZE) {
+            game.ctx.beginPath();
+            game.ctx.moveTo(sp.x, sp.y);
+            game.ctx.lineTo(ep.x, ep.y);
+            game.ctx.stroke();
+        }
+        for(var h = sh; h <= sh + this.height; h += CELL_SIZE) {
             var sp = new Point(sw, h).toScreen();
             var ep = new Point(sw + this.width, h).toScreen();
-	    game.ctx.beginPath();
-	    game.ctx.moveTo(sp.x, sp.y);
-	    game.ctx.lineTo(ep.x, ep.y);
-	    game.ctx.stroke();
-	}
+            game.ctx.beginPath();
+            game.ctx.moveTo(sp.x, sp.y);
+            game.ctx.lineTo(ep.x, ep.y);
+            game.ctx.stroke();
+        }
     };
 
     this.each = function(draw) {
@@ -240,8 +149,8 @@ function Map() {
                 case 12: if (i != 1) return; break;
 
                 case  7: if (i != 3) return; break;
-                // case 11: if (i != 2) return; break;
-                // case 13: if (i != 1) return; break; //TODO: fixme
+                    // case 11: if (i != 2) return; break;
+                    // case 13: if (i != 1) return; break; //TODO: fixme
                 case 14: if (i != 0) return; break;
 
                 case 15: if (i != 0) return; break;
@@ -290,28 +199,28 @@ function Map() {
         var cam = game.camera;
 
         var leftTop = cam
-                .clone()
-                .toWorld()
-                .div(CHUNK_SIZE)
-                .floor();
+            .clone()
+            .toWorld()
+            .div(CHUNK_SIZE)
+            .floor();
         var rightTop = cam
-                .clone()
-                .add(new Point(scr.width, 0))
-                .toWorld()
-                .div(CHUNK_SIZE)
-                .floor();
+            .clone()
+            .add(new Point(scr.width, 0))
+            .toWorld()
+            .div(CHUNK_SIZE)
+            .floor();
         var leftBottom = cam
-                .clone()
-                .add(new Point(0, scr.height))
-                .toWorld()
-                .div(CHUNK_SIZE)
-                .ceil();
+            .clone()
+            .add(new Point(0, scr.height))
+            .toWorld()
+            .div(CHUNK_SIZE)
+            .ceil();
         var rightBottom = cam
-                .clone()
-                .add(new Point(scr.width, scr.height))
-                .toWorld()
-                .div(CHUNK_SIZE)
-                .ceil();
+            .clone()
+            .add(new Point(scr.width, scr.height))
+            .toWorld()
+            .div(CHUNK_SIZE)
+            .ceil();
 
         for (var x = leftTop.x; x < rightBottom.x; x++) {
             for (var y = rightTop.y; y < leftBottom.y; y++) {
@@ -385,10 +294,8 @@ function Map() {
                 if (x < 0 || x > CHUNK_SIZE || y < 0 || y > CHUNK_SIZE)
                     return;
                 if (!canvas) {
-                    canvas = document.createElement("canvas");
-                    canvas.width = 2*ISO_CHUNK_SIZE;
-                    canvas.height = ISO_CHUNK_SIZE;
-                    ctx = canvas.getContext("2d");
+                    canvas = dom.canvas(2 * ISO_CHUNK_SIZE, ISO_CHUNK_SIZE);
+                    ctx = canvas.ctx;
                     ctx.translate(CHUNK_SIZE, 0);
                 }
                 var p = new Point(x, y).toScreen();
