@@ -429,6 +429,9 @@ hr {
     cursor: none!important;
 }
 
+.main-stage #world {
+    background-image: none;
+}
 .main-stage #canvas {
     background: url("assets/bg/space.png") repeat;
     background-color: #333;
@@ -2148,6 +2151,12 @@ input[type=number], .lot-quantity > input, .price > input {
 
 .quest-goal ul {
     padding: 0 20px;
+}
+
+.quest-voice {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }
 
 .quest-wiki-link {

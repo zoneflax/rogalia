@@ -29,10 +29,25 @@ Quest.prototype = {
         return "!";
     },
     showPanel: function() {
-        var panel = new Panel("quest", "Quest", this.getContents());
+        var contents = this.getContents();
+        var audio = null;
+        if (this.data.voice && !this.active()) {
+            audio = game.sound.playVoice(this.Id);
+            audio.classList.add("quest-voice");
+            contents.push(audio);
+        }
+
+        var panel = new Panel("quest", "Quest", contents);
         panel.quest = this;
         panel.entity = this.npc;
         panel.show();
+
+        if (audio) {
+            panel.hooks.hide = function() {
+                audio.pause();
+                audio.currentTime = 0;
+            };
+        }
     },
     update: function(){},
     makeList: function makeList(items) {

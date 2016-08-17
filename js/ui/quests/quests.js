@@ -7,6 +7,7 @@ function Quests() {
                 "en": "Tuition start",
                 "ru": "Начало обучения"
             },
+            voice: true,
             desc: {
                 "en": [
                     "Hello, settler.",
@@ -30,6 +31,7 @@ function Quests() {
                 "en": "Picking resources",
                 "ru": "Сбор ресурсов",
             },
+            voice: true,
             desc: {
                 "en": "You need some tools to survive this wild lands; and for tools you need resources. Pick four stones, two boughs and a branch.",
                 "ru": "Для выживания в этих диких землях тебе необходимы инструменты, а чтобы их создать, нужны ресурсы. Собери четыре камня, два сучка и веточку.",

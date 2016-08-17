@@ -129,6 +129,13 @@ function Sound() {
         }
     };
 
+    this.playVoice = function(id) {
+        var audio = new Audio(soundDir + "voice/" + id + ".ogg");
+        audio.autoplay = true;
+        audio.controls = true;
+        return audio;
+    };
+
     this.playSound = function(name, repeat) {
         if (!config.sound.playSound)
             return;
