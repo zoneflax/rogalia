@@ -67,7 +67,7 @@ label {
 }
 
 :focus {
-    box-shadow: 0 0 1px 1px #4a370c;
+    box-shadow: 0 0 2px 1px #56330e;
     outline-offset: 0;
     outline: none;
 }
@@ -110,28 +110,29 @@ label > input[type=text], label > input[type=password] {
     margin-left: 5px;
 }
 button {
-    box-shadow: inset 0px 1px 0px 0px #ffd5ad;
-    background: linear-gradient(to bottom, #daae7c 5%, #aa703a 100%);
-    background-color: #daae7c;
-    border-radius: 6px;
-    border: 1px solid #73461c;
+    box-shadow: inset 0px 1px 0px 0px #b1804a;
+    background: linear-gradient(to bottom, #8e602c 5%, #654323 100%);
+    background-color: #946025;
+    border-radius: 4px;
+    border: 1px solid #46280c;
     display: inline-block;
-    color: #fff;
+    color: #ffca8c;
     text-decoration: none;
     outline: none;
     cursor: url("assets/cursors/default.png"), auto;
     min-width: 67px;
+    margin-right: 5px;
 }
 
 button:hover {
-    background:linear-gradient(to bottom, #aa703a 5%, #daae7c 100%);
-    background-color:#aa703a;
+    background: linear-gradient(to bottom, #654323 5%, #8e602c 100%);
+    background-color: #aa703a;
 }
 
-button:active {
+/*button:active {
     position: relative;
     top: 1px;
-}
+} кнопки на css съезжали */
 
 /* Remove button padding in FF */
 button::-moz-focus-inner {
@@ -142,7 +143,7 @@ button::-moz-focus-inner {
 button[disabled] {
     -webkit-filter: sepia(100%)!important;
     filter: sepia(100%)!important;
-    color: #ccc;
+    color: #252121
 }
 
 quote {
@@ -161,7 +162,7 @@ a {
     color: #e28305;
 }
 a:hover {
-    color: #f9b717;
+    color: #eab97c;
 }
 
 hr {
@@ -189,14 +190,14 @@ hr {
     font-size: large;
 }
 #world {
-    background: #7b5323;
+    background: #292b2f;
     background-image: url("assets/bg/loading.png");
     background-size: 100%;
     background-repeat: no-repeat;
     background-position: center;
     position: relative;
     margin: auto;
-    border: 4px solid #484e54;
+    border: 4px solid #64696f;
     border-top: none;
     overflow: hidden;
 }
@@ -236,9 +237,10 @@ hr {
 }
 #menu .action {
     display: block;
+    color: #bec6ca;
 }
 #menu .action:hover {
-    color: #f9b717;
+    color: #e2a04e;
     cursor: url("assets/cursors/pointer.png"), auto;
 }
 #vendor > .contents {
@@ -295,8 +297,8 @@ hr {
     background: url("assets/bg/quantity.png")
 }
 .slot:hover, .slot.hovered {
-    -webkit-filter: brightness(125%);
-    filter: brightness(125%);
+    -webkit-filter: brightness(135%);
+    filter: brightness(135%);
 }
 .slot.locked {
     background-image: url("assets/bg/slot-locked.png")!important;
@@ -333,8 +335,8 @@ hr {
 }
 
 .slot.invalid {
-    -webkit-filter: hue-rotate(340deg) contrast(120%) brightness(120%);
-    filter: hue-rotate(340deg) contrast(120%) brightness(120%);
+    -webkit-filter: hue-rotate(340deg) contrast(120%) brightness(130%);
+    filter: hue-rotate(340deg) contrast(120%) brightness(130%);
 }
 
 .panel {
@@ -346,7 +348,7 @@ hr {
     max-width: 500px;
 }
 .panel.top {
-    box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 7px 1px rgba(86, 46, 3, 0.8);
     border-radius: 6px 6px 1px 1px;
 }
 .panel > .title-bar {
@@ -370,7 +372,7 @@ hr {
     white-space: nowrap;
     line-height: 15px;
     font-size: 12px;
-    color: #202325;
+    color: #ffca8c;
 }
 .panel .contents {
     background:
@@ -386,7 +388,7 @@ hr {
     padding: 10px; /* update Panel.setWidth(); pad = 2*(padding) */
 }
 .panel .close{
-    border-left: 1px solid #343a40;
+    border-left: 1px solid #683c20;
     background: url("assets/bg/panel/close.png") no-repeat center;
     display: block;
     height: 13px;
@@ -447,85 +449,62 @@ hr {
 }
 
 #controls-bar > .button > .icon {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 43px;
     display: inline-block;
     background-repeat: no-repeat;
 }
 
+#controls-bar > .button.active {
+   background-image: url("assets/bg/button-active.png");
+}
+
 #controls-bar > .button:hover > .icon {
-    -webkit-filter: brightness(125%);
-    filter: brightness(125%);
+    -webkit-filter: brightness(135%);
+    filter: brightness(135%);
 }
 
 #stats-button > .icon {
     background-image: url("assets/icons/controls/stats.png");
 }
-#stats-button.active > .icon {
-    background-image: url("assets/icons/controls/stats-active.png");
-}
 
 #help-button > .icon {
     background-image: url("assets/icons/controls/wiki.png");
-}
-#help-button.active > .icon {
-    background-image: url("assets/icons/controls/wiki-active.png");
 }
 
 #system-button > .icon {
     background-image: url("assets/icons/controls/system.png");
 }
-#system-button.active > .icon {
-    background-image: url("assets/icons/controls/system-active.png");
-}
 
 #map-button > .icon {
     background-image: url("assets/icons/controls/map.png");
-}
-#map-button.active > .icon {
-    background-image: url("assets/icons/controls/map-active.png");
 }
 
 #inventory-button > .icon {
     background-image: url("assets/icons/controls/inventory.png");
 }
-#inventory-button.active > .icon {
-    background-image: url("assets/icons/controls/inventory-active.png");
-}
 
 #craft-button > .icon {
     background-image: url("assets/icons/controls/craft.png");
-}
-#craft-button.active > .icon {
-    background-image: url("assets/icons/controls/craft-active.png");
 }
 
 #skills-button > .icon {
     background-image: url("assets/icons/controls/skills.png");
 }
-#skills-button.active > .icon {
-    background-image: url("assets/icons/controls/skills-active.png");
-}
 
 #chat-button > .icon {
     background-image: url("assets/icons/controls/chat.png");
 }
-#chat-button.active > .icon {
-    background-image: url("assets/icons/controls/chat-active.png");
-}
 
 #journal-button > .icon {
     background-image: url("assets/icons/controls/journal.png");
-}
-#journal-button.active > .icon {
-    background-image: url("assets/icons/controls/journal-active.png");
 }
 
 #system button, #links button {
     width: 99%;
     display: block;
     margin-bottom: 10px;
-    color: #202325;
+    color: #ffca8c;
 }
 #system  button:last-child {
     margin-bottom: 0;
@@ -718,9 +697,10 @@ hr {
 }
 .recipe-search-clear {
     min-width: 0;
-    right: -26px;
-    top: 0;
+    right: -27px;
+    top: 2px;
     position: absolute;
+    margin: 0;
 }
 .recipe-list.filter-portable .recipe.portable,
 .recipe-list.filter-liftable .recipe.liftable,
@@ -764,11 +744,11 @@ hr {
     background: #373b3e;
 }
 .recipe-list .recipe.selected {
-    color: #f9b717;
+    color: #fda742;
 }
 .recipe-list .recipe:hover,
 .recipe-list .group-toggle:hover {
-    color: #f8fcff;
+    color: #8a979c;
 }
 #recipe-details .item-link {
     margin-left: 3px;
@@ -993,13 +973,13 @@ lmb, rmb {
 .recipe-link, .marker-link {
     cursor: url("assets/cursors/pointer.png"), auto;
     text-decoration: underline;
-    color: #2f3538;
-    background: #965704;
+    color: #272b2d;
+    background: #966137;
     padding: 2px 4px;
     border-radius: 3px;
 }
 .marker-link {
-    color: #d49628;
+    color: #ссс;
 }
 
 #users .tab-content {
@@ -1122,7 +1102,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     top: 0;
     width: 100%;
     text-align: center;
-    color: #34383c;
+    color: #222529;
     white-space: nowrap;
 }
 .attr-strength, .vitamin-protein {
@@ -1324,8 +1304,8 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     margin-top: 8px;
 }
 #lobby .avatar-container:hover {
-    -webkit-filter: brightness(120%);
-    filter: brightness(120%);
+    -webkit-filter: brightness(130%);
+    filter: brightness(130%);
 }
 
 #lobby .avatar {
@@ -1350,7 +1330,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     filter: brightness(150%);
 }
 #create-character .profession-tab.active {
-    background: #73471b;
+    background: #292b2f;
 }
 #create-character .profession-tabs {
     display: flex;
@@ -1358,7 +1338,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     justify-content: space-around;
 }
 #create-character .professions {
-    background: #73471b;
+    background: #292b2f;
     border-radius: 2px;
     margin: -2px -1px 3px -1px;
     padding: 5px 7px;
@@ -1501,8 +1481,8 @@ ol li a:hover {
 	-webkit-filter: initial;
     }
     50%  {
-	filter: brightness(125%);
-	-webkit-filter: brightness(125%);
+	filter: brightness(135%);
+	-webkit-filter: brightness(135%);
     }
     100% {
 	filter: initial;
@@ -1581,6 +1561,7 @@ big {
 }
 #crash-help > button {
     width: 100%;
+    margin-bottom: 5px;
 }
 
 #avatar-container, #minimap-container {
@@ -1889,13 +1870,12 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 #action-progress-value {
-    background: #ac7637;
+    background: #b9bcd3;
 }
 #action-progress {
     background:
     url("assets/bg/action-progress/top.png") repeat-x top,
-    url("assets/bg/action-progress/bottom.png") repeat-x bottom,
-    #99682e;
+    url("assets/bg/action-progress/bottom.png") repeat-x bottom, #85889f;
     bottom: 170px;
     height: 23px;
     left: 0;
@@ -2003,8 +1983,8 @@ input[type=number], .lot-quantity > input, .price > input {
     z-index: 10;
     position: absolute;
     border-radius: 4px;
-    color: #fff;
-    background: #99682e;
+    color: #ffd19a;
+    background: #905c1e;
     border: 1px solid #4e3313;
     display: none;
     bottom: 110%;
@@ -2051,12 +2031,17 @@ input[type=number], .lot-quantity > input, .price > input {
     display: flex;
     justify-content: space-around;
 }
+
+#main-action-button.active {
+    background-image: url("assets/bg/main-button-active.png");
+}
+
 #main-action-button > img {
     margin: auto;
 }
 #main-action-button:hover > img {
-    -webkit-filter: brightness(125%);
-    filter: brightness(125%);
+    -webkit-filter: brightness(135%);
+    filter: brightness(135%);
 }
 
 #xp-progress-bar {
@@ -2106,6 +2091,7 @@ input[type=number], .lot-quantity > input, .price > input {
 #exchange-rates-table td {
     text-align: center;
     white-space: nowrap;
+    border: none;
 }
 #exchange-rates-table input {
     width: 40px;
@@ -2134,7 +2120,7 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 #quest-list li:hover, #quest-list li.selected {
     cursor: url("assets/cursors/pointer.png"), auto;
-    color: lightgreen;
+    color: #ffae4a;
 }
 #quest-desc {
     width: 65%;
@@ -2331,6 +2317,7 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 .letter:hover {
     background: #99682e;
+    border-radius: 3px;
 }
 .letter-delete {
     min-width: 0;
