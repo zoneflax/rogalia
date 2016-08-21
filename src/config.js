@@ -41,7 +41,7 @@ var config = {
         jukebox: true,
         chatNotifications: false,
         soundVolume: 0.50,
-        musicVolume: 1.25,
+        musicVolume: 0.25,
         voiceVolume: 1.00,
     },
 };
