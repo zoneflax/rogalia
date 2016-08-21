@@ -59,7 +59,7 @@ Quest.prototype = {
         var found = game.player.findItems(kinds);
         updater = kinds.map(function(item) {
             var slot = dom.wrap("slot", Entity.getPreview(item));
-            slot.onclick = craft.search.bind(craft, item, true);
+            slot.onclick = craft.searchOrHelp.bind(craft, item);
 
             var count = (items[item] instanceof Object) ? items[item].Count : items[item];
             var desc = dom.wrap("quest-slot-desc", TS(item) + ": " + found[item].length + "/" + count);

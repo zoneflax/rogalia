@@ -96,6 +96,19 @@
             "Ambient",
             "Play ambient.",
         ],
+        soundVolume: [
+            "Sound volume",
+            "Sound effects volume.",
+        ],
+        musicVolume: [
+            "Music volume",
+            "Background music volume.",
+        ],
+        voiceVolume: [
+            "Voice volume",
+            "NPC volume.",
+        ],
+
         jukebox: [
             "Jukebox",
             "Play jukeboxes music.",

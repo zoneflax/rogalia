@@ -365,6 +365,14 @@ Craft.prototype = {
         }
         return this.search(e.target.value);
     },
+    searchOrHelp: function(pattern) {
+        var help = Craft.help[pattern];
+        if (help) {
+            new Panel("craft-help", T("Help"), [dom.span(help)]).show();
+        } else {
+            this.search(pattern, true);
+        }
+    },
     search: function(pattern, selectMatching) {
         // we do not want to show on load
         if (game.stage.name == "main")
@@ -498,12 +506,7 @@ Craft.prototype = {
                         return;
                     }
 
-                    if (slot.group in Craft.help) {
-                        var panel = new Panel("craft-help", T("Help"), [dom.span(Craft.help[slot.group])]);
-                        panel.show();
-                    } else {
-                        self.search(slot.group, true);
-                    }
+                    self.searchOrHelp(slot.group);
                 }.bind(slot);
             }
         }
