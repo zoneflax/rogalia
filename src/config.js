@@ -40,6 +40,9 @@ var config = {
         playMusic: true,
         jukebox: true,
         chatNotifications: false,
+        soundVolume: 0.50,
+        musicVolume: 1.25,
+        voiceVolume: 1.00,
     },
 };
 var debug = {

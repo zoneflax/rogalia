@@ -140,6 +140,21 @@ var dom = {
     checkbox: function(text, name) {
         return this.input(text, null, "checkbox", name, true);
     },
+    range: function(value, onchange) {
+        var handle = dom.div("handle draggable");
+        handle.ondrag = function(event, drag) {
+            handle.style.marginLeft = 0; // remove margin, to fix left: 100% problem
+            var oldX =  parseInt(handle.style.left);
+            var maxX = handle.parentNode.clientWidth - handle.clientWidth;
+            var newX = Math.max(0, Math.min(event.pageX - drag.dx, maxX));
+            if (oldX == newX)
+                return;
+            handle.style.left = newX + "px";
+            onchange(newX / maxX);
+        };
+        handle.style.left = value * 100 + "%";
+        return this.wrap("range", handle);
+    },
     iframe: function(src, classOrName) {
         var iframe = dom.tag("iframe", classOrName);
         iframe.src = src;

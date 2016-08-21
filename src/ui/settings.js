@@ -33,6 +33,12 @@ function Settings() {
         "settings.sound.playMusic": function() {
             game.sound.toggleMusic();
         },
+        "settings.sound.musicVolume": function(value) {
+            game.sound.setMusicVolume(value);
+        },
+        "settings.sound.voiceVolume": function(value) {
+            game.sound.setVoiceVolume(value);
+        },
         "settings.sound.jukebox": function() {
             game.jukebox.toggle();
         },
@@ -102,9 +108,7 @@ Settings.prototype = {
     triggers: null,
     makeSettingsTabs: function(map, name) {
         var self = this;
-        var tabs = [];
-        Object.keys(map).forEach(function(name) {
-            var group = map[name];
+        return _.map(map, function(group, name) {
             var tab = {
                 title: T(name),
                 contents: [],
@@ -114,9 +118,8 @@ Settings.prototype = {
             optionDesc.placeholder = T("Select option");
             optionDesc.textContent = optionDesc.placeholder;
 
-            Object.keys(group).forEach(function(prop) {
+            _.forEach(group, function(value, prop) {
                 var key = ["settings", name, prop].join(".");
-                var value = group[prop];
 
                 if (value instanceof Function) {
                     if (game.player) // eval only when player is loaded
@@ -129,27 +132,42 @@ Settings.prototype = {
                 var title = desc[0];
                 var tip = desc[1];
 
-                var checkbox = dom.checkbox(title);
-                checkbox.checked = value;
-                checkbox.id = key;
 
-                var label = checkbox.label;
+                var label = makeLabel(key, value, title);
                 label.onmouseover = function() {
                     optionDesc.textContent = tip;
                 };
                 label.onmouseout = function() {
                     optionDesc.textContent = optionDesc.placeholder;
                 };
-                label.onchange = function() {
-                    group[prop] = !group[prop];
+                tab.contents.push(label);
+                function makeLabel(key, value, title) {
+                    if (_.isNumber(value)) {
+                        var range = dom.range(group[prop], function(value) {
+                            group[prop] = value;
+                            trigger();
+                        });
+                        return dom.make("label", [title, range]);
+                    }
+                    var checkbox = dom.checkbox(title);
+                    checkbox.checked = value;
+                    checkbox.id = key;
+                    checkbox.onchange = function() {
+                        group[prop] = !group[prop];
+                        trigger();
+                    };
+
+                    return checkbox.label;
+                }
+
+                function trigger() {
                     localStorage.setItem(key, group[prop]);
                     self.triggers[key] && self.triggers[key](group[prop]);
-                };
-                tab.contents.push(label);
+                }
             });
             tab.contents.push(optionDesc);
-            tabs.push(tab);
+            return tab;
+
         });
-        return tabs;
     },
 };

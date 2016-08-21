@@ -17,6 +17,8 @@ function Game(lang) {
 
     Settings.load(config);
 
+    new DragManager();
+
     this.screen = {
         width: 0,
         height: 0,
@@ -117,9 +119,9 @@ function Game(lang) {
 
     this.forceDrawStrokedText = function(text, x, y, strokeStyle) {
         var lineJoin = game.ctx.lineJoin;
-        game.ctx.strokeStyle = strokeStyle || "#333";
-        game.ctx.lineWidth = 3;
-        game.ctx.lineJoin = 'round';
+        game.ctx.strokeStyle = strokeStyle || "#292b2f";
+        game.ctx.lineWidth = 2.5;
+        game.ctx.lineJoin = "round";
         game.ctx.strokeText(text, x, y);
         game.ctx.fillText(text, x, y);
         game.ctx.lineWidth = 1;

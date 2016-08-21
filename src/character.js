@@ -1067,20 +1067,26 @@ Character.prototype = {
             }
 
             //full red rect
-            game.ctx.fillStyle = '#bd2323';
+            game.ctx.fillStyle = '#883527';
             game.ctx.fillRect(p.x - w/2, y, w, dy); //wtf
 
             //green hp
-            game.ctx.fillStyle = '#3bac3b';
+            game.ctx.fillStyle = '#2ea237';
             game.ctx.fillRect(p.x - w/2, y, w * this.Hp.Current / this.Hp.Max, dy); //wtf
 
         } else {
             dy = 0;
         }
         if (drawName) {
-            game.ctx.fillStyle = (this.Karma < 0 || this.Aggressive)
-                ? "#f00"
-                : ((this == game.player) ? "#ff0" : "#fff");
+            var nameColor = "#e2e9ec";
+            if (this.Karma < 0 || this.Aggressive)
+                nameColor = "#e23624";
+            else if (this.isPlayer)
+                nameColor = "#caff8c";
+            else if (this.IsNpc)
+                nameColor = "#ffca8c";
+
+            game.ctx.fillStyle = nameColor;
             game.drawStrokedText(name, x, y - dy / 2);
             var flag = this.flag();
             if (flag)
@@ -1686,7 +1692,7 @@ Character.prototype = {
             this.sprite.drawOutline(this.getDrawPoint());
 
         if (this == game.player.target)
-            game.setFontSize(20);
+            game.setFontSize(17);
 
         this.drawName(true, true);
 

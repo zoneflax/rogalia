@@ -96,11 +96,40 @@ label {
     outline: none;
 }
 
-input[type=text], input[type=number], input[type=password], input:not([type]), textarea {
+.input-bg() {
     border: 1px solid #575b65;
     border-radius: 3px;
+    background-color: @dark-color;
+}
+
+input[type=text], input[type=number], input[type=password], input:not([type]), textarea {
+    .input-bg;
     padding-left: 3px;
-    background: url("assets/bg/tab/send.png") no-repeat 99%, @dark-color;
+    background: url("assets/bg/tab/send.png") no-repeat 99%;
+}
+
+.range {
+    .input-bg;
+    height: 12px;
+    width: 175px;
+    position: relative;
+
+    .handle {
+	.cursor-pointer;
+	width: 14px;
+	height: 14px;
+	margin-left: -14px; // hack for dom.range()
+	border-radius: 3px;
+	border: 1px solid lighten(@bg-color, 20%);
+	background: @bg-color;
+	position: absolute;
+	top: -2px;
+	left: 0;
+    }
+
+    .handle:hover {
+	background: lighten(@bg-color, 10%);
+    }
 }
 
 textarea {
@@ -2225,7 +2254,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
 .quest-voice {
     position: absolute;
-    bottom: 10px;
+    bottom: 4px;
     right: 10px;
 }
 

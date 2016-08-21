@@ -641,7 +641,7 @@ Entity.prototype = {
         if(game.debug.entity.position) {
             var text = "(" + (this.X) + " " + (this.Y) + ")";
             text += " id:" + this.Id;
-            game.ctx.fillStyle = "#fff";
+            game.ctx.fillStyle = "#e2e9ec";
             game.drawStrokedText(text, p.x, p.y);
         }
     },
@@ -671,7 +671,7 @@ Entity.prototype = {
     drawBox: function(color) {
         game.ctx.save();
         game.ctx.globalAlpha = 0.3;
-        game.ctx.strokeStyle = "#fff";
+        game.ctx.strokeStyle = "#e2e9ec";
         game.ctx.fillStyle = color || "#ccc";
         var p = this.screen();
         if (this.round) {
@@ -725,7 +725,7 @@ Entity.prototype = {
                 measure.width + padding * 2,
                 FONT_SIZE + padding * 2
             );
-            game.ctx.fillStyle = "#fff";
+            game.ctx.fillStyle = "#e2e9ec";
             game.ctx.fillText(text, x + padding, y + padding + FONT_SIZE);
             return;
         case "feeder":
@@ -734,7 +734,7 @@ Entity.prototype = {
             game.iso.fillCircle(this.X, this.Y, this.WorkRadius);
             break;
         }
-        game.ctx.fillStyle = "#fff";
+        game.ctx.fillStyle = "#e2e9ec";
         var title = this.title;
         if (game.controller.modifier.shift)
             title += " | " + T("Quality") + ":" + this.Quality;

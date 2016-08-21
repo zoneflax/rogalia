@@ -22,7 +22,7 @@ function Minimap() {
     this.points = {};
     this.characters = [];
 
-    var wrapper = dom.wrap("wrapper no-drag", this.mapImage);
+    var wrapper = dom.wrap("wrapper", this.mapImage);
 
     var lvl = 0;
     var zoom = dom.button(T("Zoom"), "", function() {

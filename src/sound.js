@@ -17,7 +17,6 @@ function Sound() {
         localStorage.setItem(lastTrackLsKey, trackId);
     };
 
-    var volume = 0.2;
     var currentTrack = null;
     var nextTrack = null;
 
@@ -92,7 +91,7 @@ function Sound() {
     };
 
     function playTrack(track) {
-        track.volume = volume;
+        track.volume = config.sound.musicVolume;
         track.play();
 
         // track.addEventListener("ended", this.playNextTrack.bind(this));
@@ -116,6 +115,11 @@ function Sound() {
         nextTrack = loadTrack(trackId);
     }
 
+    this.setMusicVolume = function(volume) {
+        if (currentTrack)
+            currentTrack.volume = volume;
+    };
+
     this.toggleMusic = function() {
         updateMute();
         if (!currentTrack) {
@@ -129,12 +133,46 @@ function Sound() {
         }
     };
 
-    this.playVoice = function(id) {
-        var audio = new Audio(soundDir + "voice/" + id + ".ogg");
-        audio.controls = true;
-        audio.volume = 0.75;
-        return audio;
+    var voiceAudio = new Audio();
+    voiceAudio.onended = function() {
+        this.onVoiceEnded();
+    }.bind(this);
+
+    this.loadVoice = function(id) {
+        voiceAudio.src = soundDir + "voice/" + id + ".ogg";
+        voiceAudio.volume = config.sound.voiceVolume;
     };
+
+    this.playVoice = function(id) {
+        if (id) {
+            this.loadVoice(id);
+        }
+        voiceAudio.play();
+    };
+
+    this.stopVoice = function() {
+        voiceAudio.pause();
+        voiceAudio.currentTime = 0;
+    };
+
+    this.setVoiceVolume = function(volume) {
+        voiceAudio.volume = volume;
+    };
+
+    this.toggleVoice = function() {
+        if (voiceAudio.paused) {
+            voiceAudio.play();
+        } else {
+            voiceAudio.pause();
+        }
+    };
+
+    this.replayVoice = function() {
+        voiceAudio.currentTime = 0;
+        voiceAudio.play();
+    };
+
+    this.onVoiceEnded = function() {};
 
     this.playSound = function(name, repeat) {
         if (!config.sound.playSound)
@@ -147,6 +185,7 @@ function Sound() {
         }
         sound.onloadeddata = function() {
             sound.currentTime = 0;
+            sound.volume = config.sound.soundVolume;
             sound.play();
         };
         sound.load();

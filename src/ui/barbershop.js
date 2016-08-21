@@ -83,7 +83,7 @@ function Barbershop(npc) {
         var colorPreview = dom.div("color-preview");
         colorPreview.style.backgroundColor = style.color.value;
 
-        var colorPicker = dom.div("color-picker no-drag");
+        var colorPicker = dom.div("color-picker");
         var picker = ColorPicker(
             colorPicker,
             function(hex, hsv, rgb) {

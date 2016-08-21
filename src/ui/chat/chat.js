@@ -421,7 +421,7 @@ function Chat() {
             scrollToTheEnd(tab.messagesElement);
             title.classList.remove("has-new-messages");
         };
-        var messagesElement = dom.div("messages no-drag");
+        var messagesElement = dom.div("messages");
         messagesElement.innerHTML = localStorage["chat.log." + name] || "";
 
         tab.contents = [messagesElement];

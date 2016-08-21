@@ -278,46 +278,6 @@ var util = new function() {
 
     };
 
-    var dragIgnoreTags = ["INPUT", "TEXTAREA", "BUTTON", "CODE"];
-    this.dragIgnore = function(element) {
-        if (element.classList.contains("no-drag"))
-	    return true;
-        else if (dragIgnoreTags.indexOf(element.tagName) != -1)
-            return true;
-        else
-            return false;
-    };
-
-    this.draggable = function(element) {
-        var drag = null;
-        element.addEventListener('mousedown', function(e) {
-            // if (!e.target.classList.contains("contents") && !e.target.classList.contains("title-text"))
-            //     return;
-	    if(getComputedStyle(e.target).cursor.indexOf("pointer") != -1)
-	        return;
-	    var checking = e.target;
-	    while(checking && checking != element) {
-                if (util.dragIgnore(checking))
-                    return;
-	        checking = checking.parentNode;
-	    };
-
-	    drag = {
-	        dx: e.pageX - element.offsetLeft,
-	        dy: e.pageY - element.offsetTop,
-	    };
-        });
-        window.addEventListener('mouseup', function(e) {
-	    drag = null;
-        });
-        window.addEventListener('mousemove', function(e) {
-	    if (drag) {
-	        element.style.left = e.pageX - drag.dx + "px";
-	        element.style.top = e.pageY - drag.dy + "px";
-	    }
-        });
-    };
-
     this.toggleFullscreen = function() {
         if (!document.fullscreenElement &&    // alternative standard method
             !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods

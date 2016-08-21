@@ -26,7 +26,7 @@ function Panel(name, title, elements, listeners, hooks) {
 
     this.titleBar = dom.wrap("title-bar", [this.title, this.closeButton]);
 
-    this.element = dom.wrap("panel", this.titleBar);
+    this.element = dom.wrap("panel draggable", this.titleBar);
     this.element.id = name;
 
     this.button = null;
@@ -48,8 +48,6 @@ function Panel(name, title, elements, listeners, hooks) {
     }
 
     this.element.appendChild(this.contents);
-
-    util.draggable(this.element);
 
     if (listeners) {
         for(var type in listeners) {

@@ -5,8 +5,9 @@ function Quest(q, npc) {
     }
     this.data = game.quests[q.Id];
     this.npc = npc;
-    this.audio = null;
 }
+
+Quest.panel = null;
 
 Quest.prototype = {
     getName: function() {
@@ -30,18 +31,17 @@ Quest.prototype = {
         return "!";
     },
     showPanel: function() {
-        var panel = new Panel("quest", "Quest", this.getContents(true));
+        var panel = Quest.panel;
+        if (!panel) {
+            Quest.panel = panel = new Panel("quest", "Quest", []);
+            panel.hooks.hide = function() {
+                game.sound.stopVoice();
+            };
+        }
+        panel.setContents(this.getContents(true));
         panel.quest = this;
         panel.entity = this.npc;
         panel.show();
-
-        var audio = this.audio;
-        if (audio) {
-            panel.hooks.hide = function() {
-                audio.pause();
-                audio.currentTime = 0;
-            };
-        }
     },
     update: function(){},
     makeList: function makeList(items) {
@@ -214,11 +214,11 @@ Quest.prototype = {
                     {Id: game.player.interactTarget.Id, QuestId: self.Id},
                     function update(data) {
                         if (canEndTest())
-                            game.panels.quest.setContents(self.getContents(true));
+                            Quest.panel.setContents(self.getContents(true));
                         else if (hasNextQuest())
                             showNextQuest();
                         else
-                            game.panels.quest.close();
+                            Quest.panel.hide();
                         return null;
                     });
             };
@@ -232,17 +232,43 @@ Quest.prototype = {
             button
         );
 
-        this.audio = null;
         if (this.data.voice) {
             var id = this.Id;
             var hasFinal = this.data.final[game.lang];
             if (this.ready() && hasFinal) {
                 id += "-final";
             }
-            this.audio = game.sound.playVoice(id);
-            this.audio.classList.add("quest-voice");
-            this.audio.autoplay = autoplay && (this.ready() && hasFinal || !this.active());
-            contents.push(this.audio);
+            var pause = dom.img("assets/icons/pause.png", "icon-button");
+            pause.onclick = function() {
+                game.sound.toggleVoice();
+                dom.replace(pause, play);
+            };
+
+            var play = dom.img("assets/icons/play.png", "icon-button");
+            play.onclick = function() {
+                game.sound.toggleVoice();
+                dom.replace(play, pause);
+            };
+
+
+            var voiceButton = null;
+            if (autoplay && (this.ready() && hasFinal || !this.active())) {
+                game.sound.playVoice(id);
+                voiceButton = pause;
+            } else {
+                game.sound.loadVoice(id);
+                voiceButton = play;
+            }
+            contents.push(dom.wrap("quest-voice", voiceButton));
+
+            game.sound.onVoiceEnded = function() {
+                var replay = dom.img("assets/icons/replay.png", "icon-button");
+                replay.onclick = function() {
+                    dom.replace(replay, pause);
+                    game.sound.replayVoice();
+                };
+                dom.replace(voiceButton, replay);
+            };
         }
 
         return contents;

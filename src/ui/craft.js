@@ -226,7 +226,7 @@ Craft.prototype = {
             groups[recipe.Skill][type] = recipe;
         });
 
-        var list = dom.tag("ul", "recipe-list no-drag");
+        var list = dom.tag("ul", "recipe-list");
         for (var group in groups) {
             var recipes = groups[group];
             var subtree = dom.tag("ul", (this.visibleGroups[group]) ? "" : "hidden");
