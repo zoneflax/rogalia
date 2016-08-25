@@ -67,7 +67,6 @@ function Controller(game) {
 
     this.actionProgress = document.getElementById("action-progress");
     this.actionHotbar = document.getElementById("action-hotbar");
-    this.controlsBar = document.getElementById("controls-bar");
     this.targetContainer = document.getElementById("target-container");
     this.party = document.getElementById("party");
 
@@ -548,6 +547,7 @@ function Controller(game) {
         this.fpsStats = this.system.fps;
         this.inventory = {panel: {}};
 
+        this.createButton(this.shop.panel, "shop");
         this.createButton(this.skills.panel, "skills");
         this.createButton(this.stats.panel, "stats");
         this.createButton(this.inventory.panel, "inventory");

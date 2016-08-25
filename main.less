@@ -416,6 +416,7 @@ hr {
 // }
 .main-stage .panel.top > .title-bar {
     -webkit-filter: hue-rotate(180deg) sepia(25%);
+    filter: hue-rotate(180deg) sepia(25%);
 }
 .panel > .title-bar {
     .cursor-default;
@@ -514,20 +515,54 @@ hr {
     background: url("assets/bg/exit.png") no-repeat center bottom;
 }
 
-#controls-bar > .button > .icon {
-    width: 50px;
-    height: 43px;
-    display: inline-block;
-    background-repeat: no-repeat;
+#controls-bar, #action-hotbar-container{
+    position: absolute;
+    right: 4px;
 }
 
-#controls-bar > .button.active {
-   background-image: url("assets/bg/button-active.png");
+#controls-bar {
+    bottom: 0;
+    top: 0;
+    margin: auto;
+    height: 376px;
+
+    .icon {
+	width: 50px;
+	height: 43px;
+	display: inline-block;
+	background-repeat: no-repeat;
+    }
+
+    .button.active {
+	background-image: url("assets/bg/button-active.png");
+    }
+
+    .button:hover > .icon {
+	-webkit-filter: brightness(135%);
+	filter: brightness(135%);
+    }
+
+    #shop-button.active {
+	background-image: url("assets/bg/shop-button-active.png");
+    }
 }
 
-#controls-bar > .button:hover > .icon {
-    -webkit-filter: brightness(135%);
-    filter: brightness(135%);
+#shop-button {
+    background-image: url("assets/bg/shop-button.png");
+    position: absolute;
+    top: -52px;
+    right: 5px;
+
+    width: 60px;
+    height: 37px;
+    .icon {
+	width: 60px;
+	height: 37px;
+    }
+}
+
+#shop-button > .icon {
+    background-image: url("assets/icons/controls/shop.png");
 }
 
 #stats-button > .icon {
@@ -2108,18 +2143,6 @@ input[type=number], .lot-quantity > input, .price > input {
     display: block;
 }
 
-#controls-bar, #action-hotbar-container{
-    position: absolute;
-    right: 4px;
-}
-
-#controls-bar {
-    bottom: 0;
-    top: 0;
-    margin: auto;
-    height: 376px;
-}
-
 #action-hotbar-container {
     bottom: 4px;
     display: flex;
@@ -2631,4 +2654,127 @@ input[type=number], .lot-quantity > input, .price > input {
 #vendor-license .contents {
     width: 250px;
     overflow: auto;
+}
+
+#shop {
+    @tag-color: #41877c;
+    @text-color: #6db9ba;
+    max-width: none;
+
+    .title-bar {
+	background:
+	url("assets/bg/panel/shop/header-left.png") no-repeat top left,
+	url("assets/bg/panel/shop/header-right.png") no-repeat top right,
+	url("assets/bg/panel/shop/header.png") repeat-x;
+	-webkit-filter: none!important;
+	filter: none!important;
+
+	.title-text {
+	    color: #78d8d9;
+	}
+    }
+
+    .close {
+	border-color: #172220;
+	background-image: url("assets/bg/panel/shop/close.png");
+    }
+
+    .contents {
+	width: 469px;
+	height: 465px;
+
+	background:
+	url("assets/bg/panel/shop/border-top-left.png") no-repeat top left,
+	url("assets/bg/panel/shop/border-top-right.png") no-repeat top right,
+	url("assets/bg/panel/shop/border-top.png") repeat-x top,
+	url("assets/bg/panel/shop/border-bottom-left.png") no-repeat bottom left,
+	url("assets/bg/panel/shop/border-bottom-right.png") no-repeat bottom right,
+	url("assets/bg/panel/shop/border-bottom.png") repeat-x bottom,
+	url("assets/bg/panel/shop/border-left.png") repeat-y left,
+	url("assets/bg/panel/shop/border-right.png") repeat-y right,
+	@bg-color;
+    }
+
+    .tab-content {
+	padding: 3px;
+    }
+
+    .products {
+	overflow: hidden;
+	height: 436px;
+    }
+
+    .product-tag {
+	color: @tag-color;
+	clear: both;
+	margin-bottom: 2px;
+    }
+
+    .product-card {
+	.cursor-pointer;
+	width: 145px;
+	height: 118px;
+	border: 1px solid #333;
+	position: relative;
+	display: inline-block;
+	margin-right: 11px;
+	margin-bottom: 13px;
+
+	.product-desc {
+	    color: @text-color;
+	    width: 100%;
+	    box-sizing: border-box;
+	    padding: 5px;
+	    position: absolute;
+	    bottom: 0;
+	    height: 44px;
+	    background: fade(#286058, 50%);
+	    font-size: larger;
+	}
+
+    }
+
+    .product-card:nth-child(4n) {
+	margin-right: 0;
+    }
+
+    .product-cost {
+	color: #d4aa19;
+    }
+
+    .product-name {
+	color: @text-color;
+	font-size: larger;
+	margin-bottom: 6px;
+    }
+
+    .product-desc-container {
+	display: flex;
+	justify-content: space-between;
+
+	img {
+	    display: block;
+	    margin-bottom: 3px;
+	}
+
+	.product-desc {
+	    color: #98a0a0;
+	    width: 145px;
+	}
+    }
+
+    .product-buy {
+	margin: 3px 0 10px 0;
+    }
+
+    .back {
+	position: absolute;
+	right: 10px;
+	bottom: 10px;
+    }
+
+}
+
+#payment label {
+    display: block;
 }
