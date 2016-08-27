@@ -179,6 +179,7 @@ button {
     outline: none;
     min-width: 67px;
     margin: 1px;
+    padding: 4px;
 }
 
 button:focus {
@@ -415,8 +416,11 @@ hr {
 //     border-radius: 6px 6px 1px 1px;
 // }
 .main-stage .panel.top > .title-bar {
-    -webkit-filter: hue-rotate(180deg) sepia(25%);
-    filter: hue-rotate(180deg) sepia(25%);
+    -webkit-filter: brightness(150%);
+    filter: brightness(150%);
+}
+.main-stage .panel.top > .title-text {
+    color: #3a1c01;
 }
 .panel > .title-bar {
     .cursor-default;
@@ -676,6 +680,7 @@ hr {
     line-height: 45px;
     position: relative;
     margin: -1px -9px;
+
 }
 
 .button-icon {
@@ -2657,8 +2662,8 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 #shop {
-    @tag-color: #41877c;
-    @text-color: #6db9ba;
+    @tag-color: #79908c;
+    @text-color: #7eb5a9;
     max-width: none;
 
     .title-bar {
@@ -2668,10 +2673,18 @@ input[type=number], .lot-quantity > input, .price > input {
 	url("assets/bg/panel/shop/header.png") repeat-x;
 	-webkit-filter: none!important;
 	filter: none!important;
+    }
 
-	.title-text {
-	    color: #78d8d9;
-	}
+    .tabs-titles {
+        margin-left: 50px;
+    }
+
+    .tabs-title {
+        color: #99b1bb;
+    }
+
+    .title-text {
+	color: #78d8d9;
     }
 
     .close {
@@ -2702,34 +2715,40 @@ input[type=number], .lot-quantity > input, .price > input {
     .products {
 	overflow: hidden;
 	height: 436px;
+	font: 12px/22px Dejavu Sans, Sans-serif;
     }
 
     .product-tag {
 	color: @tag-color;
 	clear: both;
-	margin-bottom: 2px;
+	margin-left: 1px;
     }
 
     .product-card {
 	.cursor-pointer;
 	width: 145px;
 	height: 118px;
-	border: 1px solid #333;
+	border: 1px solid #455250;
+	border-radius: 3px;
+	box-shadow: 0 0 4px 0px #132b25;
 	position: relative;
+	left: 2px;
 	display: inline-block;
-	margin-right: 11px;
-	margin-bottom: 13px;
+	margin-right: 9px;
+	margin-bottom: 3px;
 
 	.product-desc {
 	    color: @text-color;
+            border-top: 1px solid #386d62;
 	    width: 100%;
 	    box-sizing: border-box;
-	    padding: 5px;
+	    padding: 0 5px;
 	    position: absolute;
 	    bottom: 0;
 	    height: 44px;
-	    background: fade(#286058, 50%);
-	    font-size: larger;
+	    background: fade(#286058, 90%);
+	    font-size: 14px;
+
 	}
 
     }
@@ -2739,13 +2758,13 @@ input[type=number], .lot-quantity > input, .price > input {
     }
 
     .product-cost {
-	color: #d4aa19;
+	color: #c5a01f;
     }
 
     .product-name {
 	color: @text-color;
-	font-size: larger;
-	margin-bottom: 6px;
+	font-size: 20px;
+	margin: 5px 0 15px 0;
     }
 
     .product-desc-container {
@@ -2755,16 +2774,30 @@ input[type=number], .lot-quantity > input, .price > input {
 	img {
 	    display: block;
 	    margin-bottom: 3px;
+            border-radius: 3px;
+            border: 1px solid #293834;
 	}
 
 	.product-desc {
-	    color: #98a0a0;
+	    color: #9ab7b2;
 	    width: 145px;
 	}
     }
 
     .product-buy {
 	margin: 3px 0 10px 0;
+	padding: 8px 24px;
+	font-size: 15px;
+	background: linear-gradient(to bottom, #2c8e77 5%, #236550 100%);
+	background-color: #259471;
+	box-shadow: inset 0px 1px 0px 0px #4ab194;
+	border: 1px solid #0c4639;
+	color: #97f7de;
+    }
+
+    .product-buy:hover {
+	background: linear-gradient(to bottom, #236553 5%, #2c8e7c 100%);
+	background-color: #3aaa91;
     }
 
     .back {
@@ -2772,7 +2805,6 @@ input[type=number], .lot-quantity > input, .price > input {
 	right: 10px;
 	bottom: 10px;
     }
-
 }
 
 #payment {

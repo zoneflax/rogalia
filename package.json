@@ -1,0 +1,26 @@
+{
+    "name": "rogalia",
+    "version": "0.20.0",
+    "description": "Rogalia sandbox mmorpg client",
+    "main": "src/main.js",
+    "watch": {
+        "build-less": "main.less"
+    },
+    "scripts": {
+        "build-less": "lessc --source-map main.less main.css",
+        "watch": "npm-watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TatriX/rogalia.git"
+    },
+    "author": "Tatrix <tatrics@gmail.com>",
+    "bugs": {
+        "url": "https://github.com/TatriX/rogalia/issues"
+    },
+    "homepage": "http://rogalia.ru",
+    "devDependencies": {
+        "less": "^2.7.1",
+        "npm-watch": "^0.1.6"
+    }
+}
