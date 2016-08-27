@@ -145,6 +145,11 @@ Entity.prototype = {
                 elements.push(elem);
             }.bind(this));
             elements.push(Stats.prototype.createValue("Energy", this.Props.Energy, 2));
+
+        } else if (this.Group == "portal") {
+            var input = dom.input("", this.Id);
+            input.readonly = true;
+            elements.push(input.label);
         } else if ("Armor" in this) {
             var armor = this.Armor * (1 + this.Quality / 100);
             elements.push(Stats.prototype.createValue("Armor", armor));

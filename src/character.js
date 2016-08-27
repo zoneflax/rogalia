@@ -426,6 +426,21 @@ Character.prototype = {
             this.sprite.height = 150;
             this.sprite.offset = 43;
             break;
+        case "shadow":
+            this.sprite.width = 160;
+            this.sprite.height = 160;
+            this.sprite.speed = 30000;
+            break;
+        case "bloody-shadow":
+            this.sprite.width = 130;
+            this.sprite.height = 130;
+            this.sprite.speed = 30000;
+            break;
+        case "hell-shadow":
+            this.sprite.width = 100;
+            this.sprite.height = 100;
+            this.sprite.speed = 30000;
+            break;
         case "preved-medved":
             this.sprite.width = 210;
             this.sprite.height = 210;
