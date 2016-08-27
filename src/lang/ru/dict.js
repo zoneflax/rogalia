@@ -1529,4 +1529,5 @@ T.dict = {
     "Feedback": "Написать нам",
     "Send a bug report or feedback": "Отправить сообщение об ошибке, пожелание или предложение.",
     "Your message is sent. Thank you.": "Ваше сообщение отправлено. Спасибо.",
+    "Select payment method": "Выберите способ оплаты",
 };

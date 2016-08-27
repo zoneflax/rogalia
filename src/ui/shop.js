@@ -92,28 +92,40 @@ function Shop() {
 
     function pay(product, order) {
         var name = TS(product.Name);
-        var card = dom.tag("input");
-        card.type = "radio";
-        card.value = "AC";
-        card.checked = true;
-        var yandex = dom.tag("input");
-        yandex.type = "radio";
-        yandex.value = "PC";
+        var paymentMethod = param("paymentMethod", "AC");
+
+        var card = dom.img("assets/shop/payment-card.png", "selected");
+        card.title = T("Card");
+        card.onclick = function() {
+            yandex.classList.remove("selected");
+            card.classList.add("selected");
+            paymentMethod.value = "AC";
+        };
+
+        var yandex = dom.img("assets/shop/payment-yandex.png");
+        yandex.title = T("Yandex");
+        yandex.onclick = function() {
+            card.classList.remove("selected");
+            yandex.classList.add("selected");
+            paymentMethod.value = "pC";
+        };
+
         var form = dom.make("form", [
             param("receiver", "41001149015128"),
             param("formcomment", name),
             param("short-dest", name),
             param("quickpay-form", "shop"),
             param("targets", product.Name),
-            param("sum", 1 || product.Cost),
-            dom.make("label", [card, T("Card")]),
-            dom.make("label", [yandex, T("Yandex")]),
+            param("sum", 10 || product.Cost),
             param("label", order),
+            paymentMethod,
+            T("Select payment method"),
+            dom.wrap("methods", [card, " ", yandex]),
             dom.button(T("Pay"), "", function() {
                 panel.close();
             }),
         ]);
-        form.action = "https://demomoney.yandex.ru/quickpay/confirm.xml";
+        form.action = "https://money.yandex.ru/quickpay/confirm.xml";
         form.method = "POST";
         form.target = "_blank";
         var panel = new Panel("payment", T("Payment"), [form]).show();

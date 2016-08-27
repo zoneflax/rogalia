@@ -263,6 +263,7 @@ Entity.prototype = {
         case "steel-pike":
         case "stack-of-wood":
         case "stack-of-boards":
+        case "winepress":
             if (!this.Props.Slots)
                 break;
             if (this.Props.Slots.some(function(id){ return id != 0; }))
