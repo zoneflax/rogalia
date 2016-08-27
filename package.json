@@ -7,6 +7,7 @@
         "build-less": "main.less"
     },
     "scripts": {
+        "build": "npm run build-less",
         "build-less": "lessc --source-map main.less main.css",
         "watch": "npm-watch"
     },

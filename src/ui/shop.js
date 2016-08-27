@@ -73,7 +73,7 @@ function Shop() {
         var desc = descriptions[product.Tag];
         self.panel.setContents([
             dom.wrap("product-name", name),
-            dom.wrap("product-cost", product.Cost + currency),
+            dom.wrap("product-cost big", product.Cost + currency),
             dom.button(T("Buy"), "product-buy", function() {
                 game.network.send("shop", { Product: product.Name }, function(data) {
                     pay(product, data.Order);
@@ -92,14 +92,14 @@ function Shop() {
 
     function pay(product, order) {
         var name = TS(product.Name);
-        var paymentMethod = param("paymentMethod", "AC");
+        var paymentType = param("paymentType", "AC");
 
         var card = dom.img("assets/shop/payment-card.png", "selected");
         card.title = T("Card");
         card.onclick = function() {
             yandex.classList.remove("selected");
             card.classList.add("selected");
-            paymentMethod.value = "AC";
+            paymentType.value = "AC";
         };
 
         var yandex = dom.img("assets/shop/payment-yandex.png");
@@ -107,7 +107,7 @@ function Shop() {
         yandex.onclick = function() {
             card.classList.remove("selected");
             yandex.classList.add("selected");
-            paymentMethod.value = "pC";
+            paymentType.value = "PC";
         };
 
         var form = dom.make("form", [
@@ -118,7 +118,7 @@ function Shop() {
             param("targets", product.Name),
             param("sum", 10 || product.Cost),
             param("label", order),
-            paymentMethod,
+            paymentType,
             T("Select payment method"),
             dom.wrap("methods", [card, " ", yandex]),
             dom.button(T("Pay"), "", function() {
