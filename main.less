@@ -14,6 +14,11 @@
     font:  13px/18px Dejavu Sans, Sans;
 }
 
+.allow-user-select() {
+    -webkit-user-select: text!important;
+    user-select: text!important;
+}
+
 @text-color: #e2e9ec;
 @button-color: #ffca8c;
 @dark-color: #292b2f;
@@ -64,10 +69,16 @@ iframe {
     border: 0;
 }
 
-input, textarea, code, .messages, .message, .message .body, .message .from{
+input, textarea, code, .messages {
     .font-default;
-    user-select: text!important;
     color: @text-color;
+    .allow-user-select;
+}
+
+.message {
+    .body, .from {
+	.allow-user-select;
+    }
 }
 
 table {
@@ -279,12 +290,8 @@ hr {
     left: 0;
 }
 #canvas {
-    -webkit-touch-callout: none;
     -webkit-user-select: none;
-    -khtml-user-select: none;
     -moz-user-select: none;
-    -ms-user-select: none;
-    -o-user-select: none;
     user-select: none;
 }
 #menu {
@@ -2085,14 +2092,15 @@ input[type=number], .lot-quantity > input, .price > input {
     height: 200px;
     position: relative;
 }
+
 .claim-action-north, .claim-action-south, .claim-action-west, .claim-action-east {
     position: absolute;
     margin: auto;
     width: 85px;
     height: 85px;
     border: 1px solid #a57031;
-    background: #99682e;
 }
+
 .claim-action-north, .claim-action-south {
     right: 3px;
     left: 3px;

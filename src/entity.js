@@ -984,7 +984,7 @@ Entity.prototype = {
             return dom.wrap("claim-actions", ["north", "west", "south", "east"].map(function(dir) {
                 return dom.button(
                     T(action + " " + dir),
-                    "claim-action" + dir,
+                    "claim-action-" + dir,
                     function () {
                         var cmd = action + util.ucfirst(dir);
                         game.network.send(cmd, {Id: id});
