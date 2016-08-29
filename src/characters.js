@@ -171,9 +171,6 @@ Character.npcActions = {
     "Bank": function() {
         new Bank(this);
     },
-    "Barbershop": function() {
-        new Barbershop(this);
-    },
     "Exchange": function() {
         new Exchange(this);
     },

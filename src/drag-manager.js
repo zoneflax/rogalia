@@ -44,7 +44,7 @@ function DragManager() {
         if (dragIgnoreTags.indexOf(element.tagName) != -1)
             return true;
 
-        return getComputedStyle(element).cursor.includes("pointer");
+        return !getComputedStyle(element).cursor.includes("default");
     };
 
 };

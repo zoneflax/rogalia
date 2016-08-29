@@ -196,7 +196,6 @@ Talks.npcs = {
         },
         "actions": {
             "Trade": "I wanna see your goods.",
-            "Barbershop": "I want to make a haircut.",
         },
     },
     "ahper": {

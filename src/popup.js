@@ -25,11 +25,13 @@ function Popup(buttons) {
 
     return {
         alert: function(message, onclose) {
+            var button = dom.button(T("Ok"), "popup-ok", panel.hide.bind(panel));
             panel.setContents([
                 dom.div("popup-message", {text: message}),
-                dom.button(T("Ok"), "popup-ok", panel.hide.bind(panel)),
+                button,
             ]);
             show();
+            button.focus();
             if (onclose)
                 callback = onclose;
         },
@@ -45,8 +47,14 @@ function Popup(buttons) {
             show();
         },
         prompt: function(message, value, callback) {
-            var input = dom.tag(typeof value == "string" ? "textarea" : "input", "popup-input");
-            input.value = value;
+            var input;
+            if (_.isArray(value)) {
+                input = dom.tag("textarea", "popup-input");
+                input.value = value.join("\n");
+            } else {
+                input = dom.tag("input", "popup-input");
+                input.value = value;
+            }
             panel.setContents([
                 dom.div("popup-message", {text: message}),
                 input,
@@ -63,13 +71,23 @@ function Popup(buttons) {
     };
 
     function onkeydown(event) {
-        switch (event.key) {
-        case "Enter":
-        case " ":
-            var button = overlay.getElementsByTagName("button")[0];
-            button.click();
+        switch (event.target.tagName) {
+        case "TEXTAREA":
             break;
+        case "INPUT":
+            accept(event, ["Enter"]);
+            break;
+        default:
+            accept(event, ["Enter", " "]);
         }
+    }
+
+    function accept(event, types) {
+        if (!types.includes(event.key))
+            return;
+        event.preventDefault();
+        var button = overlay.getElementsByTagName("button")[0];
+        button.click();
     }
 
     function show() {

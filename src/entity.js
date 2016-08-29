@@ -472,7 +472,7 @@ Entity.prototype = {
     //used by sign
     edit: function() {
         var id = this.Id;
-        game.prompt(T("Edit"), this.Props.Text, function(text) {
+        game.prompt(T("Edit"), [this.Props.Text], function(text) {
             game.network.send("sign-edit", {Id: id, Text: text});
         });
     },

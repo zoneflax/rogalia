@@ -368,7 +368,15 @@ Craft.prototype = {
     searchOrHelp: function(pattern) {
         var help = Craft.help[pattern];
         if (help) {
-            new Panel("craft-help", T("Help"), [dom.span(help)]).show();
+            // we need to defer panel showing because searchOrHelp will be called from click handler
+            // which will focus previous panel
+            _.defer(function() {
+                new Panel("craft-help", T("Help"), [dom.span(help)]).show();
+            });
+        } else if (pattern && pattern.match(/-wall-plan$/)) {
+            _.defer(function() {
+                game.controller.shop.search(pattern);
+            });
         } else {
             this.search(pattern, true);
         }
@@ -477,7 +485,7 @@ Craft.prototype = {
         for(var group in recipe.Ingredients) {
             var groupTitle = TS(group);
             var required = T(recipe.Ingredients[group]);
-            var ingredient = dom.make("li", [required, "x ", this.makeLink(groupTitle)]);
+            var ingredient = dom.make("li", [required, "x ", this.makeLink(group)]);
             dom.append(ingredients, ingredient);
 
             for(var j = 0; j < required; j++) {
@@ -546,8 +554,9 @@ Craft.prototype = {
         var slots = [];
         for(var name in recipe.Ingredients) {
             var required = recipe.Ingredients[name];
-            var groupTitle = TS(name.replace("meta-", ""));
-            var ingredient = dom.make("li", [required, "x ", this.makeLink(groupTitle)]);
+            var group = name.replace("meta-", "");
+            var groupTitle = TS(group);
+            var ingredient = dom.make("li", [required, "x ", this.makeLink(group)]);
             dom.append(ingredients, ingredient);
         }
         dom.append(
@@ -717,7 +726,7 @@ Craft.prototype = {
         var link = dom.link("", title, "link-item");
         var self = this;
         link.onclick = function() {
-            self.search(title);
+            self.searchOrHelp(item);
         };
         return link;
     },

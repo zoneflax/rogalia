@@ -160,6 +160,7 @@ function Minimap() {
                 if (game.controller.modifier.shift) {
                     sendPoint(point);
                 } else {
+                    e.preventDefault();
                     game.prompt(T("Description") + ":", "", function(title) {
                         point.title = title;
                     });

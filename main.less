@@ -36,6 +36,10 @@
     user-select: none!important;
 }
 
+::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+}
+
 html, body {
     .font-default;
     .cursor-default;
@@ -567,7 +571,7 @@ hr {
 #shop-button {
     background-image: url("assets/bg/shop-button.png");
     position: absolute;
-    top: -52px;
+    top: -63px;
     right: 5px;
 
     width: 60px;
@@ -830,6 +834,7 @@ hr {
     top: 1px;
     position: absolute;
     margin: 0;
+    padding: 1px 6px;
 }
 .recipe-list.filter-portable .recipe.portable,
 .recipe-list.filter-liftable .recipe.liftable,
@@ -878,6 +883,7 @@ hr {
 .recipe-list .recipe:hover,
 .recipe-list .group-toggle:hover {
     color: #8a979c;
+    white-space: nowrap;
 }
 #recipe-details .item-link {
     .cursor-pointer;
@@ -2476,6 +2482,7 @@ input[type=number], .lot-quantity > input, .price > input {
     position: absolute;
     right: 0;
     top: 0;
+    padding: 1px 6px;
 }
 .letter-has-attachment {
     width: 16px;
@@ -2485,9 +2492,15 @@ input[type=number], .lot-quantity > input, .price > input {
     top: 26px;
     right: 2px;
 }
+
+.letter-subject {
+    max-width: 232px;
+}
+
 .letter-subject, .letter-created {
     font-size: smaller;
 }
+
 .letter-attachment {
     overflow: auto;
     height: 50px;
@@ -2623,9 +2636,13 @@ input[type=number], .lot-quantity > input, .price > input {
     bottom: 0;
 }
 
-#barbershop .contents {
-    width: 192px;
-    overflow: auto;
+#barbershop {
+    .shop-panel;
+
+    .contents {
+	width: 192px;
+	overflow: auto;
+    }
 }
 
 .haircut {
@@ -2680,11 +2697,7 @@ input[type=number], .lot-quantity > input, .price > input {
     overflow: auto;
 }
 
-#shop {
-    @tag-color: #9ab7b2;
-    @text-color: #7eb5a9;
-    max-width: none;
-
+.shop-panel() {
     .title-bar {
 	background:
 	url("assets/bg/panel/shop/header-left.png") no-repeat top left,
@@ -2702,9 +2715,6 @@ input[type=number], .lot-quantity > input, .price > input {
     }
 
     .contents {
-	width: 469px;
-	height: 465px;
-
 	background:
 	url("assets/bg/panel/shop/border-top-left.png") no-repeat top left,
 	url("assets/bg/panel/shop/border-top-right.png") no-repeat top right,
@@ -2716,13 +2726,27 @@ input[type=number], .lot-quantity > input, .price > input {
 	url("assets/bg/panel/shop/border-right.png") repeat-y right,
 	@bg-color;
     }
+}
+
+#shop {
+    @tag-color: #9ab7b2;
+    @text-color: #7eb5a9;
+    max-width: none;
+
+    .shop-panel;
+
+    .contents {
+	width: 469px;
+	height: 465px;
+    }
 
     .tab-content {
 	padding: 3px;
     }
 
     .products {
-	overflow: hidden;
+	overflow-x: hidden;
+	overflow-y: auto;
 	height: 436px;
 	font: 12px/22px Dejavu Sans, Sans-serif;
     }
@@ -2739,7 +2763,7 @@ input[type=number], .lot-quantity > input, .price > input {
 	width: 145px;
 	height: 118px;
 	border-radius: 2px;
-	box-shadow: 0 0 4px 0px #132b25;
+	box-shadow: 0 0 2px 0px #132b25;
 	position: relative;
 	left: 5px;
 	display: inline-block;
@@ -2759,6 +2783,11 @@ input[type=number], .lot-quantity > input, .price > input {
 	    font-size: 14px;
 
 	}
+    }
+
+    .product-card-wall {
+	width: 457px;
+	height: 150px;
     }
 
     .product-card:hover {
@@ -2825,6 +2854,28 @@ input[type=number], .lot-quantity > input, .price > input {
 	position: absolute;
 	right: 10px;
 	bottom: 10px;
+    }
+
+    .hairstyle-color {
+	width: 26px;
+	height: 26px;
+	display: inline-block;
+	vertical-align: bottom;
+	margin-left: 3px;
+    }
+
+    .title-preview {
+	margin-top: 10px;
+
+	input {
+	    background-image: none;
+	    margin: 0 3px;
+	    width: 100px;
+	}
+    }
+
+    .title-preview-result {
+	margin: 4px;
     }
 }
 

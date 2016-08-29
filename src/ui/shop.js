@@ -5,14 +5,29 @@ function Shop() {
     var currency = "₽";
     this.tabs = null;
 
+    var loaded = false;
+    var onload = function(){};
+
     this.panel = new Panel("shop", "Shop", [], null, {
         show: function() {
-            this.hooks.show = null;
-            load();
+            if (loaded) {
+                onload();
+            } else {
+                load(function() {
+                    loaded = true;
+                    onload();
+                });
+            }
         },
     });
 
-    var groups = [];
+    this.search = function(pattern) {
+        onload = function() {
+            search(pattern);
+            onload = function(){};
+        };
+        this.panel.show();
+    };
 
     var descriptions = {
         "hairstyle": [
@@ -37,7 +52,9 @@ function Shop() {
         ],
     };
 
-    function load() {
+    var cards = [];
+
+    function load(onload) {
         game.network.send("shop-list", {}, function(data) {
             var tabs = [
                 {
@@ -51,10 +68,10 @@ function Shop() {
                 }
             ];
 
-
             var groups = _.map(_.groupBy(data.Products, ".Group"), function(products) {
                 return _.orderBy(products, ".Tag");
             });
+
             _.forEach(groups, function(group, index) {
                 var tag = "";
                 var contents = [];
@@ -63,49 +80,59 @@ function Shop() {
                         tag = product.Tag;
                         contents.push(dom.wrap("product-tag", TS(tag)));
                     }
-                    var card = dom.wrap("product-card", [
+                    var card = dom.wrap("product-card product-card-" + tag, [
                         dom.wrap("product-desc", [
-                            TS(product.Name),
+                            productName(product),
                             dom.wrap("product-cost", product.Cost + currency),
                         ]),
                     ]);
+                    card.name = product.Name;
+                    card.tab = tabs[index];
                     card.style.backgroundImage = "url(assets/shop/" + product.Name + "/preview.png)";
                     card.onclick = function() {
                         openCard(product);
                     };
+                    cards.push(card);
                     contents.push(card);
                 });
                 tabs[index].contents = dom.wrap("products", contents);
             });
             self.tabs = dom.tabs(tabs);
             self.panel.setContents(self.tabs);
+            onload();
         });
     }
 
     function openCard(product) {
-        var name = TS(product.Name);
-        var desc = descriptions[product.Tag];
         self.panel.setContents([
-            dom.wrap("product-name", name),
+            dom.wrap("product-name", productName(product)),
             dom.wrap("product-cost big", product.Cost + currency),
             dom.button(T("Buy"), "product-buy", function() {
-                game.network.send("shop", { Product: product.Name }, function(data) {
+                game.network.send("shop", { Product: product.Name, Data: product.data }, function(data) {
                     pay(product, data.Order);
                 });
                 return false;
             }),
-            dom.wrap("product-desc-container", desc.map(function(text, index) {
+            dom.wrap("product-desc-container", descriptions[product.Tag].map(function(text, index) {
                 return dom.wrap("product-desc", [
                     dom.img("assets/shop/" + product.Name + "/" + (index + 1) +".png"),
                     text,
                 ]);
             })),
+            customInput(product),
             dom.button(T("Back"), "back", back),
         ]);
     }
 
+    function productName(product) {
+        return TS(hairstyleName(product.Name));
+    }
+
+    function hairstyleName(name) {
+        return name.replace(/-(fe)?male/, "");
+    }
+
     function pay(product, order) {
-        var name = TS(product.Name);
         var paymentType = param("paymentType", "AC");
 
         var card = dom.img("assets/shop/payment-card.png", "selected");
@@ -124,13 +151,14 @@ function Shop() {
             paymentType.value = "PC";
         };
 
+        var name = productName(product);
         var form = dom.make("form", [
             param("receiver", "41001149015128"),
             param("formcomment", name),
             param("short-dest", name),
             param("quickpay-form", "shop"),
             param("targets", product.Name),
-            param("sum", 10 || product.Cost),
+            param("sum", product.Cost),
             param("label", order),
             paymentType,
             T("Select payment method"),
@@ -156,4 +184,60 @@ function Shop() {
     function back() {
         self.panel.setContents(self.tabs);
     }
+
+    function search(pattern) {
+        pattern = pattern.replace("-plan", "");
+        var card = _.find(cards, function(card) {
+            return card.name.match(pattern);
+        });
+
+        if (!card)
+            return;
+
+        card.tab.tab.title.click();
+        card.onclick();
+    }
+
+    function customInput(product) {
+        switch (product.Tag) {
+        case "hairstyle":
+            var color = dom.div("hairstyle-color");
+            return dom.wrap("hairstyle-preview", [
+                dom.button(T("Try on"), "", function() {
+                    var name = hairstyleName(product.Name).replace("-hair", "");
+                    new Barbershop(name, function(hairstyle) {
+                        product.data = hairstyle;
+                        var style = hairstyle.split("#");
+                        color.style.backgroundColor = "#" + style[1];
+                        color.style.opacity = style[2];
+                    });
+                }),
+                color,
+            ]);
+            break;
+        case "misc":
+            switch (product.Name) {
+            case "title":
+                var prefix = dom.tag("input");
+                var suffix = dom.tag("input");
+                var result = dom.span(game.playerName);
+                result.readonly = true;
+                return dom.wrap("title-preview", [
+                    prefix,
+                    game.playerName,
+                    suffix,
+                    dom.button(T("Ok"), "", function() {
+                        var title = (prefix.value + " " + game.playerName + " " + suffix.value).trim();
+                        result.textContent = title;
+                        product.data = title;
+                    }),
+                    dom.wrap("title-preview-result", [
+                        T("Title") + ": ",
+                        result,
+                    ])
+                ]);
+            }
+        }
+        return null;
+    };
 }
