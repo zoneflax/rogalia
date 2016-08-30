@@ -411,8 +411,8 @@ function Game(lang) {
 
             var links = [
                 ["Code", "TatriX", "http://vk.com/tatrix"],
-                ["Animation", "igorekv", "http://vk.com/igorekv"],
-                ["Music", "Иван Кельт", "http://vk.com/icelt"],
+                ["Graphics", "Nanalli", "http://vk.com/id325294403"],
+                // ["Music", "Иван Кельт", "http://vk.com/icelt"],
 
             ].map(function(tuple) {
                 var title = document.createElement("cite");

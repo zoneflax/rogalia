@@ -15,7 +15,7 @@ function System() {
     var links = dom.button(T("Links"));
     links.onclick = function() {
         new Panel("links", "", [
-            // game.button.forum(),
+            game.button.forum(),
             game.button.blog(),
             game.button.vk(),
             game.button.twitter(),
@@ -32,8 +32,6 @@ function System() {
             dom.hr(),
             settings,
             users,
-            dom.hr(),
-            game.button.wiki(),
             dom.hr(),
             links,
             game.button.donate(),

@@ -28,6 +28,11 @@ EffectDesc.effects = {
         "effect": "Character bears a periodic damage (30 damage points in 5 sec).",
         "desc": "Gained when attacked by some kinds of weapon or creatures.",
     },
+    "Bleed": {
+        "class": "bad",
+        "effect": "Character bears a periodic damage.",
+        "desc": "Gained when attacked by creatures.",
+    },
     "Hangover": {
         "class": "",
         "effect": " +9 strength, -9 dexterity.",

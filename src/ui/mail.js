@@ -185,7 +185,6 @@ Mail.prototype = {
                     })
                 },
                 function() {
-                    console.log("IN");
                     to.value = "";
                     subject.value = "";
                     body.value = "";

@@ -1186,11 +1186,16 @@ Character.prototype = {
         var speed = (this.Speed && this.Speed.Current || 100);
 
         var spriteSpeed = this.sprite.speed;
-        if (animation == "run") {
+        switch (animation) {
+        case "run":
             if (this.Type == "player") {
                 spriteSpeed = 6500;
             }
             speed *= this.speedFactor;
+            break;
+        case "attack":
+            spriteSpeed *= 0.8;
+            break;
         }
 
         if (now - this.sprite.lastUpdate > (spriteSpeed / speed)) {
