@@ -1216,7 +1216,6 @@ T.dict = {
     "Diego": "Диего",
     "Jesus": "Джисус",
     "Scrooge": "Скрудж",
-    "Suiseiseki": "Суисейсеки",
     "Cirno": "Сырно",
     "Athena": "Афина",
     "Ivan": "Иван",

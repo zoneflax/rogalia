@@ -302,15 +302,6 @@ Character.prototype = {
                 "run": 0,
             };
             break;
-        case "suiseiseki":
-            this.sprite.width = 68;
-            this.sprite.height = 96;
-            this.sprite.angle = Math.PI*2;
-            this.sprite.frames = {
-                "idle": 4,
-                "run": 0,
-            };
-            break;
         case "abu":
             this.sprite.width = 128;
             this.sprite.height = 128;
