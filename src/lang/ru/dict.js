@@ -1048,6 +1048,7 @@ T.dict = {
     "Chudo yudo": "Чудо-юдо",
     "Roasted chudo yudo": "Жареное Чудо-Юдо",
     "Chudo yudo fillet": "Филе Чуды-Юды",
+    "Raw holliday chicken": "Сырая праздничная курица",
     "Holliday chicken": "Праздничная курица",
     "Mushroom soup": "Грибной суп",
     "Potato casserole": "Картофельная запеканка",
@@ -1591,4 +1592,10 @@ T.dict = {
     "Order delivery": "Доставка заказа",
     "Thank you for your purchase!": "Спасибо за вашу покупку!",
     "Plan case": "Чехол для чертежей",
+    "Fish soup": "Рыбный суп",
+    "Chopped vegetables": "Нарезанные овощи",
+    "Cutlet": "Котлета",
+    "Puree with cutlet": "Пюре с котлетой",
+    "Chicken shashlik": "Куриный шашлык",
+    "mushrooms-on-stick": "Грибной шашлык",
 };
