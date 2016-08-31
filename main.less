@@ -213,7 +213,7 @@ button::-moz-focus-inner {
 }
 
 button[disabled] {
-    .button-background;
+    .button-background!important;
     -webkit-filter: sepia(100%)!important;
     filter: sepia(100%)!important;
     color: #252121;
@@ -2473,10 +2473,16 @@ input[type=number], .lot-quantity > input, .price > input {
     min-height: 32px;
     position: relative;
 }
+
 .letter:hover {
     background: #99682e;
     border-radius: 3px;
 }
+
+.letter.shop {
+    color: #78d8d9;
+}
+
 .letter-delete {
     min-width: 0;
     position: absolute;
@@ -2835,6 +2841,7 @@ input[type=number], .lot-quantity > input, .price > input {
 	.product-desc {
 	    color: #9ab7b2;
 	    width: 145px;
+	    font-size: 12px;
 	}
     }
 
@@ -2860,6 +2867,11 @@ input[type=number], .lot-quantity > input, .price > input {
 	bottom: 10px;
     }
 
+    .hairstyle-preview {
+	display: inline-block;
+	margin-left: 5px;
+    }
+
     .hairstyle-color {
 	width: 26px;
 	height: 26px;
@@ -2870,6 +2882,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
     .title-preview {
 	margin-top: 10px;
+	display: inline-block;
 
 	input {
 	    background-image: none;
@@ -2885,6 +2898,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
 #payment {
     color: #9ab7b2;
+    .shop-panel;
 
     label {
 	display: block;

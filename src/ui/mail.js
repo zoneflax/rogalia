@@ -58,6 +58,12 @@ Mail.prototype = {
 
         var self = this;
         return dom.wrap("letters", mail.map(function(letter) {
+            if (letter.From == "Rogalia Shop") {
+                letter.class = "shop";
+                letter.From = T(letter.From);
+                letter.Subject = T(letter.Subject);
+                letter.Body = T(letter.Body);
+            }
             var del = dom.button("x", "letter-delete");
             var row = dom.wrap("letter", [
                 dom.div("letter-from", {text: letter.From}),
@@ -66,6 +72,10 @@ Mail.prototype = {
                 dom.wrap("letter-created", self.formatDate(letter)),
                 del,
             ]);
+
+            if (letter.class)
+                row.classList.add(letter.class);
+
             del.onclick = function(event) {
                 event.stopPropagation();
                 game.confirm(T("Delete") + "?", function() {

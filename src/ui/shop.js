@@ -5,6 +5,8 @@ function Shop() {
     var currency = "₽";
     this.tabs = null;
 
+    var buyButton = null;
+
     var loaded = false;
     var onload = function(){};
 
@@ -31,24 +33,24 @@ function Shop() {
 
     var descriptions = {
         "hairstyle": [
-            'В примерочной подберите цвет и прозрачность, после нажмите "Приобрести".',
-            'После оплаты вам придет посылка. Заберите её у любого почтового ящика. Распакуйте и примените вашу прическу.',
-            'Чтобы шлем не скрывать прическу, отключите его отображение в Настройках.',
+            'Нажмите "Примерить" и выберите желаемый цвет, нажмите "Ок".',
+            'Нажмите кнопку "Купить", выберите способ оплаты, нажмите "Оплатить".',
+            'Получите посылку с товаром у почтового ящика в городе. Далее ПКМ - "Распаковать". Шлем можно отключить в Настройках.',
         ],
         "misc": [
-            'В примерочной подберите цвет и прозрачность, после нажмите "Приобрести".',
-            'После оплаты вам придет посылка. Заберите её у любого почтового ящика. Распакуйте и примените вашу прическу.',
-            'Чтобы шлем не скрывать прическу, отключите его отображение в Настройках.',
+            'Введите желаемый префикс и суфикс к своему имени, нажмите "Ок".',
+            'Нажмите кнопку "Купить", выберите способ оплаты, нажмите "Оплатить".',
+            'Получите посылку с товаром у почтового ящика в городе. Далее ПКМ - "Распаковать".',
         ],
         "chopper": [
-            'В примерочной подберите цвет и прозрачность, после нажмите "Приобрести".',
-            'После оплаты вам придет посылка. Заберите её у любого почтового ящика. Распакуйте и примените вашу прическу.',
-            'Чтобы шлем не скрывать прическу, отключите его отображение в Настройках.',
+            'Нажмите кнопку "Купить", выберите способ оплаты, нажмите "Оплатить".',
+            'Получите посылку с товаром у почтового ящика в городе. Далее ПКМ - "Распаковать".',
+            'От нанесения урона байк ломается. Топливо не требуется. +10 к скорости езды.',
         ],
         "wall": [
-            'В примерочной подберите цвет и прозрачность, после нажмите "Приобрести".',
-            'После оплаты вам придет посылка. Заберите её у любого почтового ящика. Распакуйте и примените вашу прическу.',
-            'Чтобы шлем не скрывать прическу, отключите его отображение в Настройках.',
+            'Нажмите кнопку "Купить", выберите способ оплаты, нажмите "Оплатить".',
+            'Получите посылку с товаром у почтового ящика в городе. Далее ПКМ - "Распаковать".',
+            'В посылке находится мешочек с 64 чертежами выбранной стены, которые нужно применить в крафте стен.',
         ],
     };
 
@@ -104,22 +106,24 @@ function Shop() {
     }
 
     function openCard(product) {
+        buyButton = dom.button(T("Buy"), "product-buy", function() {
+            game.network.send("shop", { Product: product.Name, Data: product.data }, function(data) {
+                pay(product, data.Order);
+            });
+            return false;
+        });
         self.panel.setContents([
             dom.wrap("product-name", productName(product)),
             dom.wrap("product-cost big", product.Cost + currency),
-            dom.button(T("Buy"), "product-buy", function() {
-                game.network.send("shop", { Product: product.Name, Data: product.data }, function(data) {
-                    pay(product, data.Order);
-                });
-                return false;
-            }),
+            buyButton,
+            (product.Tag == "hairstyle" && hairstylePreview(product)),
             dom.wrap("product-desc-container", descriptions[product.Tag].map(function(text, index) {
                 return dom.wrap("product-desc", [
                     dom.img("assets/shop/" + product.Name + "/" + (index + 1) +".png"),
                     text,
                 ]);
             })),
-            customInput(product),
+            (product.Name == "title" && titleEditor(product)),
             dom.button(T("Back"), "back", back),
         ]);
     }
@@ -198,46 +202,46 @@ function Shop() {
         card.onclick();
     }
 
-    function customInput(product) {
-        switch (product.Tag) {
-        case "hairstyle":
-            var color = dom.div("hairstyle-color");
-            return dom.wrap("hairstyle-preview", [
-                dom.button(T("Try on"), "", function() {
-                    var name = hairstyleName(product.Name).replace("-hair", "");
-                    new Barbershop(name, function(hairstyle) {
-                        product.data = hairstyle;
-                        var style = hairstyle.split("#");
-                        color.style.backgroundColor = "#" + style[1];
-                        color.style.opacity = style[2];
-                    });
-                }),
-                color,
-            ]);
-            break;
-        case "misc":
-            switch (product.Name) {
-            case "title":
-                var prefix = dom.tag("input");
-                var suffix = dom.tag("input");
-                var result = dom.span(game.playerName);
-                result.readonly = true;
-                return dom.wrap("title-preview", [
-                    prefix,
-                    game.playerName,
-                    suffix,
-                    dom.button(T("Ok"), "", function() {
-                        var title = (prefix.value + " " + game.playerName + " " + suffix.value).trim();
-                        result.textContent = title;
-                        product.data = title;
-                    }),
-                    dom.wrap("title-preview-result", [
-                        T("Title") + ": ",
-                        result,
-                    ])
-                ]);
-            }
-        }
-        return null;
-    };
+    function hairstylePreview(product) {
+        var color = dom.div("hairstyle-color");
+        buyButton.disabled = true;
+        return dom.wrap("hairstyle-preview", [
+            dom.button(T("Try on"), "", function() {
+                var name = hairstyleName(product.Name).replace("-hair", "");
+                new Barbershop(name, function(hairstyle) {
+                    buyButton.disabled = false;
+                    product.data = hairstyle;
+                    var style = hairstyle.split("#");
+                    color.style.backgroundColor = "#" + style[1];
+                    color.style.opacity = style[2];
+                });
+            }),
+            color,
+        ]);
+    }
+
+    function titleEditor(product) {
+        var maxLength = 10;
+        var prefix = dom.tag("input");
+        prefix.setAttribute("maxlength", maxLength);
+        var suffix = dom.tag("input");
+        suffix.setAttribute("maxlength", maxLength);
+        var result = dom.span(game.playerName);
+        result.readonly = true;
+        buyButton.disabled = true;
+        return dom.wrap("title-preview", [
+            prefix,
+            game.playerName,
+            suffix,
+            dom.button(T("Ok"), "", function() {
+                buyButton.disabled = false;
+                result.textContent = (prefix.value + " " + game.playerName + " " + suffix.value).trim();
+                product.data = (prefix.value + " {name} " + suffix.value).trim();
+            }),
+            dom.wrap("title-preview-result", [
+                T("Title") + ": ",
+                result,
+            ])
+        ]);
+    }
 }

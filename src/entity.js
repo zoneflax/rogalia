@@ -58,8 +58,16 @@ Entity.prototype = {
         var name = "";
         if (this.Type.contains("-corpse") || this.Type == "head")
             name = this.Name;
-        else
+        else if (this.Type == "parcel") {
+            var match = this.Name.match(/^(.*)-((?:fe)?male)$/);
+            if (match) {
+                name = TS(match[1]) + " (" + T(match[2]) + ")";
+            } else {
+                name = TS(this.Name);
+            }
+        } else
             name = TS(this.Name);
+
 
         if (this.Props.Capacity) {
             name += ' [' +

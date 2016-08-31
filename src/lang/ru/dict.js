@@ -1586,4 +1586,9 @@ T.dict = {
     "Ponytail": "Хвостик",
     "Beard": "Борода",
     "Title": "Титул",
+    "Payment": "Оплата",
+    "Rogalia Shop": "Магазин Рогалии",
+    "Order delivery": "Доставка заказа",
+    "Thank you for your purchase!": "Спасибо за вашу покупку!",
+    "Plan case": "Чехол для чертежей",
 };
