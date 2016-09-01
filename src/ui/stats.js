@@ -5,10 +5,7 @@ function Stats() {
     this.panel = new Panel(
         "stats",
         "Characteristics",
-        contents,
-        {
-            mousedown: this.equipContainer.onmousedown.bind(this.equipContainer),
-        }
+        contents
     );
     this.panel.element.classList.add("stats-panel");
 }

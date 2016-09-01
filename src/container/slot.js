@@ -12,6 +12,7 @@ function ContainerSlot(container, index) {
     this.element.maxWidth = Container.SLOT_SIZE + "px";
     this.element.maxHeight = Container.SLOT_SIZE + "px";
     this.element.containerSlot = this;
+    this.element.onmousedown = this.onmousedown.bind(this);
 
     this.sub = null;
 
@@ -118,5 +119,41 @@ ContainerSlot.prototype = {
         } else if (this.entity.SpawnChance > 0) {
             this.setSub(this.entity.SpawnChance);
         }
+    },
+    onmousedown: function(event) {
+        if (this.locked)
+            return;
+
+        var entity = this.entity;
+        //slot is empty
+        if (!entity)
+            return;
+
+        this.markAsSeen();
+
+        if (event.button == game.controller.RMB) {
+            game.menu.show(entity);
+            return;
+        }
+
+        if (game.controller.hovered) // swap
+            return;
+
+        var mods = game.controller.modifier;
+
+        if (mods.shift && !mods.ctrl) {
+            game.chat.linkEntity(entity);
+            return;
+        }
+
+
+        if (mods.ctrl) {
+            this.container.dwim(this);
+            return;
+        }
+
+        event.stopPropagation();
+        this.lock();
+        game.controller.cursor.set(entity, event.pageX, event.pageY, this.unlock.bind(this));
     },
 };

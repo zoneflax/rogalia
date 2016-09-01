@@ -164,13 +164,7 @@ Container.prototype = {
         this.panel = new Panel(
             "container-" + this.id,
             this.name,
-            [slots, this.fuel, dom.hr(), dom.wrap(".container-actions", buttons)],
-            {
-                mousedown: function(e) {
-                    game.controller.highlight("inventory", false);
-                    this.onmousedown(e);
-                }.bind(this)
-            }
+            [slots, this.fuel, dom.hr(), dom.wrap(".container-actions", buttons)]
         );
         this.panel.entity = this.entity;
         this.panel.hooks.hide = this.markAllAsSeen.bind(this);
@@ -189,43 +183,6 @@ Container.prototype = {
         this.slots.forEach(function(slot) {
             slot.markAsSeen();
         });
-    },
-    onmousedown: function(e) {
-        var slot = e.target.containerSlot;
-        if (!slot || slot.locked)
-            return;
-
-        var entity = slot.entity;
-        //slot is empty
-        if (!entity)
-            return;
-
-        slot.markAsSeen();
-
-        if (e.button == game.controller.RMB) {
-            game.menu.show(entity);
-            return;
-        }
-
-        if (game.controller.hovered) // swap
-            return;
-
-        var mods = game.controller.modifier;
-
-        if (mods.shift && !mods.ctrl) {
-            game.chat.linkEntity(entity);
-            return;
-        }
-
-
-        if (mods.ctrl) {
-            this.dwim(slot);
-            return;
-        }
-
-        e.stopPropagation();
-        slot.lock();
-        game.controller.cursor.set(entity, e.pageX, e.pageY, slot.unlock.bind(slot));
     },
     // dwim want slot with entity
     dwim: function(slot) {

@@ -10,7 +10,7 @@ function Shop() {
     var loaded = false;
     var onload = function(){};
 
-    this.panel = new Panel("shop", "Shop", [], null, {
+    this.panel = new Panel("shop", "Shop", [], {
         show: function() {
             if (loaded) {
                 onload();

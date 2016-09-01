@@ -30,10 +30,7 @@ function Craft() {
     this.panel = new Panel(
         "craft",
         "Craft",
-        [this.listWrapper, dom.vr(), this.recipeDetails],
-        {
-            click: this.clickListener.bind(this),
-        }
+        [this.listWrapper, dom.vr(), this.recipeDetails]
     );
     this.panel.hooks.hide = this.cleanUp.bind(this);
     this.panel.hooks.show = function() {
@@ -226,6 +223,7 @@ Craft.prototype = {
             groups[recipe.Skill][type] = recipe;
         });
 
+        var onclick = this.onclick.bind(this);
         var list = dom.tag("ul", "recipe-list");
         for (var group in groups) {
             var recipes = groups[group];
@@ -241,6 +239,7 @@ Craft.prototype = {
                 item.dataset.search = item.title.toLowerCase().replace(" ", "-");
                 item.textContent = item.title;
                 item.type = type;
+                item.onclick = onclick;
                 if (this.selected && this.selected.type == item.type) {
                     item.classList.add("selected");
                     this.selected = item;
@@ -425,7 +424,7 @@ Craft.prototype = {
             this.openRecipe(matching, false);
         }
     },
-    clickListener: function(e) {
+    onclick: function(e) {
         if (!e.target.recipe)
             return;
 

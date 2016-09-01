@@ -1,6 +1,6 @@
 "use strict";
 //TODO: make panels linked via back button
-function Panel(name, title, elements, listeners, hooks) {
+function Panel(name, title, elements, hooks) {
     if (name in game.panels) {
         game.panels[name].temporary = true; //dont save position
         game.panels[name].close();
@@ -48,13 +48,6 @@ function Panel(name, title, elements, listeners, hooks) {
     }
 
     this.element.appendChild(this.contents);
-
-    if (listeners) {
-        for(var type in listeners) {
-            this.element.addEventListener(type, listeners[type]);
-        }
-    }
-
     this.element.addEventListener('mousedown', function() {
         var mod = game.controller.modifier;
         if (mod.ctrl || mod.shift || mod.alt)
