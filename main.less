@@ -797,7 +797,7 @@ hr {
 }
 
 #recipe-list-wrapper {
-    width: 34%;
+    width: 35%;
 }
 #recipe-filters {
     display: flex;
@@ -816,6 +816,7 @@ hr {
 .recipe-list {
     height: 406px;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 0 4px 0 0px;
     position: relative;
 }
@@ -860,6 +861,7 @@ hr {
 .recipe-list >  li {
     .cursor-pointer;
     list-style-type: none;
+    white-space: nowrap;
 }
 .group-toggle {
     padding-left: 20px;
@@ -879,7 +881,6 @@ hr {
 .recipe-list .recipe:hover,
 .recipe-list .group-toggle:hover {
     color: #8a979c;
-    white-space: nowrap;
 }
 #recipe-details .item-link {
     .cursor-pointer;
