@@ -1040,7 +1040,7 @@ T.dict = {
     "Tripwire": "Растяжка",
     "Scroll of town portal": "Свиток городского портала",
     "Cast": "Колдовать",
-    "Shawarma": "Шаурма",
+    "Shawarma": "Шавермяу",
     "Kitty meat": "Кошатина",
     "Lavash": "Лаваш",
     "Big tat": "Биг-Тат",

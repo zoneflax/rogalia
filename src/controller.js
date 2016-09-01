@@ -405,6 +405,9 @@ function Controller(game) {
         H: {
             toggle: "help",
         },
+        J: {
+            toggle: "journal",
+        },
         X: {
             button: "pick-up",
             callback: function() {
