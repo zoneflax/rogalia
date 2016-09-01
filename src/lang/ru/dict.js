@@ -1597,4 +1597,7 @@ T.dict = {
     "Puree with cutlet": "Пюре с котлетой",
     "Chicken shashlik": "Куриный шашлык",
     "mushrooms-on-stick": "Грибной шашлык",
+    "Shadow": "Тень",
+    "Hell shadow": "Адская тень",
+    "Bloody shadow": "Кровавая тень",
 };
