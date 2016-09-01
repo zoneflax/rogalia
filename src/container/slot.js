@@ -11,7 +11,7 @@ function ContainerSlot(container, index) {
     this.element = dom.slot();
     this.element.maxWidth = Container.SLOT_SIZE + "px";
     this.element.maxHeight = Container.SLOT_SIZE + "px";
-    this.element.slot = this;
+    this.element.containerSlot = this;
 
     this.sub = null;
 
@@ -70,7 +70,7 @@ ContainerSlot.prototype = {
 
         var icon = entity.icon();
         icon.classList.add("item");
-        icon.slot = this;
+        icon.containerSlot = this;
 
         dom.append(this.element, [icon, quality]);
 

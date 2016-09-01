@@ -191,8 +191,7 @@ Container.prototype = {
         });
     },
     onmousedown: function(e) {
-        var slot = e.target.slot;
-
+        var slot = e.target.containerSlot;
         if (!slot || slot.locked)
             return;
 

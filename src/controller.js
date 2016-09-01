@@ -125,8 +125,8 @@ function Controller(game) {
                     if (hovered.vendor)
                         return hovered.use(entity, hovered);
 
-                    if (hovered.slot) {
-                        var slot = hovered.slot;
+                    if (hovered.containerSlot) {
+                        var slot = hovered.containerSlot;
                         // dropped back to it's place
                         if (slot.entity == entity)
                             return true;
@@ -168,8 +168,8 @@ function Controller(game) {
 
             var hovered = null;
 
-            if (element.slot)
-                hovered = element.slot.element; // slot.element not always == element
+            if (element.containerSlot)
+                hovered = element.containerSlot.element; // slot.element not always == element
             else if (element.classList.contains("item-preview"))
                 hovered = element.parentNode;
             else if (element.classList.contains("slot"))
