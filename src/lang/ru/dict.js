@@ -1600,4 +1600,5 @@ T.dict = {
     "Shadow": "Тень",
     "Hell shadow": "Адская тень",
     "Bloody shadow": "Кровавая тень",
+    "Round starts at {time}": "Раунд начнется в {time}",
 };

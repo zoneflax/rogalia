@@ -1133,8 +1133,9 @@ function Controller(game) {
             controller.showAnnouncement(TT("Match ended: {result}", {result: result}));
         } else {
             timer = dom.div("remaining", {text: util.formatTime(data.Remaining)});
-            setInterval(function() {
+            setTimeout(function tick() {
                 timer.textContent = util.formatTime(--data.Remaining);
+                setTimeout(tick, 1000);
             }, 1000);
         }
 
