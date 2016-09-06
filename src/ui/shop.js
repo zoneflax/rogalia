@@ -168,7 +168,10 @@ function Shop() {
             T("Select payment method"),
             dom.wrap("methods", [card, " ", yandex]),
             dom.button(T("Pay"), "", function() {
-                panel.close();
+                // firefox won't sumbit form if no button available
+                // so we have to defer panel destruction
+                _.defer(panel.close.bind(panel));
+                return true;
             }),
         ]);
         form.action = "https://money.yandex.ru/quickpay/confirm.xml";
