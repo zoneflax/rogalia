@@ -60,7 +60,6 @@ Talks.npcs = {
                 "We're always glad to see new customers. Come, take a sit. My name is Scrooge and I manage the greatest bank of Rogalia.",
                 "Our bank is so great we can afford local offices at remote towns like this. Don't worry, the quality of our service stays the same.",
                 "I can keep your money. Sad to say, you won't get any interest, but I'll keep them in the firm safe.",
-                "And, your bank account is related to your lands, so you don't have to think about paying taxes. All taxes and fees will be paid with your account automatically.",
                 "Also, for landlords we could offer a savings fund service. If you have some revenue, all your incomes will automatically be saved on your account. The good profit and no extra bills.",
                 "So, any questions?"
             ]
