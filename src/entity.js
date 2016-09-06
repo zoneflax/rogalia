@@ -111,8 +111,6 @@ Entity.prototype = {
             var cap = this.Props.Capacity;
             suffix = sprintf("[%d/%d]", cap.Current,  cap.Max);
             break;
-        case "arena-flag-base":
-            return TS(this.Name) + " | " + T("Score") + ":" + this.Score;
         default:
             if (this.Name)
                 title = this.Name;
