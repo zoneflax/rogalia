@@ -1096,16 +1096,14 @@ function Controller(game) {
     var bg = {
         el: document.getElementById("bg-state"),
         panel: null,
-        statFields: ["Kills", "Death", "Captures", "Releases", "Dmg done", "Dmg acpt"].map(T),
+        statFieldNames: ["Kills", "Death", "Captures", "Releases", "Dmg done", "Dmg acpt"].map(T),
+        statFields: ["Kills", "Death", "Captures", "Releases", "DamageDone", "DamageAccepted"],
         makeStatRows: function(stats) {
-            var rows = [];
-            for (var name in stats) {
-                var row = [name];
-                for (var field in stats[name])
-                    row.push(dom.text(stats[name][field]));
-                rows.push(row);
-            }
-            return rows;
+            return _.map(stats, function(row, playerName) {
+                return [playerName].concat(bg.statFields.map(function(field) {
+                    return dom.text(row[field]);
+                }));
+            });
         },
     };
 
@@ -1153,13 +1151,13 @@ function Controller(game) {
         bg.panel.setContents([
             dom.wrap("red-team", [
                 dom.table(
-                    [[Character.flags.red.image.cloneNode(), T("Name")]].concat(bg.statFields),
+                    [[Character.flags.red.image.cloneNode(), T("Name")]].concat(bg.statFieldNames),
                     bg.makeStatRows(data.Red.Stats)
                 )
             ]),
             dom.wrap("blue-team", [
                 dom.table(
-                    [[Character.flags.blue.image.cloneNode(), T("Name")]].concat(bg.statFields),
+                    [[Character.flags.blue.image.cloneNode(), T("Name")]].concat(bg.statFieldNames),
                     bg.makeStatRows(data.Blue.Stats)
                 )
             ])
