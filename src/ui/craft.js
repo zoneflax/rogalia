@@ -345,7 +345,7 @@ Craft.prototype = {
             var label = dom.tag("label", "", {title: T(name)});
             var checkbox = dom.checkbox();
             var saved = localStorage.getItem("craft.filter." + name);
-            checkbox.checked = (saved) ? JSON.parse(saved) : (name != "unavailable");
+            checkbox.checked = (saved) ? JSON.parse(saved) : true;
             if (!checkbox.checked)
                 recipeList.classList.add("filter-" + name);
 
