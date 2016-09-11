@@ -2,6 +2,7 @@
 function Game(lang) {
     window.game = this;
 
+    this.gateway = "http://alpha.rogalik.tatrix.org/gateway";
     this.lang = lang;
     this.world = document.getElementById("world");
     this.interface = document.getElementById("interface");
@@ -186,6 +187,7 @@ function Game(lang) {
         Container.save();
         game.controller.craft && game.controller.craft.save();
         game.chat && game.chat.save();
+        game.controller.minimap && game.controller.minimap.save();
     };
 
     this.addEventListeners = function() {
@@ -227,13 +229,22 @@ function Game(lang) {
     };
 
     this.loadLogin = function() {
-        game.login = localStorage.getItem("login");
-        return game.login;
+        this.login = localStorage.getItem("login");
+        return this.login;
     };
 
     this.setLogin = function(login) {
         localStorage.setItem("login", login);
-        game.login = login;
+        this.login = login;
+    };
+
+    this.loadServerHost = function() {
+        this.network.host = localStorage.getItem("server.host");
+        return this.network.host;
+    };
+
+    this.setServerHost = function(host) {
+        localStorage.setItem("server.host", host);
     };
 
     this.clearLogin = function() {
@@ -252,7 +263,12 @@ function Game(lang) {
         localStorage.removeItem("password");
     };
 
+    this.clearServerHost = function() {
+        localStorage.removeItem("server.host");
+    };
+
     this.clearCredentials = function() {
+        this.clearServerHost();
         this.clearLogin();
         this.clearPassword();
     };
@@ -496,7 +512,7 @@ function Game(lang) {
     };
 
     this.stage = new Stage();
-    this.setStage("connecting");
+    this.setStage("login");
 
 
     window.onerror = function(msg, url, line) {

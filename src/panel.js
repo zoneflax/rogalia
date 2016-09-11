@@ -134,9 +134,11 @@ Panel.prototype = {
     },
     hideCloseButton: function() {
         dom.hide(this.closeButton);
+        return this;
     },
     hideTitle: function() {
         dom.hide(this.titleBar);
+        return this;
     },
     close: function() {
         this.hide();

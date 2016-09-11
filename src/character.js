@@ -172,9 +172,9 @@ Character.prototype = {
             game.controller.updateMail(this.NewMail);
     },
     avatar: function() {
-        if (this.isPlayer)
-            return loader.loadImage("avatars/" + member.sex() + ".png");
-        return dom.img("assets/" + Character.npcAvatarSpriteDir + this.Type + ".png", "talk-avatar");
+        if (this.IsNpc)
+            return dom.img("assets/" + Character.npcAvatarSpriteDir + this.Type + ".png", "talk-avatar");
+        return loader.loadImage("avatars/" + this.sex() + ".png");
     },
     updateParty: function(members) {
         var party = game.controller.party;

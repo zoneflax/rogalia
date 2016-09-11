@@ -15,11 +15,13 @@ function Minimap() {
         width.original = self.mapImage.width;
         width.current = width.default;
         self.mapImage.width = width.default;
+        loadMarkers();
     };
 
     this.mapImage.src = window.location.protocol + "//" + game.network.addr + "/map";
 
     this.points = {};
+    this.markers = {};
     this.characters = [];
 
     var wrapper = dom.wrap("wrapper", this.mapImage);
@@ -67,6 +69,10 @@ function Minimap() {
         [wrapper, zoom]
     );
 
+    this.save = function() {
+        saveMarkers();
+    };
+
     this.sync = function(data) {
         data = data || {};
         this.characters = data;
@@ -82,6 +88,28 @@ function Minimap() {
         if (this.panel.visible)
             this.update();
     };
+
+    function addMarker(point) {
+        self.markers[point.name] = point;
+    }
+
+    function saveMarkers() {
+        var markers = _.map(self.markers, function(point) {
+            return {
+                x: point.x,
+                y: point.y,
+                title: point.title,
+            };
+        });
+        localStorage.setItem("map.markers", JSON.stringify(markers));
+    };
+
+    function loadMarkers() {
+        var markers = localStorage.getItem("map.markers");
+        markers &&  _.forEach(JSON.parse(markers), function(point) {
+            self.addMarker(point.x, point.y, point.title);
+        });
+    }
 
     function makePoint(title) {
         var point = dom.div("point");
@@ -104,6 +132,7 @@ function Minimap() {
     function removePointByName(name) {
         dom.remove(self.points[name]);
         delete self.points[name];
+        delete self.markers[name];
     };
 
     function sendPoint(point) {
@@ -121,6 +150,7 @@ function Minimap() {
     this.update = function() {
         if (!this.panel.visible)
             return;
+
         for (var name in this.characters) {
             var character = this.characters[name];
             if (!character)
@@ -153,6 +183,7 @@ function Minimap() {
         point.name = name;
         addPoint(name, point);
         updatePoint(point, x, y);
+        addMarker(point);
 
         point.onmousedown = function(e) {
             switch (e.button) {

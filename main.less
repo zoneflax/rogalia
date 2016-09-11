@@ -1161,10 +1161,11 @@ lmb, rmb {
     height: 8px;
     box-shadow: 0 0 1px 3px #000;
     background: #0f0;
+    z-index: 1;
 }
 #map #player-point {
     background: #0ff;
-    z-index: 1;
+    z-index: 2;
 }
 #map .pk {
     background: #f00;
@@ -1351,6 +1352,10 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     background-image: url("assets/bg/slot.png");
 }
 
+.non-effective {
+    background-image: url("assets/bg/non-effective-slot.png")!important;
+}
+
 /* left column */
 .equip-bag {
     background-image: url("assets/bg/bag.png"), url("assets/bg/slot.png");
@@ -1519,6 +1524,19 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     display: none;
 }
 
+#select-server {
+    text-align: center;
+
+    .servers {
+        margin-top: 5px;
+    }
+
+    .quit {
+        margin-top: 5px;
+    }
+}
+
+
 #login-form  {
     display: flex;
     flex-flow: column wrap;
@@ -1565,7 +1583,7 @@ ol li a:hover {
 }
 
 .unavailable {
-    color: #b1533c;
+    color: #c63614;
 }
 
 .message.channel-system .body, .message.channel-server .body {

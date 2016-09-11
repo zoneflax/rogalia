@@ -955,6 +955,7 @@ T.dict = {
     "Login cannot be empty": "Поле имени должно быть заполнено",
     "Lot not found or already bought": "Лот не найден или уже выкуплен",
     "Must be built on the soil": "Может быть построено только на земле",
+    "Must be built on the floor or tiles": "Может быть построено на полу и на кладке",
     "Name must start with letter and can contain only letters or digits": "Имя должно начинаться с буквы и содержать только буквы и цифры",
     "No fuel": "Нет топлива",
     "No revenue": "Нет дохода",

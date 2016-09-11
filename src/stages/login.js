@@ -1,180 +1,228 @@
 "use strict";
+
 function loginStage() {
-    var signing = false;
-    var registering = false;
-    var autoLogin = false;
-    var error = false;
-    // var captcha = null;
-    var invite = null;
+    var self = this;
+    this.panel = null;
 
-    var login = game.loadLogin();
-    var password = game.loadPassword();
-    var email = "";
+    if (game.inVK())
+        vkLogin();
+    else
+        showLoginForm();
 
-    function signin() {
-        game.network.send(
-            "login",
-            {
-                Login: login,
-                Password: password,
-                // Captcha: captcha,
-            }
-        );
-    }
+    function showLoginForm() {
+        var login = dom.input(T("Login"), game.loadLogin());
 
-    function signup() {
-        game.network.send(
-            "register",
-            {
-                Login: login,
-                Password: password,
-                Email: email,
-                // Captcha: captcha,
-                Referrer: document.referrer,
-                UA: navigator.userAgent,
-            }
-        );
-    }
+        var password = dom.input(T("Password"), game.loadPassword(), "password");
+        password.onkeydown = submitSignin;
 
-    if(login && password && !game.inVK()) {
-        autoLogin = true;
-        signin();
-    }
+        var email = dom.input(T("Email"));
+        email.onkeydown = submitSignup;
+        dom.hide(email.label);
 
-    //     var captchaDiv = document.createElement("div");
-    // "grecaptcha" in window && grecaptcha.render(captchaDiv, {
-    //     "sitekey": "6LeWNP8SAAAAAAYxO-yCtxpHfwXtlOS2LDAXze-4",
-    //     "callback": function(response) {
-    //         captcha = response;
-    //     }
-    // });
+        var signinButton = dom.button(T("Sign in"), "", submitSignin);
+        var signupButton = dom.button(T("Sign up"), "", startSignup);
 
-    var loginInput = dom.input(T("Login"), login);
-    var passwordInput = dom.input(T("Password"), "", "password");
-    var signinButton = dom.button(T("Sign in"), "#sign-in");
+        var cancelSignupButton = dom.button(T("Cancel"), "", function() {
+            password.onkeydown = submitSignin;
+            dom.hide(cancelSignupButton);
+            dom.hide(email.label);
+            dom.show(signinButton);
+            signupButton.onclick = startSignup;
+            selectFocus();
+        });
+        dom.hide(cancelSignupButton);
 
-    var emailInput = dom.input(T("Email"));
-    dom.hide(emailInput.label);
+        var form = dom.wrap("#login-form", [
+            login.label,
+            password.label,
+            email.label,
+            dom.hr(),
+            signinButton,
+            signupButton,
+            cancelSignupButton,
+        ]);
 
-    var signupButton = dom.button(T("Sign up"), "#sign-up");
-    signupButton.onclick = function() {
-        if (registering)
-            return true;
-        registering = true;
+        self.panel = new Panel("login", "", [form])
+            .hideCloseButton()
+            .show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
 
-        dom.hide(signinButton);
-        dom.show(emailInput.label);
-
-        if (!loginInput.value)
-            loginInput.focus();
-        else if (!passwordInput.value)
-            passwordInput.focus();
+        if (login.value && password.value)
+            submitSignin();
+        else if (login.value)
+            password.focus();
         else
-            emailInput.focus();
-        return false;
-    };
-;
+            login.focus();
 
-    var en = dom.option("en");
-    var ru = dom.option("ru");
-    if (game.lang == "ru")
-        ru.selected = true;
+        function submitSignin(event) {
+            if (event && event.keyCode && event.keyCode != 13)
+                return;
+            if (!validateLoginAndPassword())
+                return;
 
-    var lang = dom.select([en, ru], "lang-selector");
-    lang.onchange = function() {
-        localStorage.setItem("lang", this.value);
-        game.reload();
-    };
+            signin(login.value, password.value);
+        }
 
-    var form = dom.tag("form", "#login-form");
-    form.onsubmit = function () {
-        login = loginInput.value;
-        if (!util.validateInput(loginInput, login != "", "Please enter login"))
-            return false;
+        function submitSignup(event) {
+            if (event && event.keyCode && event.keyCode != 13)
+                return;
 
-        password = passwordInput.value;
-        if (!util.validateInput(passwordInput, password != "", "Please enter password"))
-            return false;
+            if (!validateLoginAndPassword())
+                return;
+            if (!validate(email, "Please enter email"))
+                return;
 
+            signup(login.value, password.value, email.value);
+        }
+
+        function validateLoginAndPassword() {
+            if (!validate(login, "Please enter login"))
+                return false;
+            if (!validate(password, "Please enter password"))
+                return false;
+
+            return true;
+        }
+
+        function selectFocus() {
+            if (!login.value)
+                login.focus();
+            else if (!password.value)
+                password.focus();
+            else
+                email.focus();
+        }
+
+        function startSignup() {
+            dom.show(email.label);
+            dom.show(cancelSignupButton);
+            dom.hide(signinButton);
+            password.onkeydown = null;
+            selectFocus();
+            signupButton.onclick = submitSignup;
+        }
+    }
+
+    function signin(login, password) {
         game.setLogin(login);
 
-        if (registering) {
-            email = emailInput.value;
-            if (!util.validateInput(emailInput, email != "", "Please enter email"))
-                return false;
-            signup();
+        var formData = new FormData();
+        formData.append("login", login);
+        formData.append("password", password);
+
+        var req = new XMLHttpRequest();
+        req.open("POST", game.gateway + "/login", true);
+        req.send(formData);
+
+        req.onload = function() {
+            if (this.status == 200) {
+                game.setPassword(password);
+                fastLogin();
+            } else {
+                game.alert(T(this.response.trim()));
+            }
+        };
+    }
+
+    function fastLogin() {
+        var host = game.loadServerHost();
+        if (host) {
+            self.sync = openLobby;
+            game.network.run(host, function() {
+                game.network.send(
+                    "login",
+                    {
+                        Login: game.login,
+                        Password: game.loadPassword(),
+                    }
+                );
+            });
+            self.panel.close();
+            self.draw = Stage.makeEllipsisDrawer();
         } else {
-            signin();
+            self.panel.close();
+            game.setStage("selectServer");
         }
+    }
+
+    function openLobby(data) {
+        if (data.Warning) {
+            self.draw = function(){};
+            game.clearPassword();
+            showLoginForm();
+            return;
+        }
+        self.panel.close();
+        game.setStage("lobby", data);
+    }
+
+
+
+    function signup(login, password, email) {
+        game.setLogin(login);
+
+        var formData = new FormData();
+        formData.append("login", login);
+        formData.append("password", password);
+        formData.append("email", email);
+        formData.append("referrer", document.referrer);
+        formData.append("ua", navigator.userAgent);
+
+
+        var req = new XMLHttpRequest();
+        req.open("POST", game.gateway + "/register", true);
+        req.send(formData);
+
+        req.onload = function() {
+            if (this.status == 200) {
+                game.setPassword(password);
+                fastLogin();
+            } else {
+                game.alert(T(this.response.trim()));
+            }
+        };
+
+    }
+
+    function validate(input, message) {
+        if (input.value)
+            return true;
+
+        game.alert(T(message), function() {
+            input.focus();
+        });
+
         return false;
     };
-    dom.append(form, [
-        loginInput.label,
-        passwordInput.label,
-        emailInput.label,
-        dom.hr(),
-        signinButton,
-        signupButton,
-        lang,
-    ]);
-    var panel = new Panel("login-panel", "", [form]);
-
-    panel.hideCloseButton();
-    panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
-
-    if (login)
-        passwordInput.focus();
-    else
-        loginInput.focus();
 
 
-    if (game.inVK()) {
-        panel.hide();
-        this.draw = Stage.makeEllipsisDrawer();
-        var el = document.createElement("script");
-        el.type = "text/javascript";
-        el.src = "//vk.com/js/api/xd_connection.js?2";
-        document.body.appendChild(el);
-        el.onload = function() {
+    function vkLogin() {
+        self.draw = Stage.makeEllipsisDrawer();
+        var script = util.loadScript("//vk.com/js/api/xd_connection.js?2", function() {
             VK.init(function() {
                 VK.callMethod("showInstallBox");
                 VK.addCallback("onApplicationAdded", function() {
                     var match = document.location.search.match(/access_token=(\w+)/);
                     var token = match && match[1];
                     if (token) {
-                        panel.hide();
-                        game.network.send("oauth", {Token: token});
+                        oauthLogin(token);
                     } else {
-                        panel.show();
+                        showLoginForm();
                     }
                 });
             }, function() {
                 panel.show();
             }, '5.37');
-        };
-        el.onerror = function() {
+        });
+        script.onerror = function() {
             game.alert(T("Cannot connect to vk.com"));
-            panel.show();
+            showLoginForm();
         };
     }
 
-    this.sync = function (data) {
-        if (data.Warning) {
-            localStorage.removeItem("password");
-            if (!autoLogin)
-                game.alert(T(data.Warning));
-            panel.show();
-            autoLogin = false;
-            return;
-        }
-
-        game.setPassword(password);
-        document.getElementById("version").textContent = data.Version;
-        game.setStage("lobby", data);
-    };
-
-    this.end = function() {
-        panel.close();
-    };
+    function oauthLogin(token) {
+        // TODO:
+        // game.network.send("oauth", {Token: token});
+    }
 }
+
 Stage.add(loginStage);

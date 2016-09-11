@@ -1,38 +1,33 @@
 "use strict";
 function Network() {
     this.proto = "ws://";
-    this.host = "rogalik.tatrix.org";
+    this.host = "";
     this.port = 49000;
+    this.addr = "";
+
     if (window.location.protocol == "https:") {
         this.proto = "wss://";
         this.port = 49443;
     }
 
 
-    var override = document.location.search.match(/server=([^&]+)/);
-    if (override) {
-        override = override[1].split(":");
-        this.host = override[0] || this.host;
-        this.port = override[1] || this.port;
-    }
-
-    this.addr = this.host + ":" + this.port;
-
     this.data = null;
     this.socket = null;
 
     this.queue = [];
 
-    this.run = function(onopen) {
+    this.run = function(host, onopen, onerror) {
+        game.setServerHost(host);
+        this.host = host;
+        this.addr = host + ":" + this.port;
         this.socket = new WebSocket(this.proto + this.addr);
         this.socket.binaryType = "arraybuffer";
         this.socket.onopen = onopen;
 
         function onDisconnect() {
-            window.onerror = null;
             if (game.chat)
                 game.chat.addMessage({From: "[Rogalik]", Body: "Disconnected"});
-            game.exit("Disconnected. Try again later.");
+            game.setStage("selectServer");
         }
 
         // if (e.wasClean)

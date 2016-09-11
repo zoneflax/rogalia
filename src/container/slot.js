@@ -42,6 +42,7 @@ ContainerSlot.prototype = {
         this.sub = null;
         dom.clear(this.element);
         this.element.classList.remove("has-item");
+        this.element.classList.remove("non-effective");
         this.setTitle("");
         this.markAsSeen();
         this.unlock();
@@ -87,6 +88,7 @@ ContainerSlot.prototype = {
     update: function() {
         this.updateProgress();
         this.updateCustom();
+        this.updateRequirements();
         this.setTitle(this.entity.name);
     },
     updateProgress: function() {
@@ -118,6 +120,14 @@ ContainerSlot.prototype = {
             this.setSub(this.entity.Amount);
         } else if (this.entity.SpawnChance > 0) {
             this.setSub(this.entity.SpawnChance);
+        }
+    },
+    updateRequirements: function() {
+        if (this.entity.Damage || this.entity.Armor) {
+            if (this.entity.nonEffective())
+                this.element.classList.add("non-effective");
+            else
+                this.element.classList.remove("non-effective");
         }
     },
     onmousedown: function(event) {

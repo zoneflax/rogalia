@@ -157,13 +157,24 @@ Entity.prototype = {
             input.readonly = true;
             elements.push(input.label);
         } else if ("Armor" in this) {
-            var armor = this.Armor * (1 + this.Quality / 100);
-            elements.push(Stats.prototype.createValue("Armor", armor));
+            elements.push(dom.wrap(".param", [T("Armor"), dom.wrap(".value", this.armor())]));
+            elements.push(dom.hr());
+            elements.push(dom.make("div", T("Requirements")));
+            var requirement = Stats.prototype.createValue("Vitality", this.Lvl);
+            if (this.nonEffective())
+                requirement.classList.add("unavailable");
+            elements.push(requirement);
+        } else if ("Damage" in this) {
+            elements.push(dom.wrap(".param", [T("Damage"), dom.wrap(".value", this.damage())]));
+            elements.push(dom.hr());
+            elements.push(dom.make("div", T("Requirements")));
+            requirement = Stats.prototype.createValue("Swordsmanship", this.Lvl);
+            if (this.nonEffective())
+                requirement.classList.add("unavailable");
+            elements.push(requirement);
         } else if ("Block" in this) {
             var block = this.Block;
             elements.push(Stats.prototype.createValue("Block", block));
-        } else if ("Damage" in this) {
-            elements.push(Stats.prototype.createValue("Damage", this.damage()));
         } else if (this.Props.Capacity) {
             elements.push(Stats.prototype.createParam("Capacity", this.Props.Capacity));
         }
@@ -177,8 +188,26 @@ Entity.prototype = {
 
         new Panel("item-info", TS(this.Name), elements).setEntity(this).show();
     },
+    nonEffective: function() {
+        if (this.Armor)
+            return game.player.Attr.Vitality.Current < this.Lvl;
+        else if (this.Damage)
+            return game.player.Skills.Swordsmanship.Value.Current < this.Lvl;
+        return false;
+    },
+    armor: function() {
+        var armor = this.Armor * (1 + this.Quality / 100);
+        if (this.nonEffective())
+            return "0 / " + armor;
+
+        return armor;
+    },
     damage: function() {
-        return util.toFixed(this.Damage * (Math.pow(this.Quality, 1.5) / 5000 + 1), 0);
+        var damage = util.toFixed(this.Damage * (Math.pow(this.Quality, 1.5) / 5000 + 1), 0);
+        if (this.nonEffective())
+            return util.toFixed(game.player.Skills.Swordsmanship.Value.Current) + " / " + damage;
+
+        return damage;
     },
     makeDescription: function() {
         var text = T.items[this.Type] || T.items[this.Group] || T("No description yet");
@@ -615,8 +644,28 @@ Entity.prototype = {
             return;
         }
 
-        if (this.Group != "plow")
-            this.sprite.animate();
+        if (this.Group != "plow") {
+            var cycle = null;
+            if (this.Lifetime) {
+                switch (this.Type) {
+                case "circle-of-fire":
+                    cycle = {
+                        start: 13,
+                        end: 20,
+                        lifetime: this.Lifetime,
+                    };
+                    break;
+                case "circle-of-ice":
+                    cycle = {
+                        start: 9,
+                        end: 24,
+                        lifetime: this.Lifetime,
+                    };
+                    break;
+                }
+            }
+            this.sprite.animate(cycle);
+        }
 
         var p = this.getDrawPoint();
 

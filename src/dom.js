@@ -95,8 +95,8 @@ var dom = {
         }
         return contents;
     },
-    make: function(tag, contents) {
-        return this.append(this.tag(tag), contents);
+    make: function(tag, contents, classOrId) {
+        return this.append(this.tag(tag, classOrId), contents);
     },
     append: function(element, contents) {
         if (!Array.isArray(contents))
@@ -160,7 +160,7 @@ var dom = {
         iframe.src = src;
         return iframe;
     },
-    table: function(header, rows) {
+    table: function(header, rows, classOrId) {
         var dom = this;
         return this.make("table", [
             this.make("thead", this.make("tr", header.map(function(title) {
@@ -171,7 +171,7 @@ var dom = {
                     return dom.make("td", cell);
                 }));
             }))
-        ]);
+        ], classOrId);
     },
     canvas: function (w, h, classOrId) {
         var canvas = dom.tag("canvas", classOrId);

@@ -123,15 +123,35 @@ function WorldMap() {
         }
     };
 
+
     this.drawTile = function(ctx, x, y, p) {
         var cell = this.data[y][x];
         var tile = this.tiles[cell.id];
         var variant = 0;
+
         if (tile.width > 2*CELL_SIZE) {
             var lx = game.player.Location.X / CELL_SIZE;
             var ly = game.player.Location.Y / CELL_SIZE;
             variant = Math.floor(tile.width/(4*CELL_SIZE)*(1+Math.sin((lx+x)*(ly+y))));
         }
+
+        if (tile.height == CELL_SIZE) {
+            ctx.drawImage(
+                tile,
+
+                variant * 2*CELL_SIZE,
+                0,
+                CELL_SIZE * 2,
+                CELL_SIZE,
+
+                p.x,
+                p.y,
+                CELL_SIZE * 2,
+                CELL_SIZE
+            );
+            return;
+        }
+
         var d = [
             [0, CELL_SIZE/2],
             [-CELL_SIZE, 0],

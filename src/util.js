@@ -127,15 +127,6 @@ var util = new function() {
         return (len1 * len1 + len2 * len2 < r * r);
     };
 
-    this.validateInput = function(input, predicate, message) {
-        if (predicate)
-            return true;
-        game.alert(message, function() {
-            input.focus();
-        });
-        return false;
-    };
-
     this.hash = function(string) {
         var hash = 0, i, char;
         if (string.length == 0) return hash;

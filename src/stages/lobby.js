@@ -32,10 +32,6 @@ function lobbyStage(data) {
 
     });
 
-    var account = document.createElement("div");
-    account.className = "lobby-account";
-    account.textContent = game.login;
-
     var characters = (data && data.Characters) || lobbyStage.characters || [];
     var maxChars = 4;
     // we need to save it because we may return to this stage after
@@ -84,21 +80,17 @@ function lobbyStage(data) {
     };
 
     var contents = [
-        account,
+        dom.wrap("lobby-account", game.login),
         dom.hr(),
         avatars,
     ];
 
     if (!game.inVK()) {
-        var quit = document.createElement("button");
-        quit.textContent = T("Quit");
-        quit.onclick = function() {
-            lobbyStage.characters = [];
-            game.clearCredentials();
-            game.setStage("login");
-        };
         contents.push(dom.hr());
-        contents.push(quit);
+        contents.push(dom.button(T("Back"), "", function() {
+            lobbyStage.characters = [];
+            game.setStage("selectServer");
+        }));
     }
 
     var panel = new Panel("lobby", "", contents);

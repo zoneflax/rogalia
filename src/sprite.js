@@ -7,6 +7,7 @@ function Sprite(path, width, height, speed) {
 
     this.width = width || 0;
     this.height = height || 0;
+    this.framesNum = 0;
 
     this.dy = 0; //used for animations
 
@@ -47,6 +48,7 @@ Sprite.prototype = {
             if (this.height == 0)
                 this.height = this.image.height;
 
+            this.framesNum = this.image.width / this.width;
             this.makeOutline();
             this.ready = true;
             this.loading = false;
@@ -125,7 +127,7 @@ Sprite.prototype = {
         );
         game.ctx.globalAlpha = 1;
     },
-    animate: function() {
+    animate: function(cycle) {
         if (this.width == this.image.width)
             return;
 
@@ -133,11 +135,27 @@ Sprite.prototype = {
         if(now - this.lastUpdate > this.speed) {
             this.frame++;
 
-            if(this.frame * this.width >= this.image.width) {
+            var wrap = this.frame >= this.framesNum - 1;
+            if (cycle) {
+                this.cycleAnimate(cycle, wrap);
+            } else if(wrap) {
                 this.frame = 0;
             }
 
             this.lastUpdate = now;
+        }
+    },
+    cycleAnimate: function(cycle, wrap) {
+        var ellapsed = Date.now() - cycle.lifetime.Created * 1000;
+        var ending = cycle.lifetime.Duration - this.speed * (this.framesNum - cycle.end);
+        if (ellapsed > ending) {
+            if (wrap) {
+                this.frame = this.framesNum - 1;
+            }
+        } else if (ellapsed > this.speed * cycle.start && wrap) {
+            this.frame = cycle.start;
+        }  else if (this.frame > cycle.end) {
+            this.frame = cycle.start;
         }
     },
     icon: function() {
