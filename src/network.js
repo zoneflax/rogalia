@@ -17,7 +17,6 @@ function Network() {
     this.queue = [];
 
     this.run = function(host, onopen, onerror) {
-        game.setServerHost(host);
         this.host = host;
         this.addr = host + ":" + this.port;
         this.socket = new WebSocket(this.proto + this.addr);

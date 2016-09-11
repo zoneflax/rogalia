@@ -124,10 +124,11 @@ function loginStage() {
     }
 
     function fastLogin() {
-        var host = game.loadServerHost();
-        if (host) {
+        var server = game.loadServerInfo();
+        if (server) {
+            document.getElementById("server-addr").textContent = server.Name;
             self.sync = openLobby;
-            game.network.run(host, function() {
+            game.network.run(server.Addr, function() {
                 game.network.send(
                     "login",
                     {

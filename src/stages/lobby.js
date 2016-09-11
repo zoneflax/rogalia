@@ -1,5 +1,7 @@
 "use strict";
 function lobbyStage(data) {
+    document.getElementById("version").textContent =  data.Version;
+
     util.ajax("news/" + game.lang + ".html", function(warn) {
         if (!warn) {
             return;

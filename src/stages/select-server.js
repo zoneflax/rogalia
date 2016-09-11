@@ -73,6 +73,8 @@ function selectServerStage(panel) {
 
     function enter(server) {
         self.sync = openLobby;
+        game.setServerInfo(server);
+        document.getElementById("server-addr").textContent = server.Name;
         game.network.run(server.Addr, function() {
             game.network.send(
                 "login",

@@ -238,13 +238,13 @@ function Game(lang) {
         this.login = login;
     };
 
-    this.loadServerHost = function() {
-        this.network.host = localStorage.getItem("server.host");
-        return this.network.host;
+    this.loadServerInfo = function() {
+        var server = localStorage.getItem("server");
+        return server && JSON.parse(server);
     };
 
-    this.setServerHost = function(host) {
-        localStorage.setItem("server.host", host);
+    this.setServerInfo = function(server) {
+        localStorage.setItem("server", JSON.stringify(server));
     };
 
     this.clearLogin = function() {
@@ -263,12 +263,12 @@ function Game(lang) {
         localStorage.removeItem("password");
     };
 
-    this.clearServerHost = function() {
-        localStorage.removeItem("server.host");
+    this.clearServerInfo = function() {
+        localStorage.removeItem("server");
     };
 
     this.clearCredentials = function() {
-        this.clearServerHost();
+        this.clearServerInfo();
         this.clearLogin();
         this.clearPassword();
     };
