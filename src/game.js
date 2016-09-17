@@ -2,7 +2,7 @@
 function Game(lang) {
     window.game = this;
 
-    this.gateway = "http://alpha.rogalik.tatrix.org/gateway";
+    this.gateway = "//rogalik.tatrix.org/gateway";
     this.lang = lang;
     this.world = document.getElementById("world");
     this.interface = document.getElementById("interface");
@@ -83,6 +83,7 @@ function Game(lang) {
 
     this.menu = new Menu();
 
+    this.oauthToken = null;
     this.login = null;
     this.player = null;
     this.playerName = "";
@@ -271,6 +272,22 @@ function Game(lang) {
         this.clearServerInfo();
         this.clearLogin();
         this.clearPassword();
+    };
+
+    this.connectAndLogin = function(server) {
+        this.setServerInfo(server);
+        document.getElementById("server-addr").textContent = server.Name;
+
+        var self = this;
+        this.network.run(server.Addr, this.oauthToken ? oauth : login);
+
+        function oauth() {
+            self.network.send("oauth", { Token: self.oauthToken });
+        }
+
+        function login() {
+            self.network.send("login", { Login: self.login, Password: self.loadPassword() });
+        }
     };
 
     this.logout = function() {

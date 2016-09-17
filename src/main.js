@@ -23,7 +23,6 @@ function main() {
             useFileCache: false,
         };
 
-        util.loadScript("http://localhost:8888/skewer");
         util.loadScript("//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js").onload = function() {
             var refresh = less.refresh;
             less.refresh = function() {

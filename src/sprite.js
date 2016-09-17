@@ -154,7 +154,7 @@ Sprite.prototype = {
             }
         } else if (ellapsed > this.speed * cycle.start && wrap) {
             this.frame = cycle.start;
-        }  else if (this.frame > cycle.end) {
+        } else if (this.frame > cycle.end) {
             this.frame = cycle.start;
         }
     },

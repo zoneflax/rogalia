@@ -1527,11 +1527,20 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 #select-server {
     text-align: center;
 
-    .servers {
-        margin-top: 5px;
+    .panel {
+        max-width: none;
     }
 
-    .quit {
+    .servers {
+        margin-top: 5px;
+
+        td {
+            white-space: nowrap;
+            min-width: 60px;
+        }
+    }
+
+    .quit, .refresh {
         margin-top: 5px;
     }
 }
@@ -2248,7 +2257,7 @@ input[type=number], .lot-quantity > input, .price > input {
     display: inline-block;
 }
 
-#action-hotbar.cooldown {
+.cooldown {
     opacity: 0.5;
 }
 

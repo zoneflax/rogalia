@@ -126,21 +126,12 @@ function loginStage() {
     function fastLogin() {
         var server = game.loadServerInfo();
         if (server) {
-            document.getElementById("server-addr").textContent = server.Name;
+            game.connectAndLogin(server);
             self.sync = openLobby;
-            game.network.run(server.Addr, function() {
-                game.network.send(
-                    "login",
-                    {
-                        Login: game.login,
-                        Password: game.loadPassword(),
-                    }
-                );
-            });
-            self.panel.close();
+            self.panel && self.panel.close();
             self.draw = Stage.makeEllipsisDrawer();
         } else {
-            self.panel.close();
+            self.panel && self.panel.close();
             game.setStage("selectServer");
         }
     }
@@ -152,7 +143,7 @@ function loginStage() {
             showLoginForm();
             return;
         }
-        self.panel.close();
+        self.panel && self.panel.close();
         game.setStage("lobby", data);
     }
 
@@ -165,9 +156,6 @@ function loginStage() {
         formData.append("login", login);
         formData.append("password", password);
         formData.append("email", email);
-        formData.append("referrer", document.referrer);
-        formData.append("ua", navigator.userAgent);
-
 
         var req = new XMLHttpRequest();
         req.open("POST", game.gateway + "/register", true);
@@ -221,8 +209,21 @@ function loginStage() {
     }
 
     function oauthLogin(token) {
-        // TODO:
-        // game.network.send("oauth", {Token: token});
+        var formData = new FormData();
+        formData.append("token", token);
+
+        var req = new XMLHttpRequest();
+        req.open("POST", game.gateway + "/oauth", true);
+        req.send(formData);
+
+        req.onload = function() {
+            if (this.status == 200) {
+                game.oauthToken = token;
+                fastLogin();
+            } else {
+                game.alert(T(this.response.trim()));
+            }
+        };
     }
 }
 

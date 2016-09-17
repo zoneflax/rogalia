@@ -16,6 +16,7 @@ function selectServerStage(panel) {
             self.panel = new Panel("select-server", "", [
                 dom.wrap("lobby-account", game.login),
                 serversTable(servers),
+                dom.button(T("Refresh"), "refresh", showServers),
                 dom.button(T("Quit"), "quit", quit)
             ]);
             self.panel.hideCloseButton();
@@ -32,17 +33,6 @@ function selectServerStage(panel) {
     }
 
     function serversTable(servers) {
-        servers["prod"] = {
-            Name: "Prod",
-            Players: {
-                Online: 18,
-                Limit: 80,
-                Population: 13523,
-            },
-            Desc: "REMOVE ME",
-            Status: "online",
-            Addr: "rogalik.tatrix.org",
-        };
         return dom.table(
             [
                 T("Server"),
@@ -73,26 +63,14 @@ function selectServerStage(panel) {
 
     function enter(server) {
         self.sync = openLobby;
-        game.setServerInfo(server);
-        document.getElementById("server-addr").textContent = server.Name;
-        game.network.run(server.Addr, function() {
-            game.network.send(
-                "login",
-                {
-                    Login: game.login,
-                    Password: game.loadPassword(),
-                }
-            );
-        });
         self.panel.close();
         self.draw = Stage.makeEllipsisDrawer();
+        game.connectAndLogin(server);
     }
 
     function openLobby(data) {
-        self.panel.close();
         game.setStage("lobby", data);
     }
-
 }
 
 Stage.add(selectServerStage);

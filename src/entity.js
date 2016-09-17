@@ -231,7 +231,7 @@ Entity.prototype = {
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "beehive":
+        // case "circle-of-ice":
         //     return window.y || 103;
         // }
 
@@ -657,8 +657,8 @@ Entity.prototype = {
                     break;
                 case "circle-of-ice":
                     cycle = {
-                        start: 9,
-                        end: 24,
+                        start: 11,
+                        end: 25,
                         lifetime: this.Lifetime,
                     };
                     break;

@@ -432,6 +432,21 @@ Character.prototype = {
             this.sprite.height = 100;
             this.sprite.speed = 30000;
             break;
+        case "pinky-rogalian":
+            this.sprite.width = 170;
+            this.sprite.height = 170;
+            this.sprite.speed = 30000;
+            break;
+        case "rogalian":
+            this.sprite.width = 160;
+            this.sprite.height = 160;
+            this.sprite.speed = 30000;
+            break;
+        case "hell-rogalian":
+            this.sprite.width = 200;
+            this.sprite.height = 200;
+            this.sprite.speed = 30000;
+            break;
         case "preved-medved":
             this.sprite.width = 210;
             this.sprite.height = 210;

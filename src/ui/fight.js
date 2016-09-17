@@ -74,6 +74,17 @@ function Fight() {
         args.Y = game.controller.world.y;
 
         // updateCombo(action);
+
+        switch (action) {
+        case "shomen":
+            var button = buttons[actions.indexOf("shomen")];
+            button.classList.add("cooldown");
+            setTimeout(function() {
+                button.classList.remove("cooldown");
+            }, 2000);
+            break;
+        }
+
         game.network.send("waza", args);
 
         hotbar.classList.add("cooldown");
