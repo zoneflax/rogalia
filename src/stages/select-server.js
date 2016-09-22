@@ -40,7 +40,7 @@ function selectServerStage(panel) {
                 T("Server"),
                 T("Online"),
                 T("Population"),
-                T("Desc"),
+                T("Description"),
                 T("Status"),
                 ""
             ],
@@ -55,7 +55,7 @@ function selectServerStage(panel) {
                     sprintf("%d/%d", server.Players.Online, server.Players.Limit),
                     server.Players.Population,
                     server.Desc,
-                    server.Status,
+                    TS(server.Status),
                     enterButton,
                 ];
             }),

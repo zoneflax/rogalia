@@ -1627,4 +1627,13 @@ T.dict = {
     "White stone arc": "Белая каменная арка",
     "White stone pillar": "Белый каменный столб",
     "White stone wall": "Белая стена",
+
+    "Server": "Сервер",
+    "Status": "Статус",
+    "Population": "Население",
+    "Online": "Онлайн",
+    "Offline": "Офлайн",
+    "Pending restart": "Подготовка к рестарту",
+    "Restart": "Рестарт",
+    "Starting": "Запускается",
 };
