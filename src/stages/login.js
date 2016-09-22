@@ -215,16 +215,18 @@ function loginStage() {
 
     function makeResponseHandler(callback) {
         return function() {
+            console.log(this);
             switch (this.status) {
             case 200:
                 callback.call(this);
                 break;
-            case 502:
+            case 202:
+                game.alert(T(this.response.trim()));
+                break;
+            default:
                 console.error(this.response);
                 game.alert(T("Cannot connect to server"));
                 break;
-            default:
-                game.alert(T(this.response.trim()));
             }
         };
     }

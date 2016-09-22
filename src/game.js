@@ -2,7 +2,6 @@
 function Game(lang) {
     window.game = this;
 
-    this.gateway = "//rogalik.tatrix.org/gateway";
     this.lang = lang;
     this.world = document.getElementById("world");
     this.interface = document.getElementById("interface");
@@ -16,7 +15,15 @@ function Game(lang) {
     };
     this.setFontSize();
 
+    this.gateway = (function() {
+        var match = document.location.search.match(/[?&"]gateway=([^&]+)/);
+        return (match)
+            ? "//" + match[1] + "/gateway"
+            : "//rogalik.tatrix.org/gateway";
+    })();
+
     Settings.load(config);
+
 
     new DragManager();
 
