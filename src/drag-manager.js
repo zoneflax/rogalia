@@ -13,15 +13,15 @@ function DragManager() {
         if (!target)
             return;
 
-	var checking = event.target;
-	while(checking && checking != target) {
+        var checking = event.target;
+        while(checking && checking != target) {
             if (dragIgnore(checking))
                 return;
-	    checking = checking.parentNode;
-	};
+            checking = checking.parentNode;
+        };
 
         drag.target = target;
-	drag.dx = event.pageX - target.offsetLeft;
+        drag.dx = event.pageX - target.offsetLeft;
         drag.dy = event.pageY - target.offsetTop;
     });
 
@@ -36,15 +36,15 @@ function DragManager() {
             drag.target.ondrag(event, drag);
             return;
         }
-	drag.target.style.left = event.pageX - drag.dx + "px";
-	drag.target.style.top = event.pageY - drag.dy + "px";
+        drag.target.style.left = event.pageX - drag.dx + "px";
+        drag.target.style.top = event.pageY - drag.dy + "px";
     });
 
     function dragIgnore(element) {
         if (dragIgnoreTags.indexOf(element.tagName) != -1)
             return true;
 
-        return !getComputedStyle(element).cursor.includes("default");
+        return !document.defaultView.getComputedStyle(element).cursor.includes("default");
     };
 
 };

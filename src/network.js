@@ -26,7 +26,7 @@ function Network() {
         function onDisconnect() {
             if (game.chat)
                 game.chat.addMessage({From: "[Rogalik]", Body: "Disconnected"});
-            game.setStage("selectServer");
+            game.exit(T("Disconnected"));
         }
 
         // if (e.wasClean)

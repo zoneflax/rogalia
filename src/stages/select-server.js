@@ -33,6 +33,8 @@ function selectServerStage(panel) {
     }
 
     function serversTable(servers) {
+        if (_.size(servers) == 0)
+            return dom.make("p", T("All servers are offline"));
         return dom.table(
             [
                 T("Server"),

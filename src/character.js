@@ -75,6 +75,10 @@ function Character(id) {
 
     this._parts = "{}"; //defauls for npcs
 
+    this._marker = {
+        x: 1, // marker current scale
+        dx: 0.0033,
+    };
 }
 
 Character.prototype = {
@@ -436,16 +440,19 @@ Character.prototype = {
             this.sprite.width = 170;
             this.sprite.height = 170;
             this.sprite.speed = 30000;
+            this.sprite.offset = 40;
             break;
         case "rogalian":
             this.sprite.width = 160;
             this.sprite.height = 160;
             this.sprite.speed = 30000;
+            this.sprite.offset = 30;
             break;
         case "hell-rogalian":
             this.sprite.width = 200;
             this.sprite.height = 200;
             this.sprite.speed = 30000;
+            this.sprite.offset = 40;
             break;
         case "preved-medved":
             this.sprite.width = 210;
@@ -633,11 +640,11 @@ Character.prototype = {
         }
 
         var common = {};
-        if (!this.IsNpc) {
+        if (this.IsMob || !this.IsNpc) {
             common.Select = game.player.setTarget.bind(game.player, this);
-            if (!this.IsMob) {
-                common.Inspect = game.player.inspect.bind(game.player, this);
-            }
+        }
+        if (!this.IsMob && !this.IsNpc) {
+            common.Inspect = game.player.inspect.bind(game.player, this);
         }
         if (game.player.IsAdmin) {
             common.Kill = function() {
@@ -903,8 +910,14 @@ Character.prototype = {
     },
     drawUI: function() {
         var marker = this.getQuestMarker();
-        if (marker)
-            this.drawQuestMarker(marker);
+        if (marker) {
+            this.drawMarker(marker, true);
+        } else {
+            marker = this.getNPCMarker();
+            if (marker)
+                this.drawMarker(marker);
+        }
+
 
         if (game.debug.player.box || game.controller.hideStatic()) {
             if (!this.mount)
@@ -929,27 +942,42 @@ Character.prototype = {
 
         this.drawCorpsePointer();
     },
-    _qm: {
-        x: 1, //quest marker current scale
-        dx: 0.0033,
-    },
-    drawQuestMarker: function(marker) {
-        this._qm.x += this._qm.dx;
+    drawMarker: function(marker, animate) {
+        if (animate) {
+            this._marker.x += this._marker.dx;
 
-        if (this._qm.x >= 1.1 || this._qm.x < 0.90) {
-            this._qm.dx = -this._qm.dx;
+            if (this._marker.x >= 1.1 || this._marker.x < 0.90) {
+                this._marker.dx = -this._marker.dx;
+            }
+            // fix wrench
+            if (this._marker.x == 1)
+                this._marker.x += this._marker.dx;
         }
-        // fix wrench
-        if (this._qm.x == 1)
-            this._qm.x += this._qm.dx;
 
-        var width = marker.width * this._qm.x;
+        var width = marker.width * this._marker.x;
         var height = width * marker.height / marker.width;
         var p = this.screen();
         p.x -= width / 2;
         p.y -= this.nameOffset() + height + FONT_SIZE;
 
         game.ctx.drawImage(marker, p.x, p.y, width, height);
+    },
+    getNPCMarker: function() {
+        switch (this.Type) {
+        case "charles":
+        case "diego":
+        case "larisa":
+        case "margo":
+        case "scrooge":
+            return game.loader.loadImage("icons/npcs/" + this.Type + ".png");
+        case "vendor":
+        case "shot":
+        case "bruno":
+        case "bertran":
+        case "cosmas":
+            return game.loader.loadImage("icons/npcs/vendor.png");
+        }
+        return null;
     },
     getQuestMarker: function() {
         // has owner -> vendor -> no quests
@@ -966,13 +994,13 @@ Character.prototype = {
             if (quest.End != this.Type)
                 continue;
             if (questLog.State == "ready")
-                return game.questMarkers["ready"];
+                return game.loader.loadImage("icons/quests/ready.png");
             active = active || questLog.State == "active";
         }
         if (this.getAvailableQuests().length > 0)
-            return game.questMarkers["available"];
+            return game.loader.loadImage("icons/quests/available.png");
         if (active)
-            return game.questMarkers["active"];
+            return game.loader.loadImage("icons/quests/active.png");
         return null;
     },
     drawDst: function() {
@@ -1514,7 +1542,8 @@ Character.prototype = {
 
         efdiv.hash = hash;
 
-        var title = TS(name);
+        let symbolName = util.stringToSymbol(name);
+        var title = TS(symbolName);
 
         var duration = effect.Duration / 1e6;
         if (duration > 0) {
@@ -1539,7 +1568,7 @@ Character.prototype = {
 
         var stacks = dom.span("", "effect-stacks", T("Stacks"));
         var effectElem = dom.wrap("effect", [
-            dom.img("assets/icons/effects/" + util.stringToSymbol(name) + ".png", "effect-name"),
+            dom.img("assets/icons/effects/" + symbolName + ".png", "effect-name"),
             stacks,
         ]);
 
@@ -1912,6 +1941,7 @@ Character.prototype = {
                     name: "cast",
                     width: 100,
                     height: 60,
+                    dy: -18,
                 }
             });
             break;

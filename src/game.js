@@ -101,12 +101,6 @@ function Game(lang) {
     this.vendors = {};
 
     this.quests = new Quests();
-    this.questMarkers = {
-        "available": loader.loadImage("icons/quests/available.png"),
-        "active": loader.loadImage("icons/quests/active.png"),
-        "ready": loader.loadImage("icons/quests/ready.png"),
-    };
-
     this.panels = {};
     this.epsilon = 0;
     this.camera = new Point();

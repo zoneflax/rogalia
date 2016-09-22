@@ -113,14 +113,10 @@ function loginStage() {
         req.open("POST", game.gateway + "/login", true);
         req.send(formData);
 
-        req.onload = function() {
-            if (this.status == 200) {
-                game.setPassword(password);
-                fastLogin();
-            } else {
-                game.alert(T(this.response.trim()));
-            }
-        };
+        req.onload = makeResponseHandler(function() {
+            game.setPassword(password);
+            fastLogin();
+        });
     }
 
     function fastLogin() {
@@ -161,15 +157,10 @@ function loginStage() {
         req.open("POST", game.gateway + "/register", true);
         req.send(formData);
 
-        req.onload = function() {
-            if (this.status == 200) {
-                game.setPassword(password);
-                fastLogin();
-            } else {
-                game.alert(T(this.response.trim()));
-            }
-        };
-
+        req.onload = makeResponseHandler(function() {
+            game.setPassword(password);
+            fastLogin();
+        });
     }
 
     function validate(input, message) {
@@ -216,11 +207,23 @@ function loginStage() {
         req.open("POST", game.gateway + "/oauth", true);
         req.send(formData);
 
-        req.onload = function() {
-            if (this.status == 200) {
-                game.oauthToken = token;
-                fastLogin();
-            } else {
+        req.onload = makeResponseHandler(function() {
+            game.oauthToken = token;
+            fastLogin();
+        });
+    }
+
+    function makeResponseHandler(callback) {
+        return function() {
+            switch (this.status) {
+            case 200:
+                callback.call(this);
+                break;
+            case 502:
+                console.error(this.response);
+                game.alert(T("Cannot connect to server"));
+                break;
+            default:
                 game.alert(T(this.response.trim()));
             }
         };

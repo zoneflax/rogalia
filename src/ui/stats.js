@@ -222,6 +222,7 @@ Stats.prototype = {
                 return [
                     self.createValue("Karma", player.Karma),
                     self.createValue("Fame", player.Fame),
+                    self.createValue("Addiction", player.Addiction),
                     dom.hr(),
                 ];
             },
