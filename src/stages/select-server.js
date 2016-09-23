@@ -48,7 +48,8 @@ function selectServerStage(panel) {
                 var enterButton = dom.button(T("Enter"), "", function() {
                     enter(server);
                 });
-                if (server.Status != "online")
+                var alphaDisabled = (server.Name == "Alpha" && !document.location.host.match(/localhost|alpha/));
+                if (server.Status != "online" || alphaDisabled)
                     enterButton.disabled = true;
                 return [
                     server.Name,
