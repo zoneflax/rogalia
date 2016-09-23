@@ -12,6 +12,7 @@ T.dict = {
     "Spiced wolf meat": "Волчатина с пряностями",
     "Paprika": "Паприка",
     "Wolf meat": "Волчатина",
+    "Dead meat": "Мертвечина",
     "Raw coconut cookies": "Сырое кокосовое печенье",
     "Coconut cookies": "Кокосовое печенье",
     "Change character": "Сменить персонажа",
@@ -387,7 +388,7 @@ T.dict = {
     "Plastic table": "Пластиковый стол",
     "Plastic wall": "Пластиковая стена",
     "Russian oven": "Русская печь",
-    "Stone tile": "Каменная кладка",
+    "Stone tiles": "Каменная кладка",
     "Well": "Колодец",
     "Bucket": "Ведро",
     "Sign": "Знак",
@@ -1636,4 +1637,7 @@ T.dict = {
     "Pending restart": "Подготовка к рестарту",
     "Restart": "Рестарт",
     "Starting": "Запускается",
+
+    "Cannot unequip. You can only destroy it": "Нельзя снять. Можно только уничтожить.",
+    "Name is too long": "Имя слишком длинное",
 };
