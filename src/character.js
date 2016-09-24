@@ -76,8 +76,8 @@ function Character(id) {
     this._parts = "{}"; //defauls for npcs
 
     this._marker = {
-        x: 1, // marker current scale
-        dx: 0.0033,
+        opacity: 1,
+        delta: -1,
     };
 }
 
@@ -911,13 +911,13 @@ Character.prototype = {
     drawUI: function() {
         var marker = this.getQuestMarker();
         if (marker) {
-            this.drawMarker(marker, true);
+            this.drawMarker(marker, 0.01);
         } else {
             marker = this.getNPCMarker();
-            if (marker)
-                this.drawMarker(marker);
+            if (marker) {
+                this.drawMarker(marker, 0.005);
+            }
         }
-
 
         if (game.debug.player.box || game.controller.hideStatic()) {
             if (!this.mount)
@@ -942,25 +942,20 @@ Character.prototype = {
 
         this.drawCorpsePointer();
     },
-    drawMarker: function(marker, animate) {
-        if (animate) {
-            this._marker.x += this._marker.dx;
+    drawMarker: function(marker, intensity) {
+        this._marker.opacity += this._marker.delta * intensity;
 
-            if (this._marker.x >= 1.1 || this._marker.x < 0.90) {
-                this._marker.dx = -this._marker.dx;
-            }
-            // fix wrench
-            if (this._marker.x == 1)
-                this._marker.x += this._marker.dx;
+        if (this._marker.opacity >= 1 || this._marker.opacity < 0.7) {
+            this._marker.delta = -this._marker.delta;
         }
 
-        var width = marker.width * this._marker.x;
-        var height = width * marker.height / marker.width;
         var p = this.screen();
-        p.x -= width / 2;
-        p.y -= this.nameOffset() + height + FONT_SIZE;
+        p.x -= marker.width / 2;
+        p.y -= this.nameOffset() + marker.height + FONT_SIZE;
 
-        game.ctx.drawImage(marker, p.x, p.y, width, height);
+        game.ctx.globalAlpha = this._marker.opacity;
+        game.ctx.drawImage(marker, p.x, p.y);
+        game.ctx.globalAlpha = 1;
     },
     getNPCMarker: function() {
         switch (this.Type) {

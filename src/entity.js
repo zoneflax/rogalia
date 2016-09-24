@@ -196,7 +196,7 @@ Entity.prototype = {
         return false;
     },
     armor: function() {
-        var armor = this.Armor * (1 + this.Quality / 100);
+        var armor = util.toFixed(this.Armor * (1 + this.Quality / 100), 0);
         if (this.nonEffective())
             return "0 / " + armor;
 

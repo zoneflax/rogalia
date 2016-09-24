@@ -215,7 +215,6 @@ function loginStage() {
 
     function makeResponseHandler(callback) {
         return function() {
-            console.log(this);
             switch (this.status) {
             case 200:
                 callback.call(this);

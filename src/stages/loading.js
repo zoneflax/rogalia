@@ -1,30 +1,29 @@
 "use strict";
-function loadingStage(data) {
+function loadingStage(version) {
     game.addEventListeners();
 
-    var forceUpdate = ("Version" in data);
-    ["Version", "Recipes", "EntitiesTemplates"].forEach(function(key) {
-        if (forceUpdate) {
-            localStorage.setItem(key, JSON.stringify(data[key]));
-        } else {
-            data[key] = JSON.parse(localStorage.getItem(key));
-        }
-    });
-    Character.skillLvls = data.SkillLvls;
-    Character.initSprites();
-    game.map.init(data.Bioms, data.Map);
-    //for [*add item]
-    Entity.init(data.EntitiesTemplates);
-    Entity.recipes = data.Recipes;
-    Entity.metaGroups = data.MetaGroups;
-    game.initTime(data.Time, data.Tick);
+    var req = new XMLHttpRequest();
+    req.open("GET", "metadata.json?version=" + version, true);
+    req.onload = function() {
+        var data = JSON.parse(this.responseText);
+
+        Entity.metaGroups = data.MetaGroups;
+        game.map.initBioms(data.Bioms);
+        Character.skillLvls = data.SkillLvls;
+        // game.initTime(data.Tick);
+        Entity.recipes = data.Recipes;
+        Entity.init(data.EntitiesTemplates); //for [*add item]
+
+        game.network.send("enter", {Name: game.playerName});
+    };
+    req.send(null);
+
 
     this.sync = function(data) {
-        //TODO: don't send them!
-        // ignore non init packets
-        if (!("Location" in data))
-            return;
         game.setTime(data.Time);
+        game.map.initMap(data.Map);
+        Character.initSprites();
+
         loader.ready(function() {
             Entity.sync(data.Entities);
             Character.sync(data.Players);

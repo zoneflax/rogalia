@@ -388,9 +388,7 @@ function WorldMap() {
         return list;
     };
 
-    this.init = function(bioms, map) {
-        this.full.width = map.Width;
-        this.full.height = map.Height;
+    this.initBioms = function(bioms) {
         this.bioms = this._sort(bioms);
         this.tiles = this.bioms.map(function(biom) {
             var path = "map/" + biom.Name + ".png";
@@ -401,6 +399,11 @@ function WorldMap() {
 
         this.darkness = loader.loadImage("map/darkness.png");
         this.simpleDarkness = loader.loadImage("map/simple-darkness.png");
+    };
+
+    this.initMap = function(map) {
+        this.full.width = map.Width;
+        this.full.height = map.Height;
     };
 
     this.getCell = function(x, y) {

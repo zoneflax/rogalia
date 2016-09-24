@@ -69,7 +69,7 @@ function lobbyStage(data) {
         var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png").cloneNode();
         add(info.Name, icon, function() {
             game.playerName = info.Name;
-            game.network.send("enter", {Name: info.Name, Version: game.version});
+            game.setStage("loading", data.MetadataVersion);
         });
     });
 
@@ -112,9 +112,6 @@ function lobbyStage(data) {
     this.end = function() {
         window.removeEventListener("keypress", fastenter);
         panel.close();
-    };
-    this.sync = function(data) {
-        game.setStage("loading", data);
     };
 };
 Stage.add(lobbyStage);

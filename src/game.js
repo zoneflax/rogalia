@@ -57,8 +57,6 @@ function Game(lang) {
     this.time = 0;
     this.timeElement = document.getElementById("time");
 
-    this.version = JSON.parse(localStorage.getItem("Version"));
-
     this.initTime = function(time, tick) {
         this.setTime(time);
         setInterval(function() {

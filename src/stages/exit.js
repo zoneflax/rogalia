@@ -7,24 +7,14 @@ function exitStage(message) {
         CELL_SIZE,
         CELL_SIZE
     );
+
     game.network.disconnect();
 
-    var reload = document.createElement("button");
-    reload.textContent = T("Reload");
-    reload.onclick = game.reload;
-
-    var help = document.createElement("p");
-    help.id = "crash-help";
-
-    var reset = document.createElement("button");
-    reset.textContent = T("Reset settings");
-    reset.addEventListener('click', game.controller.reset);
-    document.body.appendChild(reset);
-
-    help.appendChild(game.button.vk());
-    help.appendChild(reset);
-    help.appendChild(game.button.logout());
-    help.appendChild(reload);
-    game.world.appendChild(help);
+    dom.append(game.world, dom.wrap("#crash-help", [
+        game.button.vk(),
+        dom.button(T("Reset settings"), "", game.controller.reset),
+        game.button.logout(),
+        dom.button(T("Reload"), "", game.reload),
+    ]));
 };
 Stage.add(exitStage);

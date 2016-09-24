@@ -16,7 +16,7 @@ function Network() {
 
     this.queue = [];
 
-    this.run = function(host, onopen, onerror) {
+    this.run = function(host, onopen) {
         this.host = host;
         this.addr = host + ":" + this.port;
         this.socket = new WebSocket(this.proto + this.addr);
@@ -24,6 +24,7 @@ function Network() {
         this.socket.onopen = onopen;
 
         function onDisconnect() {
+            game.clearServerInfo();
             if (game.chat)
                 game.chat.addMessage({From: "[Rogalik]", Body: "Disconnected"});
             game.exit(T("Disconnected"));
@@ -40,7 +41,7 @@ function Network() {
     };
 
     this.disconnect = function() {
-        if (this.socket) {
+        if (this.socket ) {
             this.socket.onclose = null;
             this.socket.close();
             this.socket = null;
@@ -51,7 +52,7 @@ function Network() {
         var decompressed = util.decompress(message.data);
         var data = JSON.parse(decompressed);
         this.data = data;
-        if(this.sendStart && data.Ok) {
+        if (this.sendStart && data.Ok) {
             game.ping = Date.now() - this.sendStart;
             if (game.controller.system && game.controller.system.panel.visible) {
                 game.controller.system.ping.textContent = "Ping: " + game.ping + "ms";
