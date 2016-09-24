@@ -14,12 +14,12 @@ function loadingStage(version) {
         Entity.recipes = data.Recipes;
         Entity.init(data.EntitiesTemplates); //for [*add item]
 
-        game.network.send("enter", {Name: game.playerName});
+        game.network.send("enter", {Name: game.playerName}, sync);
     };
     req.send(null);
 
 
-    this.sync = function(data) {
+    function sync(data) {
         game.setTime(data.Time);
         game.map.initMap(data.Map);
         Character.initSprites();
