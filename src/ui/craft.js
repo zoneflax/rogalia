@@ -537,6 +537,7 @@ Craft.prototype = {
             dom.hr(),
             T("Ingredients") + ":",
             ingredients,
+            this.makeEquipRequirementes(this.current.type),
             dom.wrap("#recipe-slost", slots),
             dom.hr(),
             buttons,
@@ -656,6 +657,30 @@ Craft.prototype = {
                 this.makeLiquid(recipe),
             ]),
         ]);
+    },
+    makeEquipRequirementes: function(type) {
+        let tmpl = Entity.templates[type];
+        if ("Damage" in tmpl) {
+            var canEquip = tmpl.nonEffective() ? "unavailable" : "";
+
+            return dom.wrap("equip-requirements", [
+                dom.hr(),
+                T("Base damage") + ": " + tmpl.Damage,
+                dom.wrap(canEquip, T("Required swordsmanship level") + ": " + tmpl.Lvl),
+                dom.hr(),
+            ]);
+        }
+        if ("Armor" in tmpl) {
+            canEquip = tmpl.nonEffective() ? "unavailable" : "";
+
+            return dom.wrap("equip-requirements", [
+                dom.hr(),
+                T("Base armor") + ": " + tmpl.Armor,
+                dom.wrap(canEquip, T("Required vitality") + ": " + tmpl.Lvl),
+                dom.hr(),
+            ]);
+        }
+        return null;
     },
     makeSkill: function (recipe) {
         if (!recipe.Skill) {

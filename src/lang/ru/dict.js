@@ -1496,6 +1496,8 @@ T.dict = {
     "Prospect": "Разведать",
     "Prospecting": "Разведка руды",
     "Regeneration": "Регенерация",
+    "Cloth": "Ткань",
+    "Ore": "Руда",
     "Shovel": "Лопата",
     "Player corpse": "Труп",
     "Ok": "Ок",
@@ -1556,6 +1558,7 @@ T.dict = {
     "Color": "Цвет",
     "Opacity": "Прозрачность",
     "Try on": "Примерить",
+
     "Select hair color": "Выберите цвет волос",
     "You can have only one vendor": "У вас может быть только один торговец",
     "The license will allow you to set up a vendor post in your claim.": "Лицензия позволит вам установить торговую точку на вашем клейме.",
@@ -1644,4 +1647,8 @@ T.dict = {
 
     "Cannot unequip. You can only destroy it": "Нельзя снять. Можно только уничтожить.",
     "Name is too long": "Имя слишком длинное",
+    "Base damage": "Базовый урон",
+    "Required swordsmanship level": "Требуемый уровень фехтования",
+    "Base armor": "Базовая броня",
+    "Required vitality": "Требуемая выносливость",
 };
