@@ -10,6 +10,7 @@ function Chat() {
         system       : 7,
         announcement : 8,
         npc          : 9,
+        custom       : 100,
     };
 
     this.newMessageElement = dom.tag("input", "#new-message");
@@ -171,6 +172,11 @@ function Chat() {
             return true;
         }
 
+        if (e.target.classList.contains("channel-link")) {
+            self.setCustomChannel(e.target.dataset.channel);
+            return true;
+        }
+
         if (!e.target.classList.contains("from"))
             return true;
 
@@ -247,6 +253,15 @@ function Chat() {
             switch (cmd) {
             case "where":
                 self.addMessage(sprintf("%d %d %d", game.player.X, game.player.Y, game.player.Z));
+                break;
+            case "list-channels":
+                self.addMessage({
+                    Body: _.map(game.player.ChatChannels, ".Name").join(", "),
+                    Channel: channels.custom,
+                });
+                break;
+            case "set-channel":
+                self.setCustomChannel(arg);
                 break;
             case "lvl-down":
                 self.send(sprintf("*teleport %d %d %d", game.player.X, game.player.Y, game.player.Z + 1));
@@ -402,6 +417,12 @@ function Chat() {
             defaultPrefix: "party",
             channels: ["party", "private"]
         },
+        {
+            name: "custom",
+            hidden: true,
+            defaultPrefix: "custom",
+            channels: ["custom", "private"],
+        }
     ].map(function(tab, i) {
         var name = tab.name;
         var icon = new Image();
@@ -563,6 +584,7 @@ function Chat() {
         "http://": makeLinkParser("http"),
         "recipe:": recipeParser,
         "marker:": markerParser,
+        "channel:": channelParser,
         "b:": makeTagParser("b"),
         "i:": makeTagParser("i"),
         "u:": makeTagParser("u"),
@@ -600,7 +622,12 @@ function Chat() {
     function makeLinkParser(proto) {
         return function(data) {
             var url = proto + "://" + data;
-            return dom.link(url, decodeURI(url));
+            try {
+                var link = dom.link(url, decodeURI(url));
+                return link;
+            } catch(e) {
+                return data;
+            }
         };
     }
 
@@ -621,6 +648,13 @@ function Chat() {
         var title = data.split(" ").slice(2).join(" ") || T("Marker");
         link.textContent = title;
         link.dataset.marker = data;
+        return link;
+    }
+
+    function channelParser(data) {
+        var link = dom.link("", "", "channel-link");
+        link.textContent = "#" + data;;
+        link.dataset.channel = data;
         return link;
     }
 
@@ -646,10 +680,7 @@ function Chat() {
         if (message.To && message.From != SERVER)
             channel = channels.private;
 
-        var channelName = Object.keys(channels).find(function(name) {
-            return channel == channels[name];
-        });
-
+        var channelName = _.findKey(channels, _.partial(_.isEqual, channel));
         var elem = dom.div("message");
         elem.classList.add("channel-" + channelName);
         if (fromMe(message))
@@ -881,5 +912,31 @@ function Chat() {
             localStorage["chat.log." + tab.name] = tab.messagesElement.innerHTML;
         });
         myMessages.saveToStorage();
+    };
+
+    this.updateChannels = function(channels) {
+        let channel = _.first(channels);
+        if (channel) {
+            channels.custom = channel.Channel;
+            // var tab = _.find(tabs, { name: "custom" });
+        }
+    };
+
+    this.setCustomChannel = function(name) {
+        if (!setChannel())
+            game.network.send("chat-message", {message: "*join-channel " + name}, setChannel);
+
+        function setChannel() {
+            let channel = _.find(game.player.ChatChannels, {Name: name});
+            if (!channel) {
+                return false;
+            }
+            channels.custom = channel.Channel;
+            self.addMessage({
+                Body: T("Members") + ": " + channel.Members.join(", "),
+                Channel: channels.custom,
+            });
+            return true;
+        }
     };
 }

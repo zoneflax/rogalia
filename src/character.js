@@ -172,6 +172,10 @@ Character.prototype = {
             this.updateParty(data.Party);
         }
 
+        if ("ChatChannels" in data) {
+            game.chat && game.chat.updateChannels(data.ChatChannels);
+        }
+
         if (this.isPlayer)
             game.controller.updateMail(this.NewMail);
     },
@@ -307,31 +311,19 @@ Character.prototype = {
             };
             break;
         case "abu":
-            this.sprite.width = 128;
-            this.sprite.height = 128;
-            this.sprite.angle = Math.PI/2;
-            this.sprite.frames = {
-                "idle": 1,
-                "run": 3,
-            };
+            this.sprite.width = 120;
+            this.sprite.height = 120;
+            this.sprite.speed = 25000;
             break;
         case "senior-mocherator":
-            this.sprite.width = 80;
-            this.sprite.height = 80;
-            this.sprite.angle = Math.PI/2;
-            this.sprite.frames = {
-                "idle": 1,
-                "run": 3,
-            };
+            this.sprite.width = 110;
+            this.sprite.height = 110;
+            this.sprite.speed = 25000;
             break;
         case "mocherator":
-            this.sprite.width = 40;
-            this.sprite.height = 40;
-            this.sprite.angle = Math.PI/2;
-            this.sprite.frames = {
-                "idle": 1,
-                "run": 3,
-            };
+            this.sprite.width = 100;
+            this.sprite.height = 100;
+            this.sprite.speed = 25000;
             break;
         case "omsk":
             this.sprite.width = 170;

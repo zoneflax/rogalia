@@ -467,6 +467,7 @@ T.dict = {
     "private": "личные",
     "party": "группа",
     "server": "сервер",
+    "custom": "свой",
     "Disable help": "Отключить помощь",
     "Topics": "Темы",
     "Authors": "Авторы",
@@ -903,6 +904,9 @@ T.dict = {
     "Cow corpse": "Труп коровы",
     "Omsk corpse": "Труп Омска",
     "Plunder": "Разграбить",
+    "Abu": "Абу",
+    "Mocherator": "Мочератор",
+    "Senior mocherator": "Старший мочератор",
 
     "Access denied": "Доступ запрещен",
     "Already buying": "Уже покупается",

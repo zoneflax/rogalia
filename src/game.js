@@ -24,7 +24,6 @@ function Game(lang) {
 
     Settings.load(config);
 
-
     new DragManager();
 
     this.screen = {

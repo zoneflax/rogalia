@@ -90,7 +90,11 @@ Craft.prototype = {
             var has = ingredients[group];
             var required = recipe.Ingredients[group];
             var name = TS(group.replace("meta-", ""));
-            var ingredient = Stats.prototype.createParam(name, {Current: has, Max: required});
+            var ingredient = Stats.prototype.createParam(
+                _.truncate(name, {length: 14}),
+                {Current: has, Max: required}
+            );
+            ingredient.title = name;
             canBuild = canBuild && (has == required);
             this.ingredientsList.appendChild(ingredient);
         }
@@ -554,7 +558,6 @@ Craft.prototype = {
         for(var name in recipe.Ingredients) {
             var required = recipe.Ingredients[name];
             var group = name.replace("meta-", "");
-            var groupTitle = TS(group);
             var ingredient = dom.make("li", [required, "x ", this.makeLink(group)]);
             dom.append(ingredients, ingredient);
         }
