@@ -611,7 +611,7 @@ T.dict = {
     "Farmer boots": "Фермерские ботинки",
     "Steel pickaxe": "Стальная кирка",
     "Pickaxe": "Кирка",
-    "Boulder wall": "Стена из волунов",
+    "Boulder wall": "Стена из валунов",
     "Make window": "Сделать окно",
     "Banana palm tree": "Банановая пальма",
     "Chop": "Рубить",
@@ -1500,6 +1500,8 @@ T.dict = {
     "Ore": "Руда",
     "Shovel": "Лопата",
     "Player corpse": "Труп",
+    "Male corpse": "Труп мужчины",
+    "Female corpse": "Труп женщины",
     "Ok": "Ок",
     "Cancel": "Отмена",
     "No lots": "Нет лотов",
@@ -1651,4 +1653,5 @@ T.dict = {
     "Required swordsmanship level": "Требуемый уровень фехтования",
     "Base armor": "Базовая броня",
     "Required vitality": "Требуемая выносливость",
+    "Bleed": "Кровотечение",
 };

@@ -461,6 +461,11 @@ Character.prototype = {
             this.sprite.height = 100;
             this.sprite.offset = 45;
             break;
+        case "pig":
+            this.sprite.width = 100;
+            this.sprite.height = 100;
+            this.sprite.speed = 5000;
+            break;
         case "wolf-fatty":
             this.sprite.width = 120;
             this.sprite.height = 120;
@@ -1795,8 +1800,8 @@ Character.prototype = {
         if (this.IsNpc)
             return {};
         var parts = {
-            feet: null,
             legs: null,
+            feet: null,
             body: null,
             hair: null,
             head: null,
