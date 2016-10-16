@@ -1652,6 +1652,6 @@ T.dict = {
     "Base damage": "Базовый урон",
     "Required swordsmanship level": "Требуемый уровень фехтования",
     "Base armor": "Базовая броня",
-    "Required vitality": "Требуемая выносливость",
     "Bleed": "Кровотечение",
+    "Required vitality": "Требуемая живучесть",
 };
