@@ -67,6 +67,11 @@
             "Attack area",
             "Show character's attack area.",
         ],
+        comboHelper: [
+            "Combo",
+            "Show combo tips.",
+        ],
+
     },
     graphics: {
         snowflakes: [

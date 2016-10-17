@@ -1178,4 +1178,10 @@ function Controller(game) {
         }
         dom.hide(document.getElementById("new-mail"));
     };
+
+    this.updateCombo = function(waza) {
+        if (this.fight && config.ui.comboHelper) {
+            this.fight.combo.sync(waza);
+        }
+    };
 };

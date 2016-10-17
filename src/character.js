@@ -154,6 +154,10 @@ Character.prototype = {
             this.followPath();
         }
 
+        if ("Waza" in data) {
+            game.controller.updateCombo(data.Waza);
+        }
+
         if (this.Type == "margo") {
             this.reloadSprite();
         } else if (!init && JSON.stringify(this.getParts()) != this._parts) {

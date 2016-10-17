@@ -59,7 +59,7 @@ function Info(message, character) {
         break;
     case "combo":
         this.text = this.data.Combo;
-        this.x = 30;
+        this.x = 60;
         break;
     case "exp-gain":
         this.value = this.data;

@@ -2642,29 +2642,42 @@ input[type=number], .lot-quantity > input, .price > input {
     display: block;
 }
 
-.combo {
-    width: 32px;
-    line-height: 32px;
-    bottom: 30px;
-    z-index: 1;
-    background: #7b5323;
-    padding: 3px;
-    border-radius: 3px;
-    margin-top: 3px;
-}
 
-.combo-first {
+#combos {
     position: absolute;
+    bottom: 0;
     left: 0;
     right: 0;
+    width: 100px;
     margin: auto;
-    border: 1px solid gold;
-}
 
-.combo-continuation {
-    position: absolute;
-    left: 50px;
-    bottom: 0;
+    display: flex;
+    flex-direction: column-reverse;
+
+
+
+    .possible-actions {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .combo {
+        white-space: nowrap;
+        padding: 1px 5px;
+
+        margin: 3px;
+        background: #202326;
+        border: 1px solid #393e44;
+        border-radius: 3px;
+    }
+
+    .done {
+        color: lightgreen;
+    }
+
+    .finishing {
+        color: #e7aa69;
+    }
 }
 
 #barbershop {

@@ -27,6 +27,7 @@ var config = {
         showAttackRadius: true,
         fillClaim: false,
         strokeClaim: true,
+        comboHelper: true,
     },
     graphics: {
         // low: false,

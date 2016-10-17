@@ -51,6 +51,13 @@ function Settings() {
             else
                 game.chat.detach();
         },
+        "settings.ui.comboHelper": function(enabled) {
+            if (enabled) {
+                dom.show(document.getElementById("combos"));
+            } else {
+                dom.hide(document.getElementById("combos"));
+            }
+        },
         "settings.graphics.low": function() {
             game.map.reset();
         },
