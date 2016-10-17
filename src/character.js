@@ -31,7 +31,7 @@ function Character(id) {
     this.target = null;
     this.interactTarget = {};
 
-    this.Dx =  0;
+    this.Dx = 0;
     this.Dy = 0;
     this.Radius = CELL_SIZE / 4;
     this.isMoving = false;
@@ -88,20 +88,17 @@ Character.prototype = {
     get Y() {
         return this.y;
     },
-    set X(x) {
-        if (this.x == x)
-            return;
-        if (this.Dx == 0 || this.Settings.Pathfinding || Math.abs(this.x - x) > CELL_SIZE) {
+    set X(x) {},
+    set Y(y) {},
+    syncPosition: function(x, y) {
+        if (this.Dx == 0 ||
+            this.Dy == 0 ||
+            this.Settings.Pathfinding ||
+            (Math.abs(this.x - x) > CELL_SIZE) ||
+            (Math.abs(this.y - y) > CELL_SIZE)
+           ) {
             game.sortedEntities.remove(this);
             this.x = x;
-            game.sortedEntities.add(this);
-        }
-    },
-    set Y(y) {
-        if (this.y == y)
-            return;
-        if (this.Dy == 0 || this.Settings.Pathfinding || Math.abs(this.y - y) > CELL_SIZE) {
-            game.sortedEntities.remove(this);
             this.y = y;
             game.sortedEntities.add(this);
         }
@@ -143,6 +140,9 @@ Character.prototype = {
     },
     sync: function(data, init) {
         Character.copy(this, data);
+        if (data.X && data.Y) {
+            this.syncPosition(data.X, data.Y);
+        }
 
         this.burden = (this.Burden) ? Entity.get(this.Burden) : null;
         this.plow = ("Plowing" in this.Effects) ? Entity.get(this.Effects.Plowing.Plow) : null;
