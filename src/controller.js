@@ -799,7 +799,7 @@ function Controller(game) {
                         } else if (this.modifier.alt && game.player.IsAdmin) {
                             game.network.send("teleport", {X: this.world.x, Y: this.world.y});
                         } else if(!this.world.cursor) {
-                            game.player.setDst(this.world.x, this.world.y);
+                            game.player.onclick(this.world.x, this.world.y);
                         }
                     }
                     // close context menu when click is not on the menu item
@@ -1162,6 +1162,10 @@ function Controller(game) {
                 )
             ])
         ]);
+    };
+
+    this.wantShot = function() {
+        return (this.modifier.ctrl && this.actionButton.action == "bow");
     };
 
     this.updateActiveQuest = function() {

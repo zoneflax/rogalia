@@ -50,6 +50,7 @@ function mainStage(data) {
         game.entities.forEach(function(e) {
             e.update(game.epsilon);
         });
+        game.missiles = game.missiles.filter((m) => m.update(game.epsilon));
         game.controller.update();
         snow.update();
     };
@@ -62,6 +63,10 @@ function mainStage(data) {
             p.x, p.y, t.sprite.width, t.sprite.height,
             cam.x, cam.y, scr.width, scr.height
         );
+    }
+
+    function draw(t) {
+        t.draw();
     }
 
     function drawObject(t) {
@@ -95,6 +100,8 @@ function mainStage(data) {
         game.claims.forEach(drawClaim);
 
         game.sortedEntities.traverse(drawObject);
+
+        _.forEach(game.missiles, draw);
 
         // this.drawOrder();
         // this.drawTopologic();

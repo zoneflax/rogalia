@@ -24,6 +24,9 @@ function Info(message, character) {
         this.targetType = "target";
 
     switch(this.type) {
+    case "missile":
+        game.missiles.push(new Missile(this.data));
+        break;
     case "lvl-up":
         this.character.playAnimation({
             up: {
@@ -54,6 +57,7 @@ function Info(message, character) {
             game.sound.playSound("hit");
         else
             game.sound.playSound("punch");
+        // fallthrough
     case "damage":
         this.value = this.data.Value;
         break;
@@ -205,6 +209,7 @@ Info.prototype = {
             );
             break;
         case "miss":
+        case "evade":
         case "block":
             this.drawValue(
                 this.type,
@@ -276,6 +281,7 @@ Info.prototype = {
         switch (this.type) {
         case "murder":
         case "miss":
+        case "evade":
         case "block":
             return game.entities.get(this.data);
         case "combo":
@@ -351,6 +357,25 @@ Info.prototype = {
             }
         },
         "miss": function() {
+            switch (this.targetType) {
+            case "self":
+                return TT("{name} missed on you", {
+                    name: this.character.Name,
+                    sex: this.character.Sex,
+                });
+            case "target":
+                return TT("You missed on {name}", {
+                    name: this.target.Name,
+                    sex: this.target.Sex,
+                });
+            default:
+                return TT(
+                    "{which} missed on {who}",
+                    {who: this.target.Name, which: this.character.Name}
+                );
+            }
+        },
+        "evade": function() {
             switch (this.targetType) {
             case "self":
                 return TT("You evaded from {name}'s attack", {
