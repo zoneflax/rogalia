@@ -844,10 +844,6 @@ Character.prototype = {
         var up = this.animation.up;
         var down = this.animation.down;
 
-        if (this.isPlayer && game.controller.modifier.shift && game.controller.modifier.ctrl) {
-            this.drawBowRadius();
-        }
-
         if (down) {
             var downPoint = new Point(
                 s.x - down.width/2,
@@ -945,6 +941,10 @@ Character.prototype = {
     drawAura: function() {
         if (config.ui.showAttackRadius && this.sprite.name == "attack")
             this.drawAttackRadius();
+
+        if (this.isPlayer && game.controller.modifier.shift && game.controller.modifier.ctrl) {
+            this.drawBowRadius();
+        }
     },
     drawUI: function() {
         var marker = this.getQuestMarker();

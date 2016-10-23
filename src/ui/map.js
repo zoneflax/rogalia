@@ -378,9 +378,9 @@ function WorldMap() {
         var list = [
             get("plowed-soil"),
             get("soil"),
-            get("deep-water"),
             get("sand"),
             get("shallow-water"),
+            get("deep-water"),
         ];
         bioms.forEach(function(biom) {
             list.push(biom);
