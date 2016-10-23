@@ -37,11 +37,15 @@ window.TS = function(text) {
 window.T = function(text, symbol) {
     if (!util.isString(text))
         return text;
-    if (symbol)
-        text = util.symbolToString(text);
     var t = T.dict[text];
     if (t)
         return t;
+    if (symbol) {
+        text = util.symbolToString(text);
+        t = T.dict[text];
+        if (t)
+            return t;
+    }
     t = T.dict[util.ucfirst(text)];
     if (t)
         return util.lcfirst(t);

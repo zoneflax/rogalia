@@ -1063,6 +1063,8 @@ Entity.prototype = {
             "claim",
             "Claim",
             [
+                T("claim-help-text"),
+                dom.hr(),
                 makeButtons("Extend"),
                 dom.hr(),
                 makeButtons("Shrink")
