@@ -78,7 +78,7 @@ Mail.prototype = {
 
             del.onclick = function(event) {
                 event.stopPropagation();
-                game.confirm(T("Delete") + "?", function() {
+                game.popup.confirm(T("Delete") + "?", function() {
                     game.network.send(
                         "delete-letter",
                         {Id: self.mailbox.Id, Letter: self.letterId(letter)},

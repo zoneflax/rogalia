@@ -154,11 +154,11 @@ function createCharacterStage() {
     submit.textContent = T("Create");
     submit.onclick = function() {
         if (!name.value) {
-            game.alert(T("Please enter name"));
+            game.popup.alert(T("Please enter name"));
             return false;
         }
         if (!selectedProf) {
-            game.alert(T("Please select profession"));
+            game.popup.alert(T("Please select profession"));
             return false;
         }
         game.playerName = name.value;
@@ -202,7 +202,7 @@ function createCharacterStage() {
 
     this.sync = function(data) {
         if (data.Warning)
-            game.alert(T(data.Warning));
+            game.popup.alert(T(data.Warning));
         else
             game.setStage("loading", data);
     };

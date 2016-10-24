@@ -71,7 +71,7 @@ function Help() {
         function report() {
             game.network.send("bugreport", {Text: textarea.value}, function() {
                 textarea.value = "";
-                game.alert(T("Your message is sent. Thank you."));
+                game.popup.alert(T("Your message is sent. Thank you."));
             });
         }
     }

@@ -429,7 +429,10 @@ Entity.prototype = {
         }
         switch (this.Type) {
         case "instance-exit":
-            game.confirm(T("You will not be able to return to this intance. Are you sure?"), use);
+            game.popup.confirm(
+                T("You will not be able to return to this intance. Are you sure?"),
+                use
+            );
             return;
         }
         use();
@@ -448,11 +451,11 @@ Entity.prototype = {
     },
     setRespawn: function() {
         if (this.Creator && this.Creator != game.player.Id) {
-            game.alert(T("It's not your respawn"));
+            game.popup.alert(T("It's not your respawn"));
             return;
         }
         var id = this.Id;
-        game.confirm(T("Confirm?"), function() {
+        game.popup.confirm(T("Confirm?"), function() {
             game.network.send("SetRespawn", {id: id});
         });
     },
@@ -507,7 +510,7 @@ Entity.prototype = {
     //used by sign
     edit: function() {
         var id = this.Id;
-        game.prompt(T("Edit"), [this.Props.Text], function(text) {
+        game.popup.prompt(T("Edit"), [this.Props.Text], function(text) {
             game.network.send("sign-edit", {Id: id, Text: text});
         });
     },
@@ -536,7 +539,7 @@ Entity.prototype = {
     split: function() {
         var args = {Id: this.Id};
         if (this.Group == "currency") {
-            game.prompt(T("How many?"), 1, function(amount) {
+            game.popup.prompt(T("How many?"), 1, function(amount) {
                 args.Amount = +amount;
                 game.network.send("split", args);
             });
@@ -562,7 +565,7 @@ Entity.prototype = {
 
         switch(this.Group) {
         case "jukebox":
-            this.defaultActionSuccess = game.jukebox.open;
+            this.defaultActionSuccess = () => { game.jukebox.open(); };
         case "portal":
         case "book":
         case "grave":
@@ -1116,7 +1119,7 @@ Entity.prototype = {
             },
             "$prompt": function() {
                 var lastCmd = Entity.lastPromptCmd || "set-quality";
-                game.prompt("cmd?", lastCmd, function(cmd) {
+                game.popup.prompt("cmd?", lastCmd, function(cmd) {
                     Entity.lastPromptCmd = cmd;
                     game.chat.append("*" + cmd + " " + id);
                 });

@@ -192,7 +192,7 @@ function Minimap() {
                     sendPoint(point);
                 } else {
                     e.preventDefault();
-                    game.prompt(T("Description") + ":", "", function(title) {
+                    game.popup.prompt(T("Description") + ":", "", function(title) {
                         point.title = title;
                     });
                 }

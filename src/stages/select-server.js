@@ -9,7 +9,7 @@ function selectServerStage(panel) {
         var req = new XMLHttpRequest();
         req.onload = function() {
             if (this.status != 200) {
-                game.alert(this.response, quit);
+                game.popup.alert(this.response, quit);
                 return;
             }
             var servers = JSON.parse(this.response);

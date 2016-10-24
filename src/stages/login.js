@@ -167,7 +167,7 @@ function loginStage() {
         if (input.value)
             return true;
 
-        game.alert(T(message), function() {
+        game.popup.alert(T(message), function() {
             input.focus();
         });
 
@@ -194,7 +194,7 @@ function loginStage() {
             }, '5.37');
         });
         script.onerror = function() {
-            game.alert(T("Cannot connect to vk.com"));
+            game.popup.alert(T("Cannot connect to vk.com"));
             showLoginForm();
         };
     }
@@ -220,11 +220,11 @@ function loginStage() {
                 callback.call(this);
                 break;
             case 202:
-                game.alert(T(this.response.trim()));
+                game.popup.alert(T(this.response.trim()));
                 break;
             default:
                 console.error(this.response);
-                game.alert(T("Cannot connect to server"));
+                game.popup.alert(T("Cannot connect to server"));
                 break;
             }
         };

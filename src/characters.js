@@ -141,7 +141,7 @@ Character.npcActions = {
     },
     "Get village claim": function() {
         var id = this.Id;
-        game.prompt(T("Name") + "?", "", function(name) {
+        game.popup.prompt(T("Name") + "?", "", function(name) {
             game.network.send("get-village-claim", {Id: id, Name: name});
         });
     },
@@ -234,7 +234,7 @@ Character.npcActions = {
         var self = this;
         game.network.send("instance-list", {Id: this.Id}, function(data) {
             if (!data.Instances) {
-                game.alert(T("No available instances"));
+                game.popup.alert(T("No available instances"));
                 return;
             }
 

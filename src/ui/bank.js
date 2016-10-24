@@ -16,7 +16,7 @@ function Bank(npc) {
     var claimPaidTill = dom.tag("label");
     // var claimLastPaid = document.createElement("label");
     var claimPay = dom.button(T("Pay"), "", function() {
-        game.confirm(T("Confirm?"), function() {
+        game.popup.confirm(T("Confirm?"), function() {
             game.network.send("pay-for-claim", {Id: npc.Id}, callback);
         });
     });

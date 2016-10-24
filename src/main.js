@@ -1,12 +1,13 @@
 "use strict";
 
+var game;
 main();
 
 function main() {
     var lang = localStorage.getItem("lang") || defaultLang();
 
     T.init(lang, function() {
-        new Game(lang);
+        game = new Game(lang);
     });
 
     function defaultLang() {
