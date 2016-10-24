@@ -12,7 +12,6 @@ class Game {
             game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
         };
 
-        this.setFontSize();
         this.gateway = this._parseGateway();
 
         Settings.load(config);
@@ -172,6 +171,8 @@ class Game {
             maximize.classList.toggle("maximized");
             util.toggleFullscreen();
         };
+
+        this.setFontSize();
 
         this.stage = new Stage();
         this.setStage("login");
