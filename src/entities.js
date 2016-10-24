@@ -22,7 +22,7 @@ Entity.init = function(data) {
 
 
 Entity.sync = function(data, remove) {
-    remove && remove.forEach(game.removeEntityById);
+    remove && remove.forEach((e) => game.removeEntityById(e));
 
     var containers = []; //to update
     for (var id in data) {

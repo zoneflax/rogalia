@@ -66,16 +66,25 @@ class Game {
         this.popup = new Popup();
 
         this.button = {
+            _openLink(link) {
+                var siteUrl = "http://rogalia.ru";
+                if (link.charAt(0) == "$")
+                    link = siteUrl + link.substring(1);
+                return function() {
+                    window.open(link, "_blank");
+                    return false;
+                };
+            },
             donate: function() {
                 var link = document.createElement("button");
                 link.textContent = T("Donate");
-                link.onclick = openLink("http://rogalia.ru/shop/donate");
+                link.onclick = this._openLink("http://rogalia.ru/shop/donate");
                 return link;
             },
             blog: function() {
                 var link = document.createElement("button");
                 link.textContent = T("Blog");
-                link.onclick = openLink("http://tatrix.org");
+                link.onclick = this._openLink("http://tatrix.org");
                 return link;
             },
             vk: function() {
@@ -84,7 +93,7 @@ class Game {
                 vkLogo.src = "//vk.com/favicon.ico";
                 vk.appendChild(vkLogo);
                 vk.appendChild(document.createTextNode(T("Group")));
-                vk.onclick = openLink("//vk.com/rogalia");
+                vk.onclick = this._openLink("//vk.com/rogalia");
                 return vk;
             },
             twitter: function() {
@@ -93,19 +102,19 @@ class Game {
                 twitterLogo.src = "//twitter.com/favicon.ico";
                 twitter.appendChild(twitterLogo);
                 twitter.appendChild(document.createTextNode(T("Twitter")));
-                twitter.onclick = openLink("//twitter.com/Tatrics");
+                twitter.onclick = this._openLink("//twitter.com/Tatrics");
                 return twitter;
             },
             wiki: function() {
                 var wiki = document.createElement("button");
                 wiki.textContent = T("Wiki / FAQ");
-                wiki.onclick = openLink("$/wiki/");
+                wiki.onclick = this._openLink("$/wiki/");
                 return wiki;
             },
             forum: function() {
                 var forum = document.createElement("button");
                 forum.textContent = T("Forum");
-                forum.onclick = openLink("$/forum/");
+                forum.onclick = this._openLink("$/forum/");
                 return forum;
             },
             lobby: function() {
@@ -414,16 +423,6 @@ class Game {
 
     inVK() {
         return (window.name.indexOf('fXD') == 0);
-    }
-
-    _openLink(link) {
-        var siteUrl = "http://rogalia.ru";
-        if (link.charAt(0) == "$")
-            link = siteUrl + link.substring(1);
-        return function() {
-            window.open(link, "_blank");
-            return false;
-        };
     }
 
     error() {

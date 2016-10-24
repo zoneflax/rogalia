@@ -24,6 +24,5 @@ class Screen {
         game.canvas.height = this.height;
         game.world.style.width = this.width + "px";
         game.world.style.height = this.height + "px";
-        game.setFontSize();
     }
 }
