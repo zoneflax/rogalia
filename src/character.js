@@ -678,16 +678,30 @@ Character.prototype = {
     defaultAction: function(targetOnly) {
         if (this.isInteractive()) {
             this.interact();
-        } else {
-            // call actionButton on space
-            if (!targetOnly && this.isPlayer && game.controller.actionButton.active())
-                game.controller.actionButton.activate();
-            else if (this != game.player) {
-                var party = game.player.Party;
-                if (!party || party.indexOf(this.Name) == -1)
-                    game.player.setTarget(this);
-            }
+            return;
         }
+
+        // call actionButton on space
+        if (!targetOnly && this.isPlayer && game.controller.actionButton.active()) {
+            game.controller.actionButton.activate();
+            return;
+        }
+
+        if (this.isPlayer) {
+            return;
+        }
+
+        var party = game.player.Party;
+        if (party && party.indexOf(this.Name) == -1) {
+            return;
+        }
+
+        if (game.controller.wantShot()) {
+            game.player.shot(this.x, this.y);
+            return;
+        }
+
+        game.player.setTarget(this);
     },
     nameOffset: function() {
         switch (this.Type) {
@@ -829,6 +843,7 @@ Character.prototype = {
         var s = this.screen();
         var up = this.animation.up;
         var down = this.animation.down;
+
         if (down) {
             var downPoint = new Point(
                 s.x - down.width/2,
@@ -871,6 +886,24 @@ Character.prototype = {
             this.rider.draw(true);
         }
     },
+    drawBowRadius() {
+        var bow = Entity.get(this.equipSlot("right-hand"));
+        if (!bow || bow.Group != "bow") {
+            bow = Entity.get(this.equipSlot("left-hand"));
+        }
+        if (!bow || bow.Group != "bow") {
+            return;
+        }
+
+        // maximum range radius
+        game.ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
+        game.iso.fillCircle(this.X, this.Y, bow.Range.Maximum);
+
+        // effective range radius
+        game.ctx.fillStyle = "rgba(0, 255, 0, 0.2)";
+        game.iso.fillCircle(this.X, this.Y, bow.Range.Effective);
+
+    },
     drawCorpsePointer: function() {
         if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
             return;
@@ -908,6 +941,10 @@ Character.prototype = {
     drawAura: function() {
         if (config.ui.showAttackRadius && this.sprite.name == "attack")
             this.drawAttackRadius();
+
+        if (this.isPlayer && game.controller.modifier.shift && game.controller.modifier.ctrl) {
+            this.drawBowRadius();
+        }
     },
     drawUI: function() {
         var marker = this.getQuestMarker();
@@ -1404,6 +1441,7 @@ Character.prototype = {
         case "tool":
         case "taming":
         case "dildo":
+        case "bow":
         case "snowball":
         case "shit":
         case "fishing-rod":
@@ -1411,6 +1449,9 @@ Character.prototype = {
                 var done = null;
                 var cmd = "dig";
                 switch (action) {
+                case "bow":
+                    this.shot();
+                    return;
                 case "dildo":
                 case "snowball":
                 case "shit":
@@ -2050,5 +2091,19 @@ Character.prototype = {
         panel.setContents(panel.quest.getContents());
     },
     onremove: function() {
+    },
+    shot: function(x = 0, y = 0) {
+        if (!(this.target instanceof Character)) {
+            game.controller.showWarning("Select target");
+            return;
+        }
+        game.network.send("waza", {Name: "Shot", Id: this.target.Id, X: x, Y: y});
+    },
+    onclick: function(x, y) {
+        if (game.controller.wantShot()) {
+            this.shot(x, y);
+        } else {
+            this.setDst(x, y);
+        }
     },
 };

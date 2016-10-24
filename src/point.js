@@ -13,7 +13,7 @@ function Point(x, y) {
             this.x = x.X;
             this.y = x.Y;
         } else {
-            game.error("No x or y in %j", x);
+            game.error("No x or y in", x);
         }
         break;
     case 2:
@@ -161,5 +161,17 @@ Point.prototype = {
     },
     isZero: function() {
         return this.x == 0 && this.y == 0;
+    },
+    move: function(towards, length) {
+        var lenX = towards.x - this.x;
+        var lenY = towards.y - this.y;
+        var len  = Math.hypot(lenX, lenY);
+
+        var delta = new Point(lenX / len, lenY / len);
+        delta.normalize().mul(length);
+        this.add(delta);
+    },
+    distanceTo(p) {
+        return Math.hypot(this.x - p.x, this.y - p.y);
     },
 };

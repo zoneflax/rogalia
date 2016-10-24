@@ -101,6 +101,7 @@ function Game(lang) {
     this.sortedEntities = new BinarySearchTree();
     this.claims = new HashTable();
     this.characters = new HashTable();
+    this.missiles = [];
     this.containers = {};
     this.vendors = {};
 
@@ -470,8 +471,8 @@ function Game(lang) {
     };
 
     this.error = function() {
-        game.sendErrorf(arguments);
-        game.exit();
+        this.sendErrorf.apply(this, arguments);
+        this.exit();
         throw "Fatal error";
     };
 

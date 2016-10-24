@@ -1010,7 +1010,7 @@ T.dict = {
     "You cannot use that": "Вы не можете использовать это",
     "You do not have enough money": "У вас недостаточно денег",
     "You failed to mine here": "Попытка добычи провалилась",
-    "You have no ammo": "У вас нет боезапаса",
+    "No ammo": "Нет боезапаса",
     "You have no bag": "У вас нет сумки",
     "You have no permission to destroy that": "У вас нет полномочий это уничтожать",
     "You must be near transmutation circle to disassemble": "Вы должны быть возле круга превращения чтобы разбирать что-то",
@@ -1326,6 +1326,9 @@ T.dict = {
     "You evaded from {name}'s attack": "Вы уклонились от атаки {name}",
     "{name} evaded from your attack": "{name} {sex уклонился уклонилась} от вашей атаки",
     "{who} evaded from {which}'s attack": "{who} уклонился от атаки {which}",
+    "{name} missed on you": "{name} промазал по вам",
+    "You missed on {name}": "Вы промазали по {name}",
+    "{which} missed on {who}": "{whick} промазал по {who}",
     "Blocked {name}'s attack": "Атака {name} заблокирована",
     "{name} blocked your attack": "{name} заблокировал вашу атаку",
     "{who} blocked {which}'s attack": "{who} заблокировал атаку {which}",
@@ -1390,6 +1393,7 @@ T.dict = {
     "kaiten": "кайтен",
     "tsuki": "тски",
     "shomen": "шомен",
+    "shot": "выстрел",
     "shihonage": "шихонаге",
     "iriminage": "ириминаге",
     "ikkyo": "Иккё",
@@ -1660,4 +1664,8 @@ T.dict = {
     "Base armor": "Базовая броня",
     "Bleed": "Кровотечение",
     "Required vitality": "Требуемая живучесть",
+
+    "claim-help-text": "Расширение территории автоматически списывает оплату со счета в банке. Оплаченный срок аренды можно посмотреть в банке, там же и проплатить аренду на срок от недели до трех месяцев.",
+
+    "News": "Новости",
 };

@@ -331,7 +331,7 @@ Entity.prototype = {
         }
 
         if (!path) {
-            game.error("Entity %j has no sprite", this);
+            game.error("Entity has no sprite", this);
         }
 
         var spriteVersion = path + this.Dye;
@@ -1059,9 +1059,17 @@ Entity.prototype = {
                 );
             }));
         }
-        new Panel("claim", "Claim", [makeButtons("Extend"), dom.hr(), makeButtons("Shrink")])
-            .setTemporary(true)
-            .show();
+        new Panel(
+            "claim",
+            "Claim",
+            [
+                T("claim-help-text"),
+                dom.hr(),
+                makeButtons("Extend"),
+                dom.hr(),
+                makeButtons("Shrink")
+            ]
+        ).setTemporary(true).show();
     },
     applyAdminCmd: function() {
         var id = this.Id;

@@ -1603,7 +1603,7 @@ ol li a:hover {
     z-index: 2;
 }
 
-.icon-button, #build-warning, #bg-state {
+.icon-button, #bg-state {
     .cursor-pointer;
     display: inline-block;
     border-radius: 2px;
@@ -1636,12 +1636,47 @@ ol li a:hover {
 }
 
 
+#news {
+    max-width: none;
+    .contents {
+        width: 500px;
+    }
+
+    hr {
+        margin: 5px -5px;
+    }
+}
+
+@keyframes highlight-news {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+#news-icon {
+    right: 28px;
+    background-image: url("assets/icons/news.png");
+
+    &.breaking-news {
+        background-image: url("assets/icons/breaking-news.png");
+        animation: highlight-news 1s;
+        animation-iteration-count:infinite;
+    }
+}
+
+#news-desc {
+    white-space: nowrap;
+    position: absolute;
+}
+
+
 #maximize {
     background-image: url("assets/icons/maximize.png");
 }
 #maximize.maximized {
     background-image: url("assets/icons/minimize.png");
 }
+
 #mute {
     right: 28px;
     background-image: url("assets/icons/mute.png");
@@ -1676,16 +1711,6 @@ ol li a:hover {
     height: 22px;
 }
 
-#build-warning {
-    position: absolute;
-    top: 6px;
-    right: 150px;
-    z-index: 2;
-}
-
-#build-warning-details > hr{
-    margin: 5px -5px;
-}
 #bg-state {
     right: 0;
     left: 0;
@@ -1714,10 +1739,6 @@ ol li a:hover {
     left: 0;
     right: 0;
     top: 20px;
-}
-
-#build-warning-panel {
-    width: 500px;
 }
 
 big {
@@ -1947,41 +1968,6 @@ input[type=number], .lot-quantity > input, .price > input {
     float: left;
 }
 
-#news > .contents {
-    max-width: 400px;
-    width: 400px;
-    max-height: 500px;
-    overflow-y: auto;
-}
-#news > .contents > ul {
-    margin: 0;
-    padding: 0;
-}
-
-#news > .contents > ul > li {
-    list-style-type: none;
-}
-#news li.unread > .summary {
-    color: lightgreen;
-}
-#news .summary {
-    color: #ffefd5;
-    margin: 0;
-    font-size: large;
-    font-weight: bold;
-    border-bottom: 1px solid;
-}
-#news .details {
-    color: #eee;
-    margin-top: 3px;
-    margin-bottom: 10px;
-}
-#news .details ul {
-    list-style-type: square;
-}
-#news time {
-    float: right;
-}
 #talk p, #news p {
     margin: 5px 0 0;
 }
@@ -2115,6 +2101,11 @@ input[type=number], .lot-quantity > input, .price > input {
     top: 0px;
     right: 0px;
 }
+
+#claim {
+    max-width: 320px;
+}
+
 .claim-actions {
     width: 300px;
     height: 200px;

@@ -644,7 +644,7 @@ Craft.prototype = {
             return true;
         var skill = game.player.Skills[recipe.Skill];
         if (!skill)
-            game.error("Skill %s not found", recipe.Skill);
+            game.error("Skill not found", recipe.Skill);
         return skill.Value.Current >= recipe.Lvl;
     },
     makeRequirements: function(recipe) {
