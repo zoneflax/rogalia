@@ -1647,6 +1647,7 @@ T.dict = {
     "White stone arc": "Белая каменная арка",
     "White stone pillar": "Белый каменный столб",
     "White stone wall": "Белая стена",
+    "White stone door": "Белая каменная дверь",
 
     "Server": "Сервер",
     "Status": "Статус",

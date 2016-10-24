@@ -1061,17 +1061,6 @@ Character.prototype = {
         game.ctx.strokeStyle = "cyan";
         game.iso.strokeRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
         game.iso.strokeCircle(this.X, this.Y, this.Radius);
-
-        // game.ctx.beginPath();
-        // game.ctx.fillStyle = "black";
-        // game.ctx.beginPath();
-        // game.ctx.arc(p.x, p.y, 5, 0, 2 * Math.PI);
-        // game.ctx.fill();
-
-        // game.ctx.fillStyle = "#fff";
-        // game.ctx.beginPath();
-        // game.ctx.arc(p.x, p.y, 2, 0, 2 * Math.PI);
-        // game.ctx.fill();
     },
     getName: function() {
         var name = this.Name;
