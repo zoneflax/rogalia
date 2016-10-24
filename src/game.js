@@ -544,6 +544,22 @@ function Game(lang) {
         return false;
     };
 
+    function loadLess() {
+        window.less = {
+            env: "development",
+            useFileCache: false,
+        };
+
+        util.loadScript("//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js").onload = function() {
+            var link = dom.tag("link");
+            link.rel = "stylesheet/less";
+            link.href = "main.less";
+            dom.insert(link, document.head);
+            less.sheets.push(link);
+            less.refresh();
+        };
+    }
+
     function tick(currentTime) {
         game.controller.fpsStatsBegin();
 
@@ -554,6 +570,10 @@ function Game(lang) {
 
         requestAnimationFrame(tick);
     };
+
+    if (document.location.href.match("localhost")) {
+        loadLess();
+    }
 
     T.update();
     tick();
