@@ -6,32 +6,23 @@ function lobbyStage(data) {
         if (!warn) {
             return;
         }
-        dom.show(document.getElementById("build-warning"));
 
-        var panel = new Panel("build-warning-panel", "");
+        var panel = new Panel("news", "News");
         panel.temporary = true;
         panel.contents.innerHTML = warn;
-        panel.hooks.hide = function() {
-            localStorage.setItem("build.warning.hidden", Date.now());
+
+        var title = panel.element.querySelector("h2").textContent;
+        var icon = document.getElementById("news-icon");
+        dom.show(icon);
+        icon.onclick = function() {
+            localStorage.setItem("news.title", title);
+            panel.show();
+            icon.classList.remove("breaking-news");
         };
 
-        var title = document.getElementById("build-warning-title");
-        var buildWarning = document.getElementById("build-warning");
-        dom.replace(buildWarning, title);
-        title.id = "build-warning";
-        panel.setTitle(title.textContent);
-
-        title.onclick = function() {
-            panel.show();
-        };
-
-        var last = new Date(+localStorage.getItem("build.warning.hidden"));
-        if (Date.now() - last < 24 * 60 * 60 * 1000) {
-            panel.hide();
-        } else {
-            panel.show();
+        if (title != localStorage.getItem("news.title")) {
+            icon.classList.add("breaking-news");
         }
-
     });
 
     var characters = (data && data.Characters) || lobbyStage.characters || [];
