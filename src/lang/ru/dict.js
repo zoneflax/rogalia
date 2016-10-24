@@ -1307,7 +1307,7 @@ T.dict = {
     "Cannot buy liftable items" : "Нельзя продать переносимые предметы",
     "You need faction rank 2 or greater" : "Нужен ранг 2 или выше",
     "Cannot use myself as target" : "Нельзя навестись на себя",
-    "Pvp is not allowed" : "ПВП не разрешено",
+    "Attack is not allowed" : "Атака запрещена",
 
     "plague": "чума",
 
