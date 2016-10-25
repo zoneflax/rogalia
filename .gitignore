@@ -1,4 +1,4 @@
 .idea
-/main.css*
 /metadata.json
 /node_modules
+/bundle.*

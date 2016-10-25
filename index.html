@@ -3,19 +3,20 @@
   <head>
     <meta charset="utf-8">
     <title>Rogalia :: Alpha :: Early access</title>
-    <!-- <script src='https://www.google.com/recaptcha/api.js'></script> -->
-    <!-- <script>
-         (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-         (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	 m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-         })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-         ga('create', 'UA-32173828-2', 'auto');
-         ga('send', 'pageview');
-         </script> -->
     <link rel="icon" type="image/png" href="favicon.ico?v2" />
-    <link rel="stylesheet" href="main.css"/>
     <link rel="stylesheet" href="color-picker.css"/>
+
+    <!-- build:css -->
+    <link rel="stylesheet/less" href="main.less"/>
+    <script>
+     window.less = {
+         env: "development",
+         useFileCache: false,
+     };
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
+    <!-- endbuild -->
+
   </head>
   <body>
     <div id="cursor"></div>
@@ -113,71 +114,8 @@
     <script src="lib/sprintf.min.js"></script>
     <script src="lib/lodash.min.js"></script>
     <script src="lib/colorpicker.min.js"></script>
-    <script src="src/image-filters.js"></script>
-    <script src="src/binary-search-tree.js"></script>
-    <script src="src/polyfill.js"></script>
-    <script src="src/hashtable.js"></script>
-    <script src="src/config.js"></script>
-    <script src="src/dom.js"></script>
-    <script src="src/util.js"></script>
-    <script src="src/drag-manager.js"></script>
-    <script src="src/panel.js"></script>
-    <script src="src/popup.js"></script>
-    <script src="src/lang/dict.js"></script>
-    <script src="src/effects.js"></script>
-    <script src="src/talks.js"></script>
-    <script src="src/point.js"></script>
-    <script src="src/sprite.js"></script>
-    <script src="src/rloader.js"></script>
-    <script src="src/sound.js"></script>
-    <script src="src/stages/stage.js"></script>
-    <script src="src/stages/select-server.js"></script>
-    <script src="src/stages/create-character.js"></script>
-    <script src="src/stages/exit.js"></script>
-    <script src="src/stages/loading.js"></script>
-    <script src="src/stages/lobby.js"></script>
-    <script src="src/stages/login.js"></script>
-    <script src="src/stages/main.js"></script>
-    <script src="src/stages/stage.js"></script>
-    <script src="src/ui/quests/quest.js"></script>
-    <script src="src/ui/quests/quests.js"></script>
-    <script src="src/ui/quests/journal.js"></script>
-    <script src="src/ui/chat/chat.js"></script>
-    <script src="src/ui/chat/ring.js"></script>
-    <script src="src/ui/craft.js"></script>
-    <script src="src/ui/minimap.js"></script>
-    <script src="src/ui/users.js"></script>
-    <script src="src/ui/stats.js"></script>
-    <script src="src/ui/skills.js"></script>
-    <script src="src/ui/settings.js"></script>
-    <script src="src/ui/system.js"></script>
-    <script src="src/ui/fight.js"></script>
-    <script src="src/controller.js"></script>
-    <script src="src/network.js"></script>
-    <script src="src/container/container.js"></script>
-    <script src="src/container/slot.js"></script>
-    <script src="src/container/equip.js"></script>
-    <script src="src/missile.js"></script>
-    <script src="src/entity.js"></script>
-    <script src="src/entities.js"></script>
-    <script src="src/info.js"></script>
-    <script src="src/character.js"></script>
-    <script src="src/characters.js"></script>
-    <script src="src/ui/map.js"></script>
-    <script src="src/menu.js"></script>
-    <script src="src/iso-drawer.js"></script>
-    <script src="src/jukebox.js"></script>
-    <script src="src/screen.js"></script>
-    <script src="src/game.js"></script>
-    <script src="src/ui/vendor.js"></script>
-    <script src="src/ui/exchange.js"></script>
-    <script src="src/ui/bank.js"></script>
-    <script src="src/ui/shop.js"></script>
-    <script src="src/ui/barbershop.js"></script>
-    <script src="src/ui/auction.js"></script>
-    <script src="src/ui/mail.js"></script>
-    <script src="src/ui/help.js"></script>
-    <script src="src/new-year.js"></script>
-    <script src="src/main.js"></script>
+    <!-- build:js -->
+    <script src="dev-loader.js"></script>
+    <!-- endbuild -->
   </body>
 </html>
