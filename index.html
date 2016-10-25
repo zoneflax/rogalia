@@ -4,8 +4,19 @@
     <meta charset="utf-8">
     <title>Rogalia :: Alpha :: Early access</title>
     <link rel="icon" type="image/png" href="favicon.ico?v2" />
-    <link rel="stylesheet" href="main.css?v=$version"/>
     <link rel="stylesheet" href="color-picker.css"/>
+
+    <!-- build:css -->
+    <link rel="stylesheet/less" href="main.less"/>
+    <script>
+     window.less = {
+         env: "development",
+         useFileCache: false,
+     };
+    </script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js"></script>
+    <!-- endbuild -->
+
   </head>
   <body>
     <div id="cursor"></div>
@@ -103,6 +114,8 @@
     <script src="lib/sprintf.min.js"></script>
     <script src="lib/lodash.min.js"></script>
     <script src="lib/colorpicker.min.js"></script>
-    <script src="bundle.js?v=$version"></script>
+    <!-- build:js -->
+    <script src="dev-loader.js"></script>
+    <!-- endbuild -->
   </body>
 </html>

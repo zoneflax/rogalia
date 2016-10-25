@@ -3,7 +3,7 @@
   "version": "0.23.0",
   "description": "Rogalia sandbox mmorpg client",
   "scripts": {
-    "build": "load-metadata && compile",
+    "build": "npm run load-metadata && npm run compile",
     "compile": "gulp",
     "load-metadata": "curl -s http://rogalik.tatrix.org:8080/metadata > ../client/metadata.json"
   },
@@ -21,7 +21,9 @@
     "babel-preset-es2015": "^6.18.0",
     "gulp-babel": "^6.1.2",
     "gulp-concat": "^2.6.0",
+    "gulp-html-replace": "^1.6.1",
     "gulp-less": "^3.1.0",
+    "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^2.2.0",
     "gulp-uglify": "^2.0.0",

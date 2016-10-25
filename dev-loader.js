@@ -1,5 +1,3 @@
-// This is a dev loader.
-// bundle.js is overwritten by gulp for production
 !function() {
     var req = new XMLHttpRequest();
     req.onload = function() {

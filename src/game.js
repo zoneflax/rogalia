@@ -190,10 +190,6 @@ class Game {
             return false;
         };
 
-        if (document.location.href.match("localhost")) {
-            this._loadLess();
-        }
-
         T.update();
         this._tick();
     }
@@ -430,22 +426,6 @@ class Game {
         this.sendErrorf.apply(this, arguments);
         this.exit();
         throw "Fatal error";
-    }
-
-    _loadLess() {
-        window.less = {
-            env: "development",
-            useFileCache: false,
-        };
-
-        util.loadScript("//cdnjs.cloudflare.com/ajax/libs/less.js/2.7.1/less.min.js").onload = function() {
-            var link = dom.tag("link");
-            link.rel = "stylesheet/less";
-            link.href = "main.less";
-            dom.insert(link, document.head);
-            less.sheets.push(link);
-            less.refresh();
-        };
     }
 
     _tick(currentTime) {
