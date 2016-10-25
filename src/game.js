@@ -177,13 +177,14 @@ class Game {
         this.stage = new Stage();
         this.setStage("login");
 
-        window.onerror = function(msg, url, line) {
+        window.onerror = function(msg, url, line, column) {
             window.onerror = null;
             game.sendError([
                 "Client error:",
                 msg,
                 "Url: " + url,
                 "Line: " + line,
+                "Column: " + column,
                 "UA: " + navigator.userAgent,
             ].join("|"));
             game.exit(T("Client error. Refresh page or try again later."));

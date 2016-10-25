@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npm run load-metadata && npm run compile",
     "compile": "gulp",
-    "load-metadata": "curl -s http://rogalik.tatrix.org:8080/metadata > ../client/metadata.json"
+    "load-metadata": "curl -s http://rogalik.tatrix.org:8080/metadata > metadata.json"
   },
   "repository": {
     "type": "git",
