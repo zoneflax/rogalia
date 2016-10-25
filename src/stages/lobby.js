@@ -16,7 +16,7 @@ function lobbyStage(data) {
         dom.show(icon);
         icon.onclick = function() {
             localStorage.setItem("news.title", title);
-            panel.show();
+            panel.toggle();
             icon.classList.remove("breaking-news");
         };
 

@@ -21,8 +21,8 @@ class Missile {
         p.y -= height;
         p.x -= height;
         game.ctx.fillStyle = "#fff";
-        game.iso.fillCircle(p.x, p.y, 1);
+        game.iso.fillCircle(p.x, p.y, 2);
         game.ctx.strokeStyle = "#000";
-        game.iso.strokeCircle(p.x, p.y, 2);
+        game.iso.strokeCircle(p.x, p.y, 3);
     }
 }
