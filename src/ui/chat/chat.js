@@ -66,7 +66,7 @@ function Chat() {
 
         var actions = [
             {
-                private: self.preparePrivate.bind(self, name)
+                privateMessage: self.preparePrivate.bind(self, name)
             },
             partyActions,
             {

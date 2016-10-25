@@ -1169,7 +1169,7 @@ T.dict = {
     "Mushroom trip": "Грибной приход",
     "Fire": "Огонь",
     "Select option": "Выберите настройку",
-    "Private": "Личное сообщение",
+    "Private message": "Личное сообщение",
     "Add to friends": "Добавить в друзья",
     "Remove from friends": "Удалить из друзей",
     "Invite to party": "Пригласить в группу",

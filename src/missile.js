@@ -1,10 +1,14 @@
 "use strict";
 class Missile {
-    constructor({From, To, Speed}) {
+    constructor({From, To, Type, Speed}) {
         this.from = new Point(From);
         this.to = new Point(To);
         this.point = this.from.clone();
         this.speed = Speed;
+        this.sprite = new Sprite(Type + ".png");
+
+        var velocity = this.to.clone().sub(this.from);
+        this.angle = Math.atan2(velocity.y, velocity.x);
     }
 
     update(k) {
@@ -17,12 +21,15 @@ class Missile {
 
     draw() {
         var p = this.point.clone();
-        var height = 0;
+        var height = 40;
         p.y -= height;
         p.x -= height;
-        game.ctx.fillStyle = "#fff";
-        game.iso.fillCircle(p.x, p.y, 2);
-        game.ctx.strokeStyle = "#000";
-        game.iso.strokeCircle(p.x, p.y, 3);
+        p.toScreen();
+        p.rotate(-this.angle);
+
+        game.ctx.save();
+        game.ctx.rotate(this.angle);
+        this.sprite.draw(p);
+        game.ctx.restore();
     }
 }
