@@ -24,7 +24,6 @@
     "./src/stages/lobby.js",
     "./src/stages/login.js",
     "./src/stages/main.js",
-    "./src/stages/stage.js",
     "./src/ui/quests/quest.js",
     "./src/ui/quests/quests.js",
     "./src/ui/quests/journal.js",

@@ -4,7 +4,9 @@ function loginStage() {
     var self = this;
     this.panel = null;
 
-    if (game.inVK())
+    if ("require" in window) {
+        steamLogin();
+    } else if (game.inVK())
         vkLogin();
     else
         showLoginForm();
@@ -204,13 +206,43 @@ function loginStage() {
         formData.append("token", token);
 
         var req = new XMLHttpRequest();
-        req.open("POST", game.gateway + "/oauth", true);
+        req.open("POST", game.gateway + "/oauth/vk/", true);
         req.send(formData);
 
         req.onload = makeResponseHandler(function() {
             game.oauthToken = token;
             fastLogin();
         });
+    }
+
+    function steamLogin() {
+        var greenworks = require("./lib/greenworks");
+        if (!greenworks.initAPI()) {
+            alert("Error on initializing Steam API.");
+            return;
+        }
+        console.log("Steam API has been initalized.");
+        greenworks.getAuthSessionTicket(
+            function onSuccess(session) {
+                var formData = new FormData();
+                formData.append("ticket", session.ticket);
+
+                game.gateway = "http://localhost:49112/gateway";
+                var req = new XMLHttpRequest();
+                req.open("POST", game.gateway + "/oauth/steam", true);
+                req.send(formData);
+
+                req.onload = makeResponseHandler(function() {
+                    var token = JSON.parse(this.responseText).Token;
+                    game.oauthToken = token;
+                    fastLogin();
+                });
+            },
+            function onError(err) {
+                alert(err);
+            }
+        );
+
     }
 
     function makeResponseHandler(callback) {
