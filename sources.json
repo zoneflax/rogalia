@@ -49,6 +49,7 @@
     "./src/info.js",
     "./src/character.js",
     "./src/characters.js",
+    "./src/character-sprites.js",
     "./src/ui/map.js",
     "./src/menu.js",
     "./src/iso-drawer.js",
