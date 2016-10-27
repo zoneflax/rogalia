@@ -38,18 +38,20 @@ HashTable.prototype = {
 
     },
     forEach: function(callback) {
-        _.forEach(this.array, callback);
+        // update may remove elements from HashTable
+        // so use native forEach
+        this.array.forEach(callback);
     },
     every: function(predicate) {
-        return _.every(this.array, predicate);
+        return this.array.every(predicate);
     },
     some: function(predicate) {
-        return _.some(this.array, predicate);
+        return this.array.some(predicate);
     },
     filter: function(predicate) {
-        return _.filter(this.array, predicate);
+        return this.array.filter(predicate);
     },
     map: function(predicate) {
-        return _.map(this.array, predicate);
+        return this.array.map(predicate);
     },
 };

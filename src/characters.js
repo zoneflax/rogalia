@@ -25,7 +25,7 @@ Character.copy = function copy(to, from) {
 };
 
 Character.sync = function(data, remove) {
-    remove && remove.forEach((c) => game.removeCharacterById(c));
+    remove && remove.forEach((id) => game.removeCharacterById(id));
     for (var id in data) {
         var from = data[id];
         var to = game.entities.get(id);

@@ -351,7 +351,7 @@ Vendor.prototype = {
         Entity.sync(items);
     },
     removeItems: function() {
-        Object.keys(this.items).forEach(game.removeEntityById);
+        _.forEach(this.items, (_, id) => game.removeEntityById(id));
         this.items = {};
     }
 };
