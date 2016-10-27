@@ -58,7 +58,9 @@ Skills.prototype = {
                     item.getElementsByClassName("meter-title")[0].textContent = "max";
                 } else if (game.player.Attr[util.ucfirst(attr)].Current <= skill.Value.Current) {
                     item.classList.add("attr-" + attr);
+                    item.locked = true;
                 }
+                item.attr = attr;
                 item.name = name;
                 item.skill = skill;
                 item.classList.add("skill");
@@ -102,24 +104,28 @@ Skills.prototype = {
 
         var next = this.nextLvlOf(skill);
         if (!next) {
-            text += T("Skill has it's maximum level");
-        } else {
-            text += TT("Unlocks {lvl} lvl of the {skill} skill", {lvl: next.Name, skill: name});
-            text += "\n\n";
-            text += T("New maximum value") + ": " + next.Value + "\n";
-            text += T("Cost") + ": " + next.Cost + "\n";
-            text += TT("You have {amount} LP", {amount: game.player.LP});
-            text += "\n";
-
-            var diff = next.Cost - game.player.LP;
-            if(diff > 0) {
-                text += TT("You need {diff} additional LP to learn this skill", {diff: diff});
-                this.learnButton.disabled = true;
-            } else {
-                this.learnButton.disabled = false;
-            }
+            dom.setContents(this.description, T("Skill has it's maximum level"));
+            return;
         }
-        this.description.textContent = text;
+
+        var diff = next.Cost - game.player.LP;
+        if(diff > 0) {
+            this.learnButton.disabled = true;
+        } else {
+            this.learnButton.disabled = false;
+        }
+
+        var locked = (item.locked) ?
+            dom.span(TT("This skill cannot be greater then {attr}", {attr: item.attr}) + "\n", "unavailable")
+            : "\n";
+        dom.setContents(this.description, [
+            TT("Unlocks {lvl} lvl of the {skill} skill", {lvl: next.Name, skill: name}) + "\n",
+            locked,
+            T("New maximum value") + ": " + next.Value + "\n",
+            T("Cost") + ": " + next.Cost + "\n",
+            TT("You have {amount} LP", {amount: game.player.LP}) + "\n",
+            TT("You need {diff} additional LP to learn this skill", {diff: diff}) + "\n",
+        ]);
     },
     descriptions: {
         "Survival": "Survival gives you basic recipes like bonfire",

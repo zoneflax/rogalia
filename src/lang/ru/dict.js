@@ -1122,6 +1122,7 @@ T.dict = {
     "Carpet": "Ковер",
 
     "Horse": "Лошадь",
+    "Pig": "Свинья",
     "Rabbit": "Кролик",
     "Dog": "Собака",
     "Cat": "Кошка",
@@ -1379,7 +1380,7 @@ T.dict = {
     "You need {liquid} to craft {name}": "Вам нужна {liquid} для создания {name}",
     "You need {num} free slots": "Вам нужно {num} свободных слотов",
     "You need {skill} skill at least {lvl} lvl to build {name}": "Вам нужно знание навыка {skill} {lvl} уровня, чтобы построить {name}",
-    "Skill {name} increase by {value}": "Навык {name} увеличился на {value}",
+    "Skill {name} increased by {value}": "Навык {name} увеличился на {value}",
     "Vendor": "Торговец",
     "Internal server error; Please try again later": "Внутреняя ошибка сервер; Пожалуйста, попробуйте позже",
     "Poker table": "Покерный стол",
