@@ -173,6 +173,9 @@ var dom = {
             }))
         ], classOrId);
     },
+    ul: function(items, classOrId) {
+        return this.make("ul", items.map(item => dom.make("li", item)), classOrId);
+    },
     canvas: function (w, h, classOrId) {
         var canvas = dom.tag("canvas", classOrId);
         canvas.ctx = canvas.getContext("2d");

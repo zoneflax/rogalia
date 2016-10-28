@@ -1063,6 +1063,7 @@ T.dict = {
     "Raw potato casserole": "Сырая картофельная запеканка",
     "Sharp stick": "Острая палка",
     "Sour cream": "Сметана",
+    "Milk": "Молоко",
     "Butter": "Масло",
     "Salt": "Соль",
     "Churn": "Маслобойка",
@@ -1397,7 +1398,7 @@ T.dict = {
     "shot": "выстрел",
     "shihonage": "шихонаге",
     "iriminage": "ириминаге",
-    "ikkyo": "Иккё",
+    "ikkyo": "иккё",
     "Ratings": "Рейтинги",
     "Description": "Описание",
     "Key": "Клавиша",
@@ -1671,4 +1672,6 @@ T.dict = {
 
     "News": "Новости",
     "Second hand must be empty": "Вторая рука должна быть пуста",
+    "Melee fighting": "Ближний бой",
+    "Ranged fighting": "Дальний бой",
 };

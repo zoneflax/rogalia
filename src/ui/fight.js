@@ -104,36 +104,43 @@ function Fight() {
 
     this.combo = {
         elem: document.getElementById("combos"),
+        // also used in ui/help.js
         combos: [
             {
-            	name: "de",
-		actions: "irimi-tsuki",
+                name: "de",
+                actions: "irimi-tsuki",
                 dontStack: ["De", "Su", "Nya"],
+                desc: "Баф (+поглощение, +блок с щита)",
             },
             {
                 name: "su",
-		actions: "irimi-shomen",
+                actions: "irimi-shomen",
                 dontStack: ["De", "Su", "Nya"],
+                desc: "Баф (+урон, +шанс крита)",
             },
             {
                 name: "nya",
-		actions: "kaiten-kaiten",
+                actions: "kaiten-kaiten",
                 dontStack: ["De", "Su", "Nya"],
+                desc: "Аое Баф (+шанс крита для De, +поглощение для Su)"
             },
             {
                 name: "ikkyo",
-		actions: "irimi-tsuki-tsuki",
+                actions: "irimi-tsuki-tsuki",
                 require: "De",
+                desc: "Удар (агро моба на себя, в пвп 50% стан 1-5 сек)",
             },
             {
                 name: "shihonage",
-		actions: "irimi-tenkan-shomen",
+                actions: "irimi-tenkan-shomen",
                 require: "Su",
+                desc: "Удар (много урона, замедление на 5 сек)"
             },
             {
-		name: "iriminage",
-		actions: "irimi-tenkan-kaiten",
+                name: "iriminage",
+                actions: "irimi-tenkan-kaiten",
                 require: "Nya",
+                desc: "Удар (20% стан на 2 сек)"
             },
         ],
         timeout: null,

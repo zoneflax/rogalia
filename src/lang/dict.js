@@ -40,7 +40,7 @@ window.T = function(text, symbol) {
     var t = T.dict[text];
     if (t)
         return t;
-    if (symbol) {
+    if (symbol === true) {
         text = util.symbolToString(text);
         t = T.dict[text];
         if (t)
