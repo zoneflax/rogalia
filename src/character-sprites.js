@@ -324,7 +324,8 @@ Character.spritesInfo = {
         height: 96,
     },
     "player": {
-        offset: 40,
+        nameOffset: 40,
+        offset: 28,
         width: 112,
         height: 112,
         speed: 14000,
