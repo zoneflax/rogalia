@@ -1,6 +1,7 @@
 {
   "name": "rogalia",
   "version": "0.23.0",
+  "main": "index.html",
   "description": "Rogalia sandbox mmorpg client",
   "scripts": {
     "build": "npm run load-metadata && npm run compile",

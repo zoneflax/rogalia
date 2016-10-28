@@ -79,42 +79,6 @@ Character.flags = {
     Confederation: null,
 };
 
-Character.initSprites = function() {
-    Character.animations.forEach(function(animation) {
-        Character.sprites.male.naked[animation] = {
-            clean: new Sprite(Character.spriteDir + "male/" + animation + "/naked.png"),
-            default: new Sprite(Character.spriteDir + "male/" + animation + "/naked.png"),
-        };
-        Character.sprites.female.naked[animation] = {
-            clean: new Sprite(Character.spriteDir + "female/" + animation + "/naked.png"),
-            default: new Sprite(Character.spriteDir + "female/" + animation + "/naked-default.png"),
-        };
-    });
-    ["sword"].forEach(function(weapon) {
-        Character.sprites.male.weapons[weapon] = new Sprite(Character.spriteDir + "male/weapon/" + weapon + ".png");
-        Character.sprites.female.weapons[weapon] = new Sprite(Character.spriteDir + "female/weapon/" + weapon + ".png");
-    });
-    // shared by all characters; stupid by fast?
-    // TODO: 99% of the time we don't need it.
-    [["stun", 64, 42]].forEach(function(effect) {
-        var name = effect[0];
-        var width = effect[1];
-        var height = effect[2];
-        var sprite = new Sprite(Character.spriteDir + "/effects/" + name + ".png", width, height);
-        Character.sprites.effects[name] = sprite;
-    });
-    Character.corpse = {
-        corpse: new Sprite("icons/corpse/corpse.png"),
-        arrow: new Sprite("icons/corpse/arrow.png"),
-    };
-
-    Character.flags.Empire = new Sprite("icons/flags/empire.png");
-    Character.flags.Confederation = new Sprite("icons/flags/confederation.png");
-    Character.flags.red = new Sprite("icons/flags/red.png");
-    Character.flags.blue = new Sprite("icons/flags/blue.png");
-    Character.pvpFlag = new Sprite("icons/pvp.png");
-};
-
 Character.sex = function(sex) {
     return ["male", "female"][sex];
 };
