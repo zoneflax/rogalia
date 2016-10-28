@@ -4,7 +4,7 @@ function loginStage() {
     var self = this;
     this.panel = null;
 
-    if ("require" in window) {
+    if ("require" in window && false) {
         steamLogin();
     } else if (game.inVK())
         vkLogin();

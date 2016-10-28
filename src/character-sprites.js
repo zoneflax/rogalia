@@ -231,6 +231,7 @@ Character.spritesInfo = {
         width: 150,
         height: 150,
         offset: 43,
+        nameOffset: 90,
     },
     "shadow": {
         width: 160,
@@ -323,7 +324,7 @@ Character.spritesInfo = {
         height: 96,
     },
     "player": {
-        offset: 28,
+        offset: 40,
         width: 112,
         height: 112,
         speed: 14000,
