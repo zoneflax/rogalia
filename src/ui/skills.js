@@ -109,22 +109,25 @@ Skills.prototype = {
         }
 
         var diff = next.Cost - game.player.LP;
-        var notEnoughLearnPoints=diff>0;
-        this.learnButton.disabled = notEnoughLearnPoints;
+        var notEnoughLP = diff > 0;
+        this.learnButton.disabled = notEnoughLP;
 
-        var locked = (item.locked) ?
-            dom.span(TT("This skill cannot be greater then {attr}", {attr: item.attr}) + "\n", "unavailable")
+        var locked = (item.locked)
+            ? dom.span(TT("This skill cannot be greater then {attr}", {attr: item.attr}) + "\n", "unavailable")
             : "\n";
-        var descriptionDetails=[TT("Unlocks {lvl} lvl of the {skill} skill", {lvl: next.Name, skill: name}) + "\n",
+
+        var lpRequired = (notEnoughLP)
+            ? (TT("You need {diff} additional LP to learn this skill", {diff: diff}) + "\n")
+            : null;
+
+        dom.setContents(this.description, [
+            TT("Unlocks {lvl} lvl of the {skill} skill", {lvl: next.Name, skill: name}) + "\n",
             locked,
             T("New maximum value") + ": " + next.Value + "\n",
             T("Cost") + ": " + next.Cost + "\n",
-            TT("You have {amount} LP", {amount: game.player.LP}) + "\n"
-        ];
-        if (notEnoughLearnPoints){
-            descriptionDetails.push(TT("You need {diff} additional LP to learn this skill", {diff: diff}) + "\n");
-        }
-        dom.setContents(this.description, desc);
+            TT("You have {amount} LP", {amount: game.player.LP}) + "\n",
+            lpRequired,
+        ]);
     },
     descriptions: {
         "Survival": "Survival gives you basic recipes like bonfire",
