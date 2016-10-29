@@ -1,5 +1,6 @@
 "use strict";
 function lobbyStage(data) {
+    game.login = data.Login;
     document.getElementById("version").textContent =  data.Version;
 
     util.ajax("news/" + game.lang + ".html", function(warn) {
@@ -82,6 +83,7 @@ function lobbyStage(data) {
         contents.push(dom.hr());
         contents.push(dom.button(T("Back"), "", function() {
             lobbyStage.characters = [];
+            game.clearServerInfo();
             game.setStage("selectServer");
         }));
     }

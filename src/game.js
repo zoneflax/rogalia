@@ -16,6 +16,8 @@ class Game {
 
         this.gateway = this._gatewayAddr();
 
+        this.login = "";
+
         Settings.load(config);
 
         new DragManager();
@@ -39,7 +41,6 @@ class Game {
 
         this.menu = new Menu();
 
-        this.oauthToken = null;
         this.login = null;
         this.player = null;
         this.playerName = "";
@@ -307,20 +308,16 @@ class Game {
         localStorage.setItem("server", JSON.stringify(server));
     }
 
-    clearLogin() {
-        localStorage.removeItem("login");
+    loadSessionToken() {
+        return localStorage.getItem("session.token");
     }
 
-    loadPassword() {
-        return localStorage.getItem("password");
+    setSessionToken(token) {
+        localStorage.setItem("session.token", token);
     }
 
-    setPassword(password) {
-        localStorage.setItem("password", password);
-    }
-
-    clearPassword() {
-        localStorage.removeItem("password");
+    clearSessionToken() {
+        localStorage.removeItem("session.token");
     }
 
     clearServerInfo() {
@@ -329,24 +326,17 @@ class Game {
 
     clearCredentials() {
         this.clearServerInfo();
-        this.clearLogin();
-        this.clearPassword();
+        this.clearSessionToken();
     }
 
-    connectAndLogin(server) {
+    connectAndLogin(server, token) {
         this.setServerInfo(server);
         document.getElementById("server-addr").textContent = server.Name;
 
         var self = this;
-        this.network.run(server.Addr, this.oauthToken ? oauth : login);
-
-        function oauth() {
-            self.network.send("oauth", { Token: self.oauthToken });
-        }
-
-        function login() {
-            self.network.send("login", { Login: self.login, Password: self.loadPassword() });
-        }
+        this.network.run(server.Addr, function() {
+            self.network.send("login", { Token: token });
+        });
     }
 
     logout() {

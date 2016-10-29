@@ -68,7 +68,7 @@ function selectServerStage(panel) {
         self.sync = openLobby;
         self.panel.close();
         self.draw = Stage.makeEllipsisDrawer();
-        game.connectAndLogin(server);
+        game.connectAndLogin(server, game.loadSessionToken());
     }
 
     function openLobby(data) {

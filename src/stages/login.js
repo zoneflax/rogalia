@@ -4,6 +4,10 @@ function loginStage() {
     var self = this;
     this.panel = null;
 
+    if (fastLogin()) {
+        return;
+    }
+
     if ("require" in window && false) {
         steamLogin();
     } else if (game.inVK())
@@ -14,7 +18,7 @@ function loginStage() {
     function showLoginForm() {
         var login = dom.input(T("Login"), game.loadLogin());
 
-        var password = dom.input(T("Password"), game.loadPassword(), "password");
+        var password = dom.input(T("Password"), "", "password");
         password.onkeydown = submitSignin;
 
         var email = dom.input(T("Email"));
@@ -48,9 +52,7 @@ function loginStage() {
             .hideCloseButton()
             .show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
 
-        if (login.value && password.value)
-            submitSignin();
-        else if (login.value)
+        if (login.value)
             password.focus();
         else
             login.focus();
@@ -113,39 +115,59 @@ function loginStage() {
 
         var req = new XMLHttpRequest();
         req.open("POST", game.gateway + "/login", true);
+        req.onload = onload;
         req.send(formData);
-
-        req.onload = makeResponseHandler(function() {
-            game.setPassword(password);
-            fastLogin();
-        });
     }
+
 
     function fastLogin() {
         var server = game.loadServerInfo();
+        var token = game.loadSessionToken();
         if (server) {
-            game.connectAndLogin(server);
-            self.sync = openLobby;
-            self.panel && self.panel.close();
-            self.draw = Stage.makeEllipsisDrawer();
-        } else {
-            self.panel && self.panel.close();
-            game.setStage("selectServer");
+            if (token) {
+                connectAndLogin(server, token);
+            } else {
+                selectServer();
+            }
+            return true;
         }
+        if (token) {
+            var formData = new FormData();
+            formData.append("token", token);
+
+            var req = new XMLHttpRequest();
+            req.open("POST", game.gateway + "/token", true);
+            req.onload = onload;
+            req.send(formData);
+
+            return true;
+        }
+        return false;
+    }
+
+    function selectServer() {
+        self.panel && self.panel.close();
+        game.setStage("selectServer");
+    }
+
+    function connectAndLogin(server, token) {
+        game.connectAndLogin(server, token);
+        self.sync = openLobby;
+        self.panel && self.panel.close();
+        self.draw = Stage.makeEllipsisDrawer();
     }
 
     function openLobby(data) {
         if (data.Warning) {
+            game.popup.alert(T(data.Warning));
             self.draw = function(){};
-            game.clearPassword();
+            game.clearSessionToken();
             showLoginForm();
             return;
         }
         self.panel && self.panel.close();
         game.setStage("lobby", data);
     }
-
-
 
     function signup(login, password, email) {
         game.setLogin(login);
@@ -159,10 +181,7 @@ function loginStage() {
         req.open("POST", game.gateway + "/register", true);
         req.send(formData);
 
-        req.onload = makeResponseHandler(function() {
-            game.setPassword(password);
-            fastLogin();
-        });
+        req.onload = onload;
     }
 
     function validate(input, message) {
@@ -208,10 +227,7 @@ function loginStage() {
         req.open("POST", game.gateway + "/oauth/vk/", true);
         req.send(formData);
 
-        req.onload = makeResponseHandler(function() {
-            game.oauthToken = token;
-            fastLogin();
-        });
+        req.onload = onload;
     }
 
     function steamLogin() {
@@ -231,11 +247,7 @@ function loginStage() {
                 req.open("POST", game.gateway + "/oauth/steam", true);
                 req.send(formData);
 
-                req.onload = makeResponseHandler(function() {
-                    var token = JSON.parse(this.responseText).Token;
-                    game.oauthToken = token;
-                    fastLogin();
-                });
+                req.onload = onload;
             },
             function onError(err) {
                 alert(err);
@@ -244,21 +256,26 @@ function loginStage() {
 
     }
 
-    function makeResponseHandler(callback) {
-        return function() {
-            switch (this.status) {
-            case 200:
-                callback.call(this);
-                break;
-            case 202:
-                game.popup.alert(T(this.response.trim()));
-                break;
-            default:
-                console.error(this.response);
-                game.popup.alert(T("Cannot connect to server"));
-                break;
+    function onload() {
+        switch (this.status) {
+        case 200:
+            var token = JSON.parse(this.responseText).Token;
+            game.setSessionToken(token);
+            var server = game.loadServerInfo();
+            if (server) {
+                connectAndLogin(server, token);
+            } else {
+                selectServer();
             }
-        };
+            break;
+        case 202:
+            game.popup.alert(T(this.response.trim()));
+            break;
+        default:
+            console.error(this.response);
+            game.popup.alert(T("Cannot connect to server"));
+            break;
+        }
     }
 }
 
