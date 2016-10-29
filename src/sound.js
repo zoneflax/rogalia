@@ -46,7 +46,7 @@ function Sound() {
 
     this.init = function() {
         trackId = loadLastTrack();
-        if (document.location.hash.indexOf("mute") != -1) {
+        if (game.args["mute"]) {
             config.sound.playMusic = false;
             config.sound.playSound = false;
         } else {

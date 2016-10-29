@@ -1,4 +1,5 @@
 "use strict";
+
 function System() {
     var self = this;
     this.fps = new FpsStats();
@@ -38,9 +39,7 @@ function System() {
             game.button.donate(),
             dom.hr(),
             game.button.lobby(),
-            dom.button(T("Logout"), "", function() {
-                document.location.reload();
-            }),
+            dom.button(T("Logout"), "", game.reload),
         ]
     );
 }

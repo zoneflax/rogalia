@@ -1,9 +1,11 @@
 "use strict";
 
+var game;
 class Game {
-    constructor(lang) {
-        window.game = this;
+    constructor(lang, args) {
+        game = this;
         this.lang = lang;
+        this.args = args;
         this.world = document.getElementById("world");
         this.interface = document.getElementById("interface");
         this.canvas = document.getElementById("canvas");
@@ -12,7 +14,7 @@ class Game {
             game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
         };
 
-        this.gateway = this._parseGateway();
+        this.gateway = this._gatewayAddr();
 
         Settings.load(config);
 
@@ -199,10 +201,10 @@ class Game {
         this.ctx.font = (size || FONT_SIZE) + "px Dejavu Sans";
     }
 
-    _parseGateway() {
-        var match = document.location.search.match(/[?&"]gateway=([^&]+)/);
-        return (match)
-            ? "//" + match[1] + "/gateway"
+    _gatewayAddr() {
+        var gateway = this.args["gateway"];
+        return (gateway)
+            ? "//" + gateway + "/gateway"
             : "//rogalik.tatrix.org/gateway";
     }
 

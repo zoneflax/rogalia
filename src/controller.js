@@ -572,7 +572,7 @@ function Controller(game) {
 
         this.ready = true;
 
-        if (document.location.hash.indexOf("noui") != -1) {
+        if (game.args["noui"]) {
             config.map.world = false;
             dom.hide(game.world);
         }

@@ -183,8 +183,7 @@ function loginStage() {
             VK.init(function() {
                 VK.callMethod("showInstallBox");
                 VK.addCallback("onApplicationAdded", function() {
-                    var match = document.location.search.match(/access_token=(\w+)/);
-                    var token = match && match[1];
+                    var token = game.args["access_token"];
                     if (token) {
                         oauthLogin(token);
                     } else {

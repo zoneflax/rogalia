@@ -117,7 +117,7 @@ Skills.prototype = {
             : "\n";
 
         var lpRequired = (notEnoughLP)
-            ? (TT("You need {diff} additional LP to learn this skill", {diff: diff}) + "\n")
+            ? (TT("You need {diff} additional LP to learn this skill", {diff}) + "\n")
             : null;
 
         dom.setContents(this.description, [

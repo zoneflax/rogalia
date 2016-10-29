@@ -12,10 +12,6 @@ function mainStage(data) {
             game.controller.showWarning(data.Warning);
             return;
         }
-        if (data.Reconnect) {
-            document.location.search = "?server=" + data.Reconnect;
-            return;
-        }
         Entity.sync(data.Entities || [], data.RemoveEntities || null);
 
         Character.sync(data.Players || [], data.RemovePlayers || null);
