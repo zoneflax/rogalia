@@ -8,7 +8,7 @@ function loginStage() {
         return;
     }
 
-    if ("require" in window && false) {
+    if (game.args["steam"]) {
         steamLogin();
     } else if (game.inVK())
         vkLogin();
@@ -138,6 +138,7 @@ function loginStage() {
             var req = new XMLHttpRequest();
             req.open("POST", game.gateway + "/token", true);
             req.onload = onload;
+            req.onerror = onload;
             req.send(formData);
 
             return true;
