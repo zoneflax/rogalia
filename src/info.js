@@ -48,9 +48,9 @@ function Info(message, character) {
         this.target.playAnimation({
             up: {
                 name: "damage",
-                width: 128,
-                height: 128,
-                dy: -this.target.sprite.height/2 + this.target.sprite.offset,
+                width: 64,
+                height: 64,
+                dy: -this.target.sprite.height/2,
             },
         });
         if (this.target.IsNpc)

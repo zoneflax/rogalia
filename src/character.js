@@ -330,6 +330,7 @@ Character.prototype = {
             }
 
             sprite.image = canvas;
+            sprite.framesNum = sprite.image.width / sprite.width;
             sprite.makeOutline();
             sprite.ready = true;
             sprite.loading = false;
@@ -1000,7 +1001,10 @@ Character.prototype = {
             speed *= this.speedFactor;
             break;
         case "attack":
-            spriteSpeed *= 0.8;
+            spriteSpeed = this.Action.Duration / this.sprite.framesNum;
+            if (!this.IsMob)
+                spriteSpeed *= 2;
+            speed = 1;
             break;
         }
 

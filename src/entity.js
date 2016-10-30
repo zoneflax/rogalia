@@ -160,7 +160,7 @@ Entity.prototype = {
             elements.push(dom.wrap(".param", [T("Armor"), dom.wrap(".value", this.armor())]));
             elements.push(dom.hr());
             elements.push(dom.make("div", T("Requirements")));
-            var requirement = Stats.prototype.createValue("Vitality", this.Lvl);
+            var requirement = Stats.prototype.createValue("Vitality", this.template().Lvl);
             if (this.nonEffective())
                 requirement.classList.add("unavailable");
             elements.push(requirement);
@@ -168,7 +168,7 @@ Entity.prototype = {
             elements.push(dom.wrap(".param", [T("Damage"), dom.wrap(".value", this.damage())]));
             elements.push(dom.hr());
             elements.push(dom.make("div", T("Requirements")));
-            requirement = Stats.prototype.createValue("Swordsmanship", this.Lvl);
+            requirement = Stats.prototype.createValue("Swordsmanship", this.template().Lvl);
             if (this.nonEffective())
                 requirement.classList.add("unavailable");
             elements.push(requirement);
@@ -190,9 +190,9 @@ Entity.prototype = {
     },
     nonEffective: function() {
         if (this.Armor)
-            return game.player.Attr.Vitality.Current < this.Lvl;
+            return game.player.Attr.Vitality.Current < this.template().Lvl;
         else if (this.Damage)
-            return game.player.Skills.Swordsmanship.Value.Current < this.Lvl;
+            return game.player.Skills.Swordsmanship.Value.Current < this.template().Lvl;
         return false;
     },
     armor: function() {
@@ -1135,5 +1135,8 @@ Entity.prototype = {
             game.jukebox.stop();
             game.jukebox.panel.hide();
         }
+    },
+    template: function() {
+        return Entity.templates[this.Type];
     },
 };
