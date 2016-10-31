@@ -205,8 +205,8 @@ class Game {
     _gatewayAddr() {
         var gateway = this.args["gateway"];
         return (gateway)
-            ? "http://" + gateway + "/gateway"
-            : "http://rogalik.tatrix.org/gateway";
+            ? "//" + gateway + "/gateway"
+            : "//rogalik.tatrix.org/gateway";
     }
 
     initTime(time, tick) {
@@ -412,7 +412,7 @@ class Game {
     }
 
     inVK() {
-        return (window.name.indexOf('fXD') == 0);
+        return (window.name.indexOf("fXD") == 0);
     }
 
     error() {

@@ -13,6 +13,11 @@ function main() {
     function defaultLang(args) {
         var supportedLangs = ["ru", "en"];
 
+        // force ru for vk
+        if (window.name.indexOf("fXD") == 0) {
+            return "ru";
+        }
+
         var lang = args["lang"] || navigator.language.substring(0, 2);
         if (supportedLangs.includes(lang)) {
             return lang;

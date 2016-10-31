@@ -230,7 +230,7 @@ function loginStage() {
         formData.append("token", token);
 
         var req = new XMLHttpRequest();
-        req.open("POST", game.gateway + "/oauth/vk/", true);
+        req.open("POST", game.gateway + "/oauth/vk", true);
         req.send(formData);
 
         req.onload = onload;
