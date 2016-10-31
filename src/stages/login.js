@@ -152,6 +152,11 @@ function loginStage() {
     }
 
     function connectAndLogin(server, token) {
+        // TODO: remove fix
+        if (!token) {
+            this.clearSessionToken();
+            return;
+        }
         game.connectAndLogin(server, token);
         self.sync = openLobby;
         self.panel && self.panel.close();
