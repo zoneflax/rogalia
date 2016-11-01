@@ -276,6 +276,8 @@ function loginStage() {
             break;
         case 202:
             game.popup.alert(T(this.response.trim()));
+            game.clearSessionToken();
+            showLoginForm();
             break;
         default:
             console.error(this.response);
