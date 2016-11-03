@@ -3,7 +3,7 @@
 onmessage = function (e) {
     var data = e.data;
     var parser = new Parser(
-        parseData(data.pixels, data.bioms),
+        data.pixels,
         data.bioms,
         data.cells_x,
         data.cells_y
@@ -14,57 +14,39 @@ onmessage = function (e) {
     });
 };
 
-function parseData(pixels, bioms) {
-    var data = [];
-    var i = 0;
-    var color = 0;
-    bioms = bioms.map(function(biom) {
-        return biom.Color;
-    });
-
-    [].forEach.call(pixels, function(colorComponent, px) {
-        if (i < 3) {
-            color |=  colorComponent << ((2 - i) * 8);
-            i++;
-        } else {
-            var id = bioms.indexOf(color);
-            if (id == -1) {
-                postMessage({error: "Cannot find biom for px " + px + " " + color});
-                return;
-            }
-            data.push(id);
-            color = 0;
-            i = 0;
-        }
-    });
-    return data;
-}
-
 function Parser(data, bioms, cells_x, cells_y) {
-    this.data = [];
-    for(var h = 0; h < cells_y; h++) {
-        this.data.push([]);
-        for(var w = 0; w < cells_x; w++) {
-            var id = data[h * cells_x + w];
-            var biom = bioms[id];
-	        this.data[h].push({
-                x: w,
-                y: h,
-                id: id,
-                corners: new Array(4),
-                transition: new Array(4),
-                biom: biom,
-            });
-        }
-    }
-
     this.layers = bioms.map(function() {
         return [];
     });
 
+    var colorMap = bioms.reduce(function(map, biom, index) {
+        map[biom.Color] = [biom, index];
+        return map;
+    }, {});
+
+    this.data = new Array(cells_y);
+    for(var y = 0; y < cells_y; y++) {
+        this.data[y] = new Array(cells_x);
+        for(var x = 0; x < cells_x; x++) {
+            var color = data[y * cells_x + x];
+            var [biom, index] = colorMap[color];
+            if (!biom) {
+                throw new Error("Unknown biom color: " + color);
+            }
+	        this.data[y][x] = {
+                x: x,
+                y: y,
+                id: index,
+                corners: new Array(4),
+                transition: new Array(4),
+                biom: biom,
+            };
+        }
+    }
+
     for(var y = 0; y < cells_y; y++) {
         for(var x = 0; x < cells_x; x++) {
-            id = this.data[y][x].id;
+            var id = this.data[y][x].id;
             for (var c = 0; c < 4; c++) {
                 var offset = 0;
                 var cx = 1 - (c & 0x1);

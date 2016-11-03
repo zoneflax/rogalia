@@ -40,34 +40,44 @@ function WorldMap() {
         this.ready = true;
     }.bind(this);
 
-    var img = new Image;
-    img.onload = function() {
-        this.cells_x = img.width;
-        this.cells_y = img.height;
+    this.sync = function(data, map) {
+        var width = 64;
+        var height = 64;
+        this.cells_x = width;
+        this.cells_y = height;
 
-        this.width = img.width * CELL_SIZE;
-        this.height = img.height * CELL_SIZE;
+        this.width = width * CELL_SIZE;
+        this.height = height * CELL_SIZE;
 
-        this.minimapCanvas.width = 2*img.width;
-        this.minimapCanvas.height = img.height;
-
-        var ctx = this.minimapCanvas.ctx;
-        ctx.drawImage(img, 0, 0);
+        this.syncMinimap(data, width, height);
 
         worker.postMessage({
             bioms: this.bioms,
-            pixels: ctx.getImageData(0, 0, img.width, img.height).data,
+            pixels: data,
             cells_x: this.cells_x,
             cells_y: this.cells_y,
         });
-    }.bind(this);
 
-    this.sync = function(data, map) {
-        img.src = "data:image/png;base64," + data;
         if (map) {
             this.full.width = map.Width;
             this.full.height = map.Height;
         }
+    };
+
+    this.syncMinimap = function(data, width, height) {
+        this.minimapCanvas.width = 2*width;
+        this.minimapCanvas.height = height;
+
+        var pixels = new Uint8ClampedArray(data.length*4);
+        var color;
+        for (var i = 0, j = 0, l = data.length; i < l; i++, j += 4) {
+            color = data[i];
+            pixels[j+0] = (color >> 16) & 0xff;
+            pixels[j+1] = (color >> 8) & 0xff;
+            pixels[j+2] = (color >> 0) & 0xff;
+            pixels[j+3] = 0xff;
+        };
+        this.minimapCanvas.ctx.putImageData(new ImageData(pixels, width, height), 0, 0);
     };
 
     this.reset = function() {
@@ -412,11 +422,11 @@ function WorldMap() {
         x = (x / CELL_SIZE) << 0;
         y = (y / CELL_SIZE) << 0;
         if (!this.data[y]) {
-            // game.sendErrorf("Map cell %d %d not found (y)", x, y);
+            // throw new Error("Map cell not found (y) " + x + ", " + y);
             return null;
         }
         if (!this.data[y][x]) {
-            // game.sendErrorf("Map cell %d %d not found (x)", x, y);
+            // throw new Error("Map cell not found (x+y) " + x + ", " + y);
             return null;
         }
         return this.data[y][x];
