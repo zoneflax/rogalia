@@ -686,6 +686,9 @@ function Chat() {
         if (fromMe(message))
             elem.classList.add("from-me");
 
+        if (message.From == "TatriX")
+            elem.classList.add("from-admin");
+
         dom.append(elem, contents);
 
         tabs.forEach(function(tab) {
@@ -806,7 +809,6 @@ function Chat() {
 
         if (fromMe(message) || !sendNotification)
             return;
-
 
         var config = {
             icon : "assets/rogalik-64.png",
