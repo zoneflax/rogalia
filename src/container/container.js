@@ -166,7 +166,7 @@ Container.prototype = {
             this.name,
             [slots, this.fuel, dom.hr(), dom.wrap(".container-actions", buttons)]
         );
-        this.panel.entity = this.entity;
+        // this.panel.entity = this.entity;
         this.panel.hooks.hide = this.markAllAsSeen.bind(this);
         this.panel.hooks.show = function() {
             if (this._syncReq) {
@@ -239,8 +239,9 @@ Container.prototype = {
             }
             var entity = Entity.get(id);
             if (!entity) {
-                if (this.panel)
+                if (this.panel) {
                     this.panel.close();
+                }
                 game.sendErrorf("Entity with id %d is not found in container %d", id, this.id);
                 return;
             }

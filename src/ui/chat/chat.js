@@ -686,7 +686,7 @@ function Chat() {
         if (fromMe(message))
             elem.classList.add("from-me");
 
-        if (message.From == "TatriX")
+        if (message.From == "TatriX" || message.from == "Nanalli")
             elem.classList.add("from-admin");
 
         dom.append(elem, contents);

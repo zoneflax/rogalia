@@ -145,6 +145,7 @@ Panel.prototype = {
         if (this.element && this.element.parentNode)
             dom.remove(this.element);
 
+        localStorage.removeItem(this.lsKey);
         delete game.panels[this.name];
     },
     setTitle: function(text) {
