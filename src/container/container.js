@@ -239,6 +239,8 @@ Container.prototype = {
             }
             var entity = Entity.get(id);
             if (!entity) {
+                if (this.panel)
+                    this.panel.close();
                 game.sendErrorf("Entity with id %d is not found in container %d", id, this.id);
                 return;
             }
