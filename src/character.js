@@ -548,33 +548,17 @@ Character.prototype = {
     },
     getDrawPoint: function() {
         var p = this.screen();
-        var dx = 0;
         var dy = 0;
         if (this.mount)  {
             switch (this.mount.Type) {
             case "horse":
                 dy = 16;
                 break;
-            case "red-chopper":
-            case "blue-chopper":
-                var offset = [
-                    [0, 30],
-                    [20, 20],
-                    [25, 13],
-                    [20, 5],
-                    [0, 0],
-                    [-20, 5],
-                    [-30, 15],
-                    [-25, 25],
-                ][this.sprite.position];
-                dx = offset[0];
-                dy = offset[1];
-                break;
             }
         }
         return {
             p: p,
-            x: Math.round(p.x - this.sprite.width / 2) - dx,
+            x: Math.round(p.x - this.sprite.width / 2),
             y: Math.round(p.y - this.sprite.height + this.sprite.offset) - dy
         };
     },

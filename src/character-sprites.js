@@ -316,12 +316,14 @@ Character.spritesInfo = {
         angle: 0,
     },
     "blue-chopper": {
-        width: 96,
-        height: 96,
+        width: 146,
+        height: 112,
+        offset: 30,
     },
     "red-chopper": {
-        width: 96,
-        height: 96,
+        width: 146,
+        height: 112,
+        offset: 30,
     },
     "player": {
         nameOffset: 40,

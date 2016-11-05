@@ -1019,6 +1019,7 @@ T.dict = {
     "You need a shovel to destroy stub": "Вам нужна лопата чтобы выкорчевать пень",
     "You need a vessel of water": "Вам нужен сосуд для воды",
     "Your target is dead": "Ваша цель мертва",
+    "Your mining skill is too low": "Ваш навык горного дела слишком мал",
     "You've finished this quest today": "Вы уже выполнили этот квест сегодня",
     "Zero quantity is not allowed": "Нулевая величина запрещена",
     "Drop ingredients here": "Перетащите ингредиенты сюда",
