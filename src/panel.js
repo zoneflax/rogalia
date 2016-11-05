@@ -35,6 +35,7 @@ function Panel(name, title, elements, hooks) {
     this.hooks = {
         show: hooks.show,
         hide: hooks.hide,
+        clsoe: hooks.close,
     };
 
     if (elements && elements.length) {
@@ -120,9 +121,12 @@ Panel.prototype = {
 
         Panel.top = this;
     },
-    hide: function() {
+    hide: function(dontSave) {
         this.hooks.hide && this.hooks.hide.call(this);
-        this.savePosition();
+        if (dontSave)
+            localStorage.removeItem(this.lsKey);
+        else
+            this.savePosition();
         this.element.style.visibility = "hidden";
         if (this.button) {
             this.button.classList.remove("active");
@@ -141,12 +145,12 @@ Panel.prototype = {
         return this;
     },
     close: function() {
-        this.hide();
+        this.hide(true);
         if (this.element && this.element.parentNode)
             dom.remove(this.element);
 
-        localStorage.removeItem(this.lsKey);
         delete game.panels[this.name];
+        this.hooks.close && this.hooks.close.call(this);
     },
     setTitle: function(text) {
         this.title.title = T(text);
@@ -238,7 +242,7 @@ Panel.prototype = {
             return;
 
         if (!game.player.canUse(this.entity)) {
-            this.hide();
+            this.close();
         }
     },
 };

@@ -166,7 +166,7 @@ Container.prototype = {
             this.name,
             [slots, this.fuel, dom.hr(), dom.wrap(".container-actions", buttons)]
         );
-        // this.panel.entity = this.entity;
+        this.panel.entity = this.entity;
         this.panel.hooks.hide = this.markAllAsSeen.bind(this);
         this.panel.hooks.show = function() {
             if (this._syncReq) {
@@ -174,6 +174,9 @@ Container.prototype = {
                 this._syncReq = false;
             }
         }.bind(this);
+        this.panel.hooks.close = function() {
+            delete game.containers[id];
+        };
         this.panel.element.classList.add("container");
         this.panel.container = this;
 
@@ -230,23 +233,21 @@ Container.prototype = {
     // called on each Entity.sync()
     update: function() {
         this.sync();
-        this.slots.forEach(function(slot, i) {
+        for (var i in this.slots) {
+            var slot = this.slots[i];
             var id = this._slots[i];
             // slot is empty
             if (id == 0) {
                 slot.clear();
-                return;
+                continue;
             }
             var entity = Entity.get(id);
             if (!entity) {
-                if (this.panel) {
-                    this.panel.close();
-                }
-                game.sendErrorf("Entity with id %d is not found in container %d", id, this.id);
-                return;
+                // game.sendErrorf("Entity with id %d is not found in container %d", id, this.id);
+                continue;
             }
             slot.set(entity);
-        }.bind(this));
+        }
 
         this.updateFuel();
     },
