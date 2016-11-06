@@ -40,7 +40,6 @@ function Craft() {
 
     this.blank = {
         type: null,
-        panel: new Panel("blank-panel", "Build"),
         entity: null,
         canUse: function(entity) {
             for (var group in this.entity.Props.Ingredients) {
@@ -101,6 +100,7 @@ Craft.prototype = {
         this.buildButton.disabled = !canBuild;
     },
     update: function() {
+        // update blank after server confirmation of ingredient being added
         if (this.blank.entity)
             this.render(this.blank.entity);
 
@@ -121,7 +121,8 @@ Craft.prototype = {
     },
     open: function(blank, burden) {
         this.blank.entity = blank;
-        this.blank.panel.entity = blank;
+        var panel = new Panel("blank-panel", "Build");
+        panel.entity = blank;
 
         var slotHelp = dom.div("", {text :  T("Drop ingredients here") + ":"});
 
@@ -160,10 +161,10 @@ Craft.prototype = {
 
         this.buildButton = dom.button(T("Build"), "build-button", function(e) {
             game.network.send("build", {id: blank.Id});
-            self.blank.panel.hide();
+            panel.hide();
         });
 
-        this.blank.panel.setContents([
+        panel.setContents([
             this.titleElement,
             dom.hr(),
             slotHelp,
@@ -175,7 +176,7 @@ Craft.prototype = {
         ]);
 
         this.render(blank);
-        this.blank.panel.show();
+        panel.show();
 
         if (burden) {
             this.blank.use(burden);
