@@ -116,6 +116,7 @@ function loginStage() {
         var req = new XMLHttpRequest();
         req.open("POST", game.gateway + "/login", true);
         req.onload = onload;
+        req.onerror = onload;
         req.send(formData);
     }
 
@@ -188,6 +189,7 @@ function loginStage() {
         req.send(formData);
 
         req.onload = onload;
+        req.onerror = onload;
     }
 
     function validate(input, message) {
