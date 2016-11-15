@@ -124,12 +124,8 @@ function loginStage() {
     function fastLogin() {
         var server = game.loadServerInfo();
         var token = game.loadSessionToken();
-        if (server) {
-            if (token) {
-                connectAndLogin(server, token);
-            } else {
-                selectServer();
-            }
+        if (server && token) {
+            connectAndLogin(server, token);
             return true;
         }
         if (token) {

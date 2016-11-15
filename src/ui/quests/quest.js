@@ -5,9 +5,8 @@ function Quest(q, npc) {
     }
     this.data = game.quests[q.Id];
     this.npc = npc;
+    this.panel = null;
 }
-
-Quest.panel = null;
 
 Quest.prototype = {
     getName: function() {
@@ -31,13 +30,8 @@ Quest.prototype = {
         return "!";
     },
     showPanel: function() {
-        var panel = Quest.panel;
-        if (!panel) {
-            Quest.panel = panel = new Panel("quest", "Quest", []);
-            panel.hooks.hide = function() {
-                game.sound.stopVoice();
-            };
-        }
+        var panel = this.panel = new Panel("quest", "Quest", []);
+        panel.hooks.hide = () => game.sound.stopVoice();
         panel.setContents(this.getContents(true));
         panel.quest = this;
         panel.entity = this.npc;
@@ -214,11 +208,11 @@ Quest.prototype = {
                     {Id: game.player.interactTarget.Id, QuestId: self.Id},
                     function update(data) {
                         if (canEndTest())
-                            Quest.panel.setContents(self.getContents(true));
+                            this.panel.setContents(self.getContents(true));
                         else if (hasNextQuest())
                             showNextQuest();
                         else
-                            Quest.panel.hide();
+                            this.panel.close();
                         return null;
                     });
             };

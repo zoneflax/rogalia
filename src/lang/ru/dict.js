@@ -895,7 +895,7 @@ T.dict = {
     "Goose corpse": "Труп гуся",
     "Horse corpse": "Труп лошади",
     "Daemon corpse": "Труп демона",
-    "Preved Medved": "Превед Медвед",
+    "Preved medved": "Превед Медвед",
     "Higher daemon corpse": "Труп высшего демона",
     "Preved medved corpse": "Труп Превед-Медведа",
     "Abu corpse": "Труп Абу",

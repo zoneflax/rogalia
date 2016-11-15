@@ -521,7 +521,26 @@ hr {
 .main-stage #canvas {
     background: url("assets/bg/space.png") repeat;
     background-color: #333;
+    background-repeat: repeat;
+    animation: translate-bg 120s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-play-state: paused;
 }
+
+#canvas.animated {
+    animation-play-state: running;
+}
+
+@keyframes translate-bg {
+    from {
+        background-position: 0;
+    }
+    to {
+        background-position: -200%;
+    }
+}
+
 .main-stage #interface {
     display: block;
 }
@@ -1669,7 +1688,7 @@ ol li a:hover {
     &.breaking-news {
         background-image: url("assets/icons/breaking-news.png");
         animation: highlight-news 1s;
-        animation-iteration-count:infinite;
+        animation-iteration-count: infinite;
     }
 }
 
@@ -2642,12 +2661,12 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 .talk-avatar {
-    max-height: 300px;
+    max-height: 150px;
     display: block;
     margin: auto;
 
     position: absolute;
-    top: -299px;
+    top: -149px;
     z-index: -1;
 }
 
