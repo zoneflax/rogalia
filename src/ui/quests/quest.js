@@ -31,7 +31,9 @@ Quest.prototype = {
     },
     showPanel: function() {
         var panel = this.panel = new Panel("quest", "Quest", []);
-        panel.hooks.hide = () => game.sound.stopVoice();
+        panel.hooks.hide = function() {
+            game.sound.stopVoice();
+        };
         panel.setContents(this.getContents(true));
         panel.quest = this;
         panel.entity = this.npc;
@@ -208,11 +210,11 @@ Quest.prototype = {
                     {Id: game.player.interactTarget.Id, QuestId: self.Id},
                     function update(data) {
                         if (canEndTest())
-                            this.panel.setContents(self.getContents(true));
+                            self.panel.setContents(self.getContents(true));
                         else if (hasNextQuest())
                             showNextQuest();
                         else
-                            this.panel.close();
+                            self.panel.close();
                         return null;
                     });
             };

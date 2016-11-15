@@ -55,7 +55,7 @@ function Panel(name, title, elements, hooks) {
             return;
         this.toTop();
     }.bind(this));
-    this.element.addEventListener('mousedown', game.controller.makeHighlightCallback(name, false));
+    this.element.addEventListener("mousedown", game.controller.makeHighlightCallback(name, false));
     this.element.id = name;
     dom.insert(this.element);
 
@@ -64,7 +64,7 @@ function Panel(name, title, elements, hooks) {
     }
 
 
-    if("position" in config) {
+    if ("position" in config) {
         this.x = config.position.x;
         this.y = config.position.y;
     } else {
@@ -121,12 +121,9 @@ Panel.prototype = {
 
         Panel.top = this;
     },
-    hide: function(dontSave) {
+    hide: function() {
         this.hooks.hide && this.hooks.hide.call(this);
-        if (dontSave)
-            localStorage.removeItem(this.lsKey);
-        else
-            this.savePosition();
+        this.savePosition();
         this.element.style.visibility = "hidden";
         if (this.button) {
             this.button.classList.remove("active");
@@ -145,7 +142,7 @@ Panel.prototype = {
         return this;
     },
     close: function() {
-        this.hide(true);
+        this.hide();
         if (this.element && this.element.parentNode)
             dom.remove(this.element);
 
