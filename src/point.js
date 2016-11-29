@@ -170,6 +170,7 @@ Point.prototype = {
         var delta = new Point(lenX / len, lenY / len);
         delta.normalize().mul(length);
         this.add(delta);
+        return this;
     },
     distanceTo(p) {
         return Math.hypot(this.x - p.x, this.y - p.y);

@@ -2,8 +2,9 @@
     character: {
         pathfinding: [
             "Pathfinding",
-            "Activates pathfinding for this character.",
+            "[!Unstable feature!] Activates pathfinding for your character. Disables WASD.",
         ],
+
         hideHelmet: [
             "Hide helmet",
             "Hide your helmet for you and others.",
@@ -78,9 +79,17 @@
             "Snowflakes",
             "Show falling snow.",
         ],
+        movingSpace: [
+            "Space movement",
+            "Enable space movement on the map edge.",
+        ],
         fullscreen: [
             "Fullscreen",
             "Enable fullscreen",
+        ],
+        autoHideWalls: [
+            "Auto hide walls",
+            "Automatically hide walls inside buildings.",
         ],
         autoHighlightDoors: [
             "Highlight doors",

@@ -41,6 +41,7 @@ function Craft() {
     this.blank = {
         type: null,
         entity: null,
+        panel: null,
         canUse: function(entity) {
             for (var group in this.entity.Props.Ingredients) {
                 if (entity.is(group)) {
@@ -48,6 +49,10 @@ function Craft() {
                 }
             }
             return false;
+        },
+        dwim: function(entity) {
+            // TODO: handle game.controller.modifier.shift as for containers
+            return this.use(entity);
         },
         use: function(entity) {
             if (this.canUse(entity)) {
@@ -121,7 +126,7 @@ Craft.prototype = {
     },
     open: function(blank, burden) {
         this.blank.entity = blank;
-        var panel = new Panel("blank-panel", "Build");
+        var panel = this.blank.panel = new Panel("blank-panel", "Build");
         panel.entity = blank;
 
         var slotHelp = dom.div("", {text :  T("Drop ingredients here") + ":"});
@@ -538,6 +543,7 @@ Craft.prototype = {
             dom.hr(),
             T("Ingredients") + ":",
             ingredients,
+            this.makeInfo(this.current.type),
             this.makeEquipRequirementes(this.current.type),
             dom.wrap("#recipe-slost", slots),
             dom.hr(),
@@ -572,7 +578,9 @@ Craft.prototype = {
                 this.makeRequirements(recipe),
                 ingredients,
                 dom.hr(),
-                dom.button(T("Create"), "recipe-create", this.build.bind(this))
+                dom.button(T("Create"), "recipe-create", this.build.bind(this)),
+                dom.hr(),
+                Entity.templates[this.current.type].makeDescription(),
             ]
         );
         this.renderBackButton();
@@ -659,25 +667,29 @@ Craft.prototype = {
             ]),
         ]);
     },
+    makeInfo: function(type) {
+        var tmpl = Entity.templates[type];
+        if ("Armor" in tmpl) {
+            return dom.wrap("", [
+                dom.hr(),
+                T("Base armor") + ": " + tmpl.Armor,
+            ]);
+        }
+        if ("Damage" in tmpl) {
+             return dom.wrap("", [
+                dom.hr(),
+                T("Base damage") + ": " + tmpl.Damage,
+            ]);
+        }
+        return null;
+    },
     makeEquipRequirementes: function(type) {
         let tmpl = Entity.templates[type];
-        if ("Damage" in tmpl) {
+        if (tmpl.EffectiveParam) {
             var canEquip = tmpl.nonEffective() ? "unavailable" : "";
 
             return dom.wrap("equip-requirements", [
-                dom.hr(),
-                T("Base damage") + ": " + tmpl.Damage,
-                dom.wrap(canEquip, T("Required swordsmanship level") + ": " + tmpl.Lvl),
-                dom.hr(),
-            ]);
-        }
-        if ("Armor" in tmpl) {
-            canEquip = tmpl.nonEffective() ? "unavailable" : "";
-
-            return dom.wrap("equip-requirements", [
-                dom.hr(),
-                T("Base armor") + ": " + tmpl.Armor,
-                dom.wrap(canEquip, T("Required vitality") + ": " + tmpl.Lvl),
+                dom.wrap(canEquip, T("Requirements") + " " + T(tmpl.EffectiveParam).toLowerCase() + ": " + tmpl.Lvl),
                 dom.hr(),
             ]);
         }
@@ -774,6 +786,7 @@ Craft.prototype = {
         var self = this;
         if (!this.panel.visible)
             return false;
+
         if (slot.locked)
             return false;
         if (!slot.entity) {

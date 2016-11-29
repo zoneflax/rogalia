@@ -199,7 +199,7 @@ Container.prototype = {
 
         var blank = game.controller.craft.blank;
         if (blank.panel && blank.panel.visible) {
-            blank.use(slot.entity);
+            blank.dwim(slot.entity);
             return;
         }
         if (Panel.top.name == "blank-panel")

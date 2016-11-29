@@ -61,6 +61,17 @@ function Settings() {
         "settings.graphics.low": function() {
             game.map.reset();
         },
+        "settings.graphics.movingSpace": function(moving) {
+            if (moving)
+                game.canvas.classList.add("animated");
+            else
+                game.canvas.classList.remove("animated");
+        },
+        "settings.graphics.autoHideWalls": function(enabled) {
+            if (!enabled) {
+                game.player.inBuilding = false;
+            }
+        },
         "settings.graphics.centerScreen": function() {
             game.world.classList.toggle("snap-left");
         },

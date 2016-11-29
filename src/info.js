@@ -44,13 +44,28 @@ function Info(message, character) {
         });
         game.sound.playSound("lvl-up");
         break;
-    case "attack":
+    case "cast-gain":
         this.target.playAnimation({
             up: {
-                name: "damage",
+                name: "web",
+                width: 96,
+                height: 96,
+                dy: -this.target.sprite.height/2,
+                speed: 20,
+            },
+        });
+        break;
+    case "attack":
+        var armored = this.target.armored();
+        var animation = (armored) ? "sparks" : "damage";
+        var speed = (armored) ? 66 : 100;
+        this.target.playAnimation({
+            up: {
+                name: animation,
                 width: 64,
                 height: 64,
                 dy: -this.target.sprite.height/2,
+                speed: speed,
             },
         });
         if (this.target.IsNpc)

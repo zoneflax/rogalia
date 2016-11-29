@@ -104,11 +104,12 @@ Auction.prototype = {
             type,
             0,
             dom.table(
-                [T("Vendor"), T("Quality"), T("Cost"), , ""],
+                [T("Vendor"), T("Quality"), T("Durability"), T("Cost"), ""],
                 lots.sort(Vendor.sort.byQuality).map(function(lot) {
                     return [
                         lot.Vendor.substring(1),
                         lot.Quality,
+                        Stats.formatParam(lot.Durability),
                         Vendor.createPrice(lot.Cost),
                         dom.button(T("Buy"), "lot-buy", function(e) {
                             game.popup.confirm(T("Buy") + " " + TS(type) + "?", function() {

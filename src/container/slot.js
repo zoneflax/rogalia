@@ -123,7 +123,7 @@ ContainerSlot.prototype = {
         }
     },
     updateRequirements: function() {
-        if (this.entity.Damage || this.entity.Armor) {
+        if (this.entity.EffectiveParam) {
             if (this.entity.nonEffective())
                 this.element.classList.add("non-effective");
             else

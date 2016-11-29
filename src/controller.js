@@ -325,6 +325,8 @@ function Controller(game) {
     };
 
     this.wasd = function(x, y, up) {
+        if (game.player.Settings.Pathfinding)
+            return;
         var p = this.wasd.point;
         if (p.isZero() && up)
             return;
@@ -518,6 +520,10 @@ function Controller(game) {
     this.initInterface = function() {
         game.map.minimapContainer.style.display = "block";
         game.timeElement.style.display = "block";
+
+        if (config.graphics.movingSpace) {
+            game.canvas.classList.add("animated");
+        }
 
         function disableEvent(e) {
             e.preventDefault();

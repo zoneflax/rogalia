@@ -147,7 +147,7 @@ Entity.prototype = {
             Character.vitamins.forEach(function(vitamin) {
                 var value = this.Props[vitamin] * k;
                 var elem = Stats.prototype.createValue(vitamin, value, 2);
-                elem.classList.add(vitamin.toLowerCase());
+                elem.classList.add("vitamin-" + vitamin.toLowerCase());
                 elements.push(elem);
             }.bind(this));
             elements.push(Stats.prototype.createValue("Energy", this.Props.Energy, 2));
@@ -158,25 +158,26 @@ Entity.prototype = {
             elements.push(input.label);
         } else if ("Armor" in this) {
             elements.push(dom.wrap(".param", [T("Armor"), dom.wrap(".value", this.armor())]));
-            elements.push(dom.hr());
-            elements.push(dom.make("div", T("Requirements")));
-            var requirement = Stats.prototype.createValue("Vitality", this.template().Lvl);
-            if (this.nonEffective())
-                requirement.classList.add("unavailable");
-            elements.push(requirement);
         } else if ("Damage" in this) {
             elements.push(dom.wrap(".param", [T("Damage"), dom.wrap(".value", this.damage())]));
-            elements.push(dom.hr());
-            elements.push(dom.make("div", T("Requirements")));
-            requirement = Stats.prototype.createValue("Swordsmanship", this.template().Lvl);
-            if (this.nonEffective())
-                requirement.classList.add("unavailable");
-            elements.push(requirement);
+            if (this.Ammo) {
+                elements.push(dom.wrap(".param", [T("Ammo"), dom.wrap(".value", T(this.Ammo.Type))]));
+            }
         } else if ("Block" in this) {
             var block = this.Block;
             elements.push(Stats.prototype.createValue("Block", block));
         } else if (this.Props.Capacity) {
             elements.push(Stats.prototype.createParam("Capacity", this.Props.Capacity));
+        }
+
+        if (this.EffectiveParam) {
+            var requirement = Stats.prototype.createValue(this.EffectiveParam, this.template().Lvl);
+            if (this.nonEffective()) {
+                requirement.classList.add("unavailable");
+            }
+            elements.push(dom.hr());
+            elements.push(dom.make("div", T("Requirements")));
+            elements.push(requirement);
         }
 
         elements.push(dom.hr());
@@ -189,10 +190,17 @@ Entity.prototype = {
         new Panel("item-info", TS(this.Name), elements).setEntity(this).show();
     },
     nonEffective: function() {
-        if (this.Armor)
-            return game.player.Attr.Vitality.Current < this.template().Lvl;
-        else if (this.Damage)
-            return game.player.Skills.Swordsmanship.Value.Current < this.template().Lvl;
+        if (!this.EffectiveParam) {
+            return false;
+        }
+        var attr = game.player.Attr[this.EffectiveParam];
+        if (attr) {
+            return Math.max(1, attr.Current) < this.Lvl;
+        }
+        var skill = game.player.Skills[this.EffectiveParam];
+        if (skill) {
+            return Math.max(1, skill.Value.Current) < this.Lvl;
+        }
         return false;
     },
     armor: function() {
@@ -475,6 +483,9 @@ Entity.prototype = {
     inWorld: function() {
         return this.Location == Entity.LOCATION_ON_GROUND || this.Location == Entity.LOCATION_BURDEN;
     },
+    canCollideNow: function() {
+        return this.Location == Entity.LOCATION_ON_GROUND && this.Disposition == "";
+    },
     inContainer: function() {
         return this.Container > 0;
     },
@@ -685,8 +696,7 @@ Entity.prototype = {
         if ((this.MoveType == Entity.MT_STATIC || this.CanCollide) &&
             game.controller.hideStatic()) {
             this.drawBox(this.getDrawBoxColor());
-        } else if (this.shouldBeAutoHidden())
-        {
+        } else if (this.shouldBeAutoHidden()) {
             this.drawBox(this.getDrawBoxColor());
         } else {
             if (this.Type == "blank") {
@@ -709,7 +719,7 @@ Entity.prototype = {
             this.drawCenter();
         }
 
-        if(game.debug.entity.position) {
+        if (game.debug.entity.position) {
             var text = "(" + (this.X) + " " + (this.Y) + ")";
             text += " id:" + this.Id;
             game.ctx.fillStyle = "#e2e9ec";
@@ -1040,6 +1050,9 @@ Entity.prototype = {
         case "scroll-of-town-portal":
         case "hunter-scroll":
             game.network.send("cast", {Id: this.Id});
+            break;
+        case "embracing-web-scroll":
+            game.controller.cursor.set(this);
             break;
         default:
             game.controller.creatingCursor(new Entity(this.Spell, this.Id), "cast");

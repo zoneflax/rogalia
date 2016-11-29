@@ -1,8 +1,0 @@
-{
-    "name": "rogalia",
-    "main": "http://rogalia.ru/play",
-    "version": "0.24.0",
-    "scripts": {
-        "build": "nwbuild -p win32,linux64 -o build ."
-    }
-}

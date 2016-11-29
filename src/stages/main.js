@@ -41,12 +41,12 @@ function mainStage(data) {
         currentTime = currentTime || Date.now();
         var ellapsedTime = currentTime - startTime;
         startTime = currentTime;
-        game.epsilon = ellapsedTime / 1000;
+        var dt = ellapsedTime / 1000;
 
         game.entities.forEach(function(e) {
-            e.update(game.epsilon);
+            e.update(dt);
         });
-        game.missiles = game.missiles.filter((m) => m.update(game.epsilon));
+        game.missiles = game.missiles.filter((m) => m.update(dt));
         game.controller.update();
         snow.update();
     };
@@ -95,6 +95,7 @@ function mainStage(data) {
         game.characters.forEach(drawAura);
         game.claims.forEach(drawClaim);
 
+        // this.drawPotentialFields();
         game.sortedEntities.traverse(drawObject);
 
         _.forEach(game.missiles, draw);
@@ -129,6 +130,22 @@ function mainStage(data) {
     this.end = function() {};
 
     /* experimental and debug features */
+    this.drawPotentialFields = function() {
+        var fields = game.player.potentialFields();
+        var D = 500;
+        var STEP = 8;
+        for (var y = game.player.Y - D; y < game.player.Y + D; y += STEP) {
+            for (var x = game.player.X - D; x < game.player.X + D; x += STEP) {
+                var potential = game.potentialAt(fields, {x, y});
+                var color = (potential > 0)
+                    ? "rgba(0, " + Math.round(potential) + ",0, 0.3)"
+                    : "rgba(" + Math.round(-potential) + ", 0, 0, 0.3)";
+                game.ctx.fillStyle = color;
+                game.iso.fillRect(x, y, STEP, STEP);
+            }
+        }
+    };
+
     var adaptiveRadius = 300;
     var frames = 0;
     this.drawAdaptive = function() {

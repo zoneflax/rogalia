@@ -47,8 +47,8 @@ function Snow() {
 	    p.y += Math.cos(angle+p.d) + 1 + p.r/2;
 	    p.x += Math.sin(angle) * 2;
 
-	    if(p.x > W+5 || p.x < -5 || p.y > H) {
-		if(i%3 > 0) {
+	    if (p.x > W+5 || p.x < -5 || p.y > H) {
+		if (i%3 > 0) {
 		    particles[i] = {x: Math.random()*W, y: -10, r: p.r, d: p.d};
 		} else {
 		    if(Math.sin(angle) > 0) {

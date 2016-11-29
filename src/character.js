@@ -21,6 +21,7 @@ function Character(id) {
         X: 0,
         Y: 0,
     };
+
     this.dst = {
         x: 0,
         y: 0,
@@ -79,6 +80,8 @@ function Character(id) {
         opacity: 1,
         delta: -1,
     };
+
+    this._pathHistory = [];
 }
 
 Character.prototype = {
@@ -90,17 +93,16 @@ Character.prototype = {
     },
     set X(x) {},
     set Y(y) {},
+    positionSyncRequired: function(x, y) {
+        if (this.Dx == 0 && this.Dy == 0) {
+            return true;
+        }
+        return (Math.abs(this.x - x) > CELL_SIZE) || (Math.abs(this.y - y) > CELL_SIZE);
+    },
     syncPosition: function(x, y) {
-        if (this.Dx == 0 ||
-            this.Dy == 0 ||
-            this.Settings.Pathfinding ||
-            (Math.abs(this.x - x) > CELL_SIZE) ||
-            (Math.abs(this.y - y) > CELL_SIZE)
-           ) {
-            game.sortedEntities.remove(this);
-            this.x = x;
-            this.y = y;
-            game.sortedEntities.add(this);
+        if (this.positionSyncRequired(x, y)) {
+            this._pathHistory = [];
+            this.setPos(x, y);
         }
     },
     getZ: function() {
@@ -119,14 +121,13 @@ Character.prototype = {
     leftTopY: Entity.prototype.leftTopY,
     compare: Entity.prototype.compare,
     setPoint: function(p) {
-        if (this.Id && this.inWorld())
-            game.sortedEntities.remove(this);
-
-        this.x = p.x;
-        this.y = p.y;
-
-        if (this.Id && this.inWorld())
-            game.sortedEntities.add(this);
+        this.setPos(p.x, p.y);
+    },
+    setPos: function(x, y) {
+        game.sortedEntities.remove(this);
+        this.x = x;
+        this.y = y;
+        game.sortedEntities.add(this);
     },
     screen: function() {
         if (this.mount) {
@@ -150,10 +151,6 @@ Character.prototype = {
         this.syncMessages(this.Messages);
         this.syncMessages(this.PrivateMessages);
 
-        if ("Path" in data) {
-            this.followPath();
-        }
-
         if ("Waza" in data) {
             game.controller.updateCombo(data.Waza);
         }
@@ -163,7 +160,6 @@ Character.prototype = {
         } else if (!init && JSON.stringify(this.getParts()) != this._parts) {
             this.reloadSprite();
         }
-
 
         if (data.Dir !== undefined) {
             this.sprite.position = data.Dir;
@@ -408,6 +404,9 @@ Character.prototype = {
             common.ComeToMe = function() {
                 game.chat.send("*come-to-me " + this.Id);
             };
+            common["$cmd"] = function() {
+                game.chat.append("* " + this.Id);
+            };
             common.Summon = function() {
                 game.chat.send("*summon " + this.Id);
             };
@@ -531,9 +530,7 @@ Character.prototype = {
         this.dst.y = y;
         this.dst.radius = 9;
         this.dst.time = Date.now();
-
-        if (!this.Settings.Pathfinding)
-            this._setDst(x, y);
+        this._setDst(x, y);
     },
     _setDst: function(x, y) {
         var len_x = x - this.X;
@@ -545,6 +542,7 @@ Character.prototype = {
 
         this.Dx = len_x / len;
         this.Dy = len_y / len;
+        this._pathHistory = [];
     },
     getDrawPoint: function() {
         var p = this.screen();
@@ -622,21 +620,21 @@ Character.prototype = {
         }
     },
     drawBowRadius() {
-        var bow = Entity.get(this.equipSlot("right-hand"));
-        if (!bow || bow.Group != "bow") {
-            bow = Entity.get(this.equipSlot("left-hand"));
+        var ranged = Entity.get(this.equipSlot("right-hand"));
+        if (!ranged || !ranged.Range) {
+            ranged = Entity.get(this.equipSlot("left-hand"));
         }
-        if (!bow || bow.Group != "bow") {
+        if (!ranged || !ranged.Range) {
             return;
         }
 
         // maximum range radius
         game.ctx.fillStyle = "rgba(255, 0, 0, 0.2)";
-        game.iso.fillCircle(this.X, this.Y, bow.Range.Maximum);
+        game.iso.fillCircle(this.X, this.Y, ranged.Range.Maximum);
 
         // effective range radius
         game.ctx.fillStyle = "rgba(0, 255, 0, 0.2)";
-        game.iso.fillCircle(this.X, this.Y, bow.Range.Effective);
+        game.iso.fillCircle(this.X, this.Y, ranged.Range.Effective);
 
     },
     drawCorpsePointer: function() {
@@ -772,13 +770,6 @@ Character.prototype = {
         return null;
     },
     drawDst: function() {
-        if (debug.player.path && this.Path) {
-            var r = 2;
-            game.ctx.fillStyle = "#f00";
-            this.Path.forEach(function(p) {
-                game.iso.fillRect(p.X-r, p.Y-r, 2*r, 2*r);
-            });
-        }
         if (this.dst.radius <= 0)
             return;
         var now = Date.now();
@@ -879,6 +870,17 @@ Character.prototype = {
             //green hp
             game.ctx.fillStyle = '#2ea237';
             game.ctx.fillRect(p.x - w/2, y, w * this.Hp.Current / this.Hp.Max, dy); //wtf
+
+            if (this.Domestical && game.controller.modifier.shift) {
+                game.ctx.fillStyle = '#333';
+                game.ctx.fillRect(p.x - w/2-1, y + dy-1, w+2, dy+2); //wtf
+
+                game.ctx.fillStyle = '#883527';
+                game.ctx.fillRect(p.x - w/2, y + dy, w, dy); //wtf
+
+                game.ctx.fillStyle = '#fea237';
+                game.ctx.fillRect(p.x - w/2, y + dy, w * this.Fullness.Current / this.Fullness.Max, dy); //wtf
+            }
 
         } else {
             dy = 0;
@@ -1096,7 +1098,9 @@ Character.prototype = {
             if (this.target && !game.entities.has(this.target.Id))
                 this.setTarget(null);
 
-            this.updateBuilding();
+            if (config.graphics.autoHideWalls) {
+                this.updateBuilding();
+            }
             this.updateBar();
         }
 
@@ -1157,6 +1161,11 @@ Character.prototype = {
         if (button.action == action)
             return true;
 
+        if (tool && tool.Range) {
+            button.setAction("shot", () => this.shot());
+            return true;
+        }
+
         var callback = null;
 
         switch (action) {
@@ -1168,7 +1177,6 @@ Character.prototype = {
         case "tool":
         case "taming":
         case "dildo":
-        case "bow":
         case "snowball":
         case "shit":
         case "fishing-rod":
@@ -1176,9 +1184,6 @@ Character.prototype = {
                 var done = null;
                 var cmd = "dig";
                 switch (action) {
-                case "bow":
-                    this.shot();
-                    return;
                 case "dildo":
                 case "snowball":
                 case "shit":
@@ -1367,61 +1372,150 @@ Character.prototype = {
             this.updateEffect(name, this.Effects[name]);
         }
     },
+    findMovePosition: function(k) {
+        var delta = this.Speed.Current * k;
+        var cell = game.map.getCell(this.X, this.Y);
+        if (cell) {
+            delta *= cell.biom.Speed;
+        }
+
+        var p = new Point(this);
+        var dst = new Point(this.Dst.X, this.Dst.Y);
+        var distToDst = p.distanceTo(dst);
+        if (distToDst < delta) {
+            return dst;
+        }
+
+        p.x += this.Dx * delta;
+        p.y += this.Dy * delta;
+
+
+        if (!this.Settings.Pathfinding) {
+            return p;
+        }
+
+        var fields = this.potentialFields();
+        var maxPotential = game.potentialAt(fields, p);
+        var angleStep = Math.PI / 8;
+        var startAngle = Math.atan2(this.Dy, this.Dx) + angleStep;
+        var endAngle = startAngle + 2*Math.PI;
+        for (var angle = startAngle; angle <= endAngle; angle += angleStep) {
+            dst.x = this.X;
+            dst.y = this.Y;
+            var dx = Math.cos(angle);
+            var dy = Math.sin(angle);
+            dst.x += dx * delta;
+            dst.y += dy * delta;
+            cell = game.map.getCell(dst.x, dst.y);
+            if (cell && cell.biom.Blocked) {
+                continue;
+            }
+
+            var potential = game.potentialAt(fields, dst);
+            if (potential - maxPotential > delta) {
+                maxPotential = potential;
+                p.fromPoint(dst);
+                this.Dx = dx;
+                this.Dy = dy;
+            }
+        }
+
+        this._pathHistory.push(new CirclePotentialField(this.X, this.Y, -100, 50));
+        if (this._pathHistory.length > 32) {
+            this._pathHistory.splice(0, 1);
+        }
+
+        return p;
+    },
+    canCollideNow: function() {
+        return true;
+    },
+    potentialFields: function() {
+        var fields = this._pathHistory.slice(0);
+        var radius = this.Radius;
+        fields.push(new CirclePotentialField(this.Dst.X, this.Dst.Y, 5000, 5));
+        game.entities.forEach(function(entity) {
+            if (entity == this || !entity.CanCollide)
+                return;
+            if (!entity.canCollideNow()) {
+                return;
+            }
+
+            var base = 1000;
+            var field = (entity.round)
+                ? new CirclePotentialField(
+                    entity.X,
+                    entity.Y,
+                    -(1 + radius + entity.Radius)*base,
+                    base
+                )
+                : new RectPotentialField(
+                    entity.X - entity.Width/2,
+                    entity.Y - entity.Height/2,
+                    entity.Width,
+                    entity.Height,
+                    -base * (1 + radius),
+                    base/2
+                );
+            fields.push(field);
+        });
+        return fields;
+    },
     updatePosition: function(k) {
         if (this.mount)
             return;
         if (this.Dx == 0 && this.Dy == 0) {
             return;
         }
-        k *= this.Speed.Current;
-        var x = this.x;
-        var y = this.y;
-        var dx = this.Dx * k;
-        var new_x = x + dx;
 
-        var dy = this.Dy * k;
-        var new_y = y + dy;
+        var p = this.findMovePosition(k);
+        this.setPos(p.x, p.y);
 
-        var cell = game.map.getCell(new_x, new_y);
-        if (cell) {
-            // this fails sometimes due to difference between client *k* and server's
-            // if (cell.biom.Blocked) {
-            //     this.stop();
-            //     return;
-            // }
-            this.speedFactor = cell.biom.Speed;
-            dx *= this.speedFactor;
-            dy *= this.speedFactor;
-            new_x = x + dx;
-            new_y = y + dy;
-        }
+        // var x = this.x;
+        // var y = this.y;
 
-        var dst = this.Dst;
+        // var dx = this.Dx * k;
+        // var dy = this.Dy * k;
 
-        if (Math.abs(dst.X - x) < Math.abs(dx)) {
-            new_x = dst.X;
-        } else if (new_x < this.Radius) {
-            new_x = this.Radius;
-        } else if (new_x > game.map.full.width - this.Radius) {
-            new_x = game.map.full.width - this.Radius;
-        }
+        // var new_y = y + dy;
+        // var new_x = x + dx;
 
-        if (Math.abs(dst.Y - y) < Math.abs(dy)) {
-            new_y = dst.Y;
-        } else if (new_y < this.Radius) {
-            new_y = this.Radius;
-        } else if (new_y > game.map.full.height - this.Radius) {
-            new_y = game.map.full.height - this.Radius;
-        }
+        // var cell = game.map.getCell(new_x, new_y);
+        // if (cell) {
+        //     // this fails sometimes due to difference between client *k* and server's
+        //     // if (cell.biom.Blocked) {
+        //     //     this.stop();
+        //     //     return;
+        //     // }
+        //     this.speedFactor = cell.biom.Speed;
+        //     dx *= this.speedFactor;
+        //     dy *= this.speedFactor;
+        //     new_x = x + dx;
+        //     new_y = y + dy;
+        // }
 
-        game.sortedEntities.remove(this);
-        this.x = new_x;
-        this.y = new_y;
-        game.sortedEntities.add(this);
+        // var dst = this.Dst;
 
-        if (this.x == dst.X && this.y == dst.Y) {
-            if (!this.followPath())
-                this.stop();
+        // if (Math.abs(dst.X - x) < Math.abs(dx)) {
+        //     new_x = dst.X;
+        // } else if (new_x < this.Radius) {
+        //     new_x = this.Radius;
+        // } else if (new_x > game.map.full.width - this.Radius) {
+        //     new_x = game.map.full.width - this.Radius;
+        // }
+
+        // if (Math.abs(dst.Y - y) < Math.abs(dy)) {
+        //     new_y = dst.Y;
+        // } else if (new_y < this.Radius) {
+        //     new_y = this.Radius;
+        // } else if (new_y > game.map.full.height - this.Radius) {
+        //     new_y = game.map.full.height - this.Radius;
+        // }
+
+        // this.setPos(new_x, new_y);
+
+        if (this.X == this.Dst.X && this.Y == this.Dst.Y) {
+            this.stop();
         }
 
         if (this.isPlayer) {
@@ -1430,14 +1524,6 @@ Character.prototype = {
         }
 
         this.updatePlow();
-    },
-    followPath: function() {
-        if (this.Path && this.Path.length > 0) {
-            var p = this.Path.pop();
-            this._setDst(p.X, p.Y);
-            return true;
-        }
-        return false;
     },
     updatePlow: function() {
         if (!this.plow)
@@ -1480,6 +1566,7 @@ Character.prototype = {
     stop: function() {
         this.Dx = 0;
         this.Dy = 0;
+        this._pathHistory = [];
     },
     isNear: function(entity) {
         if (entity.belongsTo(game.player))
@@ -1672,6 +1759,8 @@ Character.prototype = {
             return true;
         case "dildo":
             game.network.send("fuck", {Id: this.Id});
+        case "spell-scroll":
+            game.network.send("cast", {Id: entity.Id, Target: this.Id});
             return true;
         }
         return false;
@@ -1684,6 +1773,7 @@ Character.prototype = {
         case "shit":
         case "dildo":
         case "snowball":
+        case "spell-scroll":
             return true;
         }
 
@@ -1735,10 +1825,10 @@ Character.prototype = {
     distanceTo: function(e) {
         return Math.hypot(this.X - e.X, this.Y - e.Y);
     },
-    selectNextTarget: function() {
+    selectNextTarget: function(p = new Point(this)) {
         var self = this;
         var party = self.Party || [];
-        var list = game.findCharsNear(this.X, this.Y, 5*CELL_SIZE).filter(function(c) {
+        var list = game.findCharsNear(p.x, p.y, 5*CELL_SIZE).filter(function(c) {
             if (c == self)
                 return false;
             if (c == self.target)
@@ -1747,7 +1837,7 @@ Character.prototype = {
                 return false;
             return party.indexOf(c.Name) == -1;
         }).sort(function(a, b) {
-            return a.distanceTo(self) - b.distanceTo(self);
+            return new Point(a).distanceTo(p) - new Point(b).distanceTo(p);
         });
         if (list.length > 0)
             this.setTarget(list[0]);
@@ -1833,4 +1923,19 @@ Character.prototype = {
             this.setDst(x, y);
         }
     },
+    armored: function() {
+        var armoredMob = _.includes([
+            "training-dummy",
+            "kitty-pahan",
+            "rogalian",
+            "hell-rogalian",
+            "ufo",
+            "red-chopper",
+            "blue-chopper",
+        ], this.Type);
+        if (armoredMob)
+            return true;
+        var armor = this.Clothes[2];
+        return _.includes(["iron", "steel", "titanium", "meteorite", "bloody"], armor);
+    }
 };

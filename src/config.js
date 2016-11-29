@@ -34,7 +34,9 @@ var config = {
         fullscreen: false,
         autoHighlightDoors: false,
         snowflakes: false,
+        movingSpace: false,
         centerScreen: true,
+        autoHideWalls: false,
     },
     sound: {
         playSound: true,
