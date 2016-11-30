@@ -678,7 +678,8 @@ Craft.prototype = {
         if ("Damage" in tmpl) {
              return dom.wrap("", [
                 dom.hr(),
-                T("Base damage") + ": " + tmpl.Damage,
+                 T("Base damage") + ": " + tmpl.Damage,
+                 tmpl.Ammo && dom.wrap("", T("Ammo") + ": " + T(tmpl.Ammo.Type)),
             ]);
         }
         return null;
