@@ -9,6 +9,7 @@ function Character(id) {
     this.Invisible = false;
 
     this.Title = "";
+    this.Type = "";
     //used to show animation of varius type, like damage deal or exp gain
     this.info = [];
     this.Messages = null;
