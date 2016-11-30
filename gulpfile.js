@@ -55,3 +55,38 @@ gulp.task("bump", function() {
         .pipe(rename("bundle.html"))
         .pipe(gulp.dest("."));
 });
+
+
+
+
+gulp.task("nwbuild", function() {
+    var NwBuilder = require("nw-builder");
+    var nw = new NwBuilder({
+        files: [
+            "./package.json",
+            "./sources.json",
+            "./index.html",
+            "./main.less",
+            "./metadata.json",
+            "./color-picker.css",
+            "./dev-loader.js",
+            "./favicon.ico",
+            "./assets/**",
+            "./books/**",
+            "./news/**",
+            "./src/**",
+            "./lib/**",
+        ],
+        appName: "rogalia",
+        buildDir: "./build",
+        cacheDir: "./build/cache/",
+        platforms: ["win32", "linux64"],
+        version: "0.17.3"
+    });
+
+    nw.build().then(function () {
+        console.log("all done!");
+    }).catch(function (error) {
+        console.error(error);
+    });
+});

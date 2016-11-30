@@ -661,8 +661,9 @@ function Chat() {
     function imgParser(data) {
         var img = Entity.getPreview(data);
         img.className = "";
-        var code = dom.tag("code", "", {text : title, title : T(data)});
-        var cnt = dom.make("span", code);
+
+        var title = T(data);
+        var cnt = dom.make("span", dom.tag("code", "", {text : title, title : title}));
 
         if (img.width) {
             cnt.appendChild(img);
@@ -686,7 +687,7 @@ function Chat() {
         if (fromMe(message))
             elem.classList.add("from-me");
 
-        if (message.From == "TatriX" || message.from == "Nanalli")
+        if (message.From == "TatriX" || message.From == "Nanalli")
             elem.classList.add("from-admin");
 
         dom.append(elem, contents);

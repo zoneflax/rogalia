@@ -11,6 +11,7 @@ var config = {
         pathfinding: function() { return game.player.Settings.Pathfinding; },
         hideHelmet: function() { return game.player.Style.HideHelmet; },
         rotateWasd: false,
+        autoTarget: true,
     },
     ui: {
         language: function() {

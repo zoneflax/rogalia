@@ -13,7 +13,10 @@
             "Rotate WASD",
             "Movemovent based on the map coordinates",
         ],
-
+        autoTarget: [
+            "Auto target",
+            "Automatically select the nearest to the cursor target.",
+        ],
     },
     ui: {
         language: [

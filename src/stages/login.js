@@ -245,8 +245,6 @@ function loginStage() {
             function onSuccess(session) {
                 var formData = new FormData();
                 formData.append("ticket", session.ticket);
-
-                game.gateway = "http://localhost:49112/gateway";
                 var req = new XMLHttpRequest();
                 req.open("POST", game.gateway + "/oauth/steam", true);
                 req.send(formData);

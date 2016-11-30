@@ -4,7 +4,7 @@
   "main": "index.html?steam=true",
   "description": "Rogalia sandbox mmorpg client",
   "scripts": {
-    "build-steam": "nwbuild -v 0.17.3 -p linux64 -o build .",
+    "steam": "gulp nwbuild",
     "build": "npm run load-metadata && npm run compile",
     "compile": "gulp",
     "load-metadata": "curl -s http://rogalik.tatrix.org:8080/metadata > metadata.json"
@@ -30,7 +30,8 @@
     "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^2.2.0",
     "gulp-uglify": "^2.0.0",
-    "less": "^2.7.1"
+    "less": "^2.7.1",
+    "nw-builder": "^3.1.2"
   },
   "dependencies": {}
 }

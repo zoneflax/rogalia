@@ -27,15 +27,16 @@ function Fight() {
         if (!prepare && !game.controller.mouse.isValid())
             return;
 
-        // Testing auto target
-        game.player.target = null;
-        var p = new Point(game.controller.world.point).sub(new Point(game.player));
-        var sector = game.player.sector(Math.PI/4, p.x, p.y);
-        p = new Point(game.player);
-        var offset = new Point(CELL_SIZE, 0).rotate(2*Math.PI - sector * Math.PI/4);
-        p.add(offset);
+        if (config.autoTarget) {
+            game.player.target = null;
+            var p = new Point(game.controller.world.point).sub(new Point(game.player));
+            var sector = game.player.sector(Math.PI/4, p.x, p.y);
+            p = new Point(game.player);
+            var offset = new Point(CELL_SIZE, 0).rotate(2*Math.PI - sector * Math.PI/4);
+            p.add(offset);
 
-        game.player.selectNextTarget(p);
+            game.player.selectNextTarget(p);
+        }
 
         switch (action) {
         case "irimi":

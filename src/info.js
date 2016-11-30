@@ -58,7 +58,7 @@ function Info(message, character) {
     case "attack":
         var armored = this.target.armored();
         var animation = (armored) ? "sparks" : "damage";
-        var speed = (armored) ? 66 : 100;
+        var speed = (armored) ? 33 : 100;
         this.target.playAnimation({
             up: {
                 name: animation,
