@@ -486,7 +486,7 @@ Entity.prototype = {
         return this.Location == Entity.LOCATION_ON_GROUND || this.Location == Entity.LOCATION_BURDEN;
     },
     canCollideNow: function() {
-        return this.Location == Entity.LOCATION_ON_GROUND && this.Disposition == "";
+        return this.CanCollide && this.Location == Entity.LOCATION_ON_GROUND && this.Disposition == "";
     },
     inContainer: function() {
         return this.Container > 0;

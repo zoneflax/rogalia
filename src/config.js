@@ -11,7 +11,7 @@ var LOBBY_Y = 15;
 
 var config = {
     character: {
-        pathfinding: function() { return game.player.Settings.Pathfinding; },
+        // pathfinding: function() { return game.player.Settings.Pathfinding; },
         hideHelmet: function() { return game.player.Style.HideHelmet; },
         rotateWasd: false,
         autoTarget: true,

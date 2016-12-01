@@ -34,12 +34,12 @@ function Fight() {
             description: T("Step and turn"),
         },
     ];
-    var buttons = _.map(actions, function(action) {
-        return game.controller.makeHotbarButton(action, () => apply(action.name, true));
-    });
 
     var hotbar = game.controller.actionHotbar;
-    dom.append(hotbar, buttons);
+    dom.append(hotbar, _.map(actions, function(action) {
+        action.button = game.controller.makeHotbarButton(action, () => apply(action.name, true));
+        return action.button;
+    }));
 
     function apply(action, prepare) {
         var now = Date.now();
@@ -111,7 +111,7 @@ function Fight() {
 
         switch (action) {
         case "shomen":
-            var button = buttons[actions.indexOf("shomen")];
+            var button = _.find(actions, {name: "shomen"}).button;
             button.classList.add("cooldown");
             setTimeout(function() {
                 button.classList.remove("cooldown");
@@ -134,8 +134,8 @@ function Fight() {
     };
 
     this.hotkey = function(key) {
-        var action = actions[key-1];
-        apply(action);
+        var action = _.find(actions, {hotkey: key});
+        apply(action.name);
     };
 
     this.combo = {

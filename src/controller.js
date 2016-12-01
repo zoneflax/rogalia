@@ -331,8 +331,8 @@ function Controller(game) {
     };
 
     this.wasd = function(x, y, up) {
-        if (game.player.Settings.Pathfinding)
-            return;
+        // if (game.player.Settings.Pathfinding)
+        //     return;
         var p = this.wasd.point;
         if (p.isZero() && up)
             return;

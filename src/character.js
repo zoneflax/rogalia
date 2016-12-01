@@ -1,4 +1,4 @@
-/* global util */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField */
 
 "use strict";
 function Character(id) {
@@ -1396,6 +1396,8 @@ Character.prototype = {
         p.x += this.Dx * delta;
         p.y += this.Dy * delta;
 
+        return p;
+
 
         if (!this.Settings.Pathfinding) {
             return p;
@@ -1413,10 +1415,6 @@ Character.prototype = {
             var dy = Math.sin(angle);
             dst.x += dx * delta;
             dst.y += dy * delta;
-            cell = game.map.getCell(dst.x, dst.y);
-            if (cell && cell.biom.Blocked) {
-                continue;
-            }
 
             var potential = game.potentialAt(fields, dst);
             if (potential - maxPotential > delta) {
@@ -1438,17 +1436,14 @@ Character.prototype = {
         return true;
     },
     potentialFields: function() {
+        var base = 1000;
         var fields = this._pathHistory.slice(0);
         var radius = this.Radius;
         fields.push(new CirclePotentialField(this.Dst.X, this.Dst.Y, 5000, 5));
         game.entities.forEach(function(entity) {
-            if (entity == this || !entity.CanCollide)
+            if (entity == this || !entity.canCollideNow())
                 return;
-            if (!entity.canCollideNow()) {
-                return;
-            }
 
-            var base = 1000;
             var field = (entity.round)
                 ? new CirclePotentialField(
                     entity.X,
@@ -1466,6 +1461,20 @@ Character.prototype = {
                 );
             fields.push(field);
         });
+        _.forEach(game.map.data, function(row, y) {
+            _.forEach(row, function(cell, x) {
+                if (cell.biom.Blocked) {
+                    fields.push(new RectPotentialField(
+                        game.player.Location.X + (x + 0.5) * CELL_SIZE,
+                        game.player.Location.Y + (y + 0.5) * CELL_SIZE,
+                        CELL_SIZE,
+                        CELL_SIZE,
+                        -base,
+                        base/2
+                    ));
+                }
+            });
+        });
         return fields;
     },
     updatePosition: function(k) {
@@ -1477,50 +1486,6 @@ Character.prototype = {
 
         var p = this.findMovePosition(k);
         this.setPos(p.x, p.y);
-
-        // var x = this.x;
-        // var y = this.y;
-
-        // var dx = this.Dx * k;
-        // var dy = this.Dy * k;
-
-        // var new_y = y + dy;
-        // var new_x = x + dx;
-
-        // var cell = game.map.getCell(new_x, new_y);
-        // if (cell) {
-        //     // this fails sometimes due to difference between client *k* and server's
-        //     // if (cell.biom.Blocked) {
-        //     //     this.stop();
-        //     //     return;
-        //     // }
-        //     this.speedFactor = cell.biom.Speed;
-        //     dx *= this.speedFactor;
-        //     dy *= this.speedFactor;
-        //     new_x = x + dx;
-        //     new_y = y + dy;
-        // }
-
-        // var dst = this.Dst;
-
-        // if (Math.abs(dst.X - x) < Math.abs(dx)) {
-        //     new_x = dst.X;
-        // } else if (new_x < this.Radius) {
-        //     new_x = this.Radius;
-        // } else if (new_x > game.map.full.width - this.Radius) {
-        //     new_x = game.map.full.width - this.Radius;
-        // }
-
-        // if (Math.abs(dst.Y - y) < Math.abs(dy)) {
-        //     new_y = dst.Y;
-        // } else if (new_y < this.Radius) {
-        //     new_y = this.Radius;
-        // } else if (new_y > game.map.full.height - this.Radius) {
-        //     new_y = game.map.full.height - this.Radius;
-        // }
-
-        // this.setPos(new_x, new_y);
-
         if (this.X == this.Dst.X && this.Y == this.Dst.Y) {
             this.stop();
         }
