@@ -1,3 +1,5 @@
+/* global game, T, dom, config, Point, CELL_SIZE, Character, util, _ */
+
 "use strict";
 function Fight() {
     var target = null;
@@ -5,16 +7,39 @@ function Fight() {
     var GCD = 500;
     var lastSend = Date.now();
 
-    var actions = ["tsuki", "shomen", "irimi", "tenkan", "kaiten"];
-    var buttons = actions.map(function(action) {
-        var button = document.getElementById(action + "-button");
-        button.onclick = function() {
-            apply(action, true);
-        };
-        return button;
+    var actions = [
+        {
+            name: "tsuki",
+            hotkey: 1,
+            description: T("Thrust"),
+        },
+        {
+            name: "shomen",
+            hotkey: 2,
+            description: T("Punch"),
+        },
+        {
+            name: "irimi",
+            hotkey: 3,
+            description: T("Step forward"),
+        },
+        {
+            name: "tenkan",
+            hotkey: 4,
+            description: T("Turn around"),
+        },
+        {
+            name: "kaiten",
+            hotkey: 5,
+            description: T("Step and turn"),
+        },
+    ];
+    var buttons = _.map(actions, function(action) {
+        return game.controller.makeHotbarButton(action, () => apply(action.name, true));
     });
 
     var hotbar = game.controller.actionHotbar;
+    dom.append(hotbar, buttons);
 
     function apply(action, prepare) {
         var now = Date.now();
@@ -121,37 +146,31 @@ function Fight() {
                 name: "de",
                 actions: "irimi-tsuki",
                 dontStack: ["De", "Su", "Nya"],
-                desc: "Баф (+поглощение, +блок с щита)",
             },
             {
                 name: "su",
                 actions: "irimi-shomen",
                 dontStack: ["De", "Su", "Nya"],
-                desc: "Баф (+урон, +шанс крита)",
             },
             {
                 name: "nya",
                 actions: "kaiten-kaiten",
                 dontStack: ["De", "Su", "Nya"],
-                desc: "Аое Баф (+шанс крита для De, +поглощение для Su)"
             },
             {
                 name: "ikkyo",
                 actions: "irimi-tsuki-tsuki",
                 require: "De",
-                desc: "Удар (агро моба на себя, в пвп 50% стан 1-5 сек)",
             },
             {
                 name: "shihonage",
                 actions: "irimi-tenkan-shomen",
                 require: "Su",
-                desc: "Удар (много урона, замедление на 5 сек)"
             },
             {
                 name: "iriminage",
                 actions: "irimi-tenkan-kaiten",
                 require: "Nya",
-                desc: "Удар (20% стан на 2 сек)"
             },
         ],
         timeout: null,

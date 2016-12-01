@@ -27,9 +27,14 @@ function selectServerStage(panel) {
     }
 
     function quit() {
-        game.clearCredentials();
-        self.panel.close();
-        game.setStage("login");
+        if (game.args["steam"]) {
+            var gui = require("nw.gui");
+            gui.App.quit();
+        } else {
+            game.clearCredentials();
+            self.panel.close();
+            game.setStage("login");
+        }
     }
 
     function serversTable(servers) {

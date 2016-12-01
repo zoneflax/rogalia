@@ -1,37 +1,46 @@
 {
-  "name": "rogalia",
-  "version": "0.25.0",
-  "main": "index.html?steam=true",
-  "description": "Rogalia sandbox mmorpg client",
-  "scripts": {
-    "steam": "gulp nwbuild",
-    "build": "npm run load-metadata && npm run compile",
-    "compile": "gulp",
-    "load-metadata": "curl -s http://rogalik.tatrix.org:8080/metadata > metadata.json"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/TatriX/rogalia.git"
-  },
-  "author": "Tatrix <tatrics@gmail.com>",
-  "bugs": {
-    "url": "https://github.com/TatriX/rogalia/issues"
-  },
-  "homepage": "http://rogalia.ru",
-  "devDependencies": {
-    "babel-core": "^6.18.0",
-    "babel-preset-es2015": "^6.18.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-concat": "^2.6.0",
-    "gulp-html-replace": "^1.6.1",
-    "gulp-less": "^3.1.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-replace": "^0.5.4",
-    "gulp-sourcemaps": "^2.2.0",
-    "gulp-uglify": "^2.0.0",
-    "less": "^2.7.1",
-    "nw-builder": "^3.1.2"
-  },
-  "dependencies": {}
+    "name": "rogalia",
+    "version": "0.25.0",
+    "main": "index.html?steam=true",
+    "description": "Rogalia sandbox mmorpg client",
+    "scripts": {
+        "steam": "gulp nwbuild",
+        "build": "npm run load-metadata && npm run compile",
+        "compile": "gulp",
+        "load-metadata": "curl -s http://rogalik.tatrix.org:8080/metadata > metadata.json"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/TatriX/rogalia.git"
+    },
+    "author": "Tatrix <tatrics@gmail.com>",
+    "bugs": {
+        "url": "https://github.com/TatriX/rogalia/issues"
+    },
+    "homepage": "http://rogalia.ru",
+    "devDependencies": {
+        "babel-core": "^6.18.0",
+        "babel-preset-es2015": "^6.18.0",
+        "gulp": "^3.9.1",
+        "gulp-babel": "^6.1.2",
+        "gulp-concat": "^2.6.0",
+        "gulp-html-replace": "^1.6.1",
+        "gulp-less": "^3.1.0",
+        "gulp-rename": "^1.2.2",
+        "gulp-replace": "^0.5.4",
+        "gulp-sourcemaps": "^2.2.0",
+        "gulp-uglify": "^2.0.0",
+        "less": "^2.7.1",
+        "nw-builder": "^3.1.2"
+    },
+    "dependencies": {},
+    "window": {
+        "title": "Rogalia",
+        "icon": "assets/bg/icon.png",
+        "frame": false,
+        "position": "center",
+        "fullscreen": true,
+        "min_width": 1280,
+        "min_height": 720
+    }
 }

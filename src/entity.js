@@ -1,3 +1,5 @@
+/* global dom, T, util, game */
+
 "use strict";
 function Entity(type, id) {
     var e = this;

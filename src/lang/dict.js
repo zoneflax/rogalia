@@ -57,6 +57,7 @@ T.init = function(lang, callback) {
         "dict",
         "time",
         "items",
+        "help",
         "effects",
         "craft",
         "settings",

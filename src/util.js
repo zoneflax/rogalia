@@ -16,18 +16,18 @@ function Util() {}
 
 var util = new function() {
     this.ajax = function(url, callback) {
-	var oReq = new XMLHttpRequest();
-	oReq.open("GET", url, true);
-	oReq.onreadystatechange = function (oEvent) {
-	    if (oReq.readyState === 4) {
-		if (oReq.status === 200) {
-		    callback && callback(oReq.responseText);
-		} else {
-		    console.log("Error", oReq.statusText);
-		}
-	    }
-	};
-	oReq.send(null);
+        var oReq = new XMLHttpRequest();
+        oReq.open("GET", url, true);
+        oReq.onreadystatechange = function (oEvent) {
+            if (oReq.readyState === 4) {
+                if (oReq.status === 200) {
+                    callback && callback(oReq.responseText);
+                } else {
+                    console.log("Error", oReq.statusText);
+                }
+            }
+        };
+        oReq.send(null);
     };
 
     this.loadScript = function(url, callback)
@@ -37,29 +37,28 @@ var util = new function() {
         script.src = url;
         if (callback)
             script.onload = callback;
-        var head = document.getElementsByTagName("head")[0];
-        head.appendChild(script);
+        document.head.appendChild(script);
         return script;
     };
 
     this.clone = function clone(o) {
-	if(!o || 'object' !== typeof o)  {
-	    return o;
-	}
-	var c = 'function' === typeof o.pop ? [] : {};
-	var p, v;
-	for(p in o) {
-	    if(o.hasOwnProperty(p)) {
-		v = o[p];
-		if(v && 'object' === typeof v) {
-		    c[p] = clone(v);
-		}
-		else {
-		    c[p] = v;
-		}
-	    }
-	}
-	return c;
+    if(!o || 'object' !== typeof o)  {
+        return o;
+    }
+    var c = 'function' === typeof o.pop ? [] : {};
+    var p, v;
+    for(p in o) {
+        if(o.hasOwnProperty(p)) {
+        v = o[p];
+        if(v && 'object' === typeof v) {
+            c[p] = clone(v);
+        }
+        else {
+            c[p] = v;
+        }
+        }
+    }
+    return c;
     };
 
     this.rand = function(min, max) {

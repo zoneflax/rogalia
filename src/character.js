@@ -1,3 +1,5 @@
+/* global util */
+
 "use strict";
 function Character(id) {
     this.Id = id;
@@ -1133,99 +1135,103 @@ Character.prototype = {
     equipSlot: function(name) {
         return this.Equip[Character.equipSlots.indexOf(name)];
     },
+    updateActionButton: function () {
+        var button = game.controller.actionButton;
+        if (this.burden) {
+            button.setAction("drop", () => this.liftStop());
+            return;
+        }
+        var left =  Entity.get(this.equipSlot("left-hand")) || {};
+        var right =  Entity.get(this.equipSlot("right-hand")) || {};
+        if (isRangedWeapon(left) || isRangedWeapon(right)) {
+            button.setAction("shot", () => this.shot());
+            return;
+        }
+        if (button.action == left.Group || button.action == right.Group) {
+            return;
+        }
+        if (isUsable(left)) {
+            button.setAction(left.Group, this.makeActionButtonHandler(left));
+            return;
+        }
+        if (isUsable(right)) {
+            button.setAction(right.Group, this.makeActionButtonHandler(right));
+            return;
+        }
+
+        // else clear the button
+        button.reset();
+
+        function isRangedWeapon(entity) {
+            return entity && entity.Range;
+        }
+
+        function isUsable(entity) {
+            return [
+                "shovel",
+                "pickaxe",
+                "tool",
+                "taming",
+                "dildo",
+                "snowball",
+                "shit",
+                "fishing-rod",
+            ].includes(entity.Group);
+        }
+    },
     updateBar: function() {
+        var self = this;
+        // TODO: refactor
         ["Hp", "Fullness", "Stamina"].map(function(name) {
             var strip = document.getElementById(util.lcfirst(name));
-            var param = this[name];
+            var param = self[name];
             var value = Math.round(param.Current / param.Max * 100);
             strip.firstChild.style.width = Math.min(100, value) + '%';
-            strip.title = name + ": "
-                + util.toFixed(this[name].Current) + " / " + util.toFixed(this[name].Max);
+            strip.title = name + ": " + util.toFixed(param.Current) + " / " + util.toFixed(param.Max);
             strip.lastChild.style.width = Math.max(0, value - 100) + '%';
-        }.bind(this));
+        });
 
-        if (!this.updateActionButton("right-hand") && !this.updateActionButton("left-hand"))
-            game.controller.actionButton.reset();
+        this.updateActionButton();
     },
-    updateActionButton: function(equipSlotName) {
-        var action = "";
-        if (this.burden) {
-            action = "drop";
-        } else {
-            var tool = Entity.get(this.equipSlot(equipSlotName));
-            if (tool) {
-                action = tool.Group;
+    makeActionButtonHandler: function(entity) {
+        return function() {
+            var done = null;
+            var cmd = "dig";
+            switch (entity.Group) {
+            case "dildo":
+            case "snowball":
+            case "shit":
+                game.controller.cursor.set(
+                    entity,
+                    game.controller.mouse.x,
+                    game.controller.mouse.y
+                );
+                return;
+            case "taming":
+                cmd = "tame";
+                break;
+            case "tool":
+                cmd = "use-tool";
+                break;
+            case "fishing-rod":
+                cmd = "fish";
+                done = this.fish.bind(this);
+                break;
+            default:
+                var align = {X: CELL_SIZE, Y: CELL_SIZE};
             }
-        }
-
-        var button = game.controller.actionButton;
-        if (button.action == action)
-            return true;
-
-        if (tool && tool.Range) {
-            button.setAction("shot", () => this.shot());
-            return true;
-        }
-
-        var callback = null;
-
-        switch (action) {
-        case "drop":
-            callback = this.liftStop.bind(this);
-            break;
-        case "shovel":
-        case "pickaxe":
-        case "tool":
-        case "taming":
-        case "dildo":
-        case "snowball":
-        case "shit":
-        case "fishing-rod":
-            callback = function() {
-                var done = null;
-                var cmd = "dig";
-                switch (action) {
-                case "dildo":
-                case "snowball":
-                case "shit":
-                    game.controller.cursor.set(
-                        tool,
-                        game.controller.mouse.x,
-                        game.controller.mouse.y
-                    );
-                    return;
-                case "taming":
-                    cmd = "tame";
-                    break;
-                case "tool":
-                    cmd = "use-tool";
-                    break;
-                case "fishing-rod":
-                    cmd = "fish";
-                    done = this.fish.bind(this);
-                    break;
-                default:
-                    var align = {X: CELL_SIZE, Y: CELL_SIZE};
-                }
-                var cursor = new Entity(tool.Type);
-                cursor.initSprite();
-                var icon = tool._icon || tool.icon();
-                cursor.Width = CELL_SIZE;
-                cursor.Height = CELL_SIZE;
-                cursor.Sprite.Dx = 6;
-                cursor.Sprite.Dy = 56;
-                cursor.sprite.image = icon;
-                cursor.sprite.width = icon.width;
-                cursor.sprite.height = icon.height;
-                game.controller.creatingCursor(cursor, cmd, done);
-            }.bind(this);
-            break;
-        default:
-            return false;
-        }
-
-        button.setAction(action, callback);
-        return true;
+            var cursor = new Entity(entity.Type);
+            cursor.initSprite();
+            var icon = entity._icon || entity.icon();
+            cursor.Width = CELL_SIZE;
+            cursor.Height = CELL_SIZE;
+            cursor.Sprite.Dx = 6;
+            cursor.Sprite.Dy = 56;
+            cursor.sprite.image = icon;
+            cursor.sprite.width = icon.width;
+            cursor.sprite.height = icon.height;
+            game.controller.creatingCursor(cursor, cmd, done);
+        };
     },
     fish: function fish(data) {
         var repeat = fish.bind(this);

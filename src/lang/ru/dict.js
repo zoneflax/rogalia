@@ -1683,8 +1683,6 @@ T.dict = {
 
     "News": "Новости",
     "Second hand must be empty": "Вторая рука должна быть пуста",
-    "Melee fighting": "Ближний бой",
-    "Ranged fighting": "Дальний бой",
     "Copper bowl": "Медная миска",
     "Embracing web scroll": "Свиток сковывающей паутины",
     "Ammo": "Снаряды",

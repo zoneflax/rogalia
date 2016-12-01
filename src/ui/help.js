@@ -1,3 +1,5 @@
+/* global game, util, T, dom */
+
 "use strict";
 function Help() {
     var self = this;
@@ -59,7 +61,9 @@ function Help() {
         tabs.tabs[1].update = null;
         var iframe = dom.tag("iframe");
         iframe.resize = true;
-        iframe.src = "http://rogalia.ru/wiki/";
+        iframe.src = (game.lang == "ru")
+            ? "http://rogalia.ru/wiki/"
+            : "http://steamcommunity.com/app/528460/guides/";
         dom.setContents(contents, iframe);
     }
 
@@ -80,42 +84,17 @@ function Help() {
     }
 
     function makeFight() {
-        var combos = game.controller.fight.combo.combos;
-        return dom.wrap("", [
-            dom.make("h3", T("Melee fighting")),
-            dom.make("p", "Бафы активируются попаданием по противнику (кроме Ня)."),
-            dom.make("p", "Ирими дает небольшое ускорение если на персонаже висит любой баф."),
-            dom.table(
-                [T("Name"), T("Combo"), T("Description")],
-                _.map(combos, function(combo) {
-                    return [
-                        util.ucfirst(T(combo.name)),
-                        combo.actions
-                            .split("-")
-                            .map(action => util.ucfirst(T(action)))
-                            .join(" "),
-                        combo.desc,
-                    ];
-                })
-            ),
-            dom.hr(),
-            dom.make("h3", T("Ranged fighting")),
-            dom.make("p", "Для использования дальнобойного оружия вторая рука должна быть пустой."),
-            dom.make("p", "Для выстрела используются снаряды, в зависимости от оружия."),
-            dom.make("p", "На арене и в пвп инстансах снаряды не тратятся."),
-            dom.wrap("", [
-                "У каждого дальнобойного оружия есть следующие характеристики:",
-                dom.ul([
-                    "Максимальная дальность: если цель вне этого радиуса, стрелять по ней нельзя.",
-                    "Эффективная дальность: внутри этого радиуса точность максимальна.",
-                    "Скорострельность: с какой скоростью выпускается снаряд",
-                    "Тип снаряда: например, камни, стрелы, атомы",
-                    "Скорость снаряда: скорость с которой снаряд дотелит до цели.",
-                ])
-            ]),
-            dom.make("p", "Максимальнаю и эффективную дистанции можно посмотреть зажав ctrl+shift."),
-            dom.make("p", "Цель может уклонится от попадания, выйдя из небольшого радиуса, по которому был нанесен выстрел."),
-            dom.make("p", "Чем дальше цель от эффективной зоны, тем вы меньше шанс попадания."),
-        ]);
+        var combos = _.map(game.controller.fight.combo.combos, function(combo) {
+            return [
+                util.ucfirst(T(combo.name)),
+                combo.actions
+                    .split("-")
+                    .map(action => util.ucfirst(T(action)))
+                    .join(" "),
+                T.help.combos[combo.name],
+            ];
+        });
+        return T.help.fight(combos);
+
     }
 }

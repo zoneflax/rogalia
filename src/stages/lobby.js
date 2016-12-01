@@ -1,7 +1,10 @@
 "use strict";
 function lobbyStage(data) {
-    game.login = data.Login;
-    document.getElementById("version").textContent =  data.Version;
+    if (data) {
+        game.login = data.Login;
+        document.getElementById("version").textContent =  data.Version;
+        lobbyStage.metadataVersion = data.MetadataVersion;
+    }
 
     util.ajax("news/" + game.lang + ".html", function(warn) {
         if (!warn) {
@@ -61,7 +64,7 @@ function lobbyStage(data) {
         var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png").cloneNode();
         add(info.Name, icon, function() {
             game.playerName = info.Name;
-            game.setStage("loading", data.MetadataVersion);
+            game.setStage("loading", lobbyStage.metadataVersion);
         });
     });
 

@@ -711,8 +711,7 @@ hr {
     height: 45px;
     line-height: 45px;
     position: relative;
-    margin: -1px -9px;
-
+    margin: -1px -7px;
 }
 
 .button-icon {
@@ -2238,9 +2237,6 @@ input[type=number], .lot-quantity > input, .price > input {
     display: flex;
     align-items: flex-end;
 }
-#action-hotbar-wrapper {
-    position: relative;
-}
 
 #main-action-button {
     background-image: url("assets/bg/main-button.png");
@@ -2284,22 +2280,18 @@ input[type=number], .lot-quantity > input, .price > input {
     height: 7px;
 }
 #action-hotbar {
-    display: inline-block;
-    position: relative;
-}
+    display: flex;
 
-#action-hotbar > .button {
-    display: inline-block;
+    .button > img {
+        position: relative;
+        top: 4px;
+    }
 }
 
 .cooldown {
     opacity: 0.5;
 }
 
-#action-hotbar > .button > img {
-    position: relative;
-    top: 4px;
-}
 #exchange {
     max-width: none;
 }
@@ -2808,6 +2800,10 @@ input[type=number], .lot-quantity > input, .price > input {
 	url("assets/bg/panel/shop/border-right.png") repeat-y right,
 	@bg-color;
     }
+}
+
+#shop-button {
+    display: none!important;
 }
 
 #shop {

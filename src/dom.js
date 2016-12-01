@@ -1,3 +1,5 @@
+"use strict";
+
 var dom = {
     tag: function(tag, classOrId, cfg) {
         var elem = document.createElement(tag);
@@ -52,7 +54,9 @@ var dom = {
     img: function(src, classOrId) {
         var img = new Image();
         img.src = src;
-        this.setClassOrId(img, classOrId || "");
+        if (classOrId) {
+            this.setClassOrId(img, classOrId);
+        }
         return img;
     },
     link: function(url, text, classOrId) {

@@ -54,6 +54,7 @@
     "./src/iso-drawer.js",
     "./src/jukebox.js",
     "./src/screen.js",
+    "./src/potential-fields.js",
     "./src/game.js",
     "./src/ui/vendor.js",
     "./src/ui/exchange.js",

@@ -1,4 +1,7 @@
+/* global Point, dom, config, util, T, TS */
+
 "use strict";
+
 function Controller(game) {
     var controller = this;
     this.ready = false;
@@ -217,6 +220,9 @@ function Controller(game) {
             }
         },
         setAction: function(action, handler) {
+            if (action == this.action) {
+                return;
+            }
             this.reset();
             this.action = action;
             this.handler = handler;
@@ -485,26 +491,58 @@ function Controller(game) {
         }.bind(this));
     };
 
+    this.makeHotbarButton = function({name, hotkey, description}, onclick) {
+        var base = "assets/icons/actions/" + name;
+        var icon = dom.img(base + ".png");
+        var action = util.ucfirst(TS(name));
+        var button = dom.wrap("button tooltip", [
+            dom.make("i", hotkey),
+            dom.make("span", [
+                action + " [" + hotkey +"]",
+                dom.make("small", description || action),
+            ]),
+            icon,
+        ]);
+        button.onmouseover = () => { icon.src = base + "-hover.png"; };
+        button.onmouseleave = () => { icon.src = base + ".png"; };
+        button.onclick = onclick;
+        return button;
+    };
+
     this.initHotbar = function() {
         //TODO: fixme
-        dom.forEach("#action-hotbar > .button",  function() {
-            var icon = new Image();
-            var base = "assets/icons/actions/" + this.id.replace("-button", "");
-            icon.src = base + ".png";
-            this.appendChild(icon);
-            icon.parentNode.addEventListener("mouseover", function() {
-                icon.src = base + "-hover.png";
-            });
-            icon.parentNode.addEventListener("mouseleave", function() {
-                icon.src = base + ".png";
-            });
-        });
-        document.getElementById("pick-up-button").onclick = function() {
-            game.player.pickUp();
-        };
-        document.getElementById("lift-button").onclick = function() {
-            game.player.liftStart();
-        };
+        /*
+		  <div class="button tooltip" id="pick-up-button">
+          <i>X</i>
+		  <span>Поднять [X]</span>
+		  </div>
+		  <div class="button tooltip" id="lift-button">
+          <i>V</i>
+		  <span>Тащить [V]</span>
+		  </div>
+        */
+        dom.append(this.actionHotbar, [
+            this.makeHotbarButton({name: "pick-up", hotkey: "X"}, () => game.player.pickUp()),
+            this.makeHotbarButton({name: "lift", hotkey: "V"}, () => game.player.pickUp()),
+        ]);
+        // dom.forEach("#action-hotbar > .button",  function() {
+        //     var icon = new Image();
+        //     var base = "assets/icons/actions/" + this.id.replace("-button", "");
+        //     icon.src = base + ".png";
+        //     this.appendChild(icon);
+        //     icon.parentNode.addEventListener("mouseover", function() {
+        //         icon.src = base + "-hover.png";
+        //     });
+        //     icon.parentNode.addEventListener("mouseleave", function() {
+        //         icon.src = base + ".png";
+        //     });
+        // });
+        // document.getElementById("pick-up-button").onclick = function() {
+        //     game.player.pickUp();
+        // };
+        // document.getElementById("lift-button").onclick = function() {
+        //     game.player.liftStart();
+        // };
     };
 
     this.fpsStatsBegin = function() {
