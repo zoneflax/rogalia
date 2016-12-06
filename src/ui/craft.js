@@ -601,21 +601,34 @@ Craft.prototype = {
     auto: function(callback) {
         callback = callback || this.dwim.bind(this);
 
-        // prepare player's inventory
-        // because we want to check it contents even if it's closed
-        Container.bag();
+        var checked = {};
+        var bag = Container.bag();
+        if (bag) {
+            check(bag);
+        }
 
         Container.forEach(function(container) {
-            if (!container.visible && !container.entity.belongsTo(game.player))
+            if (container.visible || container.entity.belongsTo(game.player)) {
+                check(container);
+            }
+        });
+
+        function check(container) {
+            if (checked[container.id])
                 return;
-            // force update
+            checked[container.id] = true;
             container.update();
+            var containers = [];
             container.forEach(function(slot) {
-                if (slot.entity) {
-                    callback(slot, container);
+                if (!slot.entity)
+                    return;
+                callback(slot, container);
+                if (slot.entity.isContainer()) {
+                    containers.push(Container.open(slot.entity));
                 }
             });
-        });
+            containers.forEach(check);
+        }
     },
     craftAll: function() {
         this.auto();

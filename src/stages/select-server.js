@@ -77,7 +77,11 @@ function selectServerStage(panel) {
     }
 
     function openLobby(data) {
-        game.setStage("lobby", data);
+        if (data.Warning) {
+            game.popup.alert(T(data.Warning), quit);
+        } else {
+            game.setStage("lobby", data);
+        }
     }
 }
 

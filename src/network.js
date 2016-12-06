@@ -82,6 +82,8 @@ function Network() {
             var result = callback(data);
             if (result instanceof Function)
                 this.queue.push(result);
+        } else if (data.Warning) {
+            this.queue = [];
         }
     }
 

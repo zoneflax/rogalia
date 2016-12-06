@@ -1141,43 +1141,100 @@ Character.prototype = {
             button.setAction("drop", () => this.liftStop());
             return;
         }
-        var left =  Entity.get(this.equipSlot("left-hand")) || {};
-        var right =  Entity.get(this.equipSlot("right-hand")) || {};
-        if (isRangedWeapon(left) || isRangedWeapon(right)) {
+        var left =  Entity.get(this.equipSlot("left-hand"));
+        var right =  Entity.get(this.equipSlot("right-hand"));
+        if (is(rangedWeaponp)) {
             button.setAction("shot", () => this.shot());
             return;
         }
-        if (button.action == left.Group || button.action == right.Group) {
-            return;
-        }
-        if (isUsable(left)) {
-            button.setAction(left.Group, this.makeActionButtonHandler(left));
-            return;
-        }
-        if (isUsable(right)) {
-            button.setAction(right.Group, this.makeActionButtonHandler(right));
+
+        var fishingRod = is(fishingRodp);
+        if (fishingRod) {
+            button.setAction("fish", () => setCursor("fish", fishingRod, this.fish.bind(this)));
             return;
         }
 
-        // else clear the button
-        button.reset();
-
-        function isRangedWeapon(entity) {
-            return entity && entity.Range;
+        var targetable = is(targetablep);
+            if (targetable) {
+            button.setAction(
+                targetable.Group,
+                function() {
+                    game.controller.cursor.set(
+                        targetable,
+                        game.controller.mouse.x,
+                        game.controller.mouse.y
+                    );
+                }
+            );
+            return;
         }
 
-        function isUsable(entity) {
-            return [
-                "shovel",
-                "pickaxe",
-                "tool",
-                "taming",
-                "dildo",
-                "snowball",
-                "shit",
-                "fishing-rod",
-            ].includes(entity.Group);
+        var [action, cmd, entity] = getAction(right) || getAction(left) || [];
+        if (button.action == action) {
+            return;
         }
+
+        if (action) {
+            button.setAction(action, makeHandler(cmd, entity));
+        } else {
+            button.reset();
+        }
+
+        function is(predicate) {
+            if (right && predicate(right)) {
+                return right;
+            }
+
+            if (left && predicate(left)) {
+                return left;
+            }
+
+            return null;
+        }
+
+        function rangedWeaponp(entity) {
+            return "Range" in entity;
+        }
+
+        function fishingRodp(entity) {
+            return entity.Group == "fishing-rod";
+        }
+
+        function targetablep(entity) {
+            return _.includes(["dildo", "snowball", "shit"], entity.Group);
+        }
+
+        function getAction(entity) {
+            if (!entity) {
+                return null;
+            }
+            var action = {
+                "taming": ["lasso", "tame"],
+                "tool": ["tool", "use-tool"],
+                "shovel": ["shovel", "dig"],
+                "pickaxe": ["pickaxe", "dig"],
+            }[entity.Group];
+            return action && action.concat(entity);
+        }
+
+        function makeHandler(action, entity) {
+            return () => setCursor(action, entity);
+        }
+
+        function setCursor(action, entity, callback) {
+            var cursor = new Entity(entity.Type);
+            cursor.initSprite();
+            var icon = entity._icon || entity.icon();
+            cursor.Width = CELL_SIZE;
+            cursor.Height = CELL_SIZE;
+            cursor.Sprite.Dx = 6;
+            cursor.Sprite.Dy = 56;
+            cursor.sprite.image = icon;
+            cursor.sprite.width = icon.width;
+            cursor.sprite.height = icon.height;
+            game.controller.creatingCursor(cursor, action, callback);
+        }
+
     },
     updateBar: function() {
         var self = this;
@@ -1193,51 +1250,10 @@ Character.prototype = {
 
         this.updateActionButton();
     },
-    makeActionButtonHandler: function(entity) {
-        return function() {
-            var done = null;
-            var cmd = "dig";
-            switch (entity.Group) {
-            case "dildo":
-            case "snowball":
-            case "shit":
-                game.controller.cursor.set(
-                    entity,
-                    game.controller.mouse.x,
-                    game.controller.mouse.y
-                );
-                return;
-            case "taming":
-                cmd = "tame";
-                break;
-            case "tool":
-                cmd = "use-tool";
-                break;
-            case "fishing-rod":
-                cmd = "fish";
-                done = this.fish.bind(this);
-                break;
-            default:
-                var align = {X: CELL_SIZE, Y: CELL_SIZE};
-            }
-            var cursor = new Entity(entity.Type);
-            cursor.initSprite();
-            var icon = entity._icon || entity.icon();
-            cursor.Width = CELL_SIZE;
-            cursor.Height = CELL_SIZE;
-            cursor.Sprite.Dx = 6;
-            cursor.Sprite.Dy = 56;
-            cursor.sprite.image = icon;
-            cursor.sprite.width = icon.width;
-            cursor.sprite.height = icon.height;
-            game.controller.creatingCursor(cursor, cmd, done);
-        };
-    },
     fish: function fish(data) {
         var repeat = fish.bind(this);
         var panel = game.panels["fishing"];
         if (!panel) {
-
             var rating = dom.div("rating");
             var buttons = dom.div("#fishing-buttons");
 
@@ -1731,6 +1747,7 @@ Character.prototype = {
             return true;
         case "dildo":
             game.network.send("fuck", {Id: this.Id});
+            return true;
         case "spell-scroll":
             game.network.send("cast", {Id: entity.Id, Target: this.Id});
             return true;

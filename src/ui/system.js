@@ -1,3 +1,5 @@
+/* global game, dom, T, Panel, FpsStats, Users, Settings */
+
 "use strict";
 
 function System() {
@@ -36,7 +38,7 @@ function System() {
             users,
             dom.hr(),
             links,
-            game.button.donate(),
+            !game.args["steam"] && game.button.donate(),
             dom.hr(),
             game.button.lobby(),
             dom.button(T("Logout"), "", game.reload),

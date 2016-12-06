@@ -9,6 +9,7 @@ function loginStage() {
     }
 
     if (game.args["steam"]) {
+        this.draw = Stage.makeEllipsisDrawer();
         steamLogin();
     } else if (game.inVK())
         vkLogin();
@@ -97,6 +98,8 @@ function loginStage() {
         }
 
         function startSignup() {
+            document.location.href = "http://store.steampowered.com/app/528460/";
+            return;
             dom.show(email.label);
             dom.show(cancelSignupButton);
             dom.hide(signinButton);
