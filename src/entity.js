@@ -58,18 +58,18 @@ Entity.prototype = {
     },
     get name() {
         var name = "";
-        if (this.Type.contains("-corpse") || this.Type == "head")
+        if (this.Type.contains("-corpse") || this.Type == "head") {
             name = this.Name;
-        else if (this.Type == "parcel") {
+        } else if (this.Type == "parcel") {
             var match = this.Name.match(/^(.*)-((?:fe)?male)$/);
             if (match) {
                 name = TS(match[1]) + " (" + T(match[2]) + ")";
             } else {
                 name = TS(this.Name);
             }
-        } else
+        } else {
             name = TS(this.Name);
-
+        }
 
         if (this.Props.Capacity) {
             name += ' [' +
@@ -796,7 +796,7 @@ Entity.prototype = {
         case "grave":
             if (!this.Props.Text)
                 break;
-            var text = this.Props.Text;
+            var text = (this.Creator) ? this.Props.Text : T(this.Props.Text);
             var padding = 5;
             var measure = game.ctx.measureText(text);
             x = p.x - measure.width / 2;

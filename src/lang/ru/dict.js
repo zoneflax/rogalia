@@ -1693,4 +1693,5 @@ T.dict = {
     "Embracing web scroll": "Свиток сковывающей паутины",
     "Ammo": "Снаряды",
     "Cannot throw": "Нельзя бросить",
+    "Market": "Рынок",
 };
