@@ -1,3 +1,5 @@
+/* global game, Image, dom */
+
 "use strict";
 function Minimap() {
     var self = this;
@@ -18,7 +20,7 @@ function Minimap() {
         loadMarkers();
     };
 
-    this.mapImage.src = window.location.protocol + "//" + game.network.addr + "/map";
+    this.mapImage.src = game.proto() + "//" + game.network.addr + "/map";
 
     this.points = {};
     this.markers = {};

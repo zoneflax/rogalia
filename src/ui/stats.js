@@ -351,7 +351,7 @@ Stats.prototype = {
         //         return function(title, contents) {
         //             dom.clear(contents);
 
-        //             var src = location.protocol + "//" + game.network.host + "/stats/" + stat;
+        //             var src = game.proto() + "//" + game.network.host + "/stats/" + stat;
         //             if (limit > 0)
         //                 src += "?limit=" + limit;
 

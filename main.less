@@ -955,9 +955,10 @@ hr {
     max-width: none;
 }
 
+
 #chat-always-visible-label, #chat-settings-icon {
     position: absolute;
-    top: 28px;
+    top: 12px;
     right: 9px;
     width: 16px;
     height: 16px;
@@ -969,10 +970,8 @@ hr {
     right: 8px;
     top: 22px;
 }
-#chat #chat-always-visible-label {
-    display: none;
-}
 #chat-always-visible-label {
+    display: none;
     pointer-events: all;
     background: url("assets/icons/tab/always-visible.png");
 }
@@ -984,14 +983,6 @@ hr {
 
 #chat-always-visible {
     display:none;
-}
-
-#attached-chat {
-    position: absolute;
-    bottom: 0px;
-    left: 0;
-    z-index: 1;
-    text-align: left;
 }
 
 .tab-title {
@@ -1032,48 +1023,77 @@ hr {
     margin-right: 4px;
 }
 
-#attached-chat #chat-wrapper {
-    background:
-    url("assets/bg/tab/corner.png") no-repeat top right,
-    url("assets/bg/panel/border-top.png") repeat-x top,
-    url("assets/bg/panel/border-right.png") repeat-y right,
-    @bg-color;
-    padding: 5px 0;
-}
-#attached-chat .chat-tab {
-    margin-left: -7px;
-    top: 2px;
-}
-#attached-chat .tab-titles > hr {
-    display: none;
-}
-#attached-chat .messages {
-    height: 8em;
+#chat {
+    .chat-tab {
+        width: auto;
+        background-image: none!important;
+        background-color: #393d42;
+        border: 1px solid #282b2f;
+        border-radius: 6px;
+        text-align: center;
+        margin-right: 4px;
+        padding: 1px 5px;
+
+        &.active {
+            background-color: #565f68;
+        }
+    }
+
+    #chat-wrapper {
+        width: 30em;
+        overflow: hidden;
+    }
+
+    #new-message {
+        pointer-events: auto;
+        width: 99%;
+    }
+
+    .tabs > hr {
+        margin: 2px -5px;
+    }
+
+    &.attached-chat {
+        left: 0!important;
+        top: auto!important;
+        bottom: 0!important;
+        z-index: 1;
+
+        #chat-always-visible-label {
+            display: block;
+        }
+
+        #chat-wrapper {
+            padding: 5px 0;
+        }
+
+        .messages {
+            height: 8em;
+        }
+
+        .semi-hidden, .semi-hidden a {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .semi-hidden > .messages {
+            pointer-events: none;
+            border: none;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        #new-message {
+            margin-left: 5px;
+            width: 95%;
+        }
+
+        .messages {
+            margin-right: -16px;
+        }
+    }
 }
 
-#attached-chat.semi-hidden, #attached-chat.semi-hidden a{
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-#attached-chat.semi-hidden > .messages {
-    pointer-events: none;
-    border: none;
-    overflow: hidden;
-    background: transparent;
-}
-#new-message {
-    pointer-events: auto;
-    width: 99%;
-}
-#attached-chat #new-message {
-    margin-left: 5px;
-    width: 95%;
-}
-#chat-wrapper {
-    width: 30em;
-    overflow: hidden;
-}
 .messages {
     width: 31em;
     height: 20em;
@@ -1082,9 +1102,6 @@ hr {
     position: relative;
     padding: 5px;
     margin: 0;
-}
-#attached-chat .messages {
-    margin-right: -16px;
 }
 
 .message {

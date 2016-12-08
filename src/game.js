@@ -93,19 +93,19 @@ class Game {
             vk: function() {
                 var vk = document.createElement("button");
                 var vkLogo = document.createElement("img");
-                vkLogo.src = "//vk.com/favicon.ico";
+                vkLogo.src = "http://vk.com/favicon.ico";
                 vk.appendChild(vkLogo);
                 vk.appendChild(document.createTextNode(T("Group")));
-                vk.onclick = this._openLink("//vk.com/rogalia");
+                vk.onclick = this._openLink("http://vk.com/rogalia");
                 return vk;
             },
             twitter: function() {
                 var twitter = document.createElement("button");
                 var twitterLogo = document.createElement("img");
-                twitterLogo.src = "//twitter.com/favicon.ico";
+                twitterLogo.src = "http://twitter.com/favicon.ico";
                 twitter.appendChild(twitterLogo);
                 twitter.appendChild(document.createTextNode(T("Twitter")));
-                twitter.onclick = this._openLink("//twitter.com/Tatrics");
+                twitter.onclick = this._openLink("http://twitter.com/Tatrics");
                 return twitter;
             },
             wiki: function() {
@@ -171,10 +171,14 @@ class Game {
         this.jukebox = new Jukebox();
 
         var maximize = document.getElementById("maximize");
-        maximize.onclick = function() {
-            maximize.classList.toggle("maximized");
-            util.toggleFullscreen();
-        };
+        if (game.args["steam"]) {
+            dom.hide(maximize);
+        } else {
+            maximize.onclick = function() {
+                maximize.classList.toggle("maximized");
+                util.toggleFullscreen();
+            };
+        }
 
         this.setFontSize();
 
@@ -204,16 +208,23 @@ class Game {
     }
 
     _gatewayAddr() {
+        if (game.args["steam"]) {
+            return "http://quasar.rogalik.tatrix.org/gateway";
+        }
         var gateway = this.args["gateway"];
 
-        var proto = "http:";
-        if (document.location.protocol.match(/^https?:$/)) {
-            proto = document.location.protocol;
-        }
-
         return (gateway)
-            ? proto + "//" + gateway + "/gateway"
-            : proto + "//rogalik.tatrix.org/gateway";
+            ? this.proto() + "//" + gateway + "/gateway"
+            : this.proto() + "//rogalik.tatrix.org/gateway";
+    }
+
+    proto() {
+        switch (document.location.protocol) {
+        case "http:":
+        case "https":
+            return document.location.protocol;
+        }
+        return "http:";
     }
 
     initTime(time, tick) {
@@ -342,7 +353,7 @@ class Game {
 
         var self = this;
         this.network.run(server.Addr, function() {
-            self.network.send("login", { Token: token });
+            self.network.send("login", { Token: token, Lang: game.lang });
         });
     }
 

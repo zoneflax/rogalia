@@ -294,6 +294,7 @@ var dom = {
             tab.isActive = function() {
                 return title.classList.contains("active");
             };
+            tab.activate = title.onclick;
             tab.tab = {
                 title: title,
                 content: content,

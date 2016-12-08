@@ -40,8 +40,12 @@ function System() {
             links,
             !game.args["steam"] && game.button.donate(),
             dom.hr(),
-            game.button.lobby(),
-            dom.button(T("Logout"), "", game.reload),
+            game.args["steam"] ?
+                dom.button(T("Change character"), "", game.reload)
+                : game.button.lobby(),
+            game.args["steam"] ?
+                dom.button(T("Quit"), "", () => require("nw.gui").App.quit())
+                : dom.button(T("Logout"), "", game.reload),
         ]
     );
 }

@@ -1,3 +1,5 @@
+/* global dom, Panel, game, localStorage, TT, config */
+
 "use strict";
 function Chat() {
     var self = this;
@@ -11,6 +13,8 @@ function Chat() {
         announcement : 8,
         npc          : 9,
         custom       : 100,
+        en: 99,
+        ru: 98,
     };
 
     this.newMessageElement = dom.tag("input", "#new-message");
@@ -255,10 +259,7 @@ function Chat() {
                 self.addMessage(sprintf("%d %d %d", game.player.X, game.player.Y, game.player.Z));
                 break;
             case "list-channels":
-                self.addMessage({
-                    Body: _.map(game.player.ChatChannels, ".Name").join(", "),
-                    Channel: channels.custom,
-                });
+                this.listChannels();
                 break;
             case "set-channel":
                 self.setCustomChannel(arg);
@@ -364,20 +365,17 @@ function Chat() {
     };
 
     this.attach = function() {
-        var contents = this.panel.contents;
-        contents.id = "attached-chat";
-        dom.remove(contents);
-        game.interface.appendChild(contents);
+        dom.move(this.panel.element, game.world);
+        this.panel.element.classList.add("attached-chat");
+        this.panel.hideTitle();
         dom.hide(this.panel.button);
-        this.panel.hide();
         semihide();
     };
 
     this.detach = function() {
-        var contents = this.panel.contents;
-        contents.id = "";
-        dom.remove(contents);
-        this.panel.element.appendChild(contents);
+        dom.move(this.panel.element, document.body);
+        this.panel.element.classList.remove("attached-chat");
+        this.panel.showTitle();
         dom.show(this.panel.button);
     };
 
@@ -401,11 +399,16 @@ function Chat() {
     var tabs = [
         {
             name: "general",
-            channels: ["global", "local", "server", "private", "announcement", "npc"]
+            channels: ["global", "local", "server", "private", "announcement", "npc"],
+        },
+        {
+            name: game.lang,
+            channels: [game.lang, "local", "server", "private", "announcement", "npc"],
+            defaultPrefix: game.lang,
         },
         {
             name: "private",
-            channels: ["private"]
+            channels: ["private"],
         },
         {
             name: "system",
@@ -413,28 +416,20 @@ function Chat() {
         },
         {
             name: "party",
-            hidden: true,
             defaultPrefix: "party",
             channels: ["party", "private"]
         },
         {
             name: "custom",
-            hidden: true,
             defaultPrefix: "custom",
             channels: ["custom", "private"],
         }
     ].map(function(tab, i) {
         var name = tab.name;
-        var icon = new Image();
-        icon.src = "assets/icons/tab/tab-" + name + ".png";
-        tab.icon = icon;
         tab.title = TT(name);
         tab.init = function(title, contents) {
-            title.style.zIndex = tabs.length - i;
             title.classList.add("chat-tab");
             title.classList.add("chat-tab-" + name);
-            if (tab.hidden)
-                dom.hide(title);
             tab.titleElement = title;
         };
         tab.update = function(title, content) {
@@ -443,7 +438,7 @@ function Chat() {
             title.classList.remove("has-new-messages");
         };
         var messagesElement = dom.div("messages");
-        messagesElement.innerHTML = localStorage["chat.log." + name] || "";
+        messagesElement.innerHTML = localStorage.getItem("chat.log." + name) || "";
 
         tab.contents = [messagesElement];
         tab.messagesElement = messagesElement;
@@ -451,26 +446,10 @@ function Chat() {
         return tab;
     });
 
-
     var tabElem = dom.tabs(tabs);
     tabElem.contents.appendChild(this.newMessageElement);
     tabElem.contents.id = "chat-wrapper";
     tabElem.addEventListener("mousedown", onmousedown);
-
-    var chatSettingsIcon = dom.img("assets/icons/tab/settings.png", "#chat-settings-icon");
-    var chatSettingsActions = {};
-    var selectableTabTitle = tabElem.titles.children[2];
-    Array.prototype.slice.call(tabElem.titles.children, 2).forEach(function(title) {
-        chatSettingsActions[title.textContent] = function() {
-            dom.hide(selectableTabTitle);
-            dom.show(title);
-            selectableTabTitle = title;
-            title.onclick();
-        };
-    });
-    chatSettingsIcon.onclick = function() {
-        game.menu.show(chatSettingsActions);
-    };
 
     function scrollAllToTheEnd(element) {
         tabs.forEach(function(tab) {
@@ -483,13 +462,10 @@ function Chat() {
         "Chat",
         [
             tabElem,
-            //TODO: restore settings
-            // settingsIcon,
             alwaysVisible.label,
-            chatSettingsIcon,
         ]
-    );
-
+    ).show();
+    tabs[1].activate();
     this.removeAlert = game.controller.makeHighlightCallback("chat", false);
 
     // hide on load
@@ -934,12 +910,30 @@ function Chat() {
             if (!channel) {
                 return false;
             }
-            channels.custom = channel.Channel;
             self.addMessage({
-                Body: T("Members") + ": " + channel.Members.join(", "),
+                Body: "-> " + channel.Name,
                 Channel: channels.custom,
             });
+            channels.custom = channel.Channel;
             return true;
         }
+    };
+
+    this.listChannels = function() {
+        var self = this;
+        if (game.player.ChatChannels.length == 0) {
+            self.addMessage({
+                Body: T("No active channels"),
+                Channel: channels.custom,
+            });
+            return;
+        }
+
+        game.player.ChatChannels.forEach(function(channel) {
+            self.addMessage({
+                Body: channel.Name + ": " + channel.Members.join(", "),
+                Channel: channels.custom,
+            });
+        });
     };
 }

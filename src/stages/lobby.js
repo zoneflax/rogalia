@@ -87,6 +87,7 @@ function lobbyStage(data) {
         contents.push(dom.button(T("Back"), "", function() {
             lobbyStage.characters = [];
             game.clearServerInfo();
+            game.network.disconnect();
             game.setStage("selectServer");
         }));
     }

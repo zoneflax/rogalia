@@ -1,3 +1,5 @@
+/* global dom, game */
+
 "use strict";
 //TODO: make panels linked via back button
 function Panel(name, title, elements, hooks) {
@@ -139,6 +141,10 @@ Panel.prototype = {
     },
     hideTitle: function() {
         dom.hide(this.titleBar);
+        return this;
+    },
+    showTitle: function() {
+        dom.show(this.titleBar);
         return this;
     },
     close: function() {

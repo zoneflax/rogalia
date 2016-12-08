@@ -23,7 +23,7 @@ function mainStage(data) {
         data.BG && game.controller.updateBG(data.BG);
 
         game.controller.syncMinimap(data.RemotePlayers);
-        game.controller.chat.sync(data.Chat || []);
+        data.Chat && game.controller.chat.sync(data.Chat);
         game.controller.skills.update();
         game.controller.fight.update();
         game.controller.craft.update();

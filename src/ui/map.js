@@ -1,3 +1,5 @@
+/* global game, Point, CELL_SIZE */
+
 "use strict";
 function WorldMap() {
     var CHUNK_SIZE = 8*CELL_SIZE;

@@ -41,7 +41,7 @@ function Network() {
     };
 
     this.disconnect = function() {
-        if (this.socket ) {
+        if (this.socket) {
             this.socket.onclose = null;
             this.socket.close();
             this.socket = null;
