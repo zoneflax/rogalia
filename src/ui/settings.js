@@ -1,3 +1,5 @@
+/* global game, Panel, dom, localStorage, config */
+
 "use strict";
 function Settings() {
     Settings.instance = this;
@@ -101,9 +103,9 @@ Settings.load = function(map) {
             if (saved !== null) {
                 group[prop] = JSON.parse(saved);
             }
-        })
-    })
-}
+        });
+    });
+};
 
 
 Settings.toggle = function(key) {
@@ -112,6 +114,7 @@ Settings.toggle = function(key) {
     var option = path[2];
     var value = !config[section][option];
     config[section][option] = value;
+    localStorage.setItem(key, value);
 
     var checkbox = document.getElementById(key);
     if (checkbox)
@@ -185,7 +188,6 @@ Settings.prototype = {
             });
             tab.contents.push(optionDesc);
             return tab;
-
         });
     },
 };

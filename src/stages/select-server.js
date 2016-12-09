@@ -1,3 +1,5 @@
+/* global game, dom, Panel, T */
+
 "use strict";
 
 function selectServerStage(panel) {
@@ -14,7 +16,7 @@ function selectServerStage(panel) {
             }
             var servers = JSON.parse(this.response);
             self.panel = new Panel("select-server", "", [
-                dom.wrap("lobby-account", game.login),
+                dom.wrap("lobby-account", game.getLogin()),
                 serversTable(servers),
                 dom.button(T("Refresh"), "refresh", showServers),
                 dom.button(T("Quit"), "quit", quit)

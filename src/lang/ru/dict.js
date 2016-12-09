@@ -1667,7 +1667,7 @@ T.dict = {
     "Hell rogalian": "Адский рогалиец",
     "White stone arc": "Белая каменная арка",
     "White stone pillar": "Белый каменный столб",
-    "White stone wall": "Белая стена",
+    "White stone wall": "Белая каменная стена",
     "White stone door": "Белая каменная дверь",
 
     "Server": "Сервер",
@@ -1695,4 +1695,5 @@ T.dict = {
     "Cannot throw": "Нельзя бросить",
     "Market": "Рынок",
     "Detonate": "Подорвать",
+    "You joined to the {faction}": "Ваша новая фракция: {faction}",
 };

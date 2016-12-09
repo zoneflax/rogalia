@@ -17,7 +17,7 @@ function loginStage() {
         showLoginForm();
 
     function showLoginForm() {
-        var login = dom.input(T("Login"), game.loadLogin());
+        var login = dom.input(T("Login"), game.getLogin());
 
         var password = dom.input(T("Password"), "", "password");
         password.onkeydown = submitSignin;

@@ -43,15 +43,14 @@ function WorldMap() {
     }.bind(this);
 
     this.sync = function(data, map) {
-        var width = 64;
-        var height = 64;
-        this.cells_x = width;
-        this.cells_y = height;
+        var size = Math.sqrt(data.length);
+        this.cells_x = size;
+        this.cells_y = size;
 
-        this.width = width * CELL_SIZE;
-        this.height = height * CELL_SIZE;
+        this.width = size * CELL_SIZE;
+        this.height = size * CELL_SIZE;
 
-        this.syncMinimap(data, width, height);
+        this.syncMinimap(data, size, size);
 
         worker.postMessage({
             bioms: this.bioms,
@@ -177,12 +176,13 @@ function WorldMap() {
                 switch(offset) {
                 case  3: if (i != 2) return; break;
                 case  5: if (i != 1) return; break;
-                case 10: if (i != 2) return; break;
-                case 12: if (i != 1) return; break;
+                // case 10: if (i != 2) return; break;
+                // case 12: if (i != 1) return; break;
 
                 case  7: if (i != 3) return; break;
                     // case 11: if (i != 2) return; break;
                     // case 13: if (i != 1) return; break; //TODO: fixme
+
                 case 14: if (i != 0) return; break;
 
                 case 15: if (i != 0) return; break;

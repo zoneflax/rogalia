@@ -18,8 +18,6 @@ class Game {
 
         this.gateway = this._gatewayAddr();
 
-        this.login = "";
-
         Settings.load(config);
 
         new DragManager();
@@ -43,7 +41,6 @@ class Game {
 
         this.menu = new Menu();
 
-        this.login = null;
         this.player = null;
         this.playerName = "";
 
@@ -307,14 +304,14 @@ class Game {
         document.location.reload();
     }
 
-    loadLogin() {
-        this.login = localStorage.getItem("login");
-        return this.login;
+    getLogin() {
+        return (this.args["steam"])
+            ? "Rogalia"
+            : localStorage.getItem("login");
     }
 
     setLogin(login) {
         localStorage.setItem("login", login);
-        this.login = login;
     }
 
     loadServerInfo() {

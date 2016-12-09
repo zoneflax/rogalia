@@ -1,7 +1,9 @@
+/* global game */
+
 "use strict";
 function lobbyStage(data) {
     if (data) {
-        game.login = data.Login;
+        game.setLogin(data.Login);
         document.getElementById("version").textContent =  data.Version;
         lobbyStage.metadataVersion = data.MetadataVersion;
     }
@@ -77,7 +79,7 @@ function lobbyStage(data) {
     };
 
     var contents = [
-        dom.wrap("lobby-account", game.login),
+        dom.wrap("lobby-account",  game.getLogin()),
         dom.hr(),
         avatars,
     ];

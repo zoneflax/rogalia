@@ -139,7 +139,7 @@ function Minimap() {
 
     function sendPoint(point) {
         var title = (point.title == point.name) ? "" : " " + point.title;
-        game.chat.send("${marker:" + point.x + " " + point.y + title +"}");
+        game.chat.link("${marker:" + point.x + " " + point.y + title +"}");
     }
 
     this.rescale = function() {

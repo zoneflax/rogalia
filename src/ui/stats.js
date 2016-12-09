@@ -1,3 +1,5 @@
+/* global game, dom, sprintf */
+
 "use strict";
 function Stats() {
     this.equipContainer = new ContainerEquip();
@@ -95,8 +97,12 @@ Stats.prototype = {
         return labelElem;
     },
     sync: function() {
-        if (this.panel && !this.panel.visible)
+        if (!this.panel)
             return;
+        if (!this.panel.visible) {
+            this.panel.hooks.show = () => this.update();
+            return;
+        }
         this.update();
     },
     update: function() {
@@ -395,10 +401,7 @@ Stats.prototype = {
         if (section.hash === hash)
             return;
         section.hash = hash;
-        var fragment = document.createDocumentFragment();
-        contents.forEach(fragment.appendChild.bind(fragment));
-        dom.clear(section.elem);
-        section.elem.appendChild(fragment);
+        dom.setContents(section.elem, contents);
     },
     updateExp: function() {
         var xp = document.getElementById("xp-progress");

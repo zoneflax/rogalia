@@ -103,14 +103,17 @@ var dom = {
         return this.append(this.tag(tag, classOrId), contents);
     },
     append: function(element, contents) {
-        if (!Array.isArray(contents))
-            contents = [contents];
-        contents.forEach(function(child) {
-            if (child) {
-                element.appendChild((child instanceof Node) ? child : document.createTextNode(child));
-            }
-        });
+        if (Array.isArray(contents)) {
+            var fragment = document.createDocumentFragment();
+            contents.forEach((child) =>  child && this.appendOne(fragment, child));
+            element.appendChild(fragment);
+        } else if (contents) {
+            this.appendOne(element, contents);
+        }
         return element;
+    },
+    appendOne: function(element, content) {
+        element.appendChild((content instanceof Node) ? content : document.createTextNode(content));
     },
     wrap: function(classOrId, elements, cfg) {
         return this.append(dom.div(classOrId, cfg), elements);

@@ -1109,8 +1109,14 @@ hr {
     padding: 0 2em 0 0;
 }
 .message .from {
+    .cursor-pointer;
     color: #8c919c;
 }
+.message .from:hover {
+    -webkit-filter: brightness(120%);
+    filter: brightness(120%);
+}
+
 .message.from-me .from{
     color: lightgreen;
 }
@@ -1118,6 +1124,7 @@ hr {
     color: #e2e9ec;
     border: 0;
     padding: 0;
+    cursor: text;
 }
 .message.from-admin .body {
     color: #eed400;
@@ -1798,17 +1805,20 @@ big {
 .hidden {
     display: none!important;
 }
-#crash-help {
+#exit {
     position: absolute;
-    top: 10px;
-    left: 0;
-    right: 0;
-    width: 150px;
+    top: 10px!important;
+    left: 0!important;
+    right: 0!important;
     margin: auto;
-}
-#crash-help > button {
-    width: 100%;
-    margin-bottom: 5px;
+    display: block!important;
+    width: 150px;
+    z-index: 1;
+
+    button {
+        width: 100%;
+        margin-bottom: 5px;
+    }
 }
 
 #avatar-container, #minimap-container {

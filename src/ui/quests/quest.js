@@ -1,3 +1,5 @@
+/* global game, dom */
+
 "use strict";
 function Quest(q, npc) {
     for (var i in q) {
@@ -256,6 +258,9 @@ Quest.prototype = {
                 voiceButton = play;
             }
             contents.push(dom.wrap("quest-voice", voiceButton));
+            if (game.lang != "ru") {
+                game.sound.toggleVoice();
+            }
 
             game.sound.onVoiceEnded = function() {
                 var replay = dom.img("assets/icons/replay.png", "icon-button");

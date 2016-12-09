@@ -347,9 +347,9 @@ Character.prototype = {
             type = (this.Owner == game.player.Id) ? "margo-naked" : "margo";
             break;
         case "vendor":
-            type = "vendors/" + this.sex() + "-" + ([].reduce.call(this.Name, function(hash, c) {
+            type = "vendors/vendor-" + ([].reduce.call(this.Name, function(hash, c) {
                 return hash + c.charCodeAt(0);
-                }, 0) % 6 + 1);
+                }, 0) % 12 + 1);
             break;
         }
 

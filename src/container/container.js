@@ -208,7 +208,8 @@ Container.prototype = {
         var entity = slot.entity;
         var top = this.getTopExcept(entity.Container);
         if (top) {
-            if (game.controller.modifier.ctrl && game.controller.modifier.shift) {
+            var equipped = (this.id == 0);
+            if (!equipped  && game.controller.modifier.ctrl && game.controller.modifier.shift) {
                 game.network.send("move-all", {
                     From: entity.Container,
                     To: top.id,

@@ -139,7 +139,7 @@ function Chat() {
             }
 
             if (e.shiftKey) {
-                self.send("${" + name + "}");
+                self.link("${" + name + "}");
                 return true;
             }
 
@@ -208,14 +208,20 @@ function Chat() {
         else
             text = entity.name || entity.Name;
 
-        this.send("${" + text + "}", true);
+        this.link("${" + text + "}");
+
         if (game.player.IsAdmin || entity.Group == "portal") {
             this.addMessage("id: " + entity.Id);
         }
     };
 
     this.linkRecipe = function(type) {
-        this.send("${recipe:" + type +"}");
+        this.link("${recipe:" + type +"}");
+    };
+
+    this.link = function(text) {
+        this.append(text);
+        _.defer(() => this.activate());
     };
 
     var myMessages = new ChatRing();

@@ -10,11 +10,23 @@ function exitStage(message) {
 
     game.network.disconnect();
 
-    dom.append(game.world, dom.wrap("#crash-help", [
-        game.button.vk(),
+    var buttons = [
         dom.button(T("Reset settings"), "", game.controller.reset),
-        game.button.logout(),
-        dom.button(T("Reload"), "", game.reload),
-    ]));
+    ];
+    if (game.args["steam"]) {
+        buttons.push(
+            dom.button(T("Reload"), "", () => game.logout()),
+            dom.button(T("Quit"), "", () => require("nw.gui").App.quit())
+        );
+    } else {
+        buttons.push(
+            game.button.logout(),
+            dom.button(T("Reload"), "", game.reload)
+        );
+    }
+    new Panel("exit", "", buttons)
+        .hideTitle()
+        .hideCloseButton()
+        .show();
 };
 Stage.add(exitStage);

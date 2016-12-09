@@ -1,3 +1,5 @@
+/* global game, config, config, Audio */
+
 "use strict";
 //TODO: make playlist shuffle
 function Sound() {

@@ -2,7 +2,7 @@
 function createCharacterStage() {
     var account = document.createElement("div");
     account.className = "lobby-account";
-    account.textContent = game.login;
+    account.textContent = game.getLogin();
 
     var name = document.createElement("input");
     name.placeholder = T("Name");
