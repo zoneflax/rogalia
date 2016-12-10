@@ -280,6 +280,11 @@ class Game {
         window.addEventListener("focus", () => { this.focus = true; });
         window.addEventListener("blur", () => { this.focus = false; });
 
+        if (game.args["steam"]) {
+            var gui = require("nw.gui");
+            var win = gui.Window.get();
+            win.on("close", () => this.save());
+        }
     }
 
     update(currentTime) {

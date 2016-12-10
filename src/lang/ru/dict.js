@@ -1696,4 +1696,11 @@ T.dict = {
     "Market": "Рынок",
     "Detonate": "Подорвать",
     "You joined to the {faction}": "Ваша новая фракция: {faction}",
+    "Vendor's place: 100 platinum.": "Место для торговца: 100 платины.",
+    "The Halt inn": "Гостиница \"Привал\"",
+    "The Prancing coyote tavern": "Таверна \"Горцующий койот\"",
+    "Craftsmans area": "Квартал ремесленников",
+    "Cemetery and Chapel": "Церковь и кладбище",
+    "Academy": "Академия",
+    "Unknown grave": "Безымянная могила",
 };

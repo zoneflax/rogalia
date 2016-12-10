@@ -1,4 +1,4 @@
-/* global game, Point, CELL_SIZE */
+/* global game, Point, CELL_SIZE, config */
 
 "use strict";
 function WorldMap() {
@@ -302,7 +302,7 @@ function WorldMap() {
             game.drawStrokedText(text, x, y + FONT_SIZE);
         }
 
-        game.debug.map.grid && this.drawGrid();
+        config.graphics.mapGrid && this.drawGrid();
 
         this.drawMinimap();
     };

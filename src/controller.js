@@ -444,7 +444,7 @@ function Controller(game) {
         },
         27: { //esc
             callback: function() {
-                if (Panel.top) {
+                if (Panel.top && Panel.top.name != "chat") {
                     Panel.top.hide();
                 }
                 game.player.setTarget(null);
@@ -556,6 +556,14 @@ function Controller(game) {
     };
 
     this.initInterface = function() {
+        if (game.args["steam"]) {
+            var gui = require("nw.gui");
+            var win = gui.Window.get();
+            win.on("new-win-policy", function(frame, url, policy) {
+                gui.Shell.openExternal(url);
+                policy.ignore();
+            });
+        }
         game.map.minimapContainer.style.display = "block";
         game.timeElement.style.display = "block";
 
@@ -996,6 +1004,12 @@ function Controller(game) {
         if (data) {
             game.ctx.strokeStyle = "#00ffff";
             game.iso.strokeRect(data.x, data.y, data.w, data.h);
+            var fill = data.fill;
+            if (fill) {
+                game.ctx.fillStyle = fill.color;
+                game.iso.fillRect(data.x - fill.w/2, data.y - fill.h/2, fill.w, fill.h);
+                game.iso.strokeRect(data.x - fill.w/2, data.y - fill.h/2, fill.w, fill.h);
+            }
         }
     };
 

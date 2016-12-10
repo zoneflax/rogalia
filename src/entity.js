@@ -397,7 +397,7 @@ Entity.prototype = {
         }.bind(this));
 
         if (this.Orientation != "" && this.MoveType != Entity.MT_STATIC) {
-            actions[2]["Rotate"] = function() {
+            actions[1]["Rotate"] = function() {
                 game.network.send("rotate", {id: this.Id});
             };
         }
@@ -415,9 +415,6 @@ Entity.prototype = {
         if (align && align.X) {
             var w = this.Width || 2*this.Radius;
             var h = this.Height || 2*this.Radius;
-            if (this.Group == "claim") {
-                w = h = 20 * CELL_SIZE;
-            }
             p.x -= w/2;
             p.y -= h/2;
             p.align(new Point(align));
@@ -426,8 +423,13 @@ Entity.prototype = {
                 y: p.y,
                 w: Math.max(w, align.X),
                 h: Math.max(h, align.Y),
+                fill: (this.Group == "claim") ? {
+                    w: 20 * CELL_SIZE,
+                    h: 20 * CELL_SIZE,
+                    color: "rgba(0, 0, 0, 0.1)",
+                } : null,
             };
-        }
+        };
         return null;
     },
     defaultActionSuccess: function(data) {

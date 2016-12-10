@@ -10,7 +10,7 @@ function Shop() {
     var loaded = false;
     var onload = function(){};
 
-    this.panel = new Panel("shop", "Shop", [], {
+    this.panel = new Panel("shop", "Shop [NOT READY YET]", [], {
         show: function() {
             if (loaded) {
                 onload();
@@ -67,7 +67,7 @@ function Shop() {
                 },
                 {
                     title: T("Items"),
-                }
+                },
             ];
 
             var groups = _.map(_.groupBy(data.Products, ".Group"), function(products) {
@@ -92,6 +92,8 @@ function Shop() {
                     card.tab = tabs[index];
                     card.style.backgroundImage = "url(assets/shop/" + product.Name + "/preview.png)";
                     card.onclick = function() {
+                        // TODO: disabled
+                        return;
                         openCard(product);
                     };
                     cards.push(card);
@@ -107,6 +109,10 @@ function Shop() {
 
     function openCard(product) {
         buyButton = dom.button(T("Buy"), "product-buy", function() {
+            if (game.args["steam"]) {
+                game.popup.alert(T("Comming soon"));
+                return false;
+            }
             game.network.send("shop", { Product: product.Name, Data: product.data }, function(data) {
                 pay(product, data.Order);
             });

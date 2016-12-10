@@ -35,12 +35,13 @@ var config = {
     },
     graphics: {
         // low: false,
-        fullscreen: false,
+        // fullscreen: false,
         autoHighlightDoors: false,
         snowflakes: false,
         movingSpace: false,
         centerScreen: true,
         autoHideWalls: true,
+        mapGrid: false,
     },
     sound: {
         playSound: true,
@@ -59,7 +60,6 @@ var debug = {
         darkness: false,
         simpleDarkness: false,
         ray: false,
-        grid: false,
         position: false,
     },
     player: {

@@ -23,7 +23,7 @@ function main() {
             return lang;
         }
 
-        return supportedLangs[0];
+        return supportedLangs[1];
     }
 
     function parseArgs() {

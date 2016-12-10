@@ -1,5 +1,5 @@
 Craft.help = {
-    "stick": "Чтобы получить палку кликните правой кнопкой мыши по суку, добытому с любого дерева, и выберите пункт <сломать>",
-    "twig": "Чтобы получить прутик кликните правой кнопкой мыши по ветке, добытой с любого дерева, и выберите пункт <сломать>",
-    "stone": "Камень можно <отколоть> киркой от каменной глыбы, булыжника или просто поднять с земли",
+    "stick": "To get a stick right click on a bough and select \"Break off\" option.",
+    "twig": "To get a twig right click on a branch and select \"Break off\" option.",
+    "stone": "Stone can be \"chipped\" with a pickaxe from a boulder and stone block, or you can simply find one one the ground",
 };

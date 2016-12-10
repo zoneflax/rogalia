@@ -65,8 +65,6 @@ function Character(id) {
         last: 0,
     };
 
-    this.speedFactor = 1; // biom's coef
-
     this.animation = {up: null, down: null};
 
     this.sprites = {};
@@ -987,7 +985,10 @@ Character.prototype = {
             if (this.Type == "player") {
                 spriteSpeed = 6500;
             }
-            speed *= this.speedFactor;
+            var cell = game.map.getCell(this.X, this.X);
+            if (cell) {
+                speed *= cell.biom.Speed;
+            }
             break;
         case "attack":
             spriteSpeed = this.Action.Duration / this.sprite.framesNum;

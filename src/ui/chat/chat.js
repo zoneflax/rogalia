@@ -208,7 +208,7 @@ function Chat() {
         else
             text = entity.name || entity.Name;
 
-        this.link("${" + text + "}");
+        this.link("${" + text.replace(/\n/g, " ") + "}");
 
         if (game.player.IsAdmin || entity.Group == "portal") {
             this.addMessage("id: " + entity.Id);
@@ -677,8 +677,13 @@ function Chat() {
         tabs.forEach(function(tab) {
             if (tab.channels.indexOf(channelName) == -1)
                 return;
-            if (!tab.titleElement.classList.contains("active"))
+            if (!tab.isActive()) {
+                if (channelName == "private" && tab.name != "private")
+                    return;
+
                 tab.titleElement.classList.add("has-new-messages");
+            }
+
             var element = tab.messagesElement;
             var m = elem.cloneNode(true);
             element.appendChild(m);
