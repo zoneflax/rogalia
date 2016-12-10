@@ -63,7 +63,7 @@ function Help() {
         iframe.resize = true;
         iframe.src = (game.lang == "ru")
             ? "http://rogalia.ru/wiki/"
-            : "http://rogalia.ru/wiki/Newbie_guide/";
+            : "http://rogalia.ru/wiki/Newbie_guide";
         dom.setContents(contents, iframe);
     }
 

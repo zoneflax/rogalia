@@ -144,7 +144,7 @@ Vendor.prototype = {
                         );
                     }),
                     dom.button(T("Buy"), "lot-buy", function(e) {
-                        if (confirm(T("Buy") + " " + name + "?")) {
+                        game.popup.confirm(T("Buy") + " " + name + "?", function() {
                             game.network.send(
                                 "buy",
                                 {Id: lot.Id, Vendor: self.vendor.Id},
@@ -152,7 +152,7 @@ Vendor.prototype = {
                                     dom.remove(e.target.parentNode.parentNode);
                                 }
                             );
-                        }
+                        });
                     }),
                 ];
             })

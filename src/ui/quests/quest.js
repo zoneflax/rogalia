@@ -230,47 +230,44 @@ Quest.prototype = {
             button
         );
 
-        if (this.data.voice) {
-            var id = this.Id;
-            var hasFinal = this.data.final[game.lang];
-            if (this.ready() && hasFinal) {
-                id += "-final";
-            }
-            var pause = dom.img("assets/icons/pause.png", "icon-button");
-            pause.onclick = function() {
-                game.sound.toggleVoice();
-                dom.replace(pause, play);
-            };
+        // if (this.data.voice) {
+        //     var id = this.Id;
+        //     var hasFinal = this.data.final[game.lang];
+        //     if (this.ready() && hasFinal) {
+        //         id += "-final";
+        //     }
+        //     var pause = dom.img("assets/icons/pause.png", "icon-button");
+        //     pause.onclick = function() {
+        //         game.sound.toggleVoice();
+        //         dom.replace(pause, play);
+        //     };
 
-            var play = dom.img("assets/icons/play.png", "icon-button");
-            play.onclick = function() {
-                game.sound.toggleVoice();
-                dom.replace(play, pause);
-            };
+        //     var play = dom.img("assets/icons/play.png", "icon-button");
+        //     play.onclick = function() {
+        //         game.sound.toggleVoice();
+        //         dom.replace(play, pause);
+        //     };
 
 
-            var voiceButton = null;
-            if (autoplay && (this.ready() && hasFinal || !this.active())) {
-                game.sound.playVoice(id);
-                voiceButton = pause;
-            } else {
-                game.sound.loadVoice(id);
-                voiceButton = play;
-            }
-            contents.push(dom.wrap("quest-voice", voiceButton));
-            if (game.lang != "ru") {
-                game.sound.toggleVoice();
-            }
+        //     var voiceButton = null;
+        //     if (autoplay && (this.ready() && hasFinal || !this.active())) {
+        //         game.sound.playVoice(id);
+        //         voiceButton = pause;
+        //     } else {
+        //         game.sound.loadVoice(id);
+        //         voiceButton = play;
+        //     }
+        //     contents.push(dom.wrap("quest-voice", voiceButton));
 
-            game.sound.onVoiceEnded = function() {
-                var replay = dom.img("assets/icons/replay.png", "icon-button");
-                replay.onclick = function() {
-                    dom.replace(replay, pause);
-                    game.sound.replayVoice();
-                };
-                dom.replace(voiceButton, replay);
-            };
-        }
+        //     game.sound.onVoiceEnded = function() {
+        //         var replay = dom.img("assets/icons/replay.png", "icon-button");
+        //         replay.onclick = function() {
+        //             dom.replace(replay, pause);
+        //             game.sound.replayVoice();
+        //         };
+        //         dom.replace(voiceButton, replay);
+        //     };
+        // }
 
         return contents;
     },

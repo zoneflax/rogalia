@@ -1,16 +1,22 @@
+/* global game, dom, Vendor */
+
 "use strict";
 
 function Bank(npc) {
     var balance = dom.tag("label");
     var price = Vendor.createPriceInput();
 
-    var deposit = dom.button(T("Deposit"), "", function() {
-        game.network.send("deposit", {Id: npc.Id, Cost: price.cost()}, callback);
-    });
+    var deposit = dom.button(T("Deposit"), "", () => send("deposit"));
 
-    var withdraw = dom.button(T("Withdraw"), "", function() {
-        game.network.send("withdraw", {Id: npc.Id, Cost: price.cost()}, callback);
-    });
+    var withdraw = dom.button(T("Withdraw"), "", () => send("withdraw"));
+
+    function send(action) {
+        var cost = price.cost();
+        if (cost == 0)
+            game.popup.alert(T("Please enter amount"));
+        else
+            game.network.send(action, {Id: npc.Id, Cost: cost}, callback);
+    }
 
     var claimRent = dom.tag("label");
     var claimPaidTill = dom.tag("label");

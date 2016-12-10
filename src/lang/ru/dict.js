@@ -1703,4 +1703,6 @@ T.dict = {
     "Cemetery and Chapel": "Церковь и кладбище",
     "Academy": "Академия",
     "Unknown grave": "Безымянная могила",
+    "Fullscreen mode may greatly decrease FPS": "Полноэкранный режим может сильно снизить FPS",
+    "Please enter amount": "Пожалуйста, введите сумму",
 };

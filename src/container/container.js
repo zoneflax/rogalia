@@ -226,7 +226,7 @@ Container.prototype = {
     init: function() {
         var entity = this.entity;
         var props = entity.Props;
-        this._slots = props.Slots;
+        this._slots = props.Slots || [];
         this._slotsWidth = props.SlotsWidth;
         this._slotsHeight = props.SlotsHeight;
         this.name = TS(entity.Name);

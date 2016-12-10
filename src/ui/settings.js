@@ -77,7 +77,10 @@ function Settings() {
         "settings.graphics.centerScreen": function() {
             game.world.classList.toggle("snap-left");
         },
-        "settings.graphics.fullscreen": function() {
+        "settings.graphics.fullscreen": function(enabled) {
+            if (enabled) {
+                game.popup.alert(dom.wrap("warning", T("Fullscreen mode may greatly decrease FPS")));
+            }
             game.screen.update();
         },
         "settings.character.pathfinding": function() {

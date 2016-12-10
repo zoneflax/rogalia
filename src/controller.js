@@ -1002,6 +1002,8 @@ function Controller(game) {
     this.drawAlign = function(entity, p) {
         var data = entity.alignedData(p);
         if (data) {
+            game.ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+            game.iso.fillRect(data.x, data.y, data.w, data.h);
             game.ctx.strokeStyle = "#00ffff";
             game.iso.strokeRect(data.x, data.y, data.w, data.h);
             var fill = data.fill;

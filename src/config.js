@@ -35,7 +35,7 @@ var config = {
     },
     graphics: {
         // low: false,
-        // fullscreen: false,
+        fullscreen: false,
         autoHighlightDoors: false,
         snowflakes: false,
         movingSpace: false,

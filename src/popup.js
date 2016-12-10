@@ -27,7 +27,7 @@ function Popup(buttons) {
         alert: function(message, onclose) {
             var button = dom.button(T("Ok"), "popup-ok", panel.hide.bind(panel));
             panel.setContents([
-                dom.div("popup-message", {text: message}),
+                dom.wrap("popup-message", message),
                 button,
             ]);
             show();
@@ -37,7 +37,7 @@ function Popup(buttons) {
         },
         confirm: function(message, callback) {
             panel.setContents([
-                dom.div("popup-message", {text: message}),
+                dom.wrap("popup-message", message),
                 dom.button(T("Ok"), "popup-ok", function() {
                     panel.hide();
                     callback();
@@ -56,7 +56,7 @@ function Popup(buttons) {
                 input.value = value;
             }
             panel.setContents([
-                dom.div("popup-message", {text: message}),
+                dom.wrap("popup-message", message),
                 input,
                 dom.button(T("Ok"), "popup-ok", function() {
                     panel.hide();
