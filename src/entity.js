@@ -450,6 +450,13 @@ Entity.prototype = {
         use();
     },
     destroy: function() {
+        if (this.isContainer()) {
+            game.popup.confirm(T("It will be destroyed with all it's contents."), () => this.forceDestroy());
+        } else {
+            this.forceDestroy();
+        }
+    },
+    forceDestroy: function() {
         game.network.send("entity-destroy", {id: this.Id});
     },
     fix: function() {
