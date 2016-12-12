@@ -556,7 +556,15 @@ Entity.prototype = {
         return this.open.bind(this);
     },
     disassemble: function() {
+        if (this.isContainer()) {
+            game.popup.confirm(T("It will be destroyed with all it's contents."), () => this.forceDisassemble());
+        } else {
+            this.forceDisassemble();
+        }
+    },
+    forceDisassemble() {
         game.network.send("disassemble", {Id: this.Id});
+
     },
     split: function() {
         var args = {Id: this.Id};

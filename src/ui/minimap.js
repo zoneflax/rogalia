@@ -1,4 +1,4 @@
-/* global game, Image, dom */
+/* global game, Image, dom, CELL_SIZE, T */
 
 "use strict";
 function Minimap() {
@@ -55,8 +55,7 @@ function Minimap() {
 
     this.mapImage.onclick = function(e) {
         if (game.controller.modifier.alt && game.player.IsAdmin) {
-            var p = pointFromEvent(e).mul(CELL_SIZE);
-            game.network.send("teleport", p.json());
+            game.network.send("teleport", pointFromEvent(e).mul(CELL_SIZE).json());
             return;
         }
         var p = pointFromEvent(e);
@@ -129,6 +128,18 @@ function Minimap() {
         point.y = y;
         point.style.left = scale() * x + "px";
         point.style.top = scale() * y + "px";
+        if (point.id == "player-point") {
+            var deg = (11 - game.player.sprite.position) * 45 % 360;
+            var diff = (deg - point.deg || 0) % 360;
+            if (diff > 180)
+                diff -= 360;
+            else if (diff < -180)
+                diff += 360;
+            deg = ((point.deg || 0) + diff);
+            point.deg = deg;
+            point.style.WebkitTransform = "rotate(" + deg + "deg)";
+
+        }
     };
 
     function removePointByName(name) {
@@ -157,23 +168,51 @@ function Minimap() {
             var character = this.characters[name];
             if (!character)
                 continue;
-            var x = character.X / CELL_SIZE;
-            var y = character.Y / CELL_SIZE;
-            var point = this.points[name];
-            if (!point) {
-                point = makePoint(name);
-
-                if (name == game.playerName) {
-                    point.id = "player-point";
-                } else if (character.Karma < 0) {
-                    point.classList.add("pk");
-                    point.title += " | " + T("Karma") + ": " + character.Karma;
-                }
-
-                addPoint(name, point);
-            }
-            updatePoint(point, x, y);
+            this.syncObject(name, character);
         }
+        this.syncObject("$corpse", game.player.Corpse);
+        this.syncObject("$respawn", game.player.Respawn);
+        game.player.Claims && game.player.Claims.forEach(c => this.syncObject("$claim", c));
+    };
+
+    this.syncObject = function(name, object) {
+        if (!object || (object.X == 0 && object.Y == 0)) {
+            return;
+        }
+        var x = object.X / CELL_SIZE;
+        var y = object.Y / CELL_SIZE;
+        var point = this.points[name];
+        if (!point) {
+            point = makePoint(name);
+
+            switch (name) {
+            case game.playerName:
+                point.id = "player-point";
+                point.title = game.playerName;
+                break;
+            case "$corpse":
+                point.id = "corpse-point";
+                point.title = T("Corpse");
+                break;
+            case "$respawn":
+                point.id = "respawn-point";
+                point.title = T("Respawn");
+                break;
+            case "$claim":
+                point.classList.add("claim-point");
+                point.title = T("Claim");
+                break;
+            default:
+                point.classList.add("character");
+                if (object.Karma < 0) {
+                    point.classList.add("pk");
+                    point.title += " | " + T("Karma") + ": " + object.Karma;
+                }
+            }
+
+            addPoint(name, point);
+        }
+        updatePoint(point, x, y);
     };
 
     this.addMarker = function(x, y, title) {

@@ -1189,39 +1189,68 @@ lmb, rmb {
 
 #map {
     max-width: none;
-}
-#map .wrapper {
-    position: relative;
-    overflow: hidden;
 
+    .wrapper {
+        position: relative;
+    }
+
+    .wrapper.zoom {
+        width: 512px;
+        height: 512px;
+        overflow: auto;
+    }
+
+    .point {
+        .cursor-pointer;
+        position: absolute;
+        margin-left: -10px;
+        margin-top: -10px;
+        width: 21px;
+        height: 21px;
+        z-index: 1;
+    }
+
+    .marker-point {
+        background: url("assets/markers/marker.png");
+    }
+
+    #player-point {
+        transition: -webkit-transform 100ms ease;
+        background: url("assets/markers/player.png");
+        margin-left: -13px;
+        margin-top: -13px;
+        width: 27px;
+        height: 27px;
+        box-shadow: none;
+
+        z-index: 2;
+    }
+
+    .claim-point {
+        background: url("assets/markers/claim.png");
+    }
+
+    #corpse-point {
+        background: url("assets/markers/corpse.png");
+    }
+
+    #respawn-point {
+        background: url("assets/markers/respawn.png");
+    }
+
+    .character {
+        background: url("assets/markers/character.png");
+        margin-left: -8px;
+        margin-top: -8px;
+        width: 17px;
+        height: 17px;
+    }
+
+    .pk {
+        background: url("assets/markers/pk.png");
+    }
 }
 
-#map .wrapper.zoom {
-    width: 512px;
-    height: 512px;
-    overflow: auto;
-}
-#map .point {
-    .cursor-pointer;
-    border-radius: 50%;
-    position: absolute;
-    width: 8px;
-    height: 8px;
-    box-shadow: 0 0 1px 3px #000;
-    background: #0f0;
-    z-index: 1;
-}
-#map #player-point {
-    background: #0ff;
-    z-index: 2;
-}
-#map .pk {
-    background: #f00;
-}
-#map .marker-point {
-    background: #f166f1;
-    border-radius: 0;
-}
 a.extern {
     background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAVklEQVR4Xn3PgQkAMQhDUXfqTu7kTtkpd5RA8AInfArtQ2iRXFWT2QedAfttj2FsPIOE1eCOlEuoWWjgzYaB/IkeGOrxXhqB+uA9Bfcm0lAZuh+YIeAD+cAqSz4kCMUAAAAASUVORK5CYII=") no-repeat scroll right center transparent;
     padding-right: 13px;

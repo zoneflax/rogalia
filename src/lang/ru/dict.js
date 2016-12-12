@@ -1705,4 +1705,5 @@ T.dict = {
     "Unknown grave": "Безымянная могила",
     "Fullscreen mode may greatly decrease FPS": "Полноэкранный режим может сильно снизить FPS",
     "Please enter amount": "Пожалуйста, введите сумму",
+    "It will be destroyed with all it's contents.": "Контейнер будет уничтожен вместе со всем содержимым.",
 };

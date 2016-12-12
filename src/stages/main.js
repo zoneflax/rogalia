@@ -1,3 +1,5 @@
+/* global game */
+
 "use strict";
 function mainStage(data) {
     setTimeout(function() {
@@ -119,11 +121,11 @@ function mainStage(data) {
     this.drawGlobalEffects = function() {
         if ("MushroomTrip" in game.player.Effects || "BadTrip" in game.player.Effects) {
             game.canvas.style.filter = "hue-rotate(" + (hueRotate % 360) +"deg)";
-            game.canvas.style.webkitFilter = "hue-rotate(" + (hueRotate % 360) +"deg)";
             hueRotate += 20;
+        } else if (game.player.Instance == "sanctuary") {
+            game.canvas.style.filter = "grayscale(100%)";
         } else {
             game.canvas.style.filter = "";
-            game.canvas.style.webkitFilter = "";
         }
     };
 

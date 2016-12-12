@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point */
 
 "use strict";
 function Character(id) {
@@ -443,7 +443,7 @@ Character.prototype = {
         }
 
         var party = game.player.Party;
-        if (party && party.indexOf(this.Name) == -1) {
+        if (party && _.includes(party, this.Name)) {
             return;
         }
 
@@ -639,8 +639,10 @@ Character.prototype = {
 
     },
     drawCorpsePointer: function() {
-        if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
+        if (!this.Corpse || this.Instance == "sanctuary" || (this.Corpse.X == 0 && this.Corpse.Y == 0)) {
             return;
+        }
+
         var dir = new Point(1, 1);
         var p = new Point(this.mount ? this.mount : this);
         var diff = new Point(this.Corpse).sub(p);
@@ -648,7 +650,6 @@ Character.prototype = {
         dir.rotate(angle).mul(100);
         p.toScreen().add(dir).round();
         Character.corpse.corpse.draw(p);
-        // TODO: uncomment with pixi?
         // Character.corpse.arrow.draw(p);
     },
     drawBurden: function(burden) {
@@ -985,9 +986,9 @@ Character.prototype = {
             if (this.Type == "player") {
                 spriteSpeed = 6500;
             }
-            var cell = game.map.getCell(this.X, this.X);
-            if (cell) {
-                speed *= cell.biom.Speed;
+            var biom = game.map.biomAt(this.X, this.Y);
+            if (biom) {
+                speed *= biom.Speed;
             }
             break;
         case "attack":
@@ -1824,6 +1825,8 @@ Character.prototype = {
             if (c == self.target)
                 return false;
             if (c.Team && c.Team == self.Team)
+                return false;
+            if (c.IsNpc && !c.IsMob)
                 return false;
             return party.indexOf(c.Name) == -1;
         }).sort(function(a, b) {
