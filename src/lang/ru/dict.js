@@ -163,6 +163,7 @@ T.dict = {
     "Wooden armor": "Деревянный доспех",
     "Wooden helmet": "Деревянный шлем",
     "Wooden chair": "Деревянный стул",
+    "Red wood chair": "Стул из красного дерева",
     "Wooden table": "Деревянный стол",
     "Dining table": "Обеденный стол",
     "Wooden plate": "Деревянная тарелка",

@@ -308,7 +308,9 @@ function WorldMap() {
             game.drawStrokedText(text, x, y + FONT_SIZE);
         }
 
-        config.graphics.mapGrid && this.drawGrid();
+        if (config.graphics.mapGrid || game.controller.keys.G) {
+            this.drawGrid();
+        }
 
         this.drawMinimap();
     };
