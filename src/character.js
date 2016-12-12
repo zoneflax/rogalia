@@ -1550,8 +1550,9 @@ Character.prototype = {
             list[0].lift();
     },
     liftStop: function() {
-        if (this.burden)
+        if (this.burden) {
             game.controller.creatingCursor(this.burden, "lift-stop");
+        }
     },
     stop: function() {
         this.Dx = 0;

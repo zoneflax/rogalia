@@ -1,4 +1,4 @@
-/* global dom, T, util, game */
+/* global dom, T, util, game, Panel, config */
 
 "use strict";
 function Entity(type, id) {
@@ -234,15 +234,15 @@ Entity.prototype = {
     },
     getDrawDx: function() {
         // switch (this.Type) {
-        // case "beehive":
+        // case "banana-palm-tree-plant":
         //     return window.x || 55;
         // }
         return this.Sprite.Dx || this.sprite.width/2;
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "circle-of-ice":
-        //     return window.y || 103;
+        // case "banana-palm-tree-plant":
+        //     return window.y || 106;
         // }
 
         if (this.Sprite.Dy)
@@ -451,7 +451,7 @@ Entity.prototype = {
     },
     destroy: function() {
         if (this.isContainer()) {
-            game.popup.confirm(T("It will be destroyed with all it's contents."), () => this.forceDestroy());
+            game.popup.confirm(T("It will be destroyed with all it's contents"), () => this.forceDestroy());
         } else {
             this.forceDestroy();
         }
@@ -557,7 +557,7 @@ Entity.prototype = {
     },
     disassemble: function() {
         if (this.isContainer()) {
-            game.popup.confirm(T("It will be destroyed with all it's contents."), () => this.forceDisassemble());
+            game.popup.confirm(T("It will be destroyed with all it's contents"), () => this.forceDisassemble());
         } else {
             this.forceDisassemble();
         }
@@ -633,6 +633,20 @@ Entity.prototype = {
             break;
         case "claim":
             this.Actions = ["claimControlls"];
+            if (this.State == "warn") {
+                var id = this.Id;
+                this.defaultActionSuccess = function() {
+                    var panel = new Panel("claim", "Claim", [
+                        T("Don't forget to pay for a claim!"),
+                        dom.wrap("", [
+                            dom.button(T("Snooze"), "", () => {
+                                game.network.send("Snooze", {Id: id});
+                                panel.hide();
+                            }),
+                        ]),
+                    ]).show();
+                };
+            }
             break;
         case "spell-scroll":
             this.Actions.push("cast");
@@ -757,7 +771,12 @@ Entity.prototype = {
         var y = this.Y - no;
 
         var color = (game.player.Id == this.Creator) ? "255,255,255" : "255,0,0";
-        if (config.ui.fillClaim) {
+        var fill = config.ui.fillClaim;
+        if (this.State == "warn") {
+            fill = true;
+            color = "255,100,0";
+        };
+        if (fill) {
             game.ctx.fillStyle = "rgba(" + color + ", 0.3)";
             game.iso.fillRect(x, y, w, h);
         }

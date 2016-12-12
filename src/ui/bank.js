@@ -1,4 +1,4 @@
-/* global game, dom, Vendor */
+/* global game, dom, Vendor, Panel, util, T, TT */
 
 "use strict";
 
@@ -21,6 +21,12 @@ function Bank(npc) {
     var claimRent = dom.tag("label");
     var claimPaidTill = dom.tag("label");
     // var claimLastPaid = document.createElement("label");
+
+    var claimGet = dom.button(T("Get claim"), "", function() {
+        game.popup.confirm(TT("Get claim for {n} gold?", {n: 8}), function() {
+            game.network.send("get-claim", {}, callback);
+        });
+    });
     var claimPay = dom.button(T("Pay"), "", function() {
         game.popup.confirm(T("Confirm?"), function() {
             game.network.send("pay-for-claim", {Id: npc.Id}, callback);
@@ -41,6 +47,7 @@ function Bank(npc) {
             T("Claim"),
             claimRent,
             claimPaidTill,
+            claimGet,
             claimPay,
         ]),
         dom.hr(),

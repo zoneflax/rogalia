@@ -83,7 +83,6 @@ gulp.task("nwbuild", function() {
         cacheDir: "./build/cache/",
         platforms: ["win32", "linux64", "linux32", "osx64"],
         version: "0.17.3",
-        zip: false,
     });
 
     nw.build().then(function () {

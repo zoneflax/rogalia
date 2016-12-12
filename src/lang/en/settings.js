@@ -44,7 +44,7 @@
             "Show items on minimap.",
         ],
         allowSelfSelection: [
-            "Charaster selection",
+            "Character selection",
             "Allows character selection and mouse interaction. Right button activates action.",
         ],
         showMeterValues: [

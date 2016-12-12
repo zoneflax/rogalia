@@ -1,3 +1,5 @@
+/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel */
+
 "use strict";
 Character.equipSlots =  [
     "bag",
@@ -101,7 +103,7 @@ Character.npcActions = {
         ]).show();
     },
     "Get claim": function() {
-        game.network.send("get-claim", {Id: this.Id});
+        game.popup.alert(T("You can get claim from the Scrooge in the bank"));
     },
     "Get village claim": function() {
         var id = this.Id;
@@ -120,7 +122,7 @@ Character.npcActions = {
                 dom.hr(),
                 dom.wrap("slot", Entity.templates["vendor-license"].icon()),
                 T("Cost") + ": ",
-                Vendor.createPrice(10 * 100 * 100),
+                Vendor.createPrice(2 * 100 * 100),
                 dom.br(),
                 dom.button(T("Buy"), "", function() {
                     game.network.send("get-vendor-license", {Id: id});

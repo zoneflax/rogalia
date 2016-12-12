@@ -1706,5 +1706,7 @@ T.dict = {
     "Unknown grave": "Безымянная могила",
     "Fullscreen mode may greatly decrease FPS": "Полноэкранный режим может сильно снизить FPS",
     "Please enter amount": "Пожалуйста, введите сумму",
-    "It will be destroyed with all it's contents.": "Контейнер будет уничтожен вместе со всем содержимым.",
+    "It will be destroyed with all it's contents": "Контейнер будет уничтожен вместе со всем содержимым",
+    "You can get claim from the Scrooge in the bank": "Вы можете получить клейм у Скруджа в банке",
+    "Get claim for {n} gold?": "Получить клейм за {n} золота?"
 };
