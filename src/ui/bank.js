@@ -23,10 +23,17 @@ function Bank(npc) {
     // var claimLastPaid = document.createElement("label");
 
     var claimGet = dom.button(T("Get claim"), "", function() {
-        game.popup.confirm(TT("Get claim for {n} gold?", {n: 8}), function() {
+        var cit = game.player.Citizenship;
+        var msg = "";
+        if (cit.Claims > 0 && cit.Claims >= cit.Rank) {
+            msg = T("To build a new claim you must increase your faction rank or destroy old claim") + ". ";
+        }
+        msg += TT("Get claim for {n} gold?", {n: 8});
+        game.popup.confirm(msg, function() {
             game.network.send("get-claim", {}, callback);
         });
     });
+
     var claimPay = dom.button(T("Pay"), "", function() {
         game.popup.confirm(T("Confirm?"), function() {
             game.network.send("pay-for-claim", {Id: npc.Id}, callback);

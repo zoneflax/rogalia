@@ -294,7 +294,7 @@ Info.prototype = {
     },
     getTarget: function() {
         switch (this.type) {
-        case "murder":
+        case "murgder":
         case "miss":
         case "evade":
         case "block":

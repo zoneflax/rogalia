@@ -808,6 +808,10 @@ Character.prototype = {
         }
         return name;
     },
+    inPvp: function() {
+        var pvpExpires = new Date(this.PvpExpires * 1000);
+        return pvpExpires > Date.now();
+    },
     drawName: function(drawHp, drawName) {
         var name = this.getName();
 
@@ -1387,6 +1391,14 @@ Character.prototype = {
         delete this.shownEffects[name];
     },
     updateEffects: function() {
+        if (this.synodProtection()) {
+            this.Effects["SynodProtection"] = {
+                Duration: 0
+            };
+        } else {
+            delete this.Effects["SynodProtection"];
+        }
+
         for(var name in this.shownEffects) {
             if (!this.Effects[name]) {
                 this.removeEffect(name);
@@ -1931,5 +1943,8 @@ Character.prototype = {
             return true;
         var armor = this.Clothes[2];
         return _.includes(["iron", "steel", "titanium", "meteorite", "bloody"], armor);
-    }
+    },
+    synodProtection: function() {
+        return this.Z == 0 && this.Karma >= 0 && !this.inPvp();
+    },
 };

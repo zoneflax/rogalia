@@ -56,8 +56,6 @@ class Game {
         this.missiles = [];
         this.containers = {};
         this.vendors = {};
-
-        this.quests = new Quests();
         this.panels = {};
         this.camera = new Point();
 
@@ -283,8 +281,14 @@ class Game {
         if (game.args["steam"]) {
             var gui = require("nw.gui");
             var win = gui.Window.get();
+            // TODO check for double save from quit()
             win.on("close", () => this.save());
         }
+    }
+
+    quit() {
+        this.save();
+        require("nw.gui").App.quit();
     }
 
     update(currentTime) {

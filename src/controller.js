@@ -468,7 +468,34 @@ function Controller(game) {
             callback: function() {
                 this.rotate(+1);
             }
+        },
+        42: { // Print Screen
+            callback: function() {
+                var name = new Date().toISOString().slice(0, 19).replace("T", "_");
+                this.takeScreenshot(name);
+            },
+        },
+    };
+
+    this.takeScreenshot = function(name) {
+        if (!game.args["steam"]) {
+            console.warn("Not supported");
+            return;
         }
+        var gui = require("nw.gui");
+        var win = gui.Window.get();
+
+        win.capturePage(function(img) {
+            var base64Data = img.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+            var fs = require("fs");
+            var dir = "./screenshots/";
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir);
+            }
+            fs.writeFile(dir + name + ".png", base64Data, "base64", function(err) {
+                console.log(err);
+            });
+        }, "png");
     };
 
     this.initHotkeys = function() {
@@ -576,15 +603,15 @@ function Controller(game) {
             return false;
         };
 
-        window.addEventListener('mousedown', this.on.mousedown);
-        window.addEventListener('mouseup', this.on.mouseup);
-        window.addEventListener('mousemove', this.on.mousemove);
-        window.addEventListener('keydown', this.on.keydown);
-        window.addEventListener('keyup', this.on.keyup);
-        window.addEventListener('wheel', this.on.wheel);
+        window.addEventListener("mousedown", this.on.mousedown);
+        window.addEventListener("mouseup", this.on.mouseup);
+        window.addEventListener("mousemove", this.on.mousemove);
+        window.addEventListener("keydown", this.on.keydown);
+        window.addEventListener("keyup", this.on.keyup);
+        window.addEventListener("wheel", this.on.wheel);
 
-        window.addEventListener('contextmenu', disableEvent);
-        window.addEventListener('dragstart', disableEvent);
+        window.addEventListener("contextmenu", disableEvent);
+        window.addEventListener("dragstart", disableEvent);
 
         this.fight = new Fight();
         this.skills = new Skills();

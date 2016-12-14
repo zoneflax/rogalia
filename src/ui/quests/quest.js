@@ -1,18 +1,18 @@
-/* global game, dom */
+/* global game, dom, Vendor, T */
 
 "use strict";
 function Quest(q, npc) {
     for (var i in q) {
         this[i] = q[i];
     }
-    this.data = game.quests[q.Id];
+    this.data = Quest.quests[q.Id];
     this.npc = npc;
     this.panel = null;
 }
 
 Quest.prototype = {
     getName: function() {
-        return this.data.name[game.lang];
+        return this.data.name;
     },
     getLog: function() {
         return game.player.ActiveQuests[this.Id];
@@ -69,18 +69,21 @@ Quest.prototype = {
         return list;
     },
     getDescContents: function(ready) {
+        var goal = this.makeGoal();
         return [
-            this.npc && this.npc.avatar(),
+            this.data.name,
+            dom.hr(),
             this.makeDesc(ready),
             dom.hr(),
-            this.makeGoal(),
+            goal,
+            (goal.children.length > 0) ? dom.hr() : null,
+            dom.make("div", T("Quest ender") + ": " + TS(this.End)),
             dom.hr(),
             this.makeReward(),
         ];
     },
     makeDesc: function(ready) {
-        var source = (ready) ? this.data.final : this.data.desc;
-        var desc = source[game.lang] || this.data.desc[game.lang];
+        var desc = (ready && this.data.final) ? this.data.final : this.data.desc;
         return dom.wrap("desc", util.mklist(desc).map(function(html) {
             var p = dom.tag("p");
             p.innerHTML = html;
@@ -92,25 +95,16 @@ Quest.prototype = {
         var goal = this.Goal;
 
         return dom.wrap("quest-goal", [
-            end(),
-            delimiter(),
             goals(),
             tip(),
             wiki(),
-
         ]);
 
-        function end() {
-            return dom.make("div", T("Quest ender") + ": " + TS(self.End));
-        }
-
-        function delimiter() {
-            return (goal.HaveItems || goal.BringItems || goal.Cmd)
-                ? dom.hr()
-                : null;
-        }
-
         function goals() {
+            if (!goal.HaveItems && !goal.BringItems && !goal.Cmd) {
+                return null;
+            }
+
             return dom.make("ul", [
                 haveItems(),
                 bringItems(),
@@ -152,7 +146,7 @@ Quest.prototype = {
             if (!self.data.tip)
                 return null;
             var tip = dom.tag("p");
-            tip.innerHTML = self.data.tip[game.lang];
+            tip.innerHTML = self.data.tip;
             return dom.make("div", [
                 dom.hr(),
                 tip,
@@ -162,7 +156,7 @@ Quest.prototype = {
         function wiki() {
             if (!self.data.wiki)
                 return null;
-            var links = self.data.wiki[game.lang] || [];
+            var links = self.data.wiki || [];
             return dom.make("div", links.map(function(name) {
                 return dom.link("/wiki/" + name, name, "quest-wiki-link");
             }));
@@ -175,6 +169,7 @@ Quest.prototype = {
             reward.Xp && dom.make("div", "+" + reward.Xp + "xp"),
             reward.Currency && Vendor.createPrice(reward.Currency),
             reward.Items && this.makeList(reward.Items),
+            reward.Custom && this.data.customReward
         ]);
     },
     getContents: function(autoplay) {
@@ -232,7 +227,7 @@ Quest.prototype = {
 
         // if (this.data.voice) {
         //     var id = this.Id;
-        //     var hasFinal = this.data.final[game.lang];
+        //     var hasFinal = this.data.final;
         //     if (this.ready() && hasFinal) {
         //         id += "-final";
         //     }

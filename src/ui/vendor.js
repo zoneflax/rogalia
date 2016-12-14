@@ -1,3 +1,5 @@
+/* global game, dom, TS, T */
+
 "use strict";
 function Vendor() {
 }
@@ -230,7 +232,10 @@ Vendor.prototype = {
                     quantity,
                     Vendor.createPrice(lot.Cost),
                     slot,
-                    dom.wrap("", [cancel, button]),
+                    dom.wrap("", [
+                        self.vendor.Owner == game.player.Id &&  cancel,
+                        button
+                    ]),
                 ];
             })
         ));

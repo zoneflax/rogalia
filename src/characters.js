@@ -165,7 +165,7 @@ Character.npcActions = {
             "interaction",
             this.Name,
             [
-                self.avatar(),
+                // self.avatar(),
                 dom.wrap("", info.talks.map(function(text) {
                     return dom.tag("p", "", {text: text});
                 })),

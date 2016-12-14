@@ -380,6 +380,9 @@ Entity.prototype = {
             return this.is(kind);
         }.bind(this));
     },
+    equip: function() {
+        game.network.send("equip", {Id: this.Id});
+    },
     getActions: function() {
         var actions = [{}, {}, {}];
 
@@ -391,6 +394,31 @@ Entity.prototype = {
             actions[0]["Pick up"] = this.pickUp;
         else if (this.MoveType == Entity.MT_LIFTABLE)
             actions[0]["Lift"] = this.lift;
+
+        if (this.Creator && this.MoveType != Entity.MT_STATIC) {
+            actions[1]["Disassemble"] = this.disassemble;
+        }
+
+        switch (this.Group) {
+        case "sword":
+        case "shield":
+        case "legs-armor":
+        case "head-armor":
+        case "body-armor":
+        case "feet-armor":
+        case "saw":
+        case "axe":
+        case "pickaxe":
+        case "hammer ":
+        case "knife":
+        case "bonfire":
+        case "shovel":
+        case "spear":
+        case "necklace":
+        case "bow":
+        case "energy-gun":
+            actions[0]["To equip"] = this.equip;
+        }
 
         this.Actions.forEach(function(action) {
             actions[1][action] = this.actionApply(action);
@@ -641,6 +669,7 @@ Entity.prototype = {
                         dom.wrap("", [
                             dom.button(T("Snooze"), "", () => {
                                 game.network.send("Snooze", {Id: id});
+                                this.defaultActionSuccess = function(){};
                                 panel.hide();
                             }),
                         ]),
@@ -657,9 +686,6 @@ Entity.prototype = {
             }.bind(this);
             break;
         }
-
-        if (this.Creator && this.MoveType != Entity.MT_STATIC)
-            this.Actions.push("disassemble");
 
         if ("Amount" in this && this.Amount > 1)
             this.Actions.push("split");
