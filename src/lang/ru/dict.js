@@ -1706,7 +1706,6 @@ T.dict = {
     "Cemetery and Chapel": "Церковь и кладбище",
     "Academy": "Академия",
     "Unknown grave": "Безымянная могила",
-    "Fullscreen mode may greatly decrease FPS": "Полноэкранный режим может сильно снизить FPS",
     "Please enter amount": "Пожалуйста, введите сумму",
     "It will be destroyed with all it's contents": "Контейнер будет уничтожен вместе со всем содержимым",
     "You can get claim from the Scrooge in the bank": "Вы можете получить клейм у Скруджа в банке",

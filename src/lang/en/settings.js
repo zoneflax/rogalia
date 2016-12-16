@@ -86,10 +86,6 @@
             "Space movement",
             "Enable space movement on the map edge.",
         ],
-        fullscreen: [
-            "Fullscreen",
-            "Enable fullscreen",
-        ],
         autoHideWalls: [
             "Auto hide walls",
             "Automatically hide walls inside buildings.",

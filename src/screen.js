@@ -1,3 +1,5 @@
+/* global game */
+
 "use strict";
 
 class Screen {
@@ -9,7 +11,7 @@ class Screen {
     }
 
     update() {
-        if (config.graphics.fullscreen) {
+        if (game.fullscreen) {
             this.width = window.innerWidth;
             this.height = window.innerHeight;
         } else {

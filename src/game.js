@@ -22,6 +22,7 @@ class Game {
 
         new DragManager();
 
+        this.fullscreen = JSON.parse(localStorage.getItem("fullscreen"));
         this.screen = new Screen();
         this.ping = 0;
         this.time = 0;
@@ -428,6 +429,12 @@ class Game {
             potential += fields[i].potentialAt(p.x, p.y);
         }
         return potential;
+    }
+
+    toggleFullscreen() {
+        this.fullscreen = !this.fullscreen;
+        this.screen.update();
+        localStorage.setItem("fullscreen", this.fullscreen);
     }
 
     exit(message) {
