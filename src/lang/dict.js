@@ -65,6 +65,7 @@ T.init = function(lang, callback) {
         "settings",
         "talks",
         "quests",
+        "professions",
     ];
     var loaded = 0;
     scripts.forEach(function(script) {

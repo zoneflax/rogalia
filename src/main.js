@@ -1,3 +1,5 @@
+/* global T, Game, localStorage */
+
 "use strict";
 
 main();
@@ -11,7 +13,7 @@ function main() {
     });
 
     function defaultLang(args) {
-        var supportedLangs = ["ru", "en"];
+        var supportedLangs = ["en", "ru", "jp"];
 
         // force ru for vk
         if (window.name.indexOf("fXD") == 0) {
@@ -23,7 +25,7 @@ function main() {
             return lang;
         }
 
-        return supportedLangs[1];
+        return supportedLangs[0];
     }
 
     function parseArgs() {

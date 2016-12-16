@@ -1,4 +1,6 @@
-﻿Settings.descriptions = {
+﻿/* global Settings */
+
+Settings.descriptions = {
     character: {
         pathfinding: [
             "Поиск пути",

@@ -1,4 +1,4 @@
-/* global loader, Character, game */
+/* global loader, Character, game, Stage, CELL_SIZE */
 
 "use strict";
 function loadingStage(version) {

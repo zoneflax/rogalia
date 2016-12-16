@@ -15,6 +15,7 @@ function Chat() {
         custom       : 100,
         en: 99,
         ru: 98,
+        jp: 97,
     };
 
     this.newMessageElement = dom.tag("input", "#new-message");

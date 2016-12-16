@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions */
 
 "use strict";
 
@@ -180,6 +180,8 @@ class Game {
 
         this.stage = new Stage();
         this.setStage("login");
+
+        this.professions = new Professions();
 
         window.onerror = function(msg, url, line, column) {
             window.onerror = null;
