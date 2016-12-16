@@ -1870,6 +1870,8 @@ Character.prototype = {
     },
     inspect: function(target) {
         game.network.send("inspect", {Id: target.Id}, function(data) {
+            if (!data.Equip)
+                return;
             target.Equip = data.Equip;
             var panel = new Panel(
                 "inspect",

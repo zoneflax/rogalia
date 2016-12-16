@@ -38,8 +38,11 @@
     "window": {
         "title": "Rogalia",
         "icon": "assets/bg/icon.png",
+        "toolbar": false,
         "frame": false,
         "position": "center",
+        "transparent": false,
+        "no-edit-menu" : true,
         "fullscreen": true,
         "min_width": 1280,
         "min_height": 720

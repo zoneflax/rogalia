@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config */
+/* global dom, T, util, game, Panel, config, Point */
 
 "use strict";
 function Entity(type, id) {
@@ -318,6 +318,12 @@ Entity.prototype = {
                 break;
             if (this.Props.Slots.some(function(id){ return id != 0; }))
                 path += "-full";
+            break;
+        case "respawn":
+            if (this.Creator == game.player.Id) {
+                path += "-my";
+            }
+            break;
         }
 
         if (this.Type != "blank") {
@@ -1122,7 +1128,7 @@ Entity.prototype = {
             game.controller.creatingCursor(new Entity(this.Spell, this.Id), "cast");
         }
     },
-    claimControlls: function() {
+    claimControls: function() {
         if (this.Creator != game.player.Id)
             return;
 

@@ -1,4 +1,4 @@
-/* global Point, dom, config, util, T, TS */
+/* global Point, dom, config, util, T, TS, Container */
 
 "use strict";
 
@@ -319,6 +319,9 @@ function Controller(game) {
                 };
                 actions.unstuck = function() {
                     game.chat.send("*unstuck");
+                };
+                actions.returnHome = function() {
+                    game.network.send("return-home");
                 };
                 game.menu.show(actions);
                 break;

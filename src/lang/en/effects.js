@@ -110,5 +110,6 @@ EffectDesc.effects = {
         "class": "good",
         "effect": "you take 80% less damage in pvp.",
         "desc": "Does not work under the ground, if you answered onto the attack or if you have negative karma.",
+        "note": "Allows you to return to your respawn if any or in the city.",
     },
 };

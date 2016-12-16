@@ -102,10 +102,12 @@ Quest.quests =  {
     },
     "buy-average-indulgence": {
         name: "Average indulgence",
-        desc: ".."
+        desc: "..",
+        customReward: "+1000 Karma",
     },
     "buy-big-indulgence": {
         name: "Big indulgence",
-        desc: ".."
+        desc: "..",
+        customReward: "+10000 Karma",
     }
 };

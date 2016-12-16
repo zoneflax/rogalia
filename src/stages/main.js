@@ -1,4 +1,4 @@
-/* global game */
+/* global game, Character */
 
 "use strict";
 function mainStage(data) {

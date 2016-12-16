@@ -279,6 +279,9 @@ function Chat() {
             case "help":
                 self.addMessage("global: 0, local: 1");
                 break;
+            case "return-home":
+                game.network.send(cmd);
+                break;
             case "friend-add":
             case "friend-remove":
             case "blacklist-add":

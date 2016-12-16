@@ -1201,7 +1201,7 @@ T.dict = {
     "Remove from blacklist": "Удалить из черного списка",
     "Blacklist is empty": "Черный список пуст",
     "Total": "Итого",
-    "Claim controlls": "Управление клеймом",
+    "Claim controls": "Управление клеймом",
     "Refresh": "Обновить",
     "{name} logged in": "{name} в сети",
     "{name} disconnected": "{name} офлайн",
@@ -1714,4 +1714,9 @@ T.dict = {
     "Don't forget to pay for a claim!": "Не забудьте оплатить клейм!",
     "Snooze": "Отложить",
     "To equip": "Экипировать",
+    "Buy slot for {cost}?": "Купить слот за {cost}?",
+    "Return home": "Вернуться домой",
+    "Small indulgence": "Малая индульгенция",
+    "Average indulgence": "Средняя индульгенция",
+    "Big indulgence": "Большая индульгенция",
 };

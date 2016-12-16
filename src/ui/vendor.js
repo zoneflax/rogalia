@@ -4,6 +4,35 @@
 function Vendor() {
 }
 
+Vendor.priceString = function(cost) {
+        cost = parseInt(cost) || 0;
+
+    var negative = false;
+    if (cost < 0) {
+        negative = true;
+        cost = -cost;
+    }
+
+    var s = cost % 100;
+    cost -= s;
+    cost /= 100;
+    var g = cost % 100;
+    cost -= g;
+    cost /= 100;
+    var p = cost;
+    var price = "";
+    if (p) {
+        price += p + "p ";
+    }
+    if (g) {
+        price += g + "g ";
+    }
+    if (s) {
+        price += s + "s";
+    }
+    return price;
+};
+
 Vendor.createPrice = function(cost) {
     cost = parseInt(cost) || 0;
 
