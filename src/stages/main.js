@@ -14,11 +14,12 @@ function mainStage(data) {
             game.controller.showWarning(data.Warning);
             return;
         }
-        Entity.sync(data.Entities || [], data.RemoveEntities || null);
-
         Character.sync(data.Players || [], data.RemovePlayers || null);
         Character.sync(data.Mobs || [], data.RemoveMobs || null);
         Character.sync(data.NPCs || [], data.RemoveNPCs || null);
+
+        Entity.sync(data.Entities || [], data.RemoveEntities || null);
+
 
         data.Location && game.map.sync(data.Location, data.Map);
 

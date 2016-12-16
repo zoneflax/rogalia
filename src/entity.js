@@ -320,7 +320,7 @@ Entity.prototype = {
                 path += "-full";
             break;
         case "respawn":
-            if (this.Creator == game.player.Id) {
+            if (this.X == game.player.Respawn.X && this.Y == game.player.Respawn.Y) {
                 path += "-my";
             }
             break;
