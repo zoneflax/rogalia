@@ -1,4 +1,4 @@
-/* global T, Game, localStorage */
+/* global T, Game, localStorage, config */
 
 "use strict";
 
@@ -13,7 +13,6 @@ function main() {
     });
 
     function defaultLang(args) {
-        var supportedLangs = ["en", "ru", "jp"];
 
         // force ru for vk
         if (window.name.indexOf("fXD") == 0) {
@@ -21,11 +20,11 @@ function main() {
         }
 
         var lang = args["lang"] || navigator.language.substring(0, 2);
-        if (supportedLangs.includes(lang)) {
+        if (config.ui.language().includes(lang)) {
             return lang;
         }
 
-        return supportedLangs[0];
+        return config.ui.language()[0];
     }
 
     function parseArgs() {

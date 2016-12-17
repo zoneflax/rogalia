@@ -17,8 +17,10 @@ var config = {
         autoTarget: true,
     },
     ui: {
-        language: function() {
-            return game.lang == "ru";
+        language: function(current) {
+            return  (current)
+                ? game.lang
+                : ["en", "ru", "jp"];
         },
         hp: true,
         name: true,

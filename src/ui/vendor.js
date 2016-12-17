@@ -116,7 +116,7 @@ Vendor.prototype = {
         this.vendor = vendor;
         this.tabs = this.tabs = [
             {
-                title: T("Buy"),
+                title: T("Buy from"),
                 update: function(title, contents) {
                     game.network.send("buy-list", {Vendor: self.vendor.Id}, function(data) {
                         dom.setContents(contents, self.buyView(data.Lots));
@@ -124,7 +124,7 @@ Vendor.prototype = {
                 }
             },
             {
-                title: T("Sell"),
+                title: T("Sell to"),
                 update: function(title, contents) {
                     game.network.send("sell-list", {Vendor: self.vendor.Id}, function(data) {
                         dom.setContents(contents, self.sellView(data.Lots));

@@ -245,12 +245,16 @@ function Chat() {
             e.target.value = myMessages.next();
             return true;
         case 13: //enter
+            if (message.length == 0) {
+                e.target.blur();
+            }
             break;
         default:
             return true;
         }
-        if (message.length == 0)
+        if (message.length == 0) {
             return true;
+        }
 
         myMessages.push(message);
 

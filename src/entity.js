@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point */
+/* global dom, T, util, game, Panel, config, Point, Container */
 
 "use strict";
 function Entity(type, id) {
@@ -320,7 +320,7 @@ Entity.prototype = {
                 path += "-full";
             break;
         case "respawn":
-            if (this.X == game.player.Respawn.X && this.Y == game.player.Respawn.Y) {
+            if (game.player.Respawn && this.X == game.player.Respawn.X && this.Y == game.player.Respawn.Y) {
                 path += "-my";
             }
             break;
@@ -572,12 +572,6 @@ Entity.prototype = {
     },
     //used by container
     open: function(data) {
-        // If entity *became* container after server update
-        // old items may be without slots, so ignore them here.
-        if (this.Props.Slots.length == 0) {
-            return null;
-        }
-
         if (game.player.canUse(this)) {
             Container.show(this);
             return null;
@@ -666,7 +660,7 @@ Entity.prototype = {
             this._canUse = true;
             break;
         case "claim":
-            this.Actions = ["claimControlls"];
+            this.Actions = ["claimControls"];
             if (this.State == "warn") {
                 var id = this.Id;
                 this.defaultActionSuccess = function() {

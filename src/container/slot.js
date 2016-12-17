@@ -1,3 +1,5 @@
+/* global util, dom */
+
 "use strict";
 function ContainerSlot(container, index) {
     this.container = container;
@@ -92,6 +94,8 @@ ContainerSlot.prototype = {
         this.setTitle(this.entity.name);
     },
     updateProgress: function() {
+        if (!this.entity)
+            return;
         if ("Readiness" in this.entity && "Fuel" in this.container.entity) {
             var rd = this.entity.Readiness;
             if (rd.Max != 0)
@@ -110,7 +114,7 @@ ContainerSlot.prototype = {
         var duration = cnt.HideDuration / 1e6;
         var diff = Date.now() - added;
         if (diff < duration) {
-            this.setSub(util.toFixed(100*diff / duration) + "%");
+            this.setSub(util.toFixed(100*diff / duration, 1) + "%");
         }
     },
     updateCustom: function() {

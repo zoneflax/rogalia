@@ -262,6 +262,7 @@ function Controller(game) {
         return this.highlight.bind(this, buttonName, off);
     };
 
+    var lastContainersUpdate = Date.now();
     this.update = function() {
         this.updateCamera();
         if (this.world.cursor instanceof Entity || this.cursor.entity)
@@ -277,6 +278,11 @@ function Controller(game) {
                 this.world.hovered = null;
         }
         this.minimap.update();
+        var now = Date.now();
+        if (now - lastContainersUpdate > 500) {
+            lastContainersUpdate = now;
+            _.forEach(game.containers, (cnt) => cnt.updateProgress());
+        }
     };
 
     this.updateCamera = function() {

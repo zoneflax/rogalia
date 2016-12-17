@@ -161,11 +161,34 @@ textarea {
 }
 
 select {
+    .cursor-pointer;
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
     background: @dark-color;
     color: @text-color;
+    border: none;
+    width: 100%;
+    padding-left: 20px;
+}
+
+.select {
+    border: 1px solid #575b65;
+    border-radius: 3px;
+    margin: 4px;
+    padding: 2px;
+    background: @dark-color;
+    position: relative;
+
+    &:before {
+        position: absolute;
+        left: 4px;
+        top: 0;
+        content: "▼";
+        border-right: 1px solid #575b65;
+        width: 14px;
+        line-height: 22px;
+    }
 }
 
 /* TODO: remove? */
@@ -364,7 +387,7 @@ hr {
 }
 .slot > sub {
     bottom: 1px;
-    width: 20px;
+    width: 27px;
     background: url("assets/bg/quantity.png")
 }
 .slot:hover, .slot.hovered {
@@ -389,20 +412,26 @@ hr {
 
 .fuel-wrapper {
     position: relative;
-}
-.fuel-wrapper .slot {
-    float: none;
-    margin: auto;
-}
-.fuel-current, .fuel-max {
-    width: 100%;
-    height: 10px;
-    background: brown;
-}
-.fuel-current {
-    background: red;
-    position: absolute;
-    top: 0;
+    text-align: center;
+
+    .slot {
+        float: none;
+        margin: auto;
+        margin-bottom: 6px;
+    }
+
+    .fuel-current, .fuel-max {
+        border-radius: 2px;
+        width: 100%;
+        height: 10px;
+        background: brown;
+    }
+
+    .fuel-current {
+        background: red;
+        position: absolute;
+        bottom: 0;
+    }
 }
 
 .slot.invalid {
@@ -417,6 +446,7 @@ hr {
     z-index: 1;
     text-align: left;
     max-width: 500px;
+    min-width: 72px;
 }
 
 .panel {
@@ -2521,6 +2551,10 @@ input[type=number], .lot-quantity > input, .price > input {
 #settings {
     max-width: none;
     width: 508px;
+
+    .select {
+        width: 163px;
+    }
 }
 #settings > .contents {
     height: 350px;
