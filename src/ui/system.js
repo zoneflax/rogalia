@@ -27,6 +27,10 @@ function System() {
         ]).show();
     };
 
+    this.update = function(ping) {
+        this.ping.textContent = "Ping: " + ping + "ms";
+    };
+
     this.panel = new Panel(
         "system",
         "System",

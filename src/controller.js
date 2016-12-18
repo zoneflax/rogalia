@@ -1284,4 +1284,8 @@ function Controller(game) {
             this.fight.combo.sync(waza);
         }
     };
+
+    this.updatePing = function(ping) {
+        this.system && this.system.update(ping);
+    };
 };

@@ -1,3 +1,5 @@
+/* global game */
+
 "use strict";
 function Network() {
     this.proto = "ws://";
@@ -52,11 +54,8 @@ function Network() {
         var decompressed = util.decompress(message.data);
         var data = JSON.parse(decompressed);
         this.data = data;
-        if (this.sendStart && data.Ok) {
-            game.ping = Date.now() - this.sendStart;
-            if (game.controller.system && game.controller.system.panel.visible) {
-                game.controller.system.ping.textContent = "Ping: " + game.ping + "ms";
-            }
+        if (this.sendStart) {
+            game.controller.updatePing(Date.now() - this.sendStart);
             this.sendStart = 0;
         }
 

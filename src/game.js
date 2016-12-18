@@ -24,7 +24,6 @@ class Game {
 
         this.fullscreen = JSON.parse(localStorage.getItem("fullscreen"));
         this.screen = new Screen();
-        this.ping = 0;
         this.time = 0;
         this.timeElement = document.getElementById("time");
 
