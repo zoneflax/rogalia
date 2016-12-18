@@ -572,6 +572,12 @@ Entity.prototype = {
     },
     //used by container
     open: function(data) {
+        // If entity *became* container after server update
+        // old items may be without slots, so ignore them here.
+        if (this.Props.Slots.length == 0 && !this.Fuel) {
+            return null;
+        }
+
         if (game.player.canUse(this)) {
             Container.show(this);
             return null;
@@ -644,8 +650,9 @@ Entity.prototype = {
         case "container":
         case "feeder":
         case "player-corpse":
-            if (this.MoveType != Entity.MT_PORTABLE)
+            if (this.MoveType != Entity.MT_PORTABLE) {
                 this.defaultActionSuccess = this.open.bind(this);
+            }
             break;
         case "blank":
             this.defaultActionSuccess = function() {

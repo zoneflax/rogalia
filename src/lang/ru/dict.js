@@ -1721,4 +1721,7 @@ T.dict = {
     "Small indulgence": "Малая индульгенция",
     "Average indulgence": "Средняя индульгенция",
     "Big indulgence": "Большая индульгенция",
+    "First finish teleportaion quests from Plato": "Сначала пройдите квесты про телепортацию у Платона",
+    "You can return home only when you have Synod Protection": "Вы можете вернуться домой только под эффектом защиты Синода.",
+    "Attack": "Атака",
 };

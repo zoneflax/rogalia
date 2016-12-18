@@ -1,4 +1,4 @@
-/* global game, dom, Vendor, T */
+/* global game, dom, Vendor, T, TS */
 
 "use strict";
 function Quest(q, npc) {
@@ -74,7 +74,6 @@ Quest.prototype = {
             this.data.name,
             dom.hr(),
             this.makeDesc(ready),
-            dom.hr(),
             goal,
             (goal.children.length > 0) ? dom.hr() : null,
             dom.make("div", T("Quest ender") + ": " + TS(this.End)),
@@ -101,7 +100,7 @@ Quest.prototype = {
         ]);
 
         function goals() {
-            if (!goal.HaveItems && !goal.BringItems && !goal.Cmd) {
+            if (!goal.HaveItems && !goal.BringItems && !goal.Cmd && !goal.Use) {
                 return null;
             }
 
@@ -109,6 +108,7 @@ Quest.prototype = {
                 haveItems(),
                 bringItems(),
                 cmd(),
+                use(),
             ]);
 
             function cmd() {
@@ -120,7 +120,11 @@ Quest.prototype = {
                     waza: "hit a training dummy",
                 };
                 var what = goals[goal.Cmd] || goal.Cmd;
-                return dom.make("li", T("You need to") + " " + T(what) + "");
+                return dom.make("li", T("You need to") + " " + TS(what) + "");
+            }
+
+            function use() {
+                return goal.Use && dom.make("li", T("You need to") + " " + T("use") + " " + TS(goal.Use));
             }
 
             function bringItems() {

@@ -1184,8 +1184,17 @@ lmb, rmb {
     padding-left: 16px;
     color: #ffb151;
 }
+
 hl {
     color: #ffb151;
+
+    &:before {
+        content: "[";
+    }
+
+    &:after {
+        content: "]";
+    }
 }
 
 .recipe-link, .marker-link {
@@ -1595,8 +1604,8 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     margin-bottom: 2px;
 }
 #create-character .profession-tab:hover {
-    -webkit-filter: brightness(150%);
-    filter: brightness(150%);
+    -webkit-filter: brightness(120%);
+    filter: brightness(120%);
 }
 #create-character .profession-tab.active {
     background: @dark-color;

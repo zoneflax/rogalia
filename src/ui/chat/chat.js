@@ -900,10 +900,12 @@ function Chat() {
     };
 
     this.activate = function() {
-        if (config.ui.chatAttached)
+        if (config.ui.chatAttached) {
             this.newMessageElement.focus();
-        else
+            this.panel.toTop();
+        } else {
             this.panel.show();
+        }
 
         scrollAllToTheEnd();
     };

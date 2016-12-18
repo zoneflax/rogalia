@@ -1131,7 +1131,7 @@ function Controller(game) {
             warn.style.display = "none";
             clearTimeout(warn.timeout);
             warn.timeout = null;
-        }, 3000);
+        }, 5000);
 
         if (game.chat)
             game.chat.addMessage(warn.textContent);

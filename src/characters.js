@@ -1,4 +1,4 @@
-/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel */
+/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel, TS */
 
 "use strict";
 Character.equipSlots =  [
@@ -209,7 +209,7 @@ Character.npcActions = {
                 data.Instances.map(function(instance) {
                     var enter = dom.button(T("Enter"));
                     enter.onclick = function() {
-                        game.network.send("instance", {Id: self.Id, Name: instance.Name});
+                        game.network.send("instance", {Id: self.Id, Name: instance.Name}, () => panel.close());
                     };
                     return [
                         TS(instance.Name),
@@ -218,10 +218,10 @@ Character.npcActions = {
                         Vendor.createPrice(instance.Cost),
                         enter,
                     ];
-                    return inst;
                 })
             );
-            new Panel("instances", "Instances", [instances]).show().setEntity(self);
+            var panel = new Panel("instances", "Instances", [instances]);
+            panel.show().setEntity(self);
         });
     },
 };

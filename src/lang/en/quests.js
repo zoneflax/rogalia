@@ -63,6 +63,20 @@ Quest.quests =  {
         name: "The end of tuition",
         desc: "Well, I did my job. It's time to move to the town.",
     },
+    "tp-return-home": {
+        name: "Teleportation: return to home" ,
+        desc: "Are you interested in portals? I'll tell you about the ways you travel around the world.<br> While you're on the surface and under the Synode protection you can easily return to your homestead. I mean, to your respawn stone, if you built one, or to the town. Give it a try.",
+        "tip": "<rmb>Click on your picture (see left top part of the screen)</rmb> to return to your home.",
+    },
+    "tp-respawn": {
+        name: "Teleportation: respawn",
+        desc: "Town respawn stones are connected to your respawn stone.<br> You can travel using a respawn stone but its primary task is to ressurect you after death. When you build your own respawn stone you'll notice it's quite different from others.",
+        tip: "<lmb></lmb> the closest respawn."
+    },
+    "tp-scrolls": {
+        name: "Teleportation: scrolls",
+        desc: "Teleportation scrolls allow you to return to home from very dangerous places. They make a good help when you're exploring underground. <br> I'll give you a couple but you can buy or make them yourself.",
+    },
     "in-city": {
         voice: true,
         name: "To the town",

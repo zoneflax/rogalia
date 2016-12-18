@@ -125,7 +125,7 @@ Container.prototype = {
 
         var contents = [
             slots,
-            this.fuel && dom.hr(),
+            this.slots.length > 0 && this.fuel && dom.hr(),
             this.fuel,
         ];
         if (buttons) {

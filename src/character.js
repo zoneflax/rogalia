@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info */
 
 "use strict";
 function Character(id) {
