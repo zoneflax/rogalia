@@ -1,20 +1,39 @@
+/* global game, dom, Vendor, Panel, util, T, TT */
+
 "use strict";
 
 function Bank(npc) {
     var balance = dom.tag("label");
     var price = Vendor.createPriceInput();
 
-    var deposit = dom.button(T("Deposit"), "", function() {
-        game.network.send("deposit", {Id: npc.Id, Cost: price.cost()}, callback);
-    });
+    var deposit = dom.button(T("Deposit"), "", () => send("deposit"));
 
-    var withdraw = dom.button(T("Withdraw"), "", function() {
-        game.network.send("withdraw", {Id: npc.Id, Cost: price.cost()}, callback);
-    });
+    var withdraw = dom.button(T("Withdraw"), "", () => send("withdraw"));
+
+    function send(action) {
+        var cost = price.cost();
+        if (cost == 0)
+            game.popup.alert(T("Please enter amount"));
+        else
+            game.network.send(action, {Id: npc.Id, Cost: cost}, callback);
+    }
 
     var claimRent = dom.tag("label");
     var claimPaidTill = dom.tag("label");
     // var claimLastPaid = document.createElement("label");
+
+    var claimGet = dom.button(T("Get claim"), "", function() {
+        var cit = game.player.Citizenship;
+        var msg = "";
+        if (cit.Claims > 0 && cit.Claims >= cit.Rank) {
+            msg = T("To build a new claim you must increase your faction rank or destroy old claim") + ". ";
+        }
+        msg += TT("Get claim for {n} gold?", {n: 8});
+        game.popup.confirm(msg, function() {
+            game.network.send("get-claim", {}, callback);
+        });
+    });
+
     var claimPay = dom.button(T("Pay"), "", function() {
         game.popup.confirm(T("Confirm?"), function() {
             game.network.send("pay-for-claim", {Id: npc.Id}, callback);
@@ -35,6 +54,7 @@ function Bank(npc) {
             T("Claim"),
             claimRent,
             claimPaidTill,
+            claimGet,
             claimPay,
         ]),
         dom.hr(),
@@ -85,9 +105,9 @@ function Bank(npc) {
                 slot.classList.add("plus");
                 slot.onclick = function() {
                     var cost = Math.pow(100, i);
-                    if (confirm(TT("Buy slot {cost} gold?", {cost: cost}))) {
+                    game.popup.confirm(TT("Buy slot for {cost}?", {cost: Vendor.priceString(cost)}), function() {
                         game.network.send("buy-bank-vault-slot", {id: npc.Id}, callback);
-                    };
+                    });
                 };
             }
             return slot;

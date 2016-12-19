@@ -1,3 +1,5 @@
+/* global loader, Character, game, Stage, CELL_SIZE */
+
 "use strict";
 function loadingStage(version) {
     game.addEventListeners();
@@ -25,10 +27,10 @@ function loadingStage(version) {
         Character.initSprites();
 
         loader.ready(function() {
-            Entity.sync(data.Entities);
             Character.sync(data.Players);
             Character.sync(data.Mobs);
             Character.sync(data.NPCs);
+            Entity.sync(data.Entities);
             game.map.sync(data.Location);
 
             var wait = setInterval(function() {

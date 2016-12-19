@@ -1,3 +1,5 @@
+/* global Character, Sprite */
+
 "use strict";
 
 Character.initSprites = function() {
@@ -26,7 +28,7 @@ Character.initSprites = function() {
     });
     Character.corpse = {
         corpse: new Sprite("icons/corpse/corpse.png"),
-        arrow: new Sprite("icons/corpse/arrow.png"),
+        // arrow: new Sprite("icons/corpse/arrow.png"),
     };
 
     Character.flags.Empire = new Sprite("icons/flags/empire.png");

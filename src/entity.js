@@ -1,4 +1,4 @@
-/* global dom, T, util, game */
+/* global dom, T, util, game, Panel, config, Point, Container */
 
 "use strict";
 function Entity(type, id) {
@@ -234,15 +234,15 @@ Entity.prototype = {
     },
     getDrawDx: function() {
         // switch (this.Type) {
-        // case "beehive":
+        // case "banana-palm-tree-plant":
         //     return window.x || 55;
         // }
         return this.Sprite.Dx || this.sprite.width/2;
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "circle-of-ice":
-        //     return window.y || 103;
+        // case "banana-palm-tree-plant":
+        //     return window.y || 106;
         // }
 
         if (this.Sprite.Dy)
@@ -318,6 +318,12 @@ Entity.prototype = {
                 break;
             if (this.Props.Slots.some(function(id){ return id != 0; }))
                 path += "-full";
+            break;
+        case "respawn":
+            if (game.player.Respawn && this.X == game.player.Respawn.X && this.Y == game.player.Respawn.Y) {
+                path += "-my";
+            }
+            break;
         }
 
         if (this.Type != "blank") {
@@ -380,6 +386,9 @@ Entity.prototype = {
             return this.is(kind);
         }.bind(this));
     },
+    equip: function() {
+        game.network.send("equip", {Id: this.Id});
+    },
     getActions: function() {
         var actions = [{}, {}, {}];
 
@@ -392,12 +401,37 @@ Entity.prototype = {
         else if (this.MoveType == Entity.MT_LIFTABLE)
             actions[0]["Lift"] = this.lift;
 
+        if (this.Creator && this.MoveType != Entity.MT_STATIC) {
+            actions[1]["Disassemble"] = this.disassemble;
+        }
+
+        switch (this.Group) {
+        case "sword":
+        case "shield":
+        case "legs-armor":
+        case "head-armor":
+        case "body-armor":
+        case "feet-armor":
+        case "saw":
+        case "axe":
+        case "pickaxe":
+        case "hammer ":
+        case "knife":
+        case "bonfire":
+        case "shovel":
+        case "spear":
+        case "necklace":
+        case "bow":
+        case "energy-gun":
+            actions[0]["To equip"] = this.equip;
+        }
+
         this.Actions.forEach(function(action) {
             actions[1][action] = this.actionApply(action);
         }.bind(this));
 
         if (this.Orientation != "" && this.MoveType != Entity.MT_STATIC) {
-            actions[2]["Rotate"] = function() {
+            actions[1]["Rotate"] = function() {
                 game.network.send("rotate", {id: this.Id});
             };
         }
@@ -415,9 +449,6 @@ Entity.prototype = {
         if (align && align.X) {
             var w = this.Width || 2*this.Radius;
             var h = this.Height || 2*this.Radius;
-            if (this.Group == "claim") {
-                w = h = 20 * CELL_SIZE;
-            }
             p.x -= w/2;
             p.y -= h/2;
             p.align(new Point(align));
@@ -426,8 +457,13 @@ Entity.prototype = {
                 y: p.y,
                 w: Math.max(w, align.X),
                 h: Math.max(h, align.Y),
+                fill: (this.Group == "claim") ? {
+                    w: 20 * CELL_SIZE,
+                    h: 20 * CELL_SIZE,
+                    color: "rgba(0, 0, 0, 0.1)",
+                } : null,
             };
-        }
+        };
         return null;
     },
     defaultActionSuccess: function(data) {
@@ -448,6 +484,13 @@ Entity.prototype = {
         use();
     },
     destroy: function() {
+        if (this.isContainer()) {
+            game.popup.confirm(T("It will be destroyed with all it's contents"), () => this.forceDestroy());
+        } else {
+            this.forceDestroy();
+        }
+    },
+    forceDestroy: function() {
         game.network.send("entity-destroy", {id: this.Id});
     },
     fix: function() {
@@ -531,7 +574,7 @@ Entity.prototype = {
     open: function(data) {
         // If entity *became* container after server update
         // old items may be without slots, so ignore them here.
-        if (this.Props.Slots.length == 0) {
+        if (this.Props.Slots.length == 0 && !this.Fuel) {
             return null;
         }
 
@@ -547,7 +590,15 @@ Entity.prototype = {
         return this.open.bind(this);
     },
     disassemble: function() {
+        if (this.isContainer()) {
+            game.popup.confirm(T("It will be destroyed with all it's contents"), () => this.forceDisassemble());
+        } else {
+            this.forceDisassemble();
+        }
+    },
+    forceDisassemble() {
         game.network.send("disassemble", {Id: this.Id});
+
     },
     split: function() {
         var args = {Id: this.Id};
@@ -599,8 +650,9 @@ Entity.prototype = {
         case "container":
         case "feeder":
         case "player-corpse":
-            if (this.MoveType != Entity.MT_PORTABLE)
+            if (this.MoveType != Entity.MT_PORTABLE) {
                 this.defaultActionSuccess = this.open.bind(this);
+            }
             break;
         case "blank":
             this.defaultActionSuccess = function() {
@@ -615,7 +667,22 @@ Entity.prototype = {
             this._canUse = true;
             break;
         case "claim":
-            this.Actions = ["claimControlls"];
+            this.Actions = ["claimControls"];
+            if (this.State == "warn") {
+                var id = this.Id;
+                this.defaultActionSuccess = function() {
+                    var panel = new Panel("claim", "Claim", [
+                        T("Don't forget to pay for a claim!"),
+                        dom.wrap("", [
+                            dom.button(T("Snooze"), "", () => {
+                                game.network.send("Snooze", {Id: id});
+                                this.defaultActionSuccess = function(){};
+                                panel.hide();
+                            }),
+                        ]),
+                    ]).show();
+                };
+            }
             break;
         case "spell-scroll":
             this.Actions.push("cast");
@@ -626,9 +693,6 @@ Entity.prototype = {
             }.bind(this);
             break;
         }
-
-        if (this.Creator && this.MoveType != Entity.MT_STATIC)
-            this.Actions.push("disassemble");
 
         if ("Amount" in this && this.Amount > 1)
             this.Actions.push("split");
@@ -740,7 +804,12 @@ Entity.prototype = {
         var y = this.Y - no;
 
         var color = (game.player.Id == this.Creator) ? "255,255,255" : "255,0,0";
-        if (config.ui.fillClaim) {
+        var fill = config.ui.fillClaim;
+        if (this.State == "warn") {
+            fill = true;
+            color = "255,100,0";
+        };
+        if (fill) {
             game.ctx.fillStyle = "rgba(" + color + ", 0.3)";
             game.iso.fillRect(x, y, w, h);
         }
@@ -1060,7 +1129,7 @@ Entity.prototype = {
             game.controller.creatingCursor(new Entity(this.Spell, this.Id), "cast");
         }
     },
-    claimControlls: function() {
+    claimControls: function() {
         if (this.Creator != game.player.Id)
             return;
 

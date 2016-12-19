@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info */
 
 "use strict";
 function Character(id) {
@@ -64,8 +64,6 @@ function Character(id) {
         progress: 0,
         last: 0,
     };
-
-    this.speedFactor = 1; // biom's coef
 
     this.animation = {up: null, down: null};
 
@@ -445,7 +443,7 @@ Character.prototype = {
         }
 
         var party = game.player.Party;
-        if (party && party.indexOf(this.Name) == -1) {
+        if (party && _.includes(party, this.Name)) {
             return;
         }
 
@@ -641,8 +639,10 @@ Character.prototype = {
 
     },
     drawCorpsePointer: function() {
-        if (!this.Corpse || (this.Corpse.X == 0 && this.Corpse.Y == 0))
+        if (!this.Corpse || this.Instance == "sanctuary" || (this.Corpse.X == 0 && this.Corpse.Y == 0)) {
             return;
+        }
+
         var dir = new Point(1, 1);
         var p = new Point(this.mount ? this.mount : this);
         var diff = new Point(this.Corpse).sub(p);
@@ -650,7 +650,6 @@ Character.prototype = {
         dir.rotate(angle).mul(100);
         p.toScreen().add(dir).round();
         Character.corpse.corpse.draw(p);
-        // TODO: uncomment with pixi?
         // Character.corpse.arrow.draw(p);
     },
     drawBurden: function(burden) {
@@ -808,6 +807,10 @@ Character.prototype = {
             name = T("Lord") + " " + name;
         }
         return name;
+    },
+    inPvp: function() {
+        var pvpExpires = new Date(this.PvpExpires * 1000);
+        return pvpExpires > Date.now();
     },
     drawName: function(drawHp, drawName) {
         var name = this.getName();
@@ -987,7 +990,10 @@ Character.prototype = {
             if (this.Type == "player") {
                 spriteSpeed = 6500;
             }
-            speed *= this.speedFactor;
+            var biom = game.map.biomAt(this.X, this.Y);
+            if (biom) {
+                speed *= biom.Speed;
+            }
             break;
         case "attack":
             spriteSpeed = this.Action.Duration / this.sprite.framesNum;
@@ -1385,6 +1391,14 @@ Character.prototype = {
         delete this.shownEffects[name];
     },
     updateEffects: function() {
+        if (this.synodProtection()) {
+            this.Effects["SynodProtection"] = {
+                Duration: 0
+            };
+        } else {
+            delete this.Effects["SynodProtection"];
+        }
+
         for(var name in this.shownEffects) {
             if (!this.Effects[name]) {
                 this.removeEffect(name);
@@ -1548,8 +1562,9 @@ Character.prototype = {
             list[0].lift();
     },
     liftStop: function() {
-        if (this.burden)
+        if (this.burden) {
             game.controller.creatingCursor(this.burden, "lift-stop");
+        }
     },
     stop: function() {
         this.Dx = 0;
@@ -1824,6 +1839,8 @@ Character.prototype = {
                 return false;
             if (c.Team && c.Team == self.Team)
                 return false;
+            if (c.IsNpc && !c.IsMob)
+                return false;
             return party.indexOf(c.Name) == -1;
         }).sort(function(a, b) {
             return new Point(a).distanceTo(p) - new Point(b).distanceTo(p);
@@ -1853,6 +1870,8 @@ Character.prototype = {
     },
     inspect: function(target) {
         game.network.send("inspect", {Id: target.Id}, function(data) {
+            if (!data.Equip)
+                return;
             target.Equip = data.Equip;
             var panel = new Panel(
                 "inspect",
@@ -1926,5 +1945,8 @@ Character.prototype = {
             return true;
         var armor = this.Clothes[2];
         return _.includes(["iron", "steel", "titanium", "meteorite", "bloody"], armor);
-    }
+    },
+    synodProtection: function() {
+        return this.Z == 0 && this.Karma >= 0 && !this.inPvp();
+    },
 };

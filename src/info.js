@@ -1,3 +1,5 @@
+/* global game, Missile, FONT_SIZE, TT */
+
 "use strict";
 function Info(message, character) {
     this.data = message.Data;
@@ -431,7 +433,7 @@ Info.prototype = {
             default:
                 return TT(
                     "{who} killed {whom}",
-                    {who: this.target.Name, whom: this.character.Name}
+                    {who: this.character.Name, whom: this.target.Name}
                 );
             }
         },

@@ -1,3 +1,5 @@
+/* global game, Character */
+
 "use strict";
 function mainStage(data) {
     setTimeout(function() {
@@ -12,11 +14,12 @@ function mainStage(data) {
             game.controller.showWarning(data.Warning);
             return;
         }
-        Entity.sync(data.Entities || [], data.RemoveEntities || null);
-
         Character.sync(data.Players || [], data.RemovePlayers || null);
         Character.sync(data.Mobs || [], data.RemoveMobs || null);
         Character.sync(data.NPCs || [], data.RemoveNPCs || null);
+
+        Entity.sync(data.Entities || [], data.RemoveEntities || null);
+
 
         data.Location && game.map.sync(data.Location, data.Map);
 
@@ -119,11 +122,11 @@ function mainStage(data) {
     this.drawGlobalEffects = function() {
         if ("MushroomTrip" in game.player.Effects || "BadTrip" in game.player.Effects) {
             game.canvas.style.filter = "hue-rotate(" + (hueRotate % 360) +"deg)";
-            game.canvas.style.webkitFilter = "hue-rotate(" + (hueRotate % 360) +"deg)";
             hueRotate += 20;
+        } else if (game.player.Instance == "sanctuary") {
+            game.canvas.style.filter = "grayscale(100%)";
         } else {
             game.canvas.style.filter = "";
-            game.canvas.style.webkitFilter = "";
         }
     };
 

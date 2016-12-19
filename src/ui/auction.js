@@ -1,10 +1,12 @@
+/* global T, game, dom, Panel */
+
 "use strict";
 
 function Auction() {
     var self = this;
     this.tabs = [
         {
-            title: T("Buy"),
+            title: T("Buy from"),
             update: function(title, contents) {
                 game.network.send("auction-buy-list", {Broker: self.broker.Id}, function(data) {
                     dom.setContents(contents, self.buyView(data.Lots));
@@ -12,7 +14,7 @@ function Auction() {
             }
         },
         {
-            title: T("Sell"),
+            title: T("Sell to"),
             update: function(title, contents) {
                 game.network.send("auction-sell-list", {Broker: self.broker.Id}, function(data) {
                     dom.setContents(contents, self.sellView(data.Lots));

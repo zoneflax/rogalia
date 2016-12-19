@@ -72,12 +72,12 @@ var dom = {
     button: function(text, classOrId, onclick) {
         return this.tag("button", classOrId, {text: text, onclick: onclick});
     },
-    select: function(options, classOrId) {
-        var select = this.tag("select", classOrId);
-        options && options.forEach(function(option) {
-            select.appendChild(option);
-        });
-        return select;
+    select: function(options, selected, classOrId) {
+        return dom.wrap("select", this.make("select", options.map(function(value) {
+            var option = dom.make("option", value);
+            option.selected = (value == selected);;;;
+            return option;
+        })), classOrId);
     },
     option: function(text) {
         return this.tag("option", null, {text: text});

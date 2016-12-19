@@ -15,6 +15,7 @@ function Chat() {
         custom       : 100,
         en: 99,
         ru: 98,
+        jp: 97,
     };
 
     this.newMessageElement = dom.tag("input", "#new-message");
@@ -208,7 +209,7 @@ function Chat() {
         else
             text = entity.name || entity.Name;
 
-        this.link("${" + text + "}");
+        this.link("${" + text.replace(/\n/g, " ") + "}");
 
         if (game.player.IsAdmin || entity.Group == "portal") {
             this.addMessage("id: " + entity.Id);
@@ -244,12 +245,16 @@ function Chat() {
             e.target.value = myMessages.next();
             return true;
         case 13: //enter
+            if (message.length == 0) {
+                e.target.blur();
+            }
             break;
         default:
             return true;
         }
-        if (message.length == 0)
+        if (message.length == 0) {
             return true;
+        }
 
         myMessages.push(message);
 
@@ -278,6 +283,12 @@ function Chat() {
                 break;
             case "help":
                 self.addMessage("global: 0, local: 1");
+                break;
+            case "return-home":
+                game.network.send(cmd);
+                break;
+            case "fullscreen":
+                game.toggleFullscreen();
                 break;
             case "friend-add":
             case "friend-remove":
@@ -677,8 +688,13 @@ function Chat() {
         tabs.forEach(function(tab) {
             if (tab.channels.indexOf(channelName) == -1)
                 return;
-            if (!tab.titleElement.classList.contains("active"))
+            if (!tab.isActive()) {
+                if (channelName == "private" && tab.name != "private")
+                    return;
+
                 tab.titleElement.classList.add("has-new-messages");
+            }
+
             var element = tab.messagesElement;
             var m = elem.cloneNode(true);
             element.appendChild(m);
@@ -884,10 +900,12 @@ function Chat() {
     };
 
     this.activate = function() {
-        if (config.ui.chatAttached)
+        if (config.ui.chatAttached) {
             this.newMessageElement.focus();
-        else
+            this.panel.toTop();
+        } else {
             this.panel.show();
+        }
 
         scrollAllToTheEnd();
     };

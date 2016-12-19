@@ -1,4 +1,4 @@
-/* global game, Point, CELL_SIZE */
+/* global game, Point, CELL_SIZE, config */
 
 "use strict";
 function WorldMap() {
@@ -43,14 +43,20 @@ function WorldMap() {
     }.bind(this);
 
     this.sync = function(data, map) {
-        var size = Math.sqrt(data.length);
-        this.cells_x = size;
-        this.cells_y = size;
+        var width = Math.sqrt(data.length);
+        var height = width;
+        // TODO: dirty hack; fix server
+        if (width != width << 0) {
+            width = 48;
+            height = 64;
+        }
+        this.cells_x = width;
+        this.cells_y = height;
 
-        this.width = size * CELL_SIZE;
-        this.height = size * CELL_SIZE;
+        this.width = width * CELL_SIZE;
+        this.height = height * CELL_SIZE;
 
-        this.syncMinimap(data, size, size);
+        this.syncMinimap(data, width, height);
 
         worker.postMessage({
             bioms: this.bioms,
@@ -302,7 +308,9 @@ function WorldMap() {
             game.drawStrokedText(text, x, y + FONT_SIZE);
         }
 
-        game.debug.map.grid && this.drawGrid();
+        if (config.graphics.mapGrid || game.controller.keys.G) {
+            this.drawGrid();
+        }
 
         this.drawMinimap();
     };

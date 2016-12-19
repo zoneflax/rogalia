@@ -1,4 +1,4 @@
-/* global Point, dom, config, util, T, TS */
+/* global Point, dom, config, util, T, TS, Container */
 
 "use strict";
 
@@ -262,6 +262,7 @@ function Controller(game) {
         return this.highlight.bind(this, buttonName, off);
     };
 
+    var lastContainersUpdate = Date.now();
     this.update = function() {
         this.updateCamera();
         if (this.world.cursor instanceof Entity || this.cursor.entity)
@@ -277,6 +278,11 @@ function Controller(game) {
                 this.world.hovered = null;
         }
         this.minimap.update();
+        var now = Date.now();
+        if (now - lastContainersUpdate > 500) {
+            lastContainersUpdate = now;
+            _.forEach(game.containers, (cnt) => cnt.updateProgress());
+        }
     };
 
     this.updateCamera = function() {
@@ -319,6 +325,9 @@ function Controller(game) {
                 };
                 actions.unstuck = function() {
                     game.chat.send("*unstuck");
+                };
+                actions.returnHome = function() {
+                    game.network.send("return-home");
                 };
                 game.menu.show(actions);
                 break;
@@ -444,7 +453,7 @@ function Controller(game) {
         },
         27: { //esc
             callback: function() {
-                if (Panel.top) {
+                if (Panel.top && Panel.top.name != "chat") {
                     Panel.top.hide();
                 }
                 game.player.setTarget(null);
@@ -468,7 +477,34 @@ function Controller(game) {
             callback: function() {
                 this.rotate(+1);
             }
+        },
+        42: { // Print Screen
+            callback: function() {
+                var name = new Date().toISOString().slice(0, 19).replace("T", "_");
+                this.takeScreenshot(name);
+            },
+        },
+    };
+
+    this.takeScreenshot = function(name) {
+        if (!game.args["steam"]) {
+            console.warn("Not supported");
+            return;
         }
+        var gui = require("nw.gui");
+        var win = gui.Window.get();
+
+        win.capturePage(function(img) {
+            var base64Data = img.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+            var fs = require("fs");
+            var dir = "./screenshots/";
+            if (!fs.existsSync(dir)){
+                fs.mkdirSync(dir);
+            }
+            fs.writeFile(dir + name + ".png", base64Data, "base64", function(err) {
+                console.log(err);
+            });
+        }, "png");
     };
 
     this.initHotkeys = function() {
@@ -556,6 +592,14 @@ function Controller(game) {
     };
 
     this.initInterface = function() {
+        if (game.args["steam"]) {
+            var gui = require("nw.gui");
+            var win = gui.Window.get();
+            win.on("new-win-policy", function(frame, url, policy) {
+                gui.Shell.openExternal(url);
+                policy.ignore();
+            });
+        }
         game.map.minimapContainer.style.display = "block";
         game.timeElement.style.display = "block";
 
@@ -568,15 +612,15 @@ function Controller(game) {
             return false;
         };
 
-        window.addEventListener('mousedown', this.on.mousedown);
-        window.addEventListener('mouseup', this.on.mouseup);
-        window.addEventListener('mousemove', this.on.mousemove);
-        window.addEventListener('keydown', this.on.keydown);
-        window.addEventListener('keyup', this.on.keyup);
-        window.addEventListener('wheel', this.on.wheel);
+        window.addEventListener("mousedown", this.on.mousedown);
+        window.addEventListener("mouseup", this.on.mouseup);
+        window.addEventListener("mousemove", this.on.mousemove);
+        window.addEventListener("keydown", this.on.keydown);
+        window.addEventListener("keyup", this.on.keyup);
+        window.addEventListener("wheel", this.on.wheel);
 
-        window.addEventListener('contextmenu', disableEvent);
-        window.addEventListener('dragstart', disableEvent);
+        window.addEventListener("contextmenu", disableEvent);
+        window.addEventListener("dragstart", disableEvent);
 
         this.fight = new Fight();
         this.skills = new Skills();
@@ -994,8 +1038,16 @@ function Controller(game) {
     this.drawAlign = function(entity, p) {
         var data = entity.alignedData(p);
         if (data) {
+            game.ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+            game.iso.fillRect(data.x, data.y, data.w, data.h);
             game.ctx.strokeStyle = "#00ffff";
             game.iso.strokeRect(data.x, data.y, data.w, data.h);
+            var fill = data.fill;
+            if (fill) {
+                game.ctx.fillStyle = fill.color;
+                game.iso.fillRect(data.x - fill.w/2, data.y - fill.h/2, fill.w, fill.h);
+                game.iso.strokeRect(data.x - fill.w/2, data.y - fill.h/2, fill.w, fill.h);
+            }
         }
     };
 
@@ -1079,7 +1131,7 @@ function Controller(game) {
             warn.style.display = "none";
             clearTimeout(warn.timeout);
             warn.timeout = null;
-        }, 3000);
+        }, 5000);
 
         if (game.chat)
             game.chat.addMessage(warn.textContent);

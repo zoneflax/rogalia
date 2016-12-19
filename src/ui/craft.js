@@ -703,7 +703,7 @@ Craft.prototype = {
             var canEquip = tmpl.nonEffective() ? "unavailable" : "";
 
             return dom.wrap("equip-requirements", [
-                dom.wrap(canEquip, T("Requirements") + " " + T(tmpl.EffectiveParam).toLowerCase() + ": " + tmpl.Lvl),
+                dom.wrap(canEquip, T("Requirements") + ": " + T(tmpl.EffectiveParam).toLowerCase() + ": " + tmpl.Lvl),
                 dom.hr(),
             ]);
         }

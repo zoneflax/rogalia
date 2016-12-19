@@ -1,3 +1,5 @@
+/* global T, util, TS */
+
 "use strict";
 // TT translates text with substitutions
 // for client:
@@ -61,7 +63,9 @@ T.init = function(lang, callback) {
         "effects",
         "craft",
         "settings",
-        "talks"
+        "talks",
+        "quests",
+        "professions",
     ];
     var loaded = 0;
     scripts.forEach(function(script) {

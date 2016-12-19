@@ -248,9 +248,9 @@ Talks.npcs = {
 		"My name is Boris, I am the abbot of this abbey. Here, in this lands, I bring the light to everyone who needs it. You're here to absolve, I guess?",
             ]
         },
-        // "actions": {
-        //     "Trade indulgence": "Исповедаться (10 золотых +100 кармы)",
-        // }
+        "actions": {
+            "Trade": "I want to buy an indulgence",
+        }
     },
     "bertran": {
         "default": {

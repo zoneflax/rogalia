@@ -1,6 +1,37 @@
+/* global game, dom, TS, T */
+
 "use strict";
 function Vendor() {
 }
+
+Vendor.priceString = function(cost) {
+        cost = parseInt(cost) || 0;
+
+    var negative = false;
+    if (cost < 0) {
+        negative = true;
+        cost = -cost;
+    }
+
+    var s = cost % 100;
+    cost -= s;
+    cost /= 100;
+    var g = cost % 100;
+    cost -= g;
+    cost /= 100;
+    var p = cost;
+    var price = "";
+    if (p) {
+        price += p + "p ";
+    }
+    if (g) {
+        price += g + "g ";
+    }
+    if (s) {
+        price += s + "s";
+    }
+    return price;
+};
 
 Vendor.createPrice = function(cost) {
     cost = parseInt(cost) || 0;
@@ -85,7 +116,7 @@ Vendor.prototype = {
         this.vendor = vendor;
         this.tabs = this.tabs = [
             {
-                title: T("Buy"),
+                title: T("Buy from"),
                 update: function(title, contents) {
                     game.network.send("buy-list", {Vendor: self.vendor.Id}, function(data) {
                         dom.setContents(contents, self.buyView(data.Lots));
@@ -93,7 +124,7 @@ Vendor.prototype = {
                 }
             },
             {
-                title: T("Sell"),
+                title: T("Sell to"),
                 update: function(title, contents) {
                     game.network.send("sell-list", {Vendor: self.vendor.Id}, function(data) {
                         dom.setContents(contents, self.sellView(data.Lots));
@@ -144,7 +175,7 @@ Vendor.prototype = {
                         );
                     }),
                     dom.button(T("Buy"), "lot-buy", function(e) {
-                        if (confirm(T("Buy") + " " + name + "?")) {
+                        game.popup.confirm(T("Buy") + " " + name + "?", function() {
                             game.network.send(
                                 "buy",
                                 {Id: lot.Id, Vendor: self.vendor.Id},
@@ -152,7 +183,7 @@ Vendor.prototype = {
                                     dom.remove(e.target.parentNode.parentNode);
                                 }
                             );
-                        }
+                        });
                     }),
                 ];
             })
@@ -230,7 +261,10 @@ Vendor.prototype = {
                     quantity,
                     Vendor.createPrice(lot.Cost),
                     slot,
-                    dom.wrap("", [cancel, button]),
+                    dom.wrap("", [
+                        self.vendor.Owner == game.player.Id &&  cancel,
+                        button
+                    ]),
                 ];
             })
         ));

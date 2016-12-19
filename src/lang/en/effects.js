@@ -1,3 +1,5 @@
+/* global EffectDesc */
+
 EffectDesc.effects = {
     "Overeat": {
         "class": "bad",
@@ -103,5 +105,11 @@ EffectDesc.effects = {
         "effect": "Deprives your health to death.",
         "desc": "May get infected when standing next to a garbage pile, another patient or during a homosexual sex.",
         "note": "Cured when having a anti-plague potion.",
-    }
+    },
+    "SynodProtection": {
+        "class": "good",
+        "effect": "you take 80% less damage in pvp.",
+        "desc": "Does not work under the ground, if you answered onto the attack or if you have negative karma.",
+        "note": "Allows you to return to your respawn if any or in the city.",
+    },
 };

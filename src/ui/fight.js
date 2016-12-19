@@ -52,7 +52,7 @@ function Fight() {
         if (!prepare && !game.controller.mouse.isValid())
             return;
 
-        if (config.autoTarget) {
+        if (config.character.autoTarget) {
             game.player.target = null;
             var p = new Point(game.controller.world.point).sub(new Point(game.player));
             var sector = game.player.sector(Math.PI/4, p.x, p.y);

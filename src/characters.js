@@ -1,3 +1,5 @@
+/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel, TS */
+
 "use strict";
 Character.equipSlots =  [
     "bag",
@@ -101,7 +103,7 @@ Character.npcActions = {
         ]).show();
     },
     "Get claim": function() {
-        game.network.send("get-claim", {Id: this.Id});
+        game.popup.alert(T("You can get claim from the Scrooge in the bank"));
     },
     "Get village claim": function() {
         var id = this.Id;
@@ -120,7 +122,7 @@ Character.npcActions = {
                 dom.hr(),
                 dom.wrap("slot", Entity.templates["vendor-license"].icon()),
                 T("Cost") + ": ",
-                Vendor.createPrice(10 * 100 * 100),
+                Vendor.createPrice(2 * 100 * 100),
                 dom.br(),
                 dom.button(T("Buy"), "", function() {
                     game.network.send("get-vendor-license", {Id: id});
@@ -163,7 +165,7 @@ Character.npcActions = {
             "interaction",
             this.Name,
             [
-                self.avatar(),
+                // self.avatar(),
                 dom.wrap("", info.talks.map(function(text) {
                     return dom.tag("p", "", {text: text});
                 })),
@@ -207,7 +209,7 @@ Character.npcActions = {
                 data.Instances.map(function(instance) {
                     var enter = dom.button(T("Enter"));
                     enter.onclick = function() {
-                        game.network.send("instance", {Id: self.Id, Name: instance.Name});
+                        game.network.send("instance", {Id: self.Id, Name: instance.Name}, () => panel.close());
                     };
                     return [
                         TS(instance.Name),
@@ -216,10 +218,10 @@ Character.npcActions = {
                         Vendor.createPrice(instance.Cost),
                         enter,
                     ];
-                    return inst;
                 })
             );
-            new Panel("instances", "Instances", [instances]).show().setEntity(self);
+            var panel = new Panel("instances", "Instances", [instances]);
+            panel.show().setEntity(self);
         });
     },
 };

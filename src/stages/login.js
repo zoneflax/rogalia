@@ -1,3 +1,5 @@
+/* global game, FormData */
+
 "use strict";
 
 function loginStage() {
@@ -111,6 +113,7 @@ function loginStage() {
 
     function signin(login, password) {
         game.setLogin(login);
+        game.clearServerInfo();
 
         var formData = new FormData();
         formData.append("login", login);
@@ -177,6 +180,7 @@ function loginStage() {
 
     function signup(login, password, email) {
         game.setLogin(login);
+        game.clearServerInfo();
 
         var formData = new FormData();
         formData.append("login", login);

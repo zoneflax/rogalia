@@ -17,8 +17,10 @@ var config = {
         autoTarget: true,
     },
     ui: {
-        language: function() {
-            return game.lang == "ru";
+        language: function(current) {
+            return  (current)
+                ? game.lang
+                : ["en", "ru", "ja"];
         },
         hp: true,
         name: true,
@@ -35,12 +37,12 @@ var config = {
     },
     graphics: {
         // low: false,
-        fullscreen: false,
         autoHighlightDoors: false,
         snowflakes: false,
         movingSpace: false,
         centerScreen: true,
         autoHideWalls: true,
+        mapGrid: false,
     },
     sound: {
         playSound: true,
@@ -59,7 +61,6 @@ var debug = {
         darkness: false,
         simpleDarkness: false,
         ray: false,
-        grid: false,
         position: false,
     },
     player: {

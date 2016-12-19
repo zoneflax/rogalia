@@ -1,3 +1,5 @@
+/* global Panel, dom, game, T, ContainerSlot */
+
 "use strict";
 function Container(entity) {
     this.entity = entity;
@@ -112,6 +114,51 @@ Container.prototype = {
         this.updateFuel();
 
         var id = this.id;
+        var buttons = this.makeButtons();
+        switch (this.entity.Type) {
+        case "chess-table":
+            buttons.push(dom.button(T("Toggle color"), "", function() {
+                slots.classList.toggle("chess-toggle");
+            }));
+            break;
+        }
+
+        var contents = [
+            slots,
+            this.slots.length > 0 && this.fuel && dom.hr(),
+            this.fuel,
+        ];
+        if (buttons) {
+            contents.push(dom.hr());
+            contents.push(dom.wrap(".container-actions", buttons));
+        }
+        this.panel = new Panel(
+            "container-" + this.id,
+            this.name,
+            contents
+        );
+
+        this.panel.entity = this.entity;
+        this.panel.hooks.hide = this.markAllAsSeen.bind(this);
+        this.panel.hooks.show = function() {
+            if (this._syncReq) {
+                this.update();
+                this._syncReq = false;
+            }
+        }.bind(this);
+        this.panel.hooks.close = function() {
+            delete game.containers[id];
+        };
+        this.panel.element.classList.add("container");
+        this.panel.container = this;
+
+        this.panel.setWidth(this._slotsWidth * Container.SLOT_SIZE);
+    },
+    makeButtons: function() {
+        if (this.slots.length < 3) {
+            return null;
+        }
+        var id = this.id;
 
         var moveAll = dom.img("assets/icons/panel/move-all.png", "icon-button");
         moveAll.title = T("Move all");
@@ -130,6 +177,7 @@ Container.prototype = {
 
         var openAll = dom.img("assets/icons/panel/open-all.png", "icon-button");
         openAll.title = T("Open all");
+        var slots = this.slots;
         openAll.onclick = function() {
             var containers = this.slots.filter(function(slot) {
                 return (slot.entity && slot.entity.isContainer());
@@ -149,38 +197,8 @@ Container.prototype = {
                 else
                     cnt.panel.hide();
             });
-        }.bind(this);
-
-        var buttons = [moveAll, sort, openAll];
-
-        switch (this.entity.Type) {
-        case "chess-table":
-            buttons.push(dom.button(T("Toggle color"), "", function() {
-                slots.classList.toggle("chess-toggle");
-            }));
-            break;
-        }
-
-        this.panel = new Panel(
-            "container-" + this.id,
-            this.name,
-            [slots, this.fuel, dom.hr(), dom.wrap(".container-actions", buttons)]
-        );
-        this.panel.entity = this.entity;
-        this.panel.hooks.hide = this.markAllAsSeen.bind(this);
-        this.panel.hooks.show = function() {
-            if (this._syncReq) {
-                this.update();
-                this._syncReq = false;
-            }
-        }.bind(this);
-        this.panel.hooks.close = function() {
-            delete game.containers[id];
         };
-        this.panel.element.classList.add("container");
-        this.panel.container = this;
-
-        this.panel.setWidth(this._slotsWidth * Container.SLOT_SIZE);
+        return [moveAll, sort, openAll];
     },
     markAllAsSeen: function() {
         this.slots.forEach(function(slot) {
@@ -226,7 +244,7 @@ Container.prototype = {
     init: function() {
         var entity = this.entity;
         var props = entity.Props;
-        this._slots = props.Slots;
+        this._slots = props.Slots || [];
         this._slotsWidth = props.SlotsWidth;
         this._slotsHeight = props.SlotsHeight;
         this.name = TS(entity.Name);
@@ -252,6 +270,9 @@ Container.prototype = {
 
         this.updateFuel();
     },
+    updateProgress: function() {
+        this.slots.forEach(slot => slot.updateProgress());
+    },
     syncReq: function() {
         this._syncReq = true;
     },
@@ -269,7 +290,7 @@ Container.prototype = {
             return;
         }
 
-        this.fuel = dom.div("fuel-wrapper", {title: T("Fuel")});
+        this.fuel = dom.wrap("fuel-wrapper", T("Fuel"), {title: T("Fuel")});
 
         var current = dom.div("fuel-current");
         var max = dom.div("fuel-max");
@@ -282,7 +303,7 @@ Container.prototype = {
         };
         update(fuel);
         this.fuel.update = update;
-        dom.append(this.fuel, [current, max, slot]);
+        dom.append(this.fuel, [slot, current, max]);
     },
     hasSpace: function() {
         return this._slots.find(function(id) { return id == 0; }) !== undefined;

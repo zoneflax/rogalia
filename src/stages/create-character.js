@@ -1,3 +1,5 @@
+/* global game, T, dom, _, Image */
+
 "use strict";
 function createCharacterStage() {
     var account = document.createElement("div");
@@ -32,93 +34,15 @@ function createCharacterStage() {
     tabs.className = "profession-tabs";
     var professions = document.createElement("div");
     professions.className = "professions";
-    [
-        {
-            name: "Blacksmith",
-	    desc: {
-                ru: "Куй железо, пока горячо! Кузнецы Рогалии создают инструменты, что так необходимы всем поселенцам: оружие, доспехи и множество прочих шедевров из металла!",
-                en: "Blacksmiths make tools every settler need: armor, gear and other brilliant masterpieces of smithy!",
-            },
-            skills: {
-                "Metalworking": 10,
-                "Mining": 5,
-            }
-        },
-        {
-            name: "Tailor",
-	    desc: {
-                ru: "Самая романтичная профессия в Империи. Портные создают не только великолепную одежду и изделия из ткани, но и пишут восхитительной красоты картины.",
-                en: "The most romantic job in the whole Empire. Tailors make majestic clothes and paint beautiful pictures.",
-            },
-            skills: {
-                "Tailoring": 10,
-                "Leatherworking": 5,
-            }
-        },
-        {
-            name: "Alchemyst",
-	    desc: {
-                ru: "Алхимики Рогалии — это люди, которых боятся и уважают все жители. Они способны управлять силой атомов, создавая гениальные изобретения, собирать сложные механизмы, а так же создавать магические свитки разрушительной мощи.",
-                en: "Almost everyone respects Rogalia's alchemists. These mighty people can control the atomic powers, invent ingenious machinery and enchant a magic scrolls of destructive power.",
-            },
-            skills: {
-                Alchemy: 10,
-                Mechanics: 5,
-            }
-        },
-        {
-            name: "Farmer",
-            desc: {
-                ru: "Главные поставщики продовольствия. Они выращивают все, что можно вырастить в Новых Землях. Бескрайние поля, долгий и упорный труд — вот ваше ремесло.",
-                en: "The primary food suppliers. They grow everything that grows in the New Lands. Hard and patient workers.",
-            },
-            skills: {
-                Farming: 10,
-                Fishing: 5,
-            }
-        },
-        {
-            name: "Carpenter",
-	    desc: {
-                ru: "Люди, создающие великолепные конструкции из древесины, которые всегда пользуются спросом у людей.",
-                en: "People who make a beautiful and robust carpentry everyone need.",
-            },
-            skills: {
-                Carpentry: 10,
-                Lumberjacking: 5,
-            }
-        },
-        {
-            name: "Cook",
-	    desc: {
-                ru: "Повара Рогалии способны творить великолепные блюда из простых продуктов, которые будут не только райски вкусны, но и богаты витаминами, что так необходимы поселенцам в Новых Землях.",
-                en: "Rogalia's cooks make delicious meals, tasty, juicy and full of vitamins.",
-            },
-            skills: {
-                Cooking: 10,
-                Herbalism: 5,
-            }
-        },
-        {
-            name: "Hunter",
-	    desc: {
-                ru: "Человек, знающий как выжить в дикой природе, найти себе ночлег и добыть еды. Ловкие и внимательные, в схватке с диким зверем выходят победителями.",
-                en: "A men who know how to survive the wild lands, find a safe place to sleep and food to eat. Careful and agile, they win every battle with the beast.",
-            },
-            skills: {
-                Swordsmanship: 10,
-                Survival: 5,
-            }
-        }
-    ].forEach(function(prof) {
-        var mainSkill = Object.keys(prof.skills)[0].toLowerCase();
+    game.professions.forEach(function(prof) {
+        console.log(prof);
         var icon = new Image();
         icon.className = "profession-tab";
-        icon.src = "assets/icons/skills/" + mainSkill + ".png";
+        icon.src = "assets/icons/skills/" + prof.mainSkill + ".png";
         icon.title = T(prof.name);
 
         var desc = dom.make("p", [
-            T(prof.desc[game.lang] || "No description"),
+            T(prof.desc || T("No description yet")),
             dom.br(),
             dom.br(),
             T("Main skills") + ":",

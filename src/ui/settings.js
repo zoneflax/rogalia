@@ -1,4 +1,4 @@
-/* global game, Panel, dom, localStorage, config */
+/* global game, Panel, dom, localStorage, config, _ */
 
 "use strict";
 function Settings() {
@@ -28,8 +28,8 @@ function Settings() {
         "settings.character.rotateWasd": function() {
             game.controller.wasd.point.set(0, 0);
         },
-        "settings.ui.language": function() {
-            localStorage.setItem("lang", (game.lang == "ru") ? "en" : "ru");
+        "settings.ui.language": function(lang) {
+            localStorage.setItem("lang", lang);
             game.reload();
         },
         "settings.sound.playMusic": function() {
@@ -76,9 +76,6 @@ function Settings() {
         },
         "settings.graphics.centerScreen": function() {
             game.world.classList.toggle("snap-left");
-        },
-        "settings.graphics.fullscreen": function() {
-            game.screen.update();
         },
         "settings.character.pathfinding": function() {
             game.player.Settings.Pathfinding = !game.player.Settings.Pathfinding;
@@ -163,6 +160,15 @@ Settings.prototype = {
                 };
                 tab.contents.push(label);
                 function makeLabel(key, value, title) {
+                    if (_.isArray(value)) {
+                        var select = dom.select(value, game.lang);
+                        select.firstChild.onchange = function() {
+                            group[prop] = this.value;
+                            trigger();
+                        };
+                        return select;
+                    }
+
                     if (_.isNumber(value)) {
                         var range = dom.range(group[prop], function(value) {
                             group[prop] = value;
@@ -170,6 +176,7 @@ Settings.prototype = {
                         });
                         return dom.make("label", [title, range]);
                     }
+
                     var checkbox = dom.checkbox(title);
                     checkbox.checked = value;
                     checkbox.id = key;

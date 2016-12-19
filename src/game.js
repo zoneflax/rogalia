@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions */
 
 "use strict";
 
@@ -22,6 +22,7 @@ class Game {
 
         new DragManager();
 
+        this.fullscreen = JSON.parse(localStorage.getItem("fullscreen"));
         this.screen = new Screen();
         this.ping = 0;
         this.time = 0;
@@ -56,8 +57,6 @@ class Game {
         this.missiles = [];
         this.containers = {};
         this.vendors = {};
-
-        this.quests = new Quests();
         this.panels = {};
         this.camera = new Point();
 
@@ -182,6 +181,8 @@ class Game {
         this.stage = new Stage();
         this.setStage("login");
 
+        this.professions = new Professions();
+
         window.onerror = function(msg, url, line, column) {
             window.onerror = null;
             game.sendError([
@@ -280,6 +281,17 @@ class Game {
         window.addEventListener("focus", () => { this.focus = true; });
         window.addEventListener("blur", () => { this.focus = false; });
 
+        if (game.args["steam"]) {
+            var gui = require("nw.gui");
+            var win = gui.Window.get();
+            // TODO check for double save from quit()
+            win.on("close", () => this.save());
+        }
+    }
+
+    quit() {
+        this.save();
+        require("nw.gui").App.quit();
     }
 
     update(currentTime) {
@@ -419,6 +431,12 @@ class Game {
             potential += fields[i].potentialAt(p.x, p.y);
         }
         return potential;
+    }
+
+    toggleFullscreen() {
+        this.fullscreen = !this.fullscreen;
+        this.screen.update();
+        localStorage.setItem("fullscreen", this.fullscreen);
     }
 
     exit(message) {
