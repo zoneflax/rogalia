@@ -13,7 +13,7 @@ EffectDesc.effects = {
     },
     "Thirsty": {
         "class": "バッド",
-        "effect": "キャラクターの移動速度が 45 and health slightly falls off. You cannot dig dirt, mine ore and lift items.",
+        "effect": "キャラクターの移動速度が 45 ヘルスも下がり、採掘したり、アイテムを持ち上げたりすることができなくなります。",
         "desc": "キャラクターのスタミナが0になったときに付与される。",
         "note": "",
     },
@@ -26,7 +26,7 @@ EffectDesc.effects = {
     "Fire": {
         "class": "バッド",
         "effect": "キャラクターは定期的なダメージを受ける (５秒間隔で３０ダメージ).",
-        "desc": "Gained when attacked by some kinds of weapon or creatures.",
+        "desc": "いくつかの武器やクリーチャーによって攻撃された場合に付与されます。",
     },
     "Bleed": {
         "class": "バッド",
