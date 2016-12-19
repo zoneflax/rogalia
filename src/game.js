@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom */
 
 "use strict";
 
@@ -166,14 +166,16 @@ class Game {
         this.jukebox = new Jukebox();
 
         var maximize = document.getElementById("maximize");
-        if (game.args["steam"]) {
-            dom.hide(maximize);
-        } else {
-            maximize.onclick = function() {
-                maximize.classList.toggle("maximized");
+        maximize.onclick = function() {
+            maximize.classList.toggle("maximized");
+            if (game.args["steam"]) {
+                var gui = require("nw.gui");
+                var win = gui.Window.get();
+                win.toggleFullscreen();
+            } else {
                 util.toggleFullscreen();
-            };
-        }
+            }
+        };
 
         this.setFontSize();
 
@@ -195,6 +197,15 @@ class Game {
             game.exit(T("Client error. Refresh page or try again later."));
             return false;
         };
+
+        if (game.args["steam"]) {
+            var gui = require("nw.gui");
+            var win = gui.Window.get();
+            win.on("new-win-policy", function(frame, url, policy) {
+                gui.Shell.openExternal(url);
+                policy.ignore();
+            });
+        }
 
         T.update();
         this._tick();

@@ -39,7 +39,7 @@
         "title": "Rogalia",
         "icon": "assets/bg/icon.png",
         "toolbar": false,
-        "frame": false,
+        "frame": true,
         "position": "center",
         "transparent": false,
         "no-edit-menu" : true,

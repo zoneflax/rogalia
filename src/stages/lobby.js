@@ -1,4 +1,4 @@
-/* global game */
+/* global game, util, Panel, dom, localStorage */
 
 "use strict";
 function lobbyStage(data) {
@@ -8,14 +8,21 @@ function lobbyStage(data) {
         lobbyStage.metadataVersion = data.MetadataVersion;
     }
 
-    util.ajax("news/" + game.lang + ".html", function(warn) {
-        if (!warn) {
+    util.ajax("news/" + game.lang + ".html", function(html) {
+        if (!html) {
             return;
         }
 
         var panel = new Panel("news", "News");
         panel.temporary = true;
-        panel.contents.innerHTML = warn;
+        panel.contents.innerHTML = html;
+
+        var pic = panel.element.querySelector(".news-pic");
+        if (pic) {
+            pic.onclick = function() {
+                new Panel("news-pic", "Image", [dom.img("news/update-full.png")]).show();
+            };
+        }
 
         var title = panel.element.querySelector("h2").textContent;
         var icon = document.getElementById("news-icon");

@@ -2,78 +2,69 @@
 
 Quest.quests =  {
     "tutorial-start": {
-        name: "Tuition start",
-        voice: true,
+        name: "Tutorial start",
         desc: [
             "Hello, settler.",
             "Everyone who arrives here gets my Academy. My job here is to teach you survival basics.",
-            "You will receive: <i>3000 exp and 4 gold</i>.",
         ],
         final: "Great, let's begin. Remember: <i>wild beasts won't attack you 'till you get 10 level, and your bag will stay with you after death.</i>",
     },
     "craft-1": {
         name: "Picking resources",
-        voice: true,
         desc: "You need some tools to survive this wild lands; and for tools you need resources. Pick four stones, two boughs and a branch.",
-        tip: "Right click on a tree and pick <rmb>Get a bough/a branch</rmb>. Right click and <rmb>Break</rmb> on a bough gives a stick, and breaking a branch gives a twig. Pick stones from the ground <lmb></lmb>.",
+        tip: "<rmb>Get bough</rmb> and <rmb>Get branch</rmb> on a tree.<br><lmb></lmb> on a stone to pick it up from the ground.",
+    },
+    "craft-1-2": {
+        name: "Making a knife handle",
+        desc: "Now make sticks from the boughs and twigs from the branches. We will use them to make a handle.",
+        tip: "<rmb>Break off</rmb> on a bough gives a stick, the same for a branch gives a twig.",
     },
     "craft-2": {
-        voice: true,
-        name: "Making a knife",
-        desc: "All right, everything is gathered. With all of these, you have to craft a  knife.",
-        tip: "<lmb></lmb> on a quest item opens a craft dialog and finds the recipe. <lmb></lmb> on an ingredient will find it in the craft list.",
+        name: "Making a knife blade",
+        desc: "The knife should has a blade. Try to make it from the sharp stones.",
+        tip: "<lmb></lmb> on the sharp stone icon.<br>Move stones into the recipe and press <hl>Create</hl>",
+    },
+    "craft-2-1": {
+        name:  "Making a knife",
+        desc: "Perfect, everything is ready. Finally let's make a knife",
+        tip: "To simplify things you can click on the <hl>Auto</hl> button and then <hl>Create</hl>",
     },
     "craft-3": {
-        voice: true,
         name: "Making a weapon",
-        desc: "Ok, now we are going to craft a sharp stick — your first weapon.",
+        desc: "Good, now let's craft a sharp stick — your first weapon. You will need it later.",
     },
     "stat-1": {
-        voice: true,
-        name:  "Thirst",
-        desc: "Now I shall teach you to obtain food and water. You'll find a small water source in the next room. Rip off some bark from a tree and make yourself a mug, then fill it with water from that source. Don't worry, the water is clean here.",
-        tip: "<rmb>Drink</rmb> on a mug will increase your stamina. <br>You should stay in a shallow water to fill a mug.<br> Click on your avatar in the upper left corner to get character's data.",
+        name: "Thirst",
+        desc: "Now I shall teach you how to obtain food and water.<br>Rip off some bark from a tree and make a mug. Then fill it with water. Don't worry, the water is clean here.",
+        tip: "Go into a water and <rmb>Fill</rmb> on a mug.<br><rmb>Drink</rmb> will increase your stamina.",
     },
     "stat-2": {
-        voice: true,
         name: "Hunger",
-        desc: "It's the time to get some food and have it. Kill a chicken and gut it, or pick some apples from a tree. Be careful, don't eat more you need, otherwise, food won't help you with vitamins. You need vitamins to improve your stats and skills. By the way, if you've overate, use the toilet next to me.",
-        tip: "Vitamins amount displays in the \"Stats\" dialog. You cannot level your skill upper than the stat related to it. You shall also check your skill level in the \"Skills\" dialog. New skills levels open with your learning points.",
+        desc: "It's the time to get some food and have it. Pick some apples from a tree. Be careful, don't eat more then you need, otherwise, food won't give you vitamins and you become very slow. By the way, if you've overate, use the toilet next to me.",
     },
     "fight": {
-        voice: true,
         name: "Fight and fighting combos",
-        desc: "Well, I see you prepared for your first fight. You'll find a combat mannequin in the next room. Take your sharp stick in the right hand and hit it.",
-        tip: "You should take the sharp stick in the right (upper) hand. The fight commands are grouped at the panel below. The best effect reached when using fight combos, like 3-2-1-1 and others. The biggest button at the panel shows a possible action with the item in your hand.",
-    },
-    "dead": {
-        voice: true,
-        name: "Death",
-        desc: "Great! If you attack the enemy who is stronger than you or aggressive beast follows you, you will hardly run away and possibly die. But death only means you lose all your vitamins, learning points and all your gear and stuff. You will spawn next to your spawn stone or, if you don't have one, in the town. If you want to contest your fighting abilities, talk to Diego, he can lead you to the hunting places for a modest fee. Also you can fight other people at the arena with no fines for death and murder.",
-
-    },
-    "claim": {
-        voice: true,
-        name: "Your claim is your fortress",
-        desc: "Anyone can attack you. You need to build a claim to keep your property. With a claim, you will protect a tiny patch of land on which you can build and garden with no fear of being robbed or attacked. You may obtain a claim license from Charles for 8 gold.",
-        tip: "Experience gained when you craft items and kill enemies. Some enemies loot money; you may also trade stuff in the town.",
+        desc: "Well, I see you prepared for your first fight.<br>Equip your sharp stick and hit a training dummy.",
+        tip: "Attack will follow the mouse pointer.<br>Skill buttons and hotkeys can be found in the bottom panel.",
     },
     "finish": {
-        voice: true,
-        name: "The end of tuition",
-        desc: "Well, I did my job. It's time to move to the town.",
+        name: "The end of tutorial",
+        desc: "Well, I did my job.",
+        final: "It's time to move to the town."
     },
-    "in-city": {
-        voice: true,
-        name: "To the town",
-        desc: [
-            "Look around the town.",
-            "Check the bargain house, you may trade your stuff there. You better keep money in the bank; and you can pay for your claim from your account.",
-            "Our pub can offer you drinks, food and some kinds of chance games. Ah, yeah, go visit Margo, she's amazing.",
-            "At the Craftsmantown you can buy stuff you cannot craft. Arena and Church are near the Bank.",
-            "Also, you can find portals through which you will get to a random wild lands. Build a respawn stone to return to town. Well, good luck!",
-        ],
-        tip: "If you consider to build more than 1 respawn set the one you will spawn next to. <rmb></rmb> on respawn and pick \"Set the spawn\"",
+    "tp-return-home": {
+        name: "Teleportation: return to home" ,
+        desc: "Are you interested in portals? I'll tell you about the ways you travel around the world.<br> While you're on the surface and under the Synode protection you can easily return to your homestead. I mean, to your respawn stone, if you built one, or to the town. Give it a try.",
+        "tip": "<rmb>Click on your picture (see left top part of the screen)</rmb> to return to your home.",
+    },
+    "tp-respawn": {
+        name: "Teleportation: respawn",
+        desc: "Town respawn stones are connected to your respawn stone.<br> You can travel using a respawn stone but its primary task is to ressurect you after death. When you build your own respawn stone you'll notice it's quite different from others.",
+        tip: "<lmb></lmb> the closest respawn."
+    },
+    "tp-scrolls": {
+        name: "Teleportation: scrolls",
+        desc: "Teleportation scrolls allow you to return to home from very dangerous places. They make a good help when you're exploring underground. <br> I'll give you a couple but you can buy or make them yourself.",
     },
     "faction-daily-1": {
         name: "Help your faction (daily)",
@@ -97,17 +88,23 @@ Quest.quests =  {
     },
     "buy-small-indulgence": {
         name: "Small indulgence",
-        desc: "..",
+        desc: [
+            "You can always make a confession here.",
+        ],
         customReward: "+100 Karma",
     },
     "buy-average-indulgence": {
         name: "Average indulgence",
-        desc: "..",
+        desc: [
+            "You can always make a confession here.",
+        ],
         customReward: "+1000 Karma",
     },
     "buy-big-indulgence": {
         name: "Big indulgence",
-        desc: "..",
+        desc: [
+            "You can always make a confession here.",
+        ],
         customReward: "+10000 Karma",
     }
 };

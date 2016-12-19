@@ -7,7 +7,7 @@ Quest.quests =  {
             "Hello, settler.",
             "Everyone who arrives here gets my Academy. My job here is to teach you survival basics.",
         ],
-        final: "Great, let's begin. Remember: <i>wild beasts won't attack you 'till you get 10 level, and your bag will stay with you after death.</i>",
+        final: "Great, let's begin. Remember: <i>wild beasts won't attack you 'till you get level 10, and your bag will stay with you after death.</i>",
     },
     "craft-1": {
         name: "Picking resources",
@@ -26,7 +26,7 @@ Quest.quests =  {
     },
     "craft-2-1": {
         name:  "Making a knife",
-        desc: "Perfect, everything is ready. Finally let's make a knife",
+        desc: "Perfect, everything is ready. Finally let's make a knife.",
         tip: "To simplify things you can click on the <hl>Auto</hl> button and then <hl>Create</hl>",
     },
     "craft-3": {
@@ -40,7 +40,7 @@ Quest.quests =  {
     },
     "stat-2": {
         name: "Hunger",
-        desc: "It's the time to get some food and have it. Pick some apples from a tree. Be careful, don't eat more then you need, otherwise, food won't give you vitamins and you become very slow. By the way, if you've overate, use the toilet next to me.",
+        desc: "It's the time to get some food. Pick some apples from a tree. Be careful, don't eat more then you need, otherwise, food won't give you vitamins and you become very slow. By the way, if you've overate, use the toilet next to me.",
     },
     "fight": {
         name: "Fight and fighting combos",
@@ -59,12 +59,12 @@ Quest.quests =  {
     },
     "tp-respawn": {
         name: "Teleportation: respawn",
-        desc: "Town respawn stones are connected to your respawn stone.<br> You can travel using a respawn stone but its primary task is to ressurect you after death. When you build your own respawn stone you'll notice it's quite different from others.",
-        tip: "<lmb></lmb> the closest respawn."
+        desc: "Town respawn stones are connected to your respawn stone.<br> You can travel using a respawn stone but its primary task is to ressurect you after death. When you build your own respawn stone you'll notice it's looks different from others.",
+        tip: "<lmb></lmb> on the closest respawn."
     },
     "tp-scrolls": {
         name: "Teleportation: scrolls",
-        desc: "Teleportation scrolls allow you to return to home from very dangerous places. They make a good help when you're exploring underground. <br> I'll give you a couple but you can buy or make them yourself.",
+        desc: "Teleportation scrolls allow you to return home from the very dangerous places. They make a good help when you're exploring underground levels.<br>I'll give you a couple but you can buy or make them yourself.",
     },
     "faction-daily-1": {
         name: "Help your faction (daily)",

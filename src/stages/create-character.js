@@ -35,7 +35,6 @@ function createCharacterStage() {
     var professions = document.createElement("div");
     professions.className = "professions";
     game.professions.forEach(function(prof) {
-        console.log(prof);
         var icon = new Image();
         icon.className = "profession-tab";
         icon.src = "assets/icons/skills/" + prof.mainSkill + ".png";

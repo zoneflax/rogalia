@@ -1759,10 +1759,25 @@ ol li a:hover {
 
 
 #news {
-    max-width: none;
+    ul {
+        max-height: 200px;
+        overflow-y: auto;
+    }
 
     hr {
         margin: 5px -5px;
+    }
+
+    .news-pic {
+        .cursor-pointer;
+    }
+}
+
+#news-pic {
+    max-width: none;
+
+    img {
+        max-width: 1150px;
     }
 }
 

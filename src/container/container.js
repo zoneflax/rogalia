@@ -197,7 +197,7 @@ Container.prototype = {
                 else
                     cnt.panel.hide();
             });
-        };
+        }.bind(this);
         return [moveAll, sort, openAll];
     },
     markAllAsSeen: function() {
