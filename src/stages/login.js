@@ -100,8 +100,10 @@ function loginStage() {
         }
 
         function startSignup() {
-            document.location.href = "http://store.steampowered.com/app/528460/";
-            return;
+            if (document.location.host == "rogalia.ru") {
+                document.location.href = "http://store.steampowered.com/app/528460/";
+                return;
+            }
             dom.show(email.label);
             dom.show(cancelSignupButton);
             dom.hide(signinButton);
@@ -125,7 +127,6 @@ function loginStage() {
         req.onerror = onload;
         req.send(formData);
     }
-
 
     function fastLogin() {
         var server = game.loadServerInfo();

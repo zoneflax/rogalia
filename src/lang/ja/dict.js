@@ -1,7 +1,6 @@
 "use strict";
 
 T.dict = {
-    "To equip": "Equip",
     "claim-help-text": "土地の権利を拡張すると claim territory automatically withdraw money from your bank account. Paid duration can be checked in the city's bank. Also there you can pay for a claim for a period from one week to three monthes.",
     "Wolf hungry": "ハングリー・ウルフ",
     "Spiced wolf meat": "スパイシーなオオカミの肉",
@@ -1663,5 +1662,28 @@ T.dict = {
     "Cannot throw": "投げられない",
     "Market": "市場",
     "Detonate": "デトネーション",
-    "You joined to the {faction}": "{faction}に参加しました。"
-}
+    "You joined to the {faction}": "{faction}に参加しました。",
+
+    "Vendor's place: 100 platinum.": "ベンダーの場所：100プラチナ。",
+    "The Halt inn": "ザ・ホルト・イン",
+    "The Prancing coyote tavern": "吹き抜けのコヨーテ居酒屋",
+    "Craftsmans area": "Craftsmans area",
+    "Cemetery and Chapel": "墓地と礼拝堂",
+    "Academy": "アカデミー",
+    "Unknown grave": "未知の墓",
+    "Please enter amount": "金額を入力してください",
+    "It will be destroyed with all it's contents": "それはすべての内容で破壊されるだろう",
+    "You can get claim from the Scrooge in the bank": "あなたは銀行のスクルージから請求することができます",
+    "Get claim for {n} gold?": "{n}金の請求権を取得しますか？",
+    "Don't forget to pay for a claim!": "クレームを支払うことを忘れないでください",
+    "Snooze": "スヌーズ",
+    "To equip": "装備する",
+    "Buy slot for {cost}?": "Buy slot for {cost}?",
+    "Return home": "帰宅",
+    "Small indulgence": "小さな耽溺",
+    "Average indulgence": "平均耽溺",
+    "Big indulgence": "大きな耽溺",
+    "First finish teleportaion quests from Plato": "プラトンからのテレポージョンクエストを最初に終える",
+    "You can return home only when you have Synod Protection": "あなたはSynod Protectionがあるときだけ家に帰ることができます：",
+    "Attack": "攻撃",
+};
