@@ -2,109 +2,111 @@
 
 Quest.quests =  {
     "tutorial-start": {
-        name: "Tutorial start",
+        name: "チュートリアル開始",
         desc: [
-            "Hello, settler.",
-            "Everyone who arrives here gets my Academy. My job here is to teach you survival basics.",
+             "ようこそ、開拓者！",
+            "ここに訪れたすべての人が私のアカデミーを受講します。 私の仕事はサバイバルの基礎を教えることです。",
         ],
-        final: "Great, let's begin. Remember: <i>wild beasts won't attack you 'till you get 10 level, and your bag will stay with you after death.</i>",
+        final: "素晴らしい！開始する前に覚えておいてください: <i>あなたが10レベルになるまで、敵対的な生物はあなたを攻撃しません。バッグは死体に残っているということを。</i>",
     },
     "craft-1": {
-        name: "Picking resources",
-        desc: "You need some tools to survive this wild lands; and for tools you need resources. Pick four stones, two boughs and a branch.",
-        tip: "<rmb>Get bough</rmb> and <rmb>Get branch</rmb> on a tree.<br><lmb></lmb> on a stone to pick it up from the ground.",
+        name: "リソースの採取",
+        desc: "この自然の地を生き残るためには道具が必要です。 道具にはリソースが必要です。 四つの石と二つの枝と小枝を選びなさい。",
+        tip: "木を右クリックしてください <rmb>枝/小枝を取る</rmb>. 取った枝を右クリックして<rmb>加工</rmb> すれば要らない葉が取れクラフトに使えるようになります, 石は地面から拾ってください。 <lmb></lmb>.",
     },
     "craft-1-2": {
-        name: "Making a knife handle",
-        desc: "Now make sticks from the boughs and twigs from the branches. We will use them to make a handle.",
-        tip: "<rmb>Break off</rmb> on a bough gives a stick, the same for a branch gives a twig.",
+        name: "ナイフの柄を作る",
+        desc: "枝と小枝から木の棒を作ってください。 私たちはそれらを使ってハンドルを作ります。",
+        tip: "<rmb>加工</rmb> 周囲にある木から枝や小枝を採取してください、そのあと枝を右クリックして<rmb>加工</rmb> ",
     },
     "craft-2": {
-        name: "Making a knife blade",
-        desc: "The knife should has a blade. Try to make it from the sharp stones.",
-        tip: "<lmb></lmb> on the sharp stone icon.<br>Move stones into the recipe and press <hl>Create</hl>",
+        name: "ナイフの刃を作る",
+        desc: "ナイフには刃をつけないといけません。 鋭い石からそれを作るようにしてください。",
+        tip: "<lmb></lmb> クラフトレシピから<br>シャープ・ストーンを探し出して <hl>作成</hl>をクリックしてください",
     },
     "craft-2-1": {
-        name:  "Making a knife",
-        desc: "Perfect, everything is ready. Finally let's make a knife",
-        tip: "To simplify things you can click on the <hl>Auto</hl> button and then <hl>Create</hl>",
+        name: "ナイフの作成",
+        desc: "用意はできました。 これらのリソースを使って、あなたはナイフを作成することができます。",
+        tip: "<lmb></lmb> クエストアイテムをクリックすると、クラフトダイアログが開き、レシピが見つかります。 <lmb></lmb> クラフトレシピから必要なリソースがわかります。",
     },
     "craft-3": {
-        name: "Making a weapon",
-        desc: "Good, now let's craft a sharp stick — your first weapon. You will need it later.",
+        name: "武器の作成",
+        desc: "さてと、私はあなたへ最初の武器である鋭いスティックをの作成を教えます。",
     },
     "stat-1": {
-        name: "Thirst",
-        desc: "Now I shall teach you how to obtain food and water.<br>Rip off some bark from a tree and make a mug. Then fill it with water. Don't worry, the water is clean here.",
-        tip: "Go into a water and <rmb>Fill</rmb> on a mug.<br><rmb>Drink</rmb> will increase your stamina.",
+        name:  "喉の渇き",
+        desc: "これから私は食べ物と水の取得方法を教えます。 次の部屋には小さな水源があります。 木から樹皮を剥がしてマグカップを作ってから、水源に立ち水を汲んでください。 心配しないでいいですよ、ここの水は奇麗ですから。",
+        tip: "<rmb>ドリンクを</rmb> 飲むことでスタミナは回復するでしょう、 <br>マグカップを満たすために浅瀬にいなければならない、<br>キャラクタのデータを取得するには、左上のアバターをクリックしてください。",
     },
     "stat-2": {
-        name: "Hunger",
-        desc: "It's the time to get some food and have it. Pick some apples from a tree. Be careful, don't eat more then you need, otherwise, food won't give you vitamins and you become very slow. By the way, if you've overate, use the toilet next to me.",
+        name: "空腹",
+        desc: "そろそろおなかが減ってくる頃じゃないですか？ ニワトリを殺してそれを刈り取ったり、木からリンゴをむしり取るのも自由です。ですが注意してください、必要以上に食べていまうと食料からビタミンの効力が発揮されません。 ステータスやスキルを向上させるためにはビタミンの効力が必要です。 もし食べ過ぎたのなら、私の隣にあるトイレを使いなさい。見たりしませんよ。",
+       
     },
     "fight": {
-        name: "Fight and fighting combos",
-        desc: "Well, I see you prepared for your first fight.<br>Equip your sharp stick and hit a training dummy.",
-        tip: "Attack will follow the mouse pointer.<br>Skill buttons and hotkeys can be found in the bottom panel.",
+        voice: true,
+        name: "戦闘中のコンボ",
+        desc: "さてと、私はあなたへ最初の戦いの準備をしました。 次の部屋に戦闘訓練用のマネキンがあります。 右手にあなたの鋭い棒を持って、それを切ったり叩いたりしてください。",
+     },
     },
     "finish": {
-        name: "The end of tutorial",
-        desc: "Well, I did my job.",
-        final: "It's time to move to the town."
+        name: "これでチュートリアルは終了です。",
+        desc: "とりあえず",
+        final: "仕事も終わったことですし。 町に戻る時間です。"
     },
     "tp-return-home": {
-        name: "Teleportation: return to home" ,
-        desc: "Are you interested in portals? I'll tell you about the ways you travel around the world.<br> While you're on the surface and under the Synode protection you can easily return to your homestead. I mean, to your respawn stone, if you built one, or to the town. Give it a try.",
-        "tip": "<rmb>Click on your picture (see left top part of the screen)</rmb> to return to your home.",
+        name: "テレポート: リターン・ホーム" ,
+        desc: "ポータルに興味はありますか？ 私はあなたが世界中を旅する方法を教えれる。<br>あなたが表面上にあってシノデ皇帝の領土内にのにいるかぎり、あなたは簡単にあなたの農場や家に帰ることができます。",
+        "tip": "<rmb>左上のポートレイトをクリックしてください、それから</rmb> 帰還を選択",
     },
     "tp-respawn": {
-        name: "Teleportation: respawn",
-        desc: "Town respawn stones are connected to your respawn stone.<br> You can travel using a respawn stone but its primary task is to ressurect you after death. When you build your own respawn stone you'll notice it's quite different from others.",
+        name: "テレポート:復活の石",
+        desc: "町の復活の石はあなたの復活の石につながっています。<br>復活の石を使用して移動することができますが、主な任務は死後にあなたを再蘇生させることです。",
         tip: "<lmb></lmb> the closest respawn."
     },
     "tp-scrolls": {
-        name: "Teleportation: scrolls",
-        desc: "Teleportation scrolls allow you to return to home from very dangerous places. They make a good help when you're exploring underground. <br> I'll give you a couple but you can buy or make them yourself.",
+        name: "テレポート・スクロール",
+        desc: "テレポーテーションのスクロールは、非常に危険な場所から帰還することができます。地下を探索しているときなどの助けになります。 <br>あなたは自分でそれを購入したり作ることができます。",
     },
     "faction-daily-1": {
-        name: "Help your faction (daily)",
-        desc: "Increase your status within the faction",
+        name: "あなたの派閥を支援する(daily)",
+        desc: "派閥内のあなたの地位を上げる",
     },
     "garland-daily": {
-        name: "Garland (daily)",
-        desc: "Help Santa to make a garland",
+        name: "ガーランド (daily)",
+        desc: "サンタが花輪を作るのを助ける",
     },
     "chrismas-flags-daily": {
-        name: "Flags (daily)",
-        desc: "Help Santa to make some paper flags",
+        name: "フラグ (daily)",
+        desc: "サンタが旗を作るのを助ける",
     },
     "chrismas-decoration-daily-1": {
-        name: "Decoration (daily)",
-        desc: "Help Santa's daughter make some paper decorations",
+        name: "デコレーション (daily)",
+        desc: "サンタの紙で女の子の飾りを作るのを助ける",
     },
     "chrismas-decoration-daily-2": {
-        name: "Glass decoration (daily)",
-        desc: "Help Santa's daughter make some glass decorations",
+        name: "ガラス装飾 (daily)",
+        desc: "サンタのガラスで女の子の飾りを作るのを助ける",
     },
     "buy-small-indulgence": {
-        name: "Small indulgence",
+        name: "小さな恩赦",
         desc: [
-            "You can always make a confession here.",
+            "ここで告白することができます。",
         ],
         customReward: "+100 Karma",
     },
     "buy-average-indulgence": {
-        name: "Average indulgence",
+        name: "恩赦",
         desc: [
-            "You can always make a confession here.",
+            "ここで告白することができます。",
         ],
         customReward: "+1000 Karma",
     },
     "buy-big-indulgence": {
-        name: "Big indulgence",
+        name: "大きな恩赦",
         desc: [
-            "You can always make a confession here.",
+            "ここで告白することができます。",
         ],
-        customReward: "+10000 Karma",
+        customReward: "+10000カルマ",
     }
 };

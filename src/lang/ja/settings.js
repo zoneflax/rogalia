@@ -6,16 +6,16 @@
         ],
 
         hideHelmet: [
-            "Hide helmet",
-            "Hide your helmet for you and others.",
+            "ヘルメットを隠す",
+            "自分自身と他の人のヘルメットを隠す。",
         ],
         rotateWasd: [
             "Rotate WASD",
             "Movemovent based on the map coordinates",
         ],
         autoTarget: [
-            "Auto target",
-            "Automatically select the nearest to the cursor target.",
+            "自動ターゲット",
+            "最も近いものを自動的に選択します。",
         ],
     },
     ui: {
@@ -24,115 +24,115 @@
             "Switch game language between russian and english.",
         ],
         hp: [
-            "Health bar",
-            "Show health bar above the character.",
+            "ヘルスバー",
+            "キャラクターのヘルスバーを表示する",
         ],
         name: [
-            "Nickname",
-            "Show characters' nicknames.",
+            "ニックネーム",
+            "自分の名前を表示する",
         ],
         npc: [
             "NPC",
-            "Show nicknames and health bars above NPCs.",
+            "ほかの人のニックネームやヘルスを表示",
         ],
         simpleFonts: [
             "Simple fonts",
             "Render fonts without dark border (Enabling this setting may increase perfomance).",
         ],
         minimapObjects: [
-            "Minimap items",
-            "Show items on minimap.",
+            "ミニマップ",
+            "ミニマップのアイテム表示",
         ],
         allowSelfSelection: [
             "Character selection",
             "Allows character selection and mouse interaction. Right button activates action.",
         ],
         showMeterValues: [
-            "Show numbers",
-            "Show the exact values of your bars (like the health bar). Will work when value updates.",
+            "ショウ・ナンバー",
+            "バーの正確な数値を表示します（ヘルスバーなど）。",
         ],
         fillClaim: [
             "Fill the claim area",
             "Fill claims areas.",
         ],
         strokeClaim: [
-            "Claim borders",
-            "Stroke claim borders.",
+            "クライム・ライン",
+            "所有地の範囲にライン",
         ],
         chatAttached: [
-            "Pin the chat window",
-            "Pin the chat window or make it separate.",
+            "ピン・チャット",
+            "チャットウィンドウを固定する",
         ],
         chatBalloons: [
-            "Message bubbles",
-            "Show message bubbles above character's head.",
+            "メッセージ・バブル",
+            "キャラクターの頭の上にメッセージを表示",
         ],
         showAttackRadius: [
-            "Attack area",
-            "Show character's attack area.",
+            "攻撃範囲",
+            "攻撃範囲の表示",
         ],
         comboHelper: [
-            "Combo",
-            "Show combo tips.",
+            "コンボ",
+            "コンボを表示",
         ],
 
     },
     graphics: {
         snowflakes: [
-            "Snowflakes",
-            "Show falling snow.",
+            "雪の表示",
+            "雪の表示を制限します",
         ],
         movingSpace: [
-            "Space movement",
-            "Enable space movement on the map edge.",
+            "移動方法",
+            "マップのエッジでスペースの移動を有効にします。",
         ],
         autoHideWalls: [
-            "Auto hide walls",
-            "Automatically hide walls inside buildings.",
+            "壁を自動的に隠す",
+            "壁を自動的に隠す",
         ],
         autoHighlightDoors: [
-            "Highlight doors",
-            "Highlight doors on mouse hover. If disabled, highlights door with Ctrl pressed.",
+            "ハイライト・ドア",
+            "マウス・カーソルでドアを強調表示します。 無効にすると、Ctrlキーを押すとドアがハイライト表示されます。",
         ],
         centerScreen: [
-            "Center screen",
-            "If enabled, game area centers on screen center.",
-            "If disabled, game area is placed on the left.",
+            "センタースクリーン",
+            "有効にすると、ゲームエリアは画面中央に配置されます。",
+            "無効にすると、ゲームエリアが左に配置されます。",
         ],
         mapGrid: [
-            "Map grid",
-            "Draw map grid",
+            "グリッド",
+            "マップにマスを表示",
         ],
     },
     sound:  {
         playSound: [
-            "Sound",
-            "Play game sounds.",
+            "サウンド",
+            "ゲームサウンド",
         ],
         playMusic: [
-            "Ambient",
-            "Play ambient.",
+            "環境音",
+            "環境音",
         ],
         soundVolume: [
-            "Sound volume",
-            "Sound effects volume.",
+            "サウンド音量",
+            "エフェクト音量",
         ],
         musicVolume: [
-            "Music volume",
-            "Background music volume.",
+            "音楽",
+            "ＢＧＭの音量",
         ],
         voiceVolume: [
-            "Voice volume",
-            "NPC volume.",
+            "ボイス",
+            "ＮＰＣ音量",
         ],
 
         jukebox: [
-            "Jukebox",
-            "Play jukeboxes music.",
+            "ジュークボックス",
+            "ジュークボックスで音楽聞く",
         ],
         chatNotifications: [
-            "Chat notifications",
-            "Show tray chat notifications",
+            "チャット通知",
+            "トレイチャット通知を表示する",
         ],
     }
 };
