@@ -1,4 +1,4 @@
-﻿Settings.descriptions = {
+Settings.descriptions = {
     character: {
         pathfinding: [
             "Pathfinding",
@@ -10,8 +10,8 @@
             "自分自身と他の人のヘルメットを隠す。",
         ],
         rotateWasd: [
-            "Rotate WASD",
-            "Movemovent based on the map coordinates",
+            "WASDでの移動",
+            "地図座標に基づく移動",
         ],
         autoTarget: [
             "自動ターゲット",
@@ -36,28 +36,28 @@
             "ほかの人のニックネームやヘルスを表示",
         ],
         simpleFonts: [
-            "Simple fonts",
-            "Render fonts without dark border (Enabling this setting may increase perfomance).",
+            "シンプルフォント",
+            "黒い枠線のないフォントをレンダリングします（この設定を有効にすると、パフォーマンスが向上する可能性があります）。",
         ],
         minimapObjects: [
             "ミニマップ",
             "ミニマップのアイテム表示",
         ],
         allowSelfSelection: [
-            "Character selection",
-            "Allows character selection and mouse interaction. Right button activates action.",
+            "キャラクターセレクト",
+            "キャラクターの選択とマウス操作が可能になります。 右ボタンはアクティブ・アクションに割り当てられます。",
         ],
         showMeterValues: [
             "ショウ・ナンバー",
             "バーの正確な数値を表示します（ヘルスバーなど）。",
         ],
         fillClaim: [
-            "Fill the claim area",
-            "Fill claims areas.",
+            "クライム・ライン",
+            "権利範囲を塗りつぶします。",
         ],
         strokeClaim: [
             "クライム・ライン",
-            "所有地の範囲にライン",
+            "権利範囲にラインを引く",
         ],
         chatAttached: [
             "ピン・チャット",
