@@ -415,7 +415,7 @@ Entity.prototype = {
         case "saw":
         case "axe":
         case "pickaxe":
-        case "hammer ":
+        case "hammer":
         case "knife":
         case "bonfire":
         case "shovel":
