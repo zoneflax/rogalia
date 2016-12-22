@@ -571,23 +571,15 @@ Entity.prototype = {
         });
     },
     //used by container
-    open: function(data) {
+    open: function() {
         // If entity *became* container after server update
         // old items may be without slots, so ignore them here.
         if (this.Props.Slots.length == 0 && !this.Fuel) {
             return null;
         }
 
-        if (game.player.canUse(this)) {
-            Container.show(this);
-            return null;
-        }
-        if (!data) {
-            game.network.send("Open", {Id: this.Id}, this.open.bind(this));
-            return null;
-        }
-
-        return this.open.bind(this);
+        game.network.send("Open", {Id: this.Id}, () => Container.show(this));
+        return null;
     },
     disassemble: function() {
         if (this.isContainer()) {
@@ -651,7 +643,7 @@ Entity.prototype = {
         case "feeder":
         case "player-corpse":
             if (this.MoveType != Entity.MT_PORTABLE) {
-                this.defaultActionSuccess = this.open.bind(this);
+                this.defaultAction = () => this.open();
             }
             break;
         case "blank":
