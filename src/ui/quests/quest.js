@@ -1,4 +1,4 @@
-/* global game, dom, Vendor, T, TS */
+/* global game, dom, Vendor, T, TS, util */
 
 "use strict";
 function Quest(q, npc) {
@@ -84,9 +84,7 @@ Quest.prototype = {
     makeDesc: function(ready) {
         var desc = (ready && this.data.final) ? this.data.final : this.data.desc;
         return dom.wrap("desc", util.mklist(desc).map(function(html) {
-            var p = dom.tag("p");
-            p.innerHTML = html;
-            return p;
+            return dom.tag("p", "", {html});
         }));
     },
     makeGoal: function() {
@@ -147,13 +145,9 @@ Quest.prototype = {
         }
 
         function tip() {
-            if (!self.data.tip)
-                return null;
-            var tip = dom.tag("p");
-            tip.innerHTML = self.data.tip;
-            return dom.make("div", [
+            return self.data.tip && dom.make("div", [
                 dom.hr(),
-                tip,
+                dom.tag("p", "", {html: self.data.tip})
             ]);
         }
 

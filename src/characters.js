@@ -1,4 +1,4 @@
-/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel, TS */
+/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel, TS, util */
 
 "use strict";
 Character.equipSlots =  [
@@ -166,8 +166,8 @@ Character.npcActions = {
             this.Name,
             [
                 // self.avatar(),
-                dom.wrap("", info.talks.map(function(text) {
-                    return dom.tag("p", "", {text: text});
+                dom.wrap("", util.mklist(info.talks).map(function(html) {
+                    return dom.tag("p", "", {html});
                 })),
                 dom.make("ul", Object.keys(info.actions).map(function(title) {
                     return dom.tag("li", "talk-link", {

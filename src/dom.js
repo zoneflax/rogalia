@@ -10,8 +10,12 @@ var dom = {
         if (cfg) {
             if (cfg.text !== undefined)
                 elem.textContent = cfg.text;
+            else if (cfg.html !== undefined)
+                elem.innerHTML = cfg.html;
+
             if (cfg.onclick !== undefined)
                 elem.onclick = cfg.onclick;
+
             if (cfg.title !== undefined)
                 elem.title = cfg.title;
         }

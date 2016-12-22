@@ -78,11 +78,11 @@ Quest.quests =  {
         name: "Flags (daily)",
         desc: "Help Santa to make some paper flags",
     },
-    "chrismas-decoration-daily-1": {
+    "chrismas-decoration-daily-2": {
         name: "Decoration (daily)",
         desc: "Help Santa's daughter make some paper decorations",
     },
-    "chrismas-decoration-daily-2": {
+    "chrismas-decoration-daily-1": {
         name: "Glass decoration (daily)",
         desc: "Help Santa's daughter make some glass decorations",
     },
