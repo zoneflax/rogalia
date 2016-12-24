@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point, Container */
+/* global dom, T, util, game, Panel, config, Point, Container, Stats, Character */
 
 "use strict";
 function Entity(type, id) {
@@ -692,6 +692,11 @@ Entity.prototype = {
         if (this.Group == "jukebox") {
             var time = (Date.now() - this.Started * 1000) / 1000;
             game.jukebox.play(this.Props.Text, time >> 0);
+        }
+
+        var info = game.panels["item-info"];
+        if (info && info.entity == this && info.visible) {
+            this.showInfo();
         }
     },
     autoHideable: function() {

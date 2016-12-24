@@ -1248,7 +1248,7 @@ T.dict = {
     "Angelina": "Ангелина",
     "Blue chopper": "Синий чоппер",
     "Red chopper": "Красный чоппер",
-    "Ded Moroz": "Дед Мороз",
+    "Ded moroz": "Дед Мороз",
     "Snegurochka": "Снегурочка",
     "Ded moroz hat": "Шапка Деда Мороза",
     "Ded moroz suit": "Костюм Деда Мороза",
@@ -1685,7 +1685,6 @@ T.dict = {
     "Restart": "Рестарт",
     "Starting": "Запускается",
 
-    "Cannot unequip. You can only destroy it": "Нельзя снять. Можно только уничтожить.",
     "Name is too long": "Имя слишком длинное",
     "Base damage": "Базовый урон",
     "Base armor": "Базовая броня",

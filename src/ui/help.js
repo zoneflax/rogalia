@@ -63,9 +63,10 @@ function Help() {
         iframe.resize = true;
         iframe.nwdisable = true;
         iframe.nwfaketop = true;
-        iframe.src = (game.lang == "ru")
-            ? "http://rogalia.ru/wiki/"
-            : "http://rogalia.ru/wiki/Newbie_guide";
+        iframe.src = {
+            en: "http://rogalia.ru/wiki/Newbie_guide",
+            ja: "http://wikiwiki.jp/rogalia/",
+        }[game.lang] || "http://rogalia.ru/wiki/";
         dom.setContents(contents, iframe);
     }
 
@@ -78,10 +79,10 @@ function Help() {
         ];
 
         function report() {
-            game.network.send("bugreport", {Text: textarea.value}, function() {
-                textarea.value = "";
-                game.popup.alert(T("Your message is sent. Thank you."));
-            });
+            var msg = {Text: textarea.value};
+            textarea.value = "";
+            game.popup.alert(T("Your message is sent. Thank you."));
+            game.network.send("bugreport", msg);
         }
     }
 
