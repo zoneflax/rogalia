@@ -405,24 +405,7 @@ Entity.prototype = {
             actions[1]["Disassemble"] = this.disassemble;
         }
 
-        switch (this.Group) {
-        case "sword":
-        case "shield":
-        case "legs-armor":
-        case "head-armor":
-        case "body-armor":
-        case "feet-armor":
-        case "saw":
-        case "axe":
-        case "pickaxe":
-        case "hammer":
-        case "knife":
-        case "bonfire":
-        case "shovel":
-        case "spear":
-        case "necklace":
-        case "bow":
-        case "energy-gun":
+        if (this.isTool()) {
             actions[0]["To equip"] = this.equip;
         }
 
@@ -443,6 +426,29 @@ Entity.prototype = {
 
         actions[2]["Info"] = this.showInfo;
         return actions;
+    },
+    isTool: function() {
+        return _.includes([
+            "sword",
+            "shield",
+            "legs-armor",
+            "head-armor",
+            "body-armor",
+            "feet-armor",
+            "saw",
+            "axe",
+            "pickaxe",
+            "hammer",
+            "knife",
+            "bonfire",
+            "shovel",
+            "spear",
+            "necklace",
+            "bow",
+            "energy-gun",
+            "scissors",
+            "needle",
+        ], this.Group);
     },
     alignedData: function(p) {
         var align = this.Sprite && this.Sprite.Align;
@@ -642,6 +648,7 @@ Entity.prototype = {
         case "container":
         case "feeder":
         case "player-corpse":
+        case "shredder":
             if (this.MoveType != Entity.MT_PORTABLE) {
                 this.defaultAction = () => this.open();
             }

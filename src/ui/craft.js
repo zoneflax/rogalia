@@ -1,3 +1,5 @@
+/* global game */
+
 "use strict";
 function Craft() {
     this.visibleGroups = {};

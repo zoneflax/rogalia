@@ -1,4 +1,4 @@
-/* global dom, Panel, game, localStorage, TT, config */
+/* global dom, Panel, game, localStorage, TT, config, util, TS, T */
 
 "use strict";
 function Chat() {
@@ -218,6 +218,12 @@ function Chat() {
 
     this.linkRecipe = function(type) {
         this.link("${recipe:" + type +"}");
+    };
+
+    this.linkSkill = function({name, value}) {
+        var current = util.toFixed(value.Current, 2);
+        var max = util.toFixed(value.Max, 2);
+        this.link("${skill:" + name + "/" + current + "/" + max + "}");
     };
 
     this.link = function(text) {
@@ -576,6 +582,7 @@ function Chat() {
         "https://": makeLinkParser("https"),
         "http://": makeLinkParser("http"),
         "recipe:": recipeParser,
+        "skill:": skillParser,
         "marker:": markerParser,
         "channel:": channelParser,
         "b:": makeTagParser("b"),
@@ -632,6 +639,13 @@ function Chat() {
 
     function recipeParser(data) {
         var link = dom.link("", T("Recipe") + ": " + TS(data), "recipe-link");
+        link.dataset.recipe = data;
+        return link;
+    }
+
+    function skillParser(data) {
+        var [skill, current, max] = data.split("/");
+        var link = dom.make("code", TS(skill || "?") + ": " + (current || "?") + "/" + (max || "?"));
         link.dataset.recipe = data;
         return link;
     }

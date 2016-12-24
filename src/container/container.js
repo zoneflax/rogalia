@@ -165,8 +165,10 @@ Container.prototype = {
 
         moveAll.onclick = function() {
             var top = this.getTopExcept(id);
-            if (top)
+            if (top) {
                 game.network.send("move-all", {From: id, To: top.id});
+                top.panel.toTop();
+            }
         }.bind(this);
 
         var sort = dom.img("assets/icons/panel/sort.png", "icon-button");
