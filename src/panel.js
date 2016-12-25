@@ -228,9 +228,10 @@ Panel.prototype = {
         };
         localStorage.setItem(this.lsKey, JSON.stringify(config));
     },
-    center: function() {
-        this.x = game.world.offsetWidth/2 - this.element.offsetWidth/2;
-        this.y = game.world.offsetHeight/2 - this.element.offsetHeight/2;
+    center: function(ratioX = 0.5, ratioY = 0.5) {
+        this.x = game.offset.x + (game.world.offsetWidth - this.element.offsetWidth) * ratioX;
+        this.y = game.offset.y + (game.world.offsetHeight - this.element.offsetHeight) * ratioY;
+        return this;
     },
     setWidth: function(w) {
         var pad = 20;

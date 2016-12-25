@@ -52,7 +52,7 @@ Settings.descriptions = {
             "バーの正確な数値を表示します（ヘルスバーなど）。",
         ],
         fillClaim: [
-            "クライム・ライン",
+            "クライム・エリア",
             "権利範囲を塗りつぶします。",
         ],
         strokeClaim: [

@@ -91,8 +91,10 @@ Entity.prototype = {
         else if (this.Props.Energy)
             name += "\n" + T("Energy") + ": " + this.Props.Energy;
 
-        if (!("Amount" in this))
+        if (!("Amount" in this)) {
             name += "\n" + T("Quality") + ": " + this.Quality;
+            name += "\n" + T("Durability") + ": " + this.durabilityPercent();
+        }
 
         if (this.Comment)
             name += "\n" + this.Comment;
@@ -137,6 +139,10 @@ Entity.prototype = {
     get round() {
         return this.Width == 0;
     },
+    durabilityPercent: function() {
+        var dur = this.Durability;
+        return util.toFixed(dur.Current / dur.Max * 100) + "%";
+    },
     showInfo: function() {
         var elements = [];
         elements.push(Stats.prototype.createValue("Level", this.Lvl));
@@ -144,6 +150,12 @@ Entity.prototype = {
         elements.push(Stats.prototype.createParam("Durability", this.Durability));
 
         if (this.Group == "food") {
+            elements.push(dom.hr());
+            elements.push(dom.make("label", [
+                T("Fullness") + " " +
+                    util.toFixed(game.player.Fullness.Current) + " → " +
+                    util.toFixed(game.player.Fullness.Current + this.Props.Energy)
+            ]));
             elements.push(dom.hr());
             var k = Math.sqrt(this.Quality);
             Character.vitamins.forEach(function(vitamin) {
@@ -241,15 +253,15 @@ Entity.prototype = {
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "banana-palm-tree-plant":
-        //     return window.y || 106;
+        // case "palm-tree-plant":
+        //     return window.y || 245;
         // }
 
         if (this.Sprite.Dy)
             return this.Sprite.Dy;
 
         if (this.Disposition == "roof" && this.Location != Entity.LOCATION_BURDEN)
-            return 136 - 8; // default wall sprite height - wall width / 2
+            return 128; // default wall sprite height - wall width / 2  === (136 - 8)
 
         // fucking hate it
         var r = this.Radius;
@@ -440,7 +452,6 @@ Entity.prototype = {
             "pickaxe",
             "hammer",
             "knife",
-            "bonfire",
             "shovel",
             "spear",
             "necklace",
@@ -700,11 +711,7 @@ Entity.prototype = {
             var time = (Date.now() - this.Started * 1000) / 1000;
             game.jukebox.play(this.Props.Text, time >> 0);
         }
-
-        var info = game.panels["item-info"];
-        if (info && info.entity == this && info.visible) {
-            this.showInfo();
-        }
+        game.controller.updateItemInfo(this);
     },
     autoHideable: function() {
         if (this.Height <= 8 || this.Width <= 8)

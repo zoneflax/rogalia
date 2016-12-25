@@ -86,6 +86,17 @@ Quest.quests =  {
         name: "Glass decoration (daily)",
         desc: "Help Santa's daughter make some glass decorations",
     },
+    "chrismas": {
+        name: "Christmas hat",
+        desc: "Merry Christmas and Happy New Year! I present you a Christmas Hat!",
+        final: "Here is your hat.",
+        customReward: "Christmas hat",
+    },
+    "chrismas-presents": {
+        name: "Christmas present (daily).",
+        desc: "Finally! Christmas! Do you want a present?",
+        final: "Here is your present.",
+    },
     "buy-small-indulgence": {
         name: "Small indulgence",
         desc: [

@@ -1,4 +1,4 @@
-/* global game, dom, sprintf */
+/* global game, dom, sprintf, Panel, T, config, Image, util */
 
 "use strict";
 function Stats() {
@@ -69,10 +69,16 @@ Stats.prototype = {
             meterWrapper.appendChild(titleElem);
         }
 
-        return dom.wrap(".param", [
+        var elem = dom.wrap(".param", [
             dom.wrap("param-label", T(label)),
             meterWrapper
         ]);
+        elem.addEventListener("click", function() {
+            if (game.controller.modifier.shift) {
+                game.chat.linkValue(param, label);
+            }
+        });
+        return elem;
     },
     createValue: function(label, value, digits, icon) {
         var valueElem = document.createElement("span");
@@ -93,6 +99,12 @@ Stats.prototype = {
             img.src = "assets/icons/" + icon.toLowerCase() + ".png";
             labelElem.appendChild(img);
         }
+
+        labelElem.addEventListener("click", function() {
+            if (game.controller.modifier.shift) {
+                game.chat.linkValue({Current: value}, label);
+            }
+        });
 
         return labelElem;
     },

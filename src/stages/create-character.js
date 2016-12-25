@@ -1,4 +1,4 @@
-/* global game, T, dom, _, Image */
+/* global game, T, dom, _, Image, Stage, Panel */
 
 "use strict";
 function createCharacterStage() {
@@ -103,8 +103,7 @@ function createCharacterStage() {
         return false;
     };
 
-    var form = dom.tag("form");
-    dom.append(form, [
+    var panel = new Panel("create-character", "Create character", dom.make("form", [
         account,
         dom.hr(),
         male.label,
@@ -117,10 +116,8 @@ function createCharacterStage() {
         dom.hr(),
         submit,
         back,
-    ]);
-    var panel = new Panel("create-character", "Create character", [form]);
-    panel.hideCloseButton();
-    panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
+    ])).hideCloseButton().show().center(0.5, 0.05);
+
     name.focus();
 
     this.sync = function(data) {
@@ -129,8 +126,10 @@ function createCharacterStage() {
         else
             game.setStage("loading", data);
     };
+
     this.end = function() {
         panel.close();
     };
 }
+
 Stage.add(createCharacterStage);

@@ -87,6 +87,18 @@ Quest.quests =  {
         name: "ガラス装飾 (daily)",
         desc: "サンタのガラスで女の子の飾りを作るのを助ける",
     },
+    "chrismas": {
+        name: "Christmas hat",
+        desc: "Merry Christmas and Happy New Year! I present you a Christmas Hat!",
+        final: "Here is your hat.",
+        customReward: "Christmas hat",
+    },
+    "chrismas-presents": {
+        name: "Christmas present.",
+        desc: "Finally! Christmas! Do you want a present?",
+        final: "Here is your present.",
+    },
+
     "buy-small-indulgence": {
         name: "小さな恩赦",
         desc: [

@@ -1,4 +1,4 @@
-/* global dom, Panel, game, localStorage, TT, config, util, TS, T */
+/* global dom, Panel, game, localStorage, TT, config, util, TS, T, ChatRing */
 
 "use strict";
 function Chat() {
@@ -7,6 +7,7 @@ function Chat() {
         global       : 0,
         local        : 1,
         party        : 2,
+        trade        : 3,
         server       : 5,
         private      : 6,
         system       : 7,
@@ -220,10 +221,13 @@ function Chat() {
         this.link("${recipe:" + type +"}");
     };
 
-    this.linkSkill = function({name, value}) {
-        var current = util.toFixed(value.Current, 2);
-        var max = util.toFixed(value.Max, 2);
-        this.link("${skill:" + name + "/" + current + "/" + max + "}");
+    this.linkValue = function(value, name) {
+        var text = "${value:" + name + "/" + util.toFixed(value.Current, 2);
+        if (value.Max && value.Max != value.Current) {
+            text += "/" + util.toFixed(value.Max, 2);
+        }
+        text += "}";
+        this.link(text);
     };
 
     this.link = function(text) {
@@ -425,6 +429,11 @@ function Chat() {
             channels: ["global", "local", "server", "private", "announcement", "npc"],
         },
         {
+            name: "$",
+            channels: ["trade", "server", "private", "announcement"],
+            defaultPrefix: "trade",
+        },
+        {
             name: game.lang,
             channels: [game.lang, "local", "server", "private", "announcement", "npc"],
             defaultPrefix: game.lang,
@@ -434,7 +443,7 @@ function Chat() {
             channels: ["private"],
         },
         {
-            name: "system",
+            name: "⚙",
             channels: ["system"],
         },
         {
@@ -488,7 +497,6 @@ function Chat() {
             alwaysVisible.label,
         ]
     ).show();
-    tabs[1].activate();
     this.removeAlert = game.controller.makeHighlightCallback("chat", false);
 
     // hide on load
@@ -582,7 +590,7 @@ function Chat() {
         "https://": makeLinkParser("https"),
         "http://": makeLinkParser("http"),
         "recipe:": recipeParser,
-        "skill:": skillParser,
+        "value:": valueParser,
         "marker:": markerParser,
         "channel:": channelParser,
         "b:": makeTagParser("b"),
@@ -643,11 +651,13 @@ function Chat() {
         return link;
     }
 
-    function skillParser(data) {
-        var [skill, current, max] = data.split("/");
-        var link = dom.make("code", TS(skill || "?") + ": " + (current || "?") + "/" + (max || "?"));
-        link.dataset.recipe = data;
-        return link;
+    function valueParser(data) {
+        var [name, current, max] = data.split("/");
+        var text = TS(name || "?") + ": " + (current || "?");
+        if (max) {
+            text += "/" + max;
+        }
+        return dom.make("code", text);
     }
 
     function markerParser(data) {

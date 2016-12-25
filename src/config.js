@@ -6,8 +6,6 @@ var CELL_SIZE = 32;
 var FONT_SIZE = 14;
 var DEFAULT_CLIENT_WIDTH = 1280;
 var DEFAULT_CLIENT_HEIGHT = 720;
-var LOBBY_X = 85;
-var LOBBY_Y = 15;
 
 var config = {
     character: {

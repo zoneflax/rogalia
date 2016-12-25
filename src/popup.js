@@ -91,7 +91,6 @@ function Popup(buttons) {
     }
 
     function show() {
-        panel.show();
-        panel.center();
+        panel.show().center();
     }
 }

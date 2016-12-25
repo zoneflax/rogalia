@@ -101,9 +101,7 @@ function lobbyStage(data) {
         }));
     }
 
-    var panel = new Panel("lobby", "", contents);
-    panel.hideCloseButton();
-    panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
+    var panel = new Panel("lobby", "", contents).hideCloseButton().show().center(0.5, 0.05);
 
     function fastenter(e) {
         if (e.keyCode != 13) // enter

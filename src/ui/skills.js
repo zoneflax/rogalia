@@ -87,9 +87,6 @@ Skills.prototype = {
         item.classList.add("selected");
         this.current = item;
         this.showDescription(item);
-        if (game.controller.modifier.shift) {
-            game.chat.linkSkill({name: item.name, value: item.skill.Value});
-        }
     },
     nextLvlOf: function(skill) {
         for (var i in Character.skillLvls) {

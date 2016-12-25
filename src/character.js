@@ -177,8 +177,12 @@ Character.prototype = {
             game.chat && game.chat.updateChannels(data.ChatChannels);
         }
 
-        if (this.isPlayer)
+        if (this.isPlayer) {
             game.controller.updateMail(this.NewMail);
+            if (data.Fullness) {
+                game.controller.updateItemInfo();
+            }
+        }
     },
     avatar: function() {
         if (this.IsNpc)
@@ -1392,11 +1396,15 @@ Character.prototype = {
     },
     updateEffects: function() {
         if (this.synodProtection()) {
-            this.Effects["SynodProtection"] = {
-                Duration: 0
-            };
+            this.Effects["SynodProtection"] = {Duration: 0};
         } else {
             delete this.Effects["SynodProtection"];
+        }
+
+        if (this.Lvl <= 20) {
+            this.Effects["NewbieProtection"] = {Duration: 0};
+        } else {
+            delete this.Effects["NewbieProtection"];
         }
 
         for(var name in this.shownEffects) {

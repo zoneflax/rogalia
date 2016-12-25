@@ -125,8 +125,7 @@ ContainerSlot.prototype = {
         } else if (this.entity.SpawnChance > 0) {
             this.setSub(this.entity.SpawnChance);
         } else if (this.entity.isTool()) {
-            var dur = this.entity.Durability;
-            this.setSub(util.toFixed(dur.Current / dur.Max * 100) + "%");
+            this.setSub(this.entity.durabilityPercent());
         }
     },
     updateRequirements: function() {

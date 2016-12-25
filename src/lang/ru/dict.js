@@ -749,6 +749,7 @@ T.dict = {
     "Torii": "Тории",
     "Arena": "Арена",
     "Synod protection": "Синоидальная защита",
+    "Newbie protection": "Защита новичка",
     "Transmutation circle": "Круг превращения",
     "Pepper": "Перец",
     "Sliced pepper": "Резаный перец",
@@ -1344,7 +1345,7 @@ T.dict = {
     "You've got {value} XP and LP": "Вы получили {value} опыта и очков обучения",
     "{name} got {value} XP and LP": "{name} получил {value} опыта и очков обучения",
     "You've got {value}": "Вы получили {value}",
-    "{name} have got {value}": "{name} {sex получил получила} [{value}]",
+    "{name} got {value}": "{name} {sex получил получила} [{value}]",
     "You've crafted {item}": "Вы скрафтили {item}",
     "{name} have crafted {item}": "{name} скрафтил {item}",
     "You evaded from {name}'s attack": "Вы уклонились от атаки {name}",
@@ -1723,4 +1724,5 @@ T.dict = {
     "First finish teleportaion quests from Plato": "Сначала пройдите квесты про телепортацию у Платона",
     "You can return home only when you have Synod Protection": "Вы можете вернуться домой только под эффектом защиты Синода.",
     "Attack": "Атака",
+    "Shredder": "Шреддер",
 };

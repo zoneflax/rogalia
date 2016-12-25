@@ -20,9 +20,7 @@ function selectServerStage(panel) {
                 serversTable(servers),
                 dom.button(T("Refresh"), "refresh", showServers),
                 dom.button(T("Quit"), "quit", quit)
-            ]);
-            self.panel.hideCloseButton();
-            self.panel.show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
+            ]).hideCloseButton().show().center(0.5, 0.05);
         };
         req.open("GET", game.gateway + "/status", true);
         req.send(null);

@@ -53,7 +53,8 @@ function loginStage() {
 
         self.panel = new Panel("login", "", [form])
             .hideCloseButton()
-            .show(LOBBY_X + game.offset.x, LOBBY_Y + game.offset.y);
+            .show()
+            .center(0.5, 0.05);
 
         if (login.value)
             password.focus();

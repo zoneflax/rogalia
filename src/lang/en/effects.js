@@ -104,12 +104,18 @@ EffectDesc.effects = {
         "class": "bad",
         "effect": "Deprives your health to death.",
         "desc": "May get infected when standing next to a garbage pile, another patient or during a homosexual sex.",
-        "note": "Cured when having a anti-plague potion.",
+        "note": "Can be cured with anti-plague potion.",
     },
     "SynodProtection": {
         "class": "good",
         "effect": "you take 80% less damage in pvp.",
         "desc": "Does not work under the ground, if you answered onto the attack or if you have negative karma.",
-        "note": "Allows you to return to your respawn if any or in the city.",
+        "note": "Allows you to return to your respawn if there is one or to the city.",
+    },
+    "NewbieProtection": {
+        "class": "",
+        "effect": "Death penalty.",
+        "desc": "Lvl 1 to 9 - keep bag and equipment.\nLvl 10 to 19 - keep bag, but lose it's contents.\nFrom lvl 20 - losing all equipment and inventory.",
+        "note": "On any level you lose all vitamins and learning points.",
     },
 };

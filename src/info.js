@@ -343,7 +343,7 @@ Info.prototype = {
             case "self":
                 return TT("You've got {value}", {value: this.data});
             default:
-                return TT("{name} have got {value}", {
+                return TT("{name} got {value}", {
                     name: this.character.Name,
                     value: this.data,
                     sex: this.character.Sex,
@@ -355,7 +355,7 @@ Info.prototype = {
             case "self":
                 return TT("You've got {value}", {value: this.data.Name});
             default:
-                return TT("{name} have got {value}", {
+                return TT("{name} got {value}", {
                     name: this.character.Name,
                     value: this.data.Name,
                     sex: this.character.Sex,
