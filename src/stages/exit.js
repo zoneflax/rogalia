@@ -1,3 +1,5 @@
+/* global game */
+
 "use strict";
 function exitStage(message) {
     message = message || T("Refresh page...");
@@ -16,7 +18,7 @@ function exitStage(message) {
     if (game.args["steam"]) {
         buttons.push(
             dom.button(T("Reload"), "", () => game.logout()),
-            dom.button(T("Quit"), "", () => require("nw.gui").App.quit())
+            dom.button(T("Quit"), "", () => game.quit())
         );
     } else {
         buttons.push(

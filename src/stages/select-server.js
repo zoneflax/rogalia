@@ -28,8 +28,7 @@ function selectServerStage(panel) {
 
     function quit() {
         if (game.args["steam"]) {
-            var gui = require("nw.gui");
-            gui.App.quit();
+            game.quit();
         } else {
             game.clearCredentials();
             self.panel.close();

@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom, Container */
 
 "use strict";
 
@@ -294,14 +294,15 @@ class Game {
         if (game.args["steam"]) {
             var gui = require("nw.gui");
             var win = gui.Window.get();
-            // TODO check for double save from quit()
-            win.on("close", () => this.save());
+            win.on("close", () => {
+                this.save();
+                gui.App.quit();
+            });
         }
     }
 
     quit() {
-        this.save();
-        require("nw.gui").App.quit();
+        require("nw.gui").App.closeAllWindows();
     }
 
     update(currentTime) {
