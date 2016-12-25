@@ -1725,4 +1725,5 @@ T.dict = {
     "You can return home only when you have Synod Protection": "Вы можете вернуться домой только под эффектом защиты Синода.",
     "Attack": "Атака",
     "Shredder": "Шреддер",
+    "Shred": "Уничтожить содержимое",
 };
