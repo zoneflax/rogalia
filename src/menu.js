@@ -1,3 +1,5 @@
+/* global dom, Panel, game, TS */
+
 "use strict";
 //TODO: use panel methods!
 function Menu() {
@@ -43,11 +45,10 @@ Menu.prototype = {
             actions[0]["Use"] = object.defaultAction;
 
         this.length = 0;
-        var contents = actions.filter(function(actions) {
-            return (Object.keys(actions).length > 0);
-        }).map(function(actions) {
-            return this.createMenu(actions, object);
-        }.bind(this));
+
+        var contents = _
+            .reject(actions, _.isEmpty)
+            .map((group) => (group == "---") ? dom.hr() : this.createMenu(group, object));
 
         if (this.container && reuse) {
             this.container.fixHeight();
@@ -102,17 +103,18 @@ Menu.prototype = {
     },
     createMenu: function(actions, object) {
         var menu = document.createElement("ul");
-        var sorted = Object.keys(actions).sort(function(a, b) {
+        var sorted = _.sortBy(_.keys(actions), function(a, b) {
             if (a == "Destroy")
                 return +1;
             else
                 return TS(a) > TS(b);
         });
-        sorted.forEach(function(title) {
-            //TODO: fixme controller.drawItemsMenu hack and remove trim
-            var menuItem = this.createMenuItem(title.trim(), actions[title], object, ++this.length);
-            menu.appendChild(menuItem);
-        }.bind(this));
-        return menu;
+        //TODO: fixme controller.drawItemsMenu hack and remove trim
+        return dom.make(
+            "ul",
+            sorted.map(
+                (title, index) => this.createMenuItem(title.trim(), actions[title], object, ++this.length)
+            )
+        );
     }
 };

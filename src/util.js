@@ -15,7 +15,7 @@ if ( !window.requestAnimationFrame ) {
 function Util() {}
 
 var util = new function() {
-    this.ajax = function(url, callback) {
+    this.ajax = function(url, callback, onError) {
         var oReq = new XMLHttpRequest();
         oReq.open("GET", url, true);
         oReq.onreadystatechange = function (oEvent) {
@@ -23,7 +23,10 @@ var util = new function() {
                 if (oReq.status === 200) {
                     callback && callback(oReq.responseText);
                 } else {
-                    console.log("Error", oReq.statusText);
+                    if (onError)
+                        onError(oReq.statusText);
+                    else
+                        console.log("Error", oReq.statusText);
                 }
             }
         };

@@ -361,44 +361,31 @@ Stats.prototype = {
                 new Panel("statistics", "Statistics", [dom.tabs(tabs)]).show();
             });
         };
+
         contents.push(toggleStats);
 
-        // var ratings = dom.button(T("Ratings"));
-        // ratings.onclick = function(data) {
-        //     function load(stat, limit) {
-        //         return function(title, contents) {
-        //             dom.clear(contents);
+        var ratings = dom.button(T("Ratings"), "", function() {
+            util.ajax(
+                game.makeServerAddr("/rating"),
+                function(data) {
+                    var rating = JSON.parse(data);
+                    new Panel("ratings", "Ratings", [
+                        T("Top") + "20",
+                        dom.table(
+                            [T("Name"), T("Level"), T("Skill sum")],
+                            rating.map(function(player) {
+                                return [player.Name, player.Lvl, util.toFixed(player.Skills)];
+                            })
+                        ),
+                    ]).show();
+                },
+                function(error) {
+                    game.popup.alert(error);
+                }
+            );
+        });
 
-        //             var src = game.proto() + "//" + game.network.host + "/stats/" + stat;
-        //             if (limit > 0)
-        //                 src += "?limit=" + limit;
-
-        //             var iframe = dom.iframe(src);
-        //             window.onmessage = function(event) {
-        //                 var body = event.data;
-        //                 iframe.width = 1+body.width + "px";
-        //                 iframe.height = 1+body.height + "px";
-        //                 window.onmessage = null;
-        //             };
-        //             contents.appendChild(iframe);
-        //         };
-        //     }
-        //     new Panel("ratings", "Ratings", [dom.tabs([
-        //         {
-        //             title: TT("general"),
-        //             update: load("")
-        //         },
-        //         {
-        //             title: T("PVE"),
-        //             update: load("pve")
-        //         },
-        //         {
-        //             title: T("PVP"),
-        //             update: load("pvp")
-        //         }
-        //     ])]).show();
-        // };
-        // contents.push(ratings);
+        contents.push(ratings);
 
         return contents;
     },

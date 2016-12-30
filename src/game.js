@@ -235,6 +235,10 @@ class Game {
         return "http:";
     }
 
+    makeServerAddr(path) {
+        return this.proto() + "//" + this.network.host + path;
+    }
+
     initTime(time, tick) {
         this.setTime(time);
         var self = this;
@@ -302,6 +306,7 @@ class Game {
     }
 
     quit() {
+        this.clearCredentials();
         require("nw.gui").App.closeAllWindows();
     }
 

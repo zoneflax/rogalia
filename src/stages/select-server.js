@@ -1,4 +1,4 @@
-/* global game, dom, Panel, T */
+/* global game, dom, Panel, T, sprintf, TS */
 
 "use strict";
 

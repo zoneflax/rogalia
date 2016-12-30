@@ -55,26 +55,26 @@ function Chat() {
     };
 
     this.makeNameActions = function(name) {
-        var partyActions = {};
+        var partyActions = {
+            inviteToParty: function() {
+                self.send("*invite " + name);
+            }
+        };
 
         var party = game.player.Party;
-        if (!party || party[0] == game.playerName) {
-            if (!party || party.indexOf(name) == -1) {
-                partyActions.inviteToParty = function() {
-                    self.send("*invite " + name);
-                };
-            } else if (party[0] == game.playerName) {
-                partyActions.kickFromParty = function() {
-                    self.send("*kick " + name);
-                };
-            }
+        if (party && party[0] == game.playerName) {
+            partyActions.kickFromParty = function() {
+                self.send("*kick " + name);
+            };
         }
 
         var actions = [
             {
-                privateMessage: self.preparePrivate.bind(self, name)
+                privateMessage: () => self.preparePrivate(name)
             },
+            "---",
             partyActions,
+            "---",
             {
                 addToFriends: function() {
                     game.network.send(
@@ -91,6 +91,7 @@ function Chat() {
                     );
                 },
             },
+            "---",
             {
                 addToBlacklist: function() {
                     game.network.send(
@@ -109,6 +110,7 @@ function Chat() {
             }
         ];
         if (game.player.IsAdmin) {
+            actions.push("---");
             actions.push({
                 teleport: function() {
                     game.network.send("teleport", {name: name});

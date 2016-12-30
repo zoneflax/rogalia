@@ -404,10 +404,6 @@ Entity.prototype = {
     getActions: function() {
         var actions = [{}, {}, {}];
 
-        if (game.player.IsAdmin) {
-            actions[0]["$cmd"] = this.applyAdminCmd;
-        }
-
         if (this.MoveType == Entity.MT_PORTABLE && this.inWorld())
             actions[0]["Pick up"] = this.pickUp;
         else if (this.MoveType == Entity.MT_LIFTABLE)
@@ -437,6 +433,12 @@ Entity.prototype = {
             actions[2]["Drop"] =  function() { game.network.send("entity-drop", {id: this.Id}); };
 
         actions[2]["Info"] = this.showInfo;
+
+        if (game.player.IsAdmin) {
+            actions.push("---");
+            actions.push({"$cmd": this.applyAdminCmd});
+        }
+
         return actions;
     },
     isTool: function() {
@@ -459,6 +461,9 @@ Entity.prototype = {
             "energy-gun",
             "scissors",
             "needle",
+            "taming",
+            "insect-net",
+            "fishing-rod",
         ], this.Group);
     },
     alignedData: function(p) {

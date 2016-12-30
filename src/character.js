@@ -399,36 +399,41 @@ Character.prototype = {
         if (!this.IsMob && !this.IsNpc) {
             common.Inspect = game.player.inspect.bind(game.player, this);
         }
-        if (game.player.IsAdmin) {
-            common.Kill = function() {
-                if (this.IsNpc && !this.IsMob)
-                    game.chat.send("*remove-npc " + this.Id);
-                else
-                    game.chat.send("*kill " + this.Id);
-            };
-            common.ComeToMe = function() {
-                game.chat.send("*come-to-me " + this.Id);
-            };
-            common["$cmd"] = function() {
-                game.chat.append("* " + this.Id);
-            };
-            common.Summon = function() {
-                game.chat.send("*summon " + this.Id);
-            };
-            if (this.Type == "vendor") {
-                common.RemoveVendor = function() {
-                    game.chat.send("*remove-vendor " + this.Name);
-                };
-            }
-        }
         if (this.isInteractive()) {
             common.Interact =  this.interact;
         }
 
         var list = [common, actions];
-        if (this.IsNpc)
-            return list;
-        return list.concat(game.chat.makeNameActions(this.Name));
+        if (!this.IsNpc)
+            list = list.concat(game.chat.makeNameActions(this.Name));
+
+        if (game.player.IsAdmin) {
+            var admin = {};
+            admin.Kill = function() {
+                if (this.IsNpc && !this.IsMob)
+                    game.chat.send("*remove-npc " + this.Id);
+                else
+                    game.chat.send("*kill " + this.Id);
+            };
+            admin.ComeToMe = function() {
+                game.chat.send("*come-to-me " + this.Id);
+            };
+            admin["$cmd"] = function() {
+                game.chat.append("* " + this.Id);
+            };
+            admin.Summon = function() {
+                game.chat.send("*summon " + this.Id);
+            };
+            if (this.Type == "vendor") {
+                admin.RemoveVendor = function() {
+                    game.chat.send("*remove-vendor " + this.Name);
+                };
+            }
+            list.push("---");
+            list.push(admin);
+        }
+
+        return list;
     },
     defaultAction: function(targetOnly) {
         if (this.isInteractive()) {

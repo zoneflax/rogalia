@@ -328,7 +328,7 @@ function Controller(game) {
                     };
                 }
                 actions.suicide = function() {
-                    game.chat.send("*suicide");
+                    game.popup.confirm(T("Commit suicide?"), () => game.chat.send("*suicide"));
                 };
                 actions.unstuck = function() {
                     game.chat.send("*unstuck");
