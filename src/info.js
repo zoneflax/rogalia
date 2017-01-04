@@ -1,4 +1,4 @@
-/* global game, Missile, FONT_SIZE, TT */
+/* global game, Missile, FONT_SIZE, TT, Container, dom, T, Panel, util */
 
 "use strict";
 function Info(message, character) {
@@ -113,7 +113,7 @@ function Info(message, character) {
             ids.forEach(function(id) {
                 var entity = Entity.get(id);
                 if (!entity) {
-                    game.sendErrorf("(Info.js) Cannot find item %d", id);
+                    // game.sendErrorf("(Info.js) Cannot find item %d", id);
                     return;
                 }
                 var cnt = entity.findContainer();

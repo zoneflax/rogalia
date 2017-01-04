@@ -401,6 +401,14 @@ Entity.prototype = {
     equip: function() {
         game.network.send("equip", {Id: this.Id});
     },
+    gut: function() {
+        var gut = () => game.network.send("Gut", {Id: this.Id});
+        if (this.Group == "player-corpse") {
+            game.popup.confirm(T("Warning: This action can cause bad karma, continue at your own risk!"), gut);
+        } else {
+            gut();
+        }
+    },
     getActions: function() {
         var actions = [{}, {}, {}];
 
@@ -703,9 +711,7 @@ Entity.prototype = {
             this.Actions.push("cast");
             break;
         case "mailbox":
-            this.defaultActionSuccess = function(data) {
-                game.controller.mail.open(this, data.Mail);
-            }.bind(this);
+            this.defaultActionSuccess = (data) => { game.controller.mail.open(this, data.Mail); };
             break;
         }
 

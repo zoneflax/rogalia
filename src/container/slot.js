@@ -1,4 +1,4 @@
-/* global util, dom */
+/* global util, dom, game */
 
 "use strict";
 function ContainerSlot(container, index) {

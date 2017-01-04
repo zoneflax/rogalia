@@ -511,7 +511,11 @@ function WorldMap() {
             if (!color)
                 return null;
             var index = this.colorMap[color];
-            return {biom: this.bioms[index]};
+            return {
+                x, y,
+                id: index,
+                biom: this.bioms[index],
+            };
         }
 
         if (!this.data[y]) {

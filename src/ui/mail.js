@@ -1,28 +1,7 @@
+/* global T, dom, game, util, Panel, ContainerSlot, Vendor, Container */
+
 "use strict";
-function Mail() {
-    var self = this;
-    this.tabs = [
-        {
-            title: T("Inbox"),
-            update: function(title, contents) {
-                if (self.mail && !self.updateRequired) {
-                    dom.setContents(contents, self.listView(self.mail));
-                    return;
-                }
-                game.network.send("entity-use", {Id: self.mailbox.Id}, function(data) {
-                    self.mail = data.Mail;
-                    dom.setContents(contents, self.listView(data.Mail));
-                });
-            },
-        },
-        {
-            title: T("Compose"),
-            update: function(title, contents) {
-                dom.setContents(contents, self.composeView());
-            },
-        }
-    ];
-}
+function Mail() {}
 
 Mail.prototype = {
     mailbox: null,
@@ -34,13 +13,32 @@ Mail.prototype = {
     open: function(mailbox, mail) {
         this.mailbox = mailbox;
         this.mail = mail || [];
-        if (!this.panel) {
-            this.panel = new Panel("mail", "Mail", [dom.tabs(this.tabs)]);
-            this.panel.hooks.hide = this.update.bind(this);
-        }
-        this.panel.temporary = true;
-        this.panel.entity = mailbox;
-        this.panel.show();
+        this.updateRequired = false;
+        this.tabs = [
+            {
+                title: T("Inbox"),
+                update: (title, contents) => {
+                    if (this.mail && !this.updateRequired) {
+                        dom.setContents(contents, this.listView(this.mail));
+                        return;
+                    }
+                    game.network.send("entity-use", {Id: this.mailbox.Id}, (data) => {
+                        this.mail = data.Mail;
+                        dom.setContents(contents, this.listView(data.Mail));
+                    });
+                },
+            },
+            {
+                title: T("Compose"),
+                update: (title, contents) => {
+                    dom.setContents(contents, this.composeView());
+                },
+            }
+        ];
+        this.panel = new Panel("mail", "Mail", [dom.tabs(this.tabs)])
+            .setTemporary(true)
+            .setEntity(mailbox)
+            .show();
     },
     formatDate: function(letter) {
         var created = new Date(letter.Created * 1000);
@@ -163,15 +161,25 @@ Mail.prototype = {
 
         var slots = util.dotimes(4, function() {
             var slot = dom.slot();
-            slot.canUse = function() {
-                return true;
-            };
+            slot.mail = true;
             slot.use = function(entity) {
+                var from = Container.getEntityContainer(entity);
+                if (!from)
+                    return false;
+
+                slot.containerSlot = from.findSlot(entity);
+                slot.containerSlot.lock();
+
                 slot.entity = entity;
                 dom.setContents(slot, entity.icon());
                 return true;
             };
             slot.cleanup = function() {
+                if (!slot.entity)
+                    return;
+
+                slot.containerSlot.unlock();
+
                 slot.entity = null;
                 dom.clear(slot);
             };

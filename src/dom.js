@@ -276,8 +276,9 @@ var dom = {
                 dom.append(content, tab.contents);
             contents.appendChild(content);
 
-            if (tab.update)
+            if (tab.update) {
                 tab.update = tab.update.bind(tabs, title, content);
+            }
 
             title.onclick = function() {
                 active.title.classList.remove("active");

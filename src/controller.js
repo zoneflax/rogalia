@@ -117,6 +117,11 @@ function Controller(game) {
                         return hovered.use(entity);
                     }
 
+                    if (hovered.mail) {
+                        cleanup = function(){};
+                        return hovered.use(entity);
+                    }
+
                     if (hovered.craft) {
                         cleanup = function(){};
                         return controller.craft.use(entity, hovered);

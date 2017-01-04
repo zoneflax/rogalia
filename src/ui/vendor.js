@@ -63,12 +63,18 @@ Vendor.createPrice = function(cost) {
 
 Vendor.createPriceInput = function() {
     var platinum = dom.tag("input", "platinum", {title: T("Platinum")});
+    platinum.type = "number";
+    platinum.min = 0;
     platinum.value = 0;
 
     var gold = dom.tag("input", "gold", {title: T("gold")});
+    gold.type = "number";
+    gold.min = 0;
     gold.value = 0;
 
     var silver = dom.tag("input", "silver", {title: T("Silver")});
+    silver.type = "number";
+    silver.min = 0;
     silver.value = 0;
 
     var price = dom.div("price");
