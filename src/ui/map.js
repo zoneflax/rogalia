@@ -1,4 +1,4 @@
-/* global game, Point, CELL_SIZE, config */
+/* global game, Point, CELL_SIZE, config, loader */
 
 "use strict";
 function WorldMap() {
@@ -13,6 +13,7 @@ function WorldMap() {
     this.cells_x = 0;
     this.cells_y = 0;
     this.bioms = [];
+    this.colorMap = {};
 
     var gridColor = "#999";
 
@@ -25,6 +26,8 @@ function WorldMap() {
     this.location = new Point();
 
     this.tiles = [];
+
+    this.fastRender = game.args["fast-render"];
 
     var worker = new Worker("src/map-parser.js");
     worker.onmessage = function(e) {
@@ -58,12 +61,19 @@ function WorldMap() {
 
         this.syncMinimap(data, width, height);
 
-        worker.postMessage({
-            bioms: this.bioms,
-            pixels: data,
-            cells_x: this.cells_x,
-            cells_y: this.cells_y,
-        });
+        if (this.fastRender) {
+            var loc = game.player.Location;
+            this.location.set(loc.X, loc.Y);
+            this.data = data;
+            this.ready = true;
+        } else {
+            worker.postMessage({
+                bioms: this.bioms,
+                pixels: data,
+                cells_x: this.cells_x,
+                cells_y: this.cells_y,
+            });
+        }
 
         if (map) {
             this.full.width = map.Width;
@@ -182,8 +192,8 @@ function WorldMap() {
                 switch(offset) {
                 case  3: if (i != 2) return; break;
                 case  5: if (i != 1) return; break;
-                // case 10: if (i != 2) return; break;
-                // case 12: if (i != 1) return; break;
+                    // case 10: if (i != 2) return; break;
+                    // case 12: if (i != 1) return; break;
 
                 case  7: if (i != 3) return; break;
                     // case 11: if (i != 2) return; break;
@@ -212,25 +222,85 @@ function WorldMap() {
         });
     };
 
-    this.draw = function() {
-        // this.each(function(w, h, p, x, y) {
-        //     var cell = this.data[h][w];
-        //     var tile = this.tiles[cell.id];
-        //     game.ctx.drawImage(
-        //         tile,
-        //         2*CELL_SIZE,
-        //         15 * CELL_SIZE,
-        //         CELL_SIZE * 2,
-        //         CELL_SIZE,
-        //         p.x,
-        //         p.y,
-        //         CELL_SIZE * 2,
-        //         CELL_SIZE
+    this.fastDraw = function() {
+        var scr = game.screen;
+        var cam = game.camera;
 
-        //     );
-        //     //     this.drawTile(game.ctx, w, h, p);
-        // });
-        // return;
+        var leftTop = cam
+            .clone()
+            .toWorld()
+            .div(CELL_SIZE)
+            .floor();
+        var rightTop = cam
+            .clone()
+            .add(new Point(scr.width, 0))
+            .toWorld()
+            .div(CELL_SIZE)
+            .floor();
+        var leftBottom = cam
+            .clone()
+            .add(new Point(0, scr.height))
+            .toWorld()
+            .div(CELL_SIZE)
+            .ceil();
+        var rightBottom = cam
+            .clone()
+            .add(new Point(scr.width, scr.height))
+            .toWorld()
+            .div(CELL_SIZE)
+            .ceil();
+
+        for (var x = leftTop.x; x < rightBottom.x; x++) {
+            for (var y = rightTop.y; y < leftBottom.y; y++) {
+                var p = new Point(x * CELL_SIZE, y * CELL_SIZE).toScreen();
+
+                if (p.x + CELL_SIZE < cam.x)
+                    continue;
+                if (p.y + CELL_SIZE < cam.y)
+                    continue;
+                if (p.x - CELL_SIZE > cam.x + scr.width)
+                    continue;
+                if (p.y > cam.y + scr.height)
+                    continue;
+
+                p.x -= CELL_SIZE;
+
+                var w = x - this.location.x / CELL_SIZE;
+                var h = y - this.location.y / CELL_SIZE;
+                if (w < 0 || h < 0 || w >= this.cells_x || h >= this.cells_y) {
+                    continue;
+                }
+                var color = this.data[h*this.cells_x + w];
+                var index = this.colorMap[color];
+                var tile = this.tiles[index];
+
+                var offset = (tile.height > CELL_SIZE) ? 15 : 0;
+
+                var variant = (tile.width > 2*CELL_SIZE) ?
+                    Math.floor(tile.width/(4*CELL_SIZE)*(1+Math.sin(x*y)))
+                    : 0;
+                game.ctx.drawImage(
+                    tile,
+                    variant * 2*CELL_SIZE,
+                    offset * CELL_SIZE,
+                    CELL_SIZE * 2,
+                    CELL_SIZE,
+                    p.x,
+                    p.y,
+                    CELL_SIZE * 2,
+                    CELL_SIZE
+
+                );
+
+            }
+        }
+    };
+
+    this.draw = function() {
+        if (this.fastRender) {
+            this.fastDraw();
+            return;
+        }
         var layers = this.makeLayers();
 
         var scr = game.screen;
@@ -417,6 +487,11 @@ function WorldMap() {
             return tile;
         });
 
+        this.colorMap = this.bioms.reduce(function(map, biom, index) {
+            map[biom.Color] = index;
+            return map;
+        }, {});
+
         this.darkness = loader.loadImage("map/darkness.png");
         this.simpleDarkness = loader.loadImage("map/simple-darkness.png");
     };
@@ -431,6 +506,14 @@ function WorldMap() {
         y -= this.location.y;
         x = (x / CELL_SIZE) << 0;
         y = (y / CELL_SIZE) << 0;
+        if (this.fastRender) {
+            var color = this.data[y*this.cells_x + x];
+            if (!color)
+                return null;
+            var index = this.colorMap[color];
+            return {biom: this.bioms[index]};
+        }
+
         if (!this.data[y]) {
             // throw new Error("Map cell not found (y) " + x + ", " + y);
             return null;

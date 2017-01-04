@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom, Container */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom, Container, _ */
 
 "use strict";
 
@@ -7,7 +7,8 @@ class Game {
     constructor(lang, args) {
         game = this;
         this.lang = lang;
-        this.args = args;
+        this.args = this._initArgs(args);
+
         this.world = document.getElementById("world");
         this.interface = document.getElementById("interface");
         this.canvas = document.getElementById("canvas");
@@ -15,6 +16,7 @@ class Game {
         this.ctx.clear = function() {
             game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
         };
+
 
         this.gateway = this._gatewayAddr();
 
@@ -201,6 +203,7 @@ class Game {
         if (game.args["steam"]) {
             var gui = require("nw.gui");
             var win = gui.Window.get();
+            this.clearCredentials();
             win.on("new-win-policy", function(frame, url, policy) {
                 gui.Shell.openExternal(url);
                 policy.ignore();
@@ -210,6 +213,14 @@ class Game {
         T.update();
         this._tick();
     }
+
+    _initArgs(args) {
+        if (!args["steam"]) {
+            return args;
+        }
+        var argv = _.map(require("nw.gui").App.argv, (arg) => arg.replace(/^--?/, ""));
+        return _.merge(args, _.zipObject(argv, _.map(argv, () => true)));
+    };
 
     setFontSize(size) {
         this.ctx.font = (size || FONT_SIZE) + "px Dejavu Sans";
@@ -302,6 +313,25 @@ class Game {
                 this.save();
                 gui.App.quit();
             });
+
+
+            window.addEventListener("wheel", function (e) {
+                console.log("IN");
+                if (e.ctrlKey) {
+                    if (e.deltaY > 0) {
+                        win.zoomLevel -= 0.5;
+                    }
+                    else {
+                        win.zoomLevel += 0.5;
+                    }
+                    localStorage.zoomLevel = win.zoomLevel;
+                }
+            });
+
+            // load zoom level from localStorage
+            if (localStorage.zoomLevel) {
+                win.zoomLevel = parseFloat(localStorage.zoomLevel);
+            }
         }
     }
 

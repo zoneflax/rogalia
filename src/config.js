@@ -34,7 +34,6 @@ var config = {
         comboHelper: true,
     },
     graphics: {
-        // low: false,
         autoHighlightDoors: false,
         snowflakes: false,
         movingSpace: false,

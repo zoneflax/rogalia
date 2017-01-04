@@ -60,9 +60,6 @@ function Settings() {
                 dom.hide(document.getElementById("combos"));
             }
         },
-        "settings.graphics.low": function() {
-            game.map.reset();
-        },
         "settings.graphics.movingSpace": function(moving) {
             if (moving)
                 game.canvas.classList.add("animated");

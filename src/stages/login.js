@@ -223,7 +223,7 @@ function loginStage() {
                     }
                 });
             }, function() {
-                panel.show();
+                showLoginForm();
             }, '5.37');
         });
         script.onerror = function() {
@@ -253,7 +253,7 @@ function loginStage() {
         greenworks.getAuthSessionTicket(
             function onSuccess(session) {
                 var formData = new FormData();
-                formData.append("ticket", session.ticket);
+                formData.append("ticket", session.ticket.toString("hex"));
                 var req = new XMLHttpRequest();
                 req.open("POST", game.gateway + "/oauth/steam", true);
                 req.send(formData);

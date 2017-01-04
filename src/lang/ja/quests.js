@@ -88,35 +88,38 @@ Quest.quests =  {
         desc: "サンタのガラスで女の子の飾りを作るのを助ける",
     },
     "chrismas": {
-        name: "Christmas hat",
-        desc: "Merry Christmas and Happy New Year! I present you a Christmas Hat!",
-        final: "Here is your hat.",
-        customReward: "Christmas hat",
+        name: "クリスマスの帽子",
+        desc: "メリークリスマスと新年あけましておめでとうございます！ 私はあなたにクリスマスハットをプレゼント！",
+        final: "ここに貴方の帽子があるよ",
+        customReward: "クリスマスの帽子",
     },
     "chrismas-presents": {
-        name: "Christmas present.",
-        desc: "Finally! Christmas! Do you want a present?",
-        final: "Here is your present.",
+        name: "クリスマスの贈り物だよ.",
+        desc: "さ～クリスマスプレゼントが欲しいですか？?",
+        final: "ここに貴方へのプレゼントがあります。",
     },
 
     "buy-small-indulgence": {
-        name: "小さな恩赦",
+        name: "心からの贖罪",
         desc: [
-            "ここで告白することができます。",
-        ],
-        customReward: "+100 Karma",
+            "真に悔い改めることは、貴方の魂を正しい道へ導くのに役立ちます。いつでも懺悔することができます。",
+            "教会の仕事は、善と悪のバランスを維持することです。教会の翼の下に身を寄せるな、救済する術を教える事でしょう。" ,       ],
     },
+        customReward: "+100 Karma",
+
     "buy-average-indulgence": {
-        name: "恩赦",
+        name: "命を懸けた贖罪",
         desc: [
-            "ここで告白することができます。",
+            "真に悔い改めることは、貴方の魂を正しい道へ導くのに役立ちます。いつでも懺悔することができます。",
+            "教会の仕事は、善と悪のバランスを維持することです。教会の翼の下に身を寄せるな、救済する術を教える事でしょう。",
         ],
         customReward: "+1000 Karma",
     },
     "buy-big-indulgence": {
-        name: "大きな恩赦",
+        name: "魂をかけた贖罪",
         desc: [
-            "ここで告白することができます。",
+            "真に悔い改めることは、貴方の魂を正しい道へ導くのに役立ちます。いつでも懺悔することができます。",
+            "教会の仕事は、善と悪のバランスを維持することです。教会の翼の下に身を寄せるな、救済する術を教える事でしょう。",
         ],
         customReward: "+10000カルマ",
     }

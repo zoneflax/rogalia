@@ -79,10 +79,11 @@ gulp.task("nwbuild", function() {
         ],
         appName: "rogalia",
         buildDir: "./build",
-        flavor: "normal", // sdk
+        flavor: "normal",
+        // flavor: "sdk",
         cacheDir: "./build/cache/",
         platforms: ["win32", "linux64", "linux32", "osx64"],
-        version: "0.17.5",
+        version: "0.19.4",
     });
 
     nw.build().then(function () {

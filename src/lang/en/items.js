@@ -21,7 +21,7 @@ T.items = {
     "rennet": "Required in the making of cheese. Stinks of course... terribly.",
     "raw-coconut-cookies": "Dough, mixed with coconut chips and milk. Requires baking in the oven.",
     "coconut-cookies": "Exquisite cookies, highly nutritious, gives a lot of body fat and carbohydrates.",
-    "holiday-chicken": "Tasty dish for dinner. Due to long and complex cooking process loses almost all vitamins, but it's still delicious and can decorate any table.",
+    "holliday-chicken": "Tasty dish for dinner. Due to long and complex cooking process loses almost all vitamins, but it's still delicious and can decorate any table.",
     "english-breakfast": "Hearty breakfast. Consists of a different products and gives a lot of vitamins. Incredibly delicious and gives strength for the whole day.",
     "raw-big-tat": "Delicious dish, but you must cook it before eating.",
     "raw-potato-casserole": "Delicious dish, but you must cook it in the oven before eating.",
@@ -128,7 +128,7 @@ T.items = {
     "transmutation-circle": "A large alchemical circle, reinforcing the formula of the owner. Allows the alchemist to safely break down objects into atoms.",
     "swordsman-statue": "A full-size replica statue of the nameless swordsman. It is believed that it was first created the sculptor Tayterrskiy, portraying one of the King's guards.",
     "forge": "Useless relic of antiquity, however, previously widely used for creating and forging tools.",
-    "anvil": "A heavy and very sturdy metal block in which blacksmiths can create their own masterpieces. Not really a task for one person to create."
+    "anvil": "A heavy and very sturdy metal block in which blacksmiths can create their own masterpieces. Not really a task for one person to create.",
     "loom": "Machine for manufactory or, less frequently, home use. Allows the weaving of fabric from linen yarn, which are then used when sewing clothes.",
     "well": "A deep well that allows you to get water almost anywhere. If a girl falls down the hole, please call the guard, instead of covering with boards.",
     "gear": "What mechanism can be without this intricate piece of metal?",
