@@ -421,7 +421,7 @@ Entity.prototype = {
             actions[1]["Disassemble"] = this.disassemble;
         }
 
-        if (this.isTool()) {
+        if (this.isTool() && this.Location != Entity.LOCATION_EQUIPPED) {
             actions[0]["To equip"] = this.equip;
         }
 
