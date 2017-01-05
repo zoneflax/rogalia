@@ -618,8 +618,11 @@ Entity.prototype = {
         }
 
         if (this.inContainer() && game.controller.modifier.ctrl && game.controller.modifier.shift) {
-            var self = this;
             var container = Container.getEntityContainer(this);
+            if (!container) {
+                this.forceDisassemble();
+                return;
+            }
             var list = container.slots
                 .filter((slot) => slot.entity && slot.entity.Type == this.Type) // use is(this.Group)?
                 .map((slot) => slot.entity.Id);
