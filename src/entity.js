@@ -614,30 +614,26 @@ Entity.prototype = {
     disassemble: function() {
         if (this.isContainer()) {
             game.popup.confirm(T("It will be destroyed with all it's contents"), () => this.forceDisassemble());
-        } else {
-            if (this.inContainer() && game.controller.modifier.ctrl && game.controller.modifier.shift) {
-                var self = this;
-                var container = Container.getEntityContainer(this);
-                var toDisassemble = container.slots.filter(function(slot) {
-                    return (slot.entity != null && slot.entity.Type == self.Type);
-                }).map(function(slot) {
-                    return slot.entity;
-                });
-
-                this.queueAction("disassemble", toDisassemble);
-            } else {
-                this.forceDisassemble();
-            }
-        }
-    },
-    queueAction(name, list) {
-        if (!list || list.length == 0) {
             return;
         }
 
-        game.network.send("disassemble", {Id: list[0].Id}, () => {
-            this.queueAction(name, list.slice(1));
-        });
+        if (this.inContainer() && game.controller.modifier.ctrl && game.controller.modifier.shift) {
+            var self = this;
+            var container = Container.getEntityContainer(this);
+            var list = container.slots
+                .filter((slot) => slot.entity && slot.entity.Type == this.Type) // use is(this.Group)?
+                .map((slot) => slot.entity.Id);
+            this.queueAction("disassemble", list);
+        } else {
+            this.forceDisassemble();
+        }
+    },
+    queueAction(action, list) {
+        if (list.length > 0) {
+            game.network.send(action, {Id: _.head(list)}, () => {
+                this.queueAction(action, _.tail(list));
+            });
+        }
     },
     forceDisassemble() {
         game.network.send("disassemble", {Id: this.Id});
