@@ -17,6 +17,7 @@ function ContainerSlot(container, index) {
     this.element.onmousedown = this.onmousedown.bind(this);
 
     this.sub = null;
+    this.bar = null;
 
     this.onclear = function() {};
 }
@@ -42,6 +43,7 @@ ContainerSlot.prototype = {
     clear: function() {
         this.entity = null;
         this.sub = null;
+        this.bar = null;
         dom.clear(this.element);
         this.element.classList.remove("has-item");
         this.element.classList.remove("non-effective");
@@ -87,6 +89,19 @@ ContainerSlot.prototype = {
         }
         this.sub.textContent = text;
     },
+    setBar: function(percent, cls) {
+        if (this.bar == null) {
+            this.bar = dom.wrap("bar", dom.div("bar-value"));
+            dom.append(this.element, this.bar);
+        }
+        if (cls) {
+            this.bar.classList.add(cls);
+        }
+        this.bar.firstChild.style.width = percent + "%";
+
+        this.setSub(util.toFixed(percent) + "%");
+        this.sub.classList.add("sub-bar");
+    },
     update: function() {
         this.updateProgress();
         this.updateCustom();
@@ -98,8 +113,9 @@ ContainerSlot.prototype = {
             return;
         if ("Readiness" in this.entity && "Fuel" in this.container.entity) {
             var rd = this.entity.Readiness;
-            if (rd.Max != 0)
-                this.setSub(util.toFixed(100*rd.Current / rd.Max) + "%");
+            if (rd.Max != 0) {
+                this.setBar(100*rd.Current / rd.Max, "progress");
+            }
             return;
         }
         if ("Generate" in this.container.entity && "Progress" in this.container.entity.Generate) {
@@ -114,7 +130,7 @@ ContainerSlot.prototype = {
         var duration = cnt.HideDuration / 1e6;
         var diff = Date.now() - added;
         if (diff < duration) {
-            this.setSub(util.toFixed(100*diff / duration, 1) + "%");
+            this.setBar(100*diff / duration, "progress");
         }
     },
     updateCustom: function() {
@@ -125,7 +141,7 @@ ContainerSlot.prototype = {
         } else if (this.entity.SpawnChance > 0) {
             this.setSub(this.entity.SpawnChance);
         } else if (this.entity.isTool()) {
-            this.setSub(this.entity.durabilityPercent());
+            this.setBar(this.entity.durabilityPercent());
         }
     },
     updateRequirements: function() {

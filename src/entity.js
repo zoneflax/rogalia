@@ -93,7 +93,7 @@ Entity.prototype = {
 
         if (!("Amount" in this)) {
             name += "\n" + T("Quality") + ": " + this.Quality;
-            name += "\n" + T("Durability") + ": " + this.durabilityPercent();
+            name += "\n" + T("Durability") + ": " + this.durabilityPercent() + "%";
         }
 
         if (this.Comment)
@@ -141,7 +141,7 @@ Entity.prototype = {
     },
     durabilityPercent: function() {
         var dur = this.Durability;
-        return util.toFixed(dur.Current / dur.Max * 100) + "%";
+        return util.toFixed(dur.Current / dur.Max * 100);
     },
     showInfo: function() {
         var elements = [];

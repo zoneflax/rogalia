@@ -386,19 +386,61 @@ hr {
     right: 0;
     pointer-events: none;
 }
-.slot > .quality {
-    top: 1px;
-    background: url("assets/bg/quality.png");
+
+.slot:hover {
+    .sub-bar {
+        display: block;
+    }
 }
-.slot > sub {
-    bottom: 1px;
-    background: #2a2e34;
-    width: initial;
-    padding: 0 3px;
-    right: 1px;
-    border: 1px solid #22262a;
-    border-top-left-radius: 25% 50%;
-    border-bottom-right-radius: 29%;
+
+.slot {
+    .quality {
+        top: 1px;
+        background: url("assets/bg/quality.png");
+    }
+
+    .sub-bar {
+        z-index: 4;
+        display: none;
+    }
+
+    sub {
+        bottom: 1px;
+        background: #2a2e34;
+        width: initial;
+        padding: 0 3px;
+        right: 1px;
+        border: 1px solid #22262a;
+        border-top-left-radius: 25% 50%;
+        border-bottom-right-radius: 29%;
+    }
+
+    .bar, .bar-value {
+        border-radius: 4px;
+        height: 2px;
+    }
+
+    .bar {
+        position: absolute;
+        bottom: 4px;
+        width: 36px;
+        margin: auto;
+        left: 0;
+        right: 0;
+        background: #8a1717;
+        z-index: 3;
+        border: 1px solid #333;
+
+        .bar-value {
+            background: #4ab74a;
+        }
+    }
+    .bar.progress {
+        background: #7d5c0f;
+        .bar-value {
+            background: #ffc800;
+        }
+    }
 }
 
 .slot:hover, .slot.hovered {
