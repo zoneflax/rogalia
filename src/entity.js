@@ -615,12 +615,32 @@ Entity.prototype = {
         if (this.isContainer()) {
             game.popup.confirm(T("It will be destroyed with all it's contents"), () => this.forceDisassemble());
         } else {
-            this.forceDisassemble();
+            if (this.inContainer() && game.controller.modifier.ctrl && game.controller.modifier.shift) {
+                var self = this;
+                var container = Container.getEntityContainer(this);
+                var toDisassemble = container.slots.filter(function(slot) {
+                    return (slot.entity != null && slot.entity.Type == self.Type);
+                }).map(function(slot) {
+                    return slot.entity;
+                });
+
+                this.queueAction("disassemble", toDisassemble);
+            } else {
+                this.forceDisassemble();
+            }
         }
+    },
+    queueAction(name, list) {
+        if (!list || list.length == 0) {
+            return;
+        }
+
+        game.network.send("disassemble", {Id: list[0].Id}, () => {
+            this.queueAction(name, list.slice(1));
+        });
     },
     forceDisassemble() {
         game.network.send("disassemble", {Id: this.Id});
-
     },
     split: function() {
         var args = {Id: this.Id};
