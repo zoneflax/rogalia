@@ -110,6 +110,7 @@ function Controller(game) {
                         game.chat.linkEntity(entity);
                         return true;
                     }
+
                     if (hovered.check && !hovered.check(controller.cursor))
                         return false;
 

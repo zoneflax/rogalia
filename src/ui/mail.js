@@ -1,7 +1,9 @@
 /* global T, dom, game, util, Panel, ContainerSlot, Vendor, Container */
 
 "use strict";
-function Mail() {}
+function Mail() {
+    this.slots = [];
+}
 
 Mail.prototype = {
     mailbox: null,
@@ -39,6 +41,10 @@ Mail.prototype = {
             .setTemporary(true)
             .setEntity(mailbox)
             .show();
+        this.panel.hooks.hide = () => this.cleanUp();
+    },
+    cleanUp: function() {
+        _.forEach(this.slots, (slot) => slot.cleanup());
     },
     formatDate: function(letter) {
         var created = new Date(letter.Created * 1000);
@@ -159,7 +165,7 @@ Mail.prototype = {
         var body = dom.tag("textarea", "mail-body");
         var send = dom.button(T("Send"));
 
-        var slots = util.dotimes(4, function() {
+        var slots = this.slots = util.dotimes(4, function() {
             var slot = dom.slot();
             slot.mail = true;
             slot.use = function(entity) {
@@ -175,10 +181,10 @@ Mail.prototype = {
                 return true;
             };
             slot.cleanup = function() {
-                if (!slot.entity)
-                    return;
-
-                slot.containerSlot.unlock();
+                if (slot.containerSlot) {
+                    slot.containerSlot.unlock();
+                    slot.containerSlot = null;
+                }
 
                 slot.entity = null;
                 dom.clear(slot);
