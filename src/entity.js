@@ -717,8 +717,10 @@ Entity.prototype = {
                         T("Don't forget to pay for a claim!"),
                         dom.wrap("", [
                             dom.button(T("Snooze"), "", () => {
-                                game.network.send("Snooze", {Id: id});
-                                this.defaultActionSuccess = function(){};
+                                game.network.send("Snooze", {Id: id}, function() {
+                                    game.controller.setBlinkingWarning();
+                                });
+                                this.defaultActionSuccess = () => {};
                                 panel.hide();
                             }),
                         ]),
@@ -845,12 +847,7 @@ Entity.prototype = {
         var y = this.Y - no;
 
         var color = (game.player.Id == this.Creator) ? "255,255,255" : "255,0,0";
-        var fill = config.ui.fillClaim;
-        if (this.State == "warn") {
-            fill = true;
-            color = "255,100,0";
-        };
-        if (fill) {
+        if (config.ui.fillClaimfill) {
             game.ctx.fillStyle = "rgba(" + color + ", 0.3)";
             game.iso.fillRect(x, y, w, h);
         }
@@ -859,6 +856,9 @@ Entity.prototype = {
             game.ctx.strokeStyle = "rgba(" + color + ", 0.7)";
             game.iso.strokeRect(x, y, w, h);
             game.ctx.lineWidth = 1;
+        }
+        if (this.State == "warn" && this.Creator == game.player.Id) {
+            game.controller.setBlinkingWarning(T("Check your stake claim!"));
         }
     },
     drawBox: function(color) {

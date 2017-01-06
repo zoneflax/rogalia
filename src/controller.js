@@ -1293,4 +1293,17 @@ function Controller(game) {
     this.updatePing = function(ping) {
         this.system && this.system.update(ping);
     };
+
+    var blinkingWarning = dom.div("#blinking-warning-message");
+    dom.append(document.getElementById("blinking-warning"), blinkingWarning);
+    dom.hide(blinkingWarning);
+
+    this.setBlinkingWarning = _.throttle(function(message) {
+        if (message) {
+            dom.show(blinkingWarning);
+            blinkingWarning.textContent = message;
+        } else {
+            dom.hide(blinkingWarning);
+        }
+    }, 300, {trailing: true});
 };

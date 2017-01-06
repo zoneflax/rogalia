@@ -5,10 +5,13 @@ T.dict = {
 	"Iron fishing rod": "鉄の釣り竿",
 	"Shredder": "シュレッダー",
     "You must equip knife not": "ナイフを装備する必要があります。",
+    "You must equip knife to gut": "ナイフを装備する必要があります。",
     "Claim controls": "所有地の増減",
     "Eat more to take a good shit": "もっと食べないとうんちが出ないな。",
     "You do not have enough money on your bank account": "銀行の口座に、十分なお金がありません",
     "Mushroom plant": "マッシュルーム農園",
+    "Banana palm tree log": "バナナの木の丸太",
+    "Kitty cutthroat": "キティ・カットロート",
 
     "claim-help-text": "土地の権利を拡張すると 権利金は自動的にあなたの銀行口座から引き出されます。 都市の銀行で支払期間を確認することができます。 また、1週間から3ヶ月の権利金を支払うことができます。",
     "Wolf hungry": "ハングリー・ウルフ",

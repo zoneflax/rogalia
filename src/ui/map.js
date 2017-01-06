@@ -296,11 +296,7 @@ function WorldMap() {
         }
     };
 
-    this.draw = function() {
-        if (this.fastRender) {
-            this.fastDraw();
-            return;
-        }
+    this.layerDraw = function() {
         var layers = this.makeLayers();
 
         var scr = game.screen;
@@ -370,12 +366,13 @@ function WorldMap() {
                 // game.iso.strokeRect(p.x, p.y, CHUNK_SIZE, CHUNK_SIZE);
             });
         });
+    };
 
-        if (game.debug.map.position && false) {
-            var text = "(" + (x + game.camera.x) + " " + (y + game.camera.y) + ")";
-            game.ctx.fillStyle = "#fff";
-
-            game.drawStrokedText(text, x, y + FONT_SIZE);
+    this.draw = function() {
+        if (this.fastRender) {
+            this.fastDraw();
+        } else {
+            this.layerDraw();
         }
 
         if (config.graphics.mapGrid || game.controller.keys.G) {

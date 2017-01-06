@@ -1,4 +1,4 @@
-/* global game, dom, Panel, T, sprintf, TS */
+/* global game, dom, Panel, T, sprintf, TS, util */
 
 "use strict";
 
@@ -18,12 +18,19 @@ function selectServerStage(panel) {
             self.panel = new Panel("select-server", "", [
                 dom.wrap("lobby-account", game.getLogin()),
                 serversTable(servers),
+                dom.button(T("EULA"), "eula", showEULA),
                 dom.button(T("Refresh"), "refresh", showServers),
                 dom.button(T("Quit"), "quit", quit)
             ]).hideCloseButton().show().center(0.5, 0.05);
         };
         req.open("GET", game.gateway + "/status", true);
         req.send(null);
+    }
+
+    function showEULA() {
+        var eula = dom.tag("p");
+        util.ajax("/eula.txt", (text) => { dom.setContents(eula, text); });
+        new Panel("eula", T("EULA"), [eula]).show();
     }
 
     function quit() {
