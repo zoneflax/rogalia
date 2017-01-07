@@ -97,6 +97,9 @@ Container.prototype = {
     forEach: function(callback)  {
         this.slots.forEach(callback);
     },
+    filter: function(predicate) {
+        return this.slots.filter((slot) => slot.entity).map((slot) => slot.entity).filter(predicate);
+    },
     createContainerPanel: function() {
         var slots = dom.div("slots-wrapper");
         this._slots.forEach(function(id, i) {
