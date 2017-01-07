@@ -27,8 +27,6 @@ function WorldMap() {
 
     this.tiles = [];
 
-    this.fastRender = game.args["fast-render"];
-
     var worker = new Worker("src/map-parser.js");
     worker.onmessage = function(e) {
         var data = e.data;
@@ -61,7 +59,7 @@ function WorldMap() {
 
         this.syncMinimap(data, width, height);
 
-        if (this.fastRender) {
+        if (config.graphics.fastRender) {
             var loc = game.player.Location;
             this.location.set(loc.X, loc.Y);
             this.data = data;
@@ -369,7 +367,7 @@ function WorldMap() {
     };
 
     this.draw = function() {
-        if (this.fastRender) {
+        if (config.graphics.fastRender) {
             this.fastDraw();
         } else {
             this.layerDraw();
@@ -503,7 +501,7 @@ function WorldMap() {
         y -= this.location.y;
         x = (x / CELL_SIZE) << 0;
         y = (y / CELL_SIZE) << 0;
-        if (this.fastRender) {
+        if (config.graphics.fastRender) {
             var color = this.data[y*this.cells_x + x];
             if (!color)
                 return null;

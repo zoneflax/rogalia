@@ -99,7 +99,7 @@ ContainerSlot.prototype = {
         }
         this.bar.firstChild.style.width = percent + "%";
 
-        this.setSub(util.toFixed(percent) + "%");
+        this.setSub(util.toFixed(percent) + " %");
         this.sub.classList.add("sub-bar");
     },
     update: function() {
@@ -119,7 +119,7 @@ ContainerSlot.prototype = {
             return;
         }
         if ("Generate" in this.container.entity && "Progress" in this.container.entity.Generate) {
-            this.setSub(this.container.entity.Generate.Progress + "%");
+            this.setSub(this.container.entity.Generate.Progress + " %");
             return;
         }
         //TODO: make generic `progress' @server-side

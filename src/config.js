@@ -40,6 +40,7 @@ var config = {
         centerScreen: true,
         autoHideWalls: true,
         mapGrid: false,
+        fastRender: false,
     },
     sound: {
         playSound: true,
