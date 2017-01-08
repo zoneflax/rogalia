@@ -305,18 +305,22 @@ class Game {
             var gui = require("nw.gui");
             var win = gui.Window.get();
             win.on("close", () => {
-                this.save();
-                gui.App.quit();
+                // hack to fix nw.js bug
+                // see https://github.com/nwjs/nw.js/issues/2087
+                if (window) {
+                    this.save();
+                }
+                win.close(true);
             });
 
 
             window.addEventListener("wheel", function (e) {
-                console.log("IN");
                 if (e.ctrlKey) {
-                    if (e.deltaY > 0) {
+                    if (e.shiftKey) {
+                        win.zoomLevel = 0.0;
+                    } else if (e.deltaY > 0) {
                         win.zoomLevel -= 0.5;
-                    }
-                    else {
+                    } else {
                         win.zoomLevel += 0.5;
                     }
                     localStorage.zoomLevel = win.zoomLevel;
@@ -332,6 +336,8 @@ class Game {
 
     quit() {
         this.clearCredentials();
+        // force save here, becuase nwjs onClose handler is broken
+        this.save();
         require("nw.gui").App.closeAllWindows();
     }
 
