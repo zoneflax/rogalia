@@ -242,24 +242,24 @@ function Chat() {
 
     this.autocomplete = function(message) {
         var players = game.controller.system.users.getOnlinePlayers();
-        var candidates = players.filter(
-            (player) => player.indexOf(message) == 0 && player.length > message.length
-        );
+        var candidates = players.filter(function(player) {
+            return player.indexOf(message) == 0 && player.length > message.length;
+        });
 
-        if (candidates.length > 0) { // some candidates for autocompletion are found
-            if (candidates.length == 1) {
-                return candidates[0];
-            } else {
-                var A = candidates.concat().sort(),
-                    a1 = A[0], a2 = A[A.length-1], L = a1.length, i = 0;
-                while(i < L && a1.charAt(i) === a2.charAt(i)) i++;
-                return a1.substring(0, i);
-            }
+        switch (candidates.length) {
+        case 0:
+            return null;
+        case 1:
+            return candidates[0];
+        default:
+            // find longest common substring
+            var A = candidates.concat().sort(),
+            a1 = A[0], a2 = A[A.length-1], L = a1.length, i = 0;
+            while(i < L && a1.charAt(i) === a2.charAt(i)) i++;
+            return a1.substring(0, i);
         }
-
-        return null;
     };
-    
+
     this.keydown = function(e) {
         if (e.ctrlKey && e.keyCode ==  82) {
             self.preparePrivate(lastPrivate);

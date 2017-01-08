@@ -1306,6 +1306,7 @@ Character.prototype = {
             panel.playerValue = playerValue;
         }
         if ("Rating" in data) {
+            panel.rating.textContent = T(data.Rating);
             panel.player.value = +data.Player || 0;
             panel.fish.value = +data.Fish || 0;
             panel.playerValue.textContent = +data.Player || 0;
