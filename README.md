@@ -1,9 +1,9 @@
 Rogalia MMO game client available in the browser and on Steam.
 
-- [Steam](store.steampowered.com/app/528460/)
+- [Steam](http://store.steampowered.com/app/528460/)
 - [Browser](http://rogalia.ru/play)
 
-### Express
+## Express
 ```
 npm install
 npm run load-metadata
@@ -22,22 +22,25 @@ The Rogalia client requires [Node](https://nodejs.org/en/) to be installed. Curr
 Then use express to run the web server.
 
 When building on Windows, asset symlinks won't work. To set up NTFS hardlinks run the following commands in Git Bash:
-> sh scripts/fix-symlinks.sh
-> git rm-symlinks
+```
+sh scripts/fix-symlinks.sh
+git rm-symlinks
+```
 
-### Webserver
+## Webserver
 
 Another option is to run the client on a webserver e.g. Apache or NGINX.
 Navigate to `localhost/index.html`
 
-### NW.js executable
+## NW.js executable
 
 To run the client in a Webkit executable [NW.js](https://github.com/nwjs/nw.js) (for Windows x32 is required).
 
-> Extract the NW.js binary package
+* Extract the NW.js binary package
+* Drag the Rogalia directory, not the package.json itself, on to the NW.js executable (nwjs.exe) in your NW.JS directory.
 
-> Drag the Rogalia directory, not the package.json itself, on to the NW.js executable (nwjs.exe) in your NW.JS directory.
 or run in the client root directory
+
 ```
 nw .
 ```
