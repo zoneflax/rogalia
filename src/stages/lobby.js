@@ -1,4 +1,4 @@
-/* global game, util, Panel, dom, localStorage */
+/* global game, util, Panel, dom, localStorage, loader, Character */
 
 "use strict";
 function lobbyStage(data) {
@@ -46,7 +46,7 @@ function lobbyStage(data) {
 
     var avatars = document.createElement("div");
 
-    function add(name, icon, callback) {
+    function add({name, karma, icon}, callback) {
         var avatarContainer = document.createElement("div");
         avatarContainer.className = "avatar-container";
 
@@ -56,6 +56,9 @@ function lobbyStage(data) {
 
         var nameElem = document.createElement("div");
         nameElem.className = "avatar-name";
+        if (karma < 0) {
+            nameElem.className += " avatar-pk";
+        }
         nameElem.textContent = (name == "+") ? T("Create") : name;
 
         avatarContainer.appendChild(avatar);
@@ -71,7 +74,7 @@ function lobbyStage(data) {
 
     characters.forEach(function(info) {
         var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png").cloneNode();
-        add(info.Name, icon, function() {
+        add({name:  info.Name, karma: info.Karma, icon}, function() {
             game.playerName = info.Name;
             game.setStage("loading", lobbyStage.metadataVersion);
         });
@@ -80,7 +83,7 @@ function lobbyStage(data) {
     for (var i = maxChars - characters.length; i > 0; i--) {
         var create = loader.loadImage("avatars/new.png").cloneNode();
         create.className = "create";
-        add(T("Create"), create, function() {
+        add({name: T("Create"), icon: create}, function() {
             game.setStage("createCharacter");
         });
     };

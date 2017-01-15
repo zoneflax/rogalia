@@ -1,4 +1,4 @@
-/* global game, Character */
+/* global game, Character, util, util, config */
 
 "use strict";
 function mainStage(data) {
@@ -24,6 +24,8 @@ function mainStage(data) {
         data.Location && game.map.sync(data.Location, data.Map);
 
         data.BG && game.controller.updateBG(data.BG);
+
+        data.Shop && game.controller.shop.sync(data.Shop);
 
         game.controller.syncMinimap(data.RemotePlayers);
         data.Chat && game.controller.chat.sync(data.Chat);
@@ -99,13 +101,18 @@ function mainStage(data) {
         game.claims.forEach(drawClaim);
 
         // this.drawPotentialFields();
-        game.sortedEntities.traverse(drawObject);
+
+        // TODO: calc max items using game.controller.fps()
+        if (config.graphics.topologicalSort || game.sortedEntities.length < 200) {
+            this.drawTopologic();
+        } else {
+            game.sortedEntities.traverse(drawObject);
+        }
+
+        // this.drawOrder();
 
         _.forEach(game.missiles, draw);
 
-        // this.drawOrder();
-        // this.drawTopologic();
-        // this.drawAdaptive();
 
         snow.draw();
 
@@ -149,28 +156,6 @@ function mainStage(data) {
         }
     };
 
-    var adaptiveRadius = 300;
-    var frames = 0;
-    this.drawAdaptive = function() {
-        frames++;
-
-        var started = Date.now();
-        var pl = game.player;
-
-        var list = this.getDrawableList().filter(function(e) {
-            return pl.distanceTo(e) < adaptiveRadius;
-        });
-
-        this.topologicalSort(list).forEach(drawObject);
-
-        var ellapsed = Date.now() - started;
-        var diff = (ellapsed > 15) ? -CELL_SIZE : +CELL_SIZE;
-        if (diff != 0 && frames > 24) {
-            frames = 0;
-            adaptiveRadius += diff;
-        }
-    };
-
     this.drawOrder = function() {
         var i = 0;
         game.sortedEntities.traverse(function(object)  {
@@ -183,53 +168,63 @@ function mainStage(data) {
     };
 
     this.drawTopologic = function() {
-        this.topologicalSort(this.getDrawableList()).forEach(drawObject);
+        let list = this.getDrawableList();
+        for(let i = 0; i < list.length; i++) {
+            let entity = list[i];
+            const width = (entity.Width/2 || entity.Radius);
+            const height = (entity.Height/2 || entity.Radius);
+            entity.graph = {
+                maxX: entity.X + width,
+                maxY: entity.Y + height,
+                minX: entity.X - width,
+                minY: entity.Y - height,
+                z: entity.getZ(),
+                behind: [],
+                visited: false,
+                depth: 0,
+            };
+        }
+
+        for (let i = 0; i < list.length; i++) {
+            let entity = list[i].graph;
+            for(let j = 0; j < list.length; j++) {
+                var other = list[j].graph;
+                if (entity.z == other.z && other.minX < entity.maxX && other.minY < entity.maxY) {
+                    entity.behind.push(list[j]);
+                }
+            }
+        }
+
+        for (let i = 0; i < list.length; i++) {
+            visit(list[i]);
+        }
+
+        list = util.msort(list, function(a, b) {
+            var z = a.graph.z - b.graph.z;
+            if (z != 0)
+                return z;
+
+            return (a.graph.depth >= b.graph.depth) ? +1 : -1;
+        });
+        for (let i = 0; i < list.length; i++) {
+            list[i].draw();
+        }
     };
+
+    let depth = 0;
+    function visit(entity) {
+        if (entity.graph.visited)
+            return;
+        entity.graph.visited = true;
+        for (let i = 0; i < entity.graph.behind.length; i++) {
+            visit(entity.graph.behind[i]);
+        }
+        entity.graph.depth = depth++;
+    }
 
     this.getDrawableList = function() {
         return game.entities.filter(function(e) {
             return e instanceof Character || e.inWorld();
-        });
-    };
-
-    this.topologicalSort = function(list) {
-        list.forEach(function(e) {
-            e.visited = false;
-            e.behind = list.filter(function(t) {
-                if (e.getZ() != t.getZ())
-                    return false;
-                var aMaxX = e.X + e.Width/2;
-                var aMaxY = e.Y + e.Height/2;
-                var bMinX = t.X - t.Width/2;
-                var bMinY = t.Y - t.Height/2;
-                return (bMinX < aMaxX && bMinY < aMaxY);
-            });
-        });
-
-        // var tree = new BinarySearchTree();
-        var depth = 0;
-        function visit(e) {
-            if (e.visited)
-                return;
-            e.visited = true;
-            e.behind.forEach(visit);
-            e.depth = depth++;
-            // tree.add(e);
-        }
-
-        list.forEach(function(e) {
-            visit(e);
-        });
-
-        // list.forEach(tree.add.bind(tree));
-        // return tree;
-
-        return util.msort(list, function(a, b) {
-            var z = a.getZ() - b.getZ();
-            if (z != 0)
-                return z;
-
-            return (a.depth >= b.depth) ? +1 : -1;
         });
     };
 

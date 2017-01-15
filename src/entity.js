@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point, Container, Stats, Character */
+/* global dom, T, util, game, Panel, config, Point, Container, Stats, Character, BBox */
 
 "use strict";
 function Entity(type, id) {
@@ -42,6 +42,7 @@ Entity.prototype = {
     _canUse: false,
     _icon: null,
     _spriteVersion: "",
+    graph: null,
     x: 0,
     y: 0,
     get X() {
@@ -246,15 +247,15 @@ Entity.prototype = {
     },
     getDrawDx: function() {
         // switch (this.Type) {
-        // case "banana-palm-tree-plant":
-        //     return window.x || 55;
+        // case "honey-extractor":
+        //     return window.x || 15;
         // }
         return this.Sprite.Dx || this.sprite.width/2;
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "palm-tree-plant":
-        //     return window.y || 245;
+        // case "honey-extractor":
+        //     return window.y || 55;
         // }
 
         if (this.Sprite.Dy)
@@ -570,7 +571,10 @@ Entity.prototype = {
         return this.Location == Entity.LOCATION_ON_GROUND || this.Location == Entity.LOCATION_BURDEN;
     },
     canCollideNow: function() {
-        return this.CanCollide && this.Location == Entity.LOCATION_ON_GROUND && this.Disposition == "";
+        return this.CanCollide &&
+            this.Location == Entity.LOCATION_ON_GROUND &&
+            this.Disposition == "" &&
+            this.Group != "gate";
     },
     inContainer: function() {
         return this.Container > 0;
@@ -867,13 +871,19 @@ Entity.prototype = {
         game.ctx.fillRect(p.x, p.y, 3, 3);
     },
     setPoint: function(p) {
-        if (this.Id && this.inWorld())
+        const reinsert = this.Id && this.inWorld();
+        if (reinsert)
             game.sortedEntities.remove(this);
 
         this.x = p.x;
         this.y = p.y;
 
-        if (this.Id && this.inWorld())
+        if (reinsert) {
+            game.quadtree.remove(this);
+            game.quadtree.insert(this);
+        }
+
+        if (reinsert)
             game.sortedEntities.add(this);
     },
     drawHovered: function() {
@@ -1245,4 +1255,14 @@ Entity.prototype = {
     template: function() {
         return Entity.templates[this.Type];
     },
+    bbox: function() {
+        const width = (this.Width || 2*this.Radius);
+        const height = (this.Height || 2*this.Radius);
+        return new BBox(
+            this.X - width/2,
+            this.Y - height/2,
+            width,
+            height
+        );
+    }
 };

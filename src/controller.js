@@ -594,6 +594,12 @@ function Controller(game) {
         // };
     };
 
+    this.fps = function() {
+        return (this.fpsStats)
+            ? this.fpsStats.currentFps()
+            : 0;
+    };
+
     this.fpsStatsBegin = function() {
         if (this.fpsStats)
             this.fpsStats.begin();

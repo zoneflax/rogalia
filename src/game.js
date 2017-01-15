@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom, Container, _ */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree */
 
 "use strict";
 
@@ -50,6 +50,8 @@ class Game {
 
         this.controller = new Controller(this);
         this.network = new Network();
+
+        this.quadtree = new Quadtree(0, 0, 65568, 65568);
 
         this.entities = new HashTable();
         this.sortedEntities = new BinarySearchTree();
@@ -420,7 +422,6 @@ class Game {
 
     addCharacter(character) {
         this.addEntity(character);
-
         this.characters.set(character.name || character.Id, character);
 
         if (character.Name == this.playerName) {
@@ -431,6 +432,7 @@ class Game {
 
     addEntity(entity) {
         this.entities.set(entity.Id, entity);
+
         if (entity.Group == "claim")
             this.claims.set(entity.Id, entity);
     }
@@ -444,6 +446,7 @@ class Game {
         var entity = Entity.get(id);
         entity.onremove();
         this.sortedEntities.remove(entity);
+        this.quadtree.remove(entity);
         this.entities.remove(id);
         this.claims.remove(id);
     }

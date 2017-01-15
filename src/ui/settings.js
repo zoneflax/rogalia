@@ -1,4 +1,4 @@
-/* global game, Panel, dom, localStorage, config, _ */
+/* global game, Panel, dom, localStorage, config, _, TS, util */
 
 "use strict";
 function Settings() {
@@ -146,7 +146,8 @@ Settings.prototype = {
                         value = false;
                 }
 
-                var desc = Settings.descriptions[name] && Settings.descriptions[name][prop] || [prop, ""];
+                var desc = Settings.descriptions[name] && Settings.descriptions[name][prop] ||
+                    [TS(util.stringToSymbol(prop)), ""];
                 var title = desc[0];
                 var tip = desc[1];
 

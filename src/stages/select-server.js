@@ -29,7 +29,7 @@ function selectServerStage(panel) {
 
     function showEULA() {
         var eula = dom.tag("p");
-        util.ajax("/eula.txt", (text) => { dom.setContents(eula, text); });
+        util.ajax("eula.txt", (text) => { dom.setContents(eula, text); });
         new Panel("eula", T("EULA"), [eula]).show();
     }
 

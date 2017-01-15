@@ -1,4 +1,6 @@
-define(["../../lib/binary-search-tree.js"], function () {
+/* global define, BinarySearchTree, QUnit */
+
+define(["../../binary-search-tree.js"], function () {
     function Value(n) {
         this.Id = n;
         this.compare = function(to) {
@@ -27,31 +29,31 @@ define(["../../lib/binary-search-tree.js"], function () {
         });
     };
 
-    function assertEqual(accert, tree, values) {
-        accert.deepEqual(array(tree.toArray()), array(values));
+    function assertEqual(assert, tree, values) {
+        assert.deepEqual(array(tree.toArray()), array(values));
     }
 
-    QUnit.test("bst.add", function(accert) {
+    QUnit.test("bst.add", function(assert) {
         var tree = makeTree();
-        assertEqual(accert, tree, [a, b, c]);
+        assertEqual(assert, tree, [a, b, c]);
     });
 
-    QUnit.test("bst.remove", function(accert) {
+    QUnit.test("bst.remove", function(assert) {
         var tree = makeTree();
         tree.remove(b);
-        assertEqual(accert, tree, [a, c]);
+        assertEqual(assert, tree, [a, c]);
     });
 
-    QUnit.test("bst.remove1000", function(accert) {
+    QUnit.test("bst.remove1000", function(assert) {
         var tree = new BinarySearchTree();
         var values = Array.apply(null, {length: 1000}).map(function(_, i) {
             return new Value(i);
         });
         values.forEach(tree.add.bind(tree));
-        assertEqual(accert, tree, values);
+        assertEqual(assert, tree, values);
     });
 
-    QUnit.test("bst.addAndRemove", function(accert) {
+    QUnit.test("bst.addAndRemove", function(assert) {
         var tree = new BinarySearchTree();
         var values = Array.apply(null, {length: 1000}).map(function(_, i) {
             return new Value(i);
@@ -59,6 +61,6 @@ define(["../../lib/binary-search-tree.js"], function () {
         values.slice(0, 500).forEach(tree.add.bind(tree));
         values.slice(250, 500).forEach(tree.remove.bind(tree));
         values.slice(250, 1000).forEach(tree.add.bind(tree));
-        assertEqual(accert, tree, values);
+        assertEqual(assert, tree, values);
     });
 });

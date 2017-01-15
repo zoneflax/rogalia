@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox */
 
 "use strict";
 function Character(id) {
@@ -75,7 +75,7 @@ function Character(id) {
     }.bind(this));
     this.sprite = this.sprites.idle;
 
-    this._parts = "{}"; //defauls for npcs
+    this._parts = "{}"; //defaults for npcs
 
     this._marker = {
         opacity: 1,
@@ -98,6 +98,10 @@ Character.prototype = {
         if (this.Dx == 0 && this.Dy == 0) {
             return true;
         }
+        if ((Math.abs(this.x - x) > CELL_SIZE) || (Math.abs(this.y - y) > CELL_SIZE)) {
+            console.log("IN");
+        }
+
         return (Math.abs(this.x - x) > CELL_SIZE) || (Math.abs(this.y - y) > CELL_SIZE);
     },
     syncPosition: function(x, y) {
@@ -533,6 +537,12 @@ Character.prototype = {
 
         if (x == this.Dst.X && y == this.Dst.Y)
             return;
+
+        this._setDst(x, y);
+        if (this.willCollide(this.findMovePosition())) {
+            this.stop();
+            return;
+        }
 
         game.network.send("set-dst", {x: x, y: y});
         game.controller.resetAction();
@@ -1434,7 +1444,7 @@ Character.prototype = {
             this.updateEffect(name, this.Effects[name]);
         }
     },
-    findMovePosition: function(k) {
+    findMovePosition: function(k = 50/1000) {
         var delta = this.Speed.Current * k;
         var cell = game.map.getCell(this.X, this.Y);
         if (cell) {
@@ -1539,10 +1549,14 @@ Character.prototype = {
             return;
         }
 
-        var p = this.findMovePosition(k);
-        this.setPos(p.x, p.y);
-        if (this.X == this.Dst.X && this.Y == this.Dst.Y) {
+        let p = this.findMovePosition(k);
+        if (p.x == this.Dst.X && p.y == this.Dst.Y) {
+            this.setPos(p.x, p.y);
             this.stop();
+        } else if (this.isPlayer && this.willCollide(p)) {
+            this.stop();
+        } else {
+            this.setPos(p.x, p.y);
         }
 
         if (this.isPlayer) {
@@ -1551,6 +1565,18 @@ Character.prototype = {
         }
 
         this.updatePlow();
+    },
+    willCollide: function(point) {
+        let bbox = BBox.centeredAtPoint(point, 2*this.Radius, 2*this.Radius);
+        return game.quadtree.find(bbox, (object) => {
+            if (object == this || !object.canCollideNow())
+                return false;
+            if (object.Width && object.Height) {
+                return true;
+            }
+            const radius = object.Radius + this.Radius;
+            return util.distanceLessThan(point.x - object.X, point.y - object.Y, radius);
+        });
     },
     updatePlow: function() {
         if (!this.plow)
@@ -1974,4 +2000,12 @@ Character.prototype = {
     synodProtection: function() {
         return this.Z == 0 && this.Karma >= 0 && !this.inPvp();
     },
+    bbox: function() {
+        return new BBox(
+            this.X - this.Width/2,
+            this.Y - this.Height/2,
+            this.Width,
+            this.Height
+        );
+    }
 };

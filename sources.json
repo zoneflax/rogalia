@@ -1,6 +1,8 @@
 [
     "./src/image-filters.js",
     "./src/binary-search-tree.js",
+    "./src/bbox.js",
+    "./src/quadtree.js",
     "./src/polyfill.js",
     "./src/hashtable.js",
     "./src/config.js",

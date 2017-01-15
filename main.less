@@ -1640,34 +1640,43 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     right: -60px;
 }
 
-#lobby .avatar-container {
-    .cursor-pointer;
-    background: url("assets/bg/main-button.png") no-repeat;
-    width: 105px;
-    height: 86px;
-    display: inline-block;
-    margin-right: 3px;
-    position: relative;
-}
-#lobby .create {
-    margin: auto;
-    left: 0;
-    right: 0;
-    position: absolute;
-}
-#lobby .avatar-name {
-    margin-top: 8px;
-}
-#lobby .avatar-container:hover {
-    -webkit-filter: brightness(130%);
-    filter: brightness(130%);
-}
+#lobby {
+    .avatar-container {
+        .cursor-pointer;
+        background: url("assets/bg/main-button.png") no-repeat;
+        width: 105px;
+        height: 86px;
+        display: inline-block;
+        margin-right: 3px;
+        position: relative;
+    }
 
-#lobby .avatar {
-    width: 60px;
-    height: 58px;
-    overflow: hidden;
-    margin: auto;
+    .create {
+        margin: auto;
+        left: 0;
+        right: 0;
+        position: absolute;
+    }
+
+    .avatar-name {
+        margin-top: 8px;
+    }
+
+    .avatar-pk {
+        color: red;
+    }
+
+    .avatar-container:hover {
+        -webkit-filter: brightness(130%);
+        filter: brightness(130%);
+    }
+
+    .avatar {
+        width: 60px;
+        height: 58px;
+        overflow: hidden;
+        margin: auto;
+    }
 }
 
 #create-character {
@@ -3218,5 +3227,13 @@ input[type=number], .lot-quantity > input, .price > input {
 
     button {
 	width: 100%;
+    }
+}
+
+#steam-payment {
+    max-width: none;
+    iframe {
+        width: 1000px;
+        height: 600px;
     }
 }

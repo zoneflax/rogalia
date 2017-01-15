@@ -476,7 +476,7 @@ T.items = {
     "meteorite-shovel": "Shovel of celestial alloy. You can dig through a stone surface with this.",
     "hammer": "Hammer.",
     "stone-hammer": "Working with metal, that's what men must do, and a hammer like this in the hands of a good man, he could forge a great sword.",
-    "copper-hammer": "The process of forging this hammer is long, but because copper is soft and malleable it won't last long either, but we all have to start somewhere, right?"
+    "copper-hammer": "The process of forging this hammer is long, but because copper is soft and malleable it won't last long either, but we all have to start somewhere, right?",
     "iron-hammer": "An ordinary hammer. It feels to weigh a few good pounds. If you're a weakling with arms like spaghetti, it's time to stop sucking mommy's tits and time to start planting vegetables. The art of forging metal is only for hardy people.",
     "steel-hammer": "Hammer of steel. Stronger and better than iron. What else is there to add?",
     "titanium-hammer": "With this hammer, I could quickly forge something good.",

@@ -41,6 +41,7 @@ var config = {
         autoHideWalls: true,
         mapGrid: false,
         fastRender: false,
+        topologicalSort: false,
     },
     sound: {
         playSound: true,

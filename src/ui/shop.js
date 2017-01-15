@@ -1,3 +1,5 @@
+/* global dom, game, TS, Panel, T */
+
 "use strict";
 
 function Shop() {
@@ -10,7 +12,7 @@ function Shop() {
     var loaded = false;
     var onload = function(){};
 
-    this.panel = new Panel("shop", "Shop [NOT READY YET]", [], {
+    this.panel = new Panel("shop", "Shop", [], {
         show: function() {
             if (loaded) {
                 onload();
@@ -22,6 +24,14 @@ function Shop() {
             }
         },
     });
+
+    this.sync = function(data) {
+        new Panel("steam-payment", "Steam", [
+            dom.link(data.Url, T("Open payment link in your browser")),
+            dom.hr(),
+            dom.iframe(data.Url),
+        ]).show();
+    };
 
     this.search = function(pattern) {
         onload = function() {
@@ -91,11 +101,7 @@ function Shop() {
                     card.name = product.Name;
                     card.tab = tabs[index];
                     card.style.backgroundImage = "url(assets/shop/" + product.Name + "/preview.png)";
-                    card.onclick = function() {
-                        // TODO: disabled
-                        return;
-                        openCard(product);
-                    };
+                    card.onclick = () => { openCard(product); };
                     cards.push(card);
                     contents.push(card);
                 });
@@ -109,13 +115,10 @@ function Shop() {
 
     function openCard(product) {
         buyButton = dom.button(T("Buy"), "product-buy", function() {
-            if (game.args["steam"]) {
-                game.popup.alert(T("Comming soon"));
-                return false;
-            }
-            game.network.send("shop", { Product: product.Name, Data: product.data }, function(data) {
-                pay(product, data.Order);
-            });
+            game.network.send("shop", { Product: product.Name, Data: product.data });
+            // function(data) {
+            //     pay(product, data.Order);
+            // }
             return false;
         });
         self.panel.setContents([

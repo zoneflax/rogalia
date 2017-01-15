@@ -92,7 +92,9 @@ Character.npcActions = {
         var id = this.Id;
         var set = function(name) {
             return function() {
-                game.network.send("set-citizenship", {Id: id, Name: name});
+                game.popup.confirm(T("Change faction?"), function() {
+                    game.network.send("set-citizenship", {Id: id, Name: name});
+                });
             };
         };
         new Panel("citizenship", "Citizenship", [
