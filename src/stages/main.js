@@ -187,11 +187,14 @@ function mainStage(data) {
 
         for (let i = 0; i < list.length; i++) {
             let entity = list[i].graph;
-            for(let j = 0; j < list.length; j++) {
-                var other = list[j].graph;
-                if (entity.z == other.z && other.minX < entity.maxX && other.minY < entity.maxY) {
-                    entity.behind.push(list[j]);
-                }
+            for(let j = i+1; j < list.length; j++) {
+                let other = list[j].graph;
+                if(entity.z !== other.z)
+                    continue;
+                if(other.minX < entity.maxX && other.minY < entity.maxY)
+                    entity.behind.push(list[j])
+                else if(entity.minX < other.maxX && entity.minY < other.maxY)
+                    other.behind.push(list[i])
             }
         }
 
