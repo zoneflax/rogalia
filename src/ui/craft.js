@@ -142,7 +142,7 @@ Craft.prototype = {
         var auto = dom.button(T("Auto"), "build-auto", function() {
             var list = [];
             var items = [];
-            self.auto(function(item) {
+            game.controller.iterateContainers(function(item) {
                 items.push(item.entity);
             });
             for (var group in blank.Props.Ingredients) {
@@ -532,9 +532,9 @@ Craft.prototype = {
 
         this.slots = slots;
 
-        var auto = dom.button(T("Auto"), "recipe-auto", this.auto.bind(this, null));
-        var create = dom.button(T("Create"), "recipe-create", this.create.bind(this));
-        var all = dom.button(T("Craft all"), "recipe-craft-all", this.craftAll.bind(this));
+        var auto = dom.button(T("Auto"), "recipe-auto", () => game.controller.iterateContainers((slot) => this.dwim(slot)));
+        var create = dom.button(T("Create"), "recipe-create", () => this.create());
+        var all = dom.button(T("Craft all"), "recipe-craft-all", () => this.craftAll());
         var buttons = dom.wrap("#recipe-buttons", [all, auto, create]);
 
         dom.append(this.recipeDetails, [
@@ -600,40 +600,8 @@ Craft.prototype = {
             }),
         ]);
     },
-    auto: function(callback) {
-        callback = callback || this.dwim.bind(this);
-
-        var checked = {};
-        var bag = Container.bag();
-        if (bag) {
-            check(bag);
-        }
-
-        Container.forEach(function(container) {
-            if (container.visible || container.entity.belongsTo(game.player)) {
-                check(container);
-            }
-        });
-
-        function check(container) {
-            if (checked[container.id])
-                return;
-            checked[container.id] = true;
-            container.update();
-            var containers = [];
-            container.forEach(function(slot) {
-                if (!slot.entity)
-                    return;
-                callback(slot, container);
-                if (slot.entity.isContainer()) {
-                    containers.push(Container.open(slot.entity));
-                }
-            });
-            containers.forEach(check);
-        }
-    },
     craftAll: function() {
-        this.auto();
+        game.controller.iterateContainers((slot) => this.dwim(slot));
         this.create(true);
     },
     create: function(craftAll) {

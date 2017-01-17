@@ -1665,28 +1665,37 @@ Character.prototype = {
     },
     bag: function() {
         return Entity.get(this.Equip[0]);
-
     },
     findItems: function(kinds) {
         var found = {};
+        var self = this;
+
         kinds.forEach(function(kind) {
             found[kind] = [];
         });
+
         var entities = [
-            this.equipSlot("bag"),
             this.equipSlot("right-hand"),
             this.equipSlot("left-hand"),
         ].map(Entity.get).map(search);
 
-        // TODO: search in recursive containers
+        game.controller.iterateContainers(function (slot) {
+            kinds.forEach(function (kind) {
+                if (slot.entity && slot.entity.is(kind)) {
+                    found[kind].push(slot.entity);
+                }
+            });
+        });
+
         function search(entity) {
             if (!entity)
                 return;
+
             var items = (entity.Props.Slots) ? entity.Props.Slots.map(Entity.get) : [entity];
-            items.forEach(function(entity) {
+            items.forEach(function (entity) {
                 if (!entity)
                     return;
-                kinds.forEach(function(kind) {
+                kinds.forEach(function (kind) {
                     if (entity.is(kind)) {
                         found[kind].push(entity);
                     }
