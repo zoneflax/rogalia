@@ -7,8 +7,15 @@ function Bank(npc) {
     var price = Vendor.createPriceInput();
 
     var deposit = dom.button(T("Deposit"), "", () => send("deposit"));
-
     var withdraw = dom.button(T("Withdraw"), "", () => send("withdraw"));
+    var max = dom.button(T("Max"), "", () => maxCurrency());
+
+    function maxCurrency() {
+        var items = game.player.findItems(["currency"]);
+        _(items.currency).groupBy("Type").forEach((v, k) => (
+            price.setTypeValue(k, _.sumBy(v, 'Amount'))
+        ));
+    }
 
     function send(action) {
         var cost = price.cost();
@@ -47,6 +54,7 @@ function Bank(npc) {
         balance,
         dom.hr(),
         price,
+        max,
         deposit,
         withdraw,
         dom.hr(),
