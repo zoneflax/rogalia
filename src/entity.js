@@ -321,6 +321,7 @@ Entity.prototype = {
 
         switch (this.Type) {
         case "wooden-table":
+        case "herb-rack":
         case "bookshelf":
         case "wooden-trough":
         case "steel-pike":
@@ -965,6 +966,8 @@ Entity.prototype = {
         case "entrance":
         case "exit":
             return true;
+        case "fence":
+            return false;
         }
         return (!this.Sprite.Unselectable && !this.Disposition);
     },

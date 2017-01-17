@@ -75,7 +75,7 @@ function Character(id) {
     }.bind(this));
     this.sprite = this.sprites.idle;
 
-    this._parts = "{}"; //defaults for npcs
+    this._parts = "{}"; // defaults for npcs
 
     this._marker = {
         opacity: 1,
@@ -98,10 +98,6 @@ Character.prototype = {
         if (this.Dx == 0 && this.Dy == 0) {
             return true;
         }
-        if ((Math.abs(this.x - x) > CELL_SIZE) || (Math.abs(this.y - y) > CELL_SIZE)) {
-            console.log("IN");
-        }
-
         return (Math.abs(this.x - x) > CELL_SIZE) || (Math.abs(this.y - y) > CELL_SIZE);
     },
     syncPosition: function(x, y) {
