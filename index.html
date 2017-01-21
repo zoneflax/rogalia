@@ -34,14 +34,7 @@
       </div>
 
       <div id="interface">
-	  <div id="avatar-container">
-	      <img id="avatar">
-	      <div id="strips">
-		  <div id="hp"><div></div><div></div></div>
-		  <div id="fullness"><div></div><div></div></div>
-		  <div id="stamina"><div></div><div></div></div>
-	      </div>
-	  </div>
+	  <div id="player-avatar"></div>
           <div id="new-mail" class="icon-button hidden animate-opacity" title="New mail"></div>
           <div id="party"></div>
 	  <div id="target-container" class="hidden character-avatar-container"></div>
@@ -52,18 +45,7 @@
 		  <canvas id="minimap-objects-canvas"></canvas>
 	      </div>
 	  </div>
-	  <div id="controls-bar" class="button-bar">
-              <div class="button" id="shop-button" title="Shop"></div>
-	      <div class="button" id="stats-button" title="Characteristics"></div>
-	      <div class="button" id="inventory-button" title="Inventory"></div>
-	      <div class="button" id="skills-button" title="Skills"></div>
-	      <div class="button" id="craft-button" title="Craft"></div>
-              <div class="button" id="map-button" title="Map"></div>
-	      <div class="button" id="chat-button" title="Chat" style="display: none"></div>
-	      <div class="button" id="journal-button" title="Journal"></div>
-	      <div class="button" id="system-button" title="System"></div>
-	      <div class="button" id="help-button" title="Help"></div>
-	  </div>
+	  <div id="controls-bar" class="button-bar"></div>
 	  <div title="Game time" id="time">00:00</div>
 	  <div id="effects"></div>
 	  <div id="warning"></div>
@@ -71,14 +53,16 @@
           <div id="blinking-warning"></div>
 	  <div id="messages"></div>
           <div id="combos"></div>
-	  <div id="action-hotbar-container">
-	      <div id="main-action-button" class="button"></div>
-	      <div id="action-hotbar-wrapper">
-		  <div id="xp-progress-bar"><div id="xp-progress"></div></div>
-		  <div id="action-hotbar" class="button-bar"></div>
-	      </div>
-	  </div>
 	  <div id="action-progress" class="hidden"><div id="action-progress-value"></div></div>
+	  <div id="hotbars-container">
+              <div id="hotbars">
+	          <div id="main-action-button" class="button"></div>
+	          <div id="hotbars-wrapper">
+		      <div id="fight-hotbar" class="button-bar"></div>
+                      <div id="action-hotbar" class="button-bar"></div>
+	          </div>
+              </div>
+	  </div>
       </div>
     </div>
     <script src="lib/rawinflate.js"></script>

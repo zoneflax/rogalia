@@ -39,7 +39,6 @@ var config = {
         movingSpace: false,
         centerScreen: true,
         autoHideWalls: true,
-        mapGrid: false,
         fastRender: false,
         topologicalSort: false,
     },

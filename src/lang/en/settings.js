@@ -101,10 +101,6 @@ Settings.descriptions = {
             "If enabled, game area centers on screen center.",
             "If disabled, game area is placed on the left.",
         ],
-        mapGrid: [
-            "Map grid",
-            "Draw map grid",
-        ],
     },
     sound:  {
         playSound: [

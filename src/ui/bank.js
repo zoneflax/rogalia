@@ -8,14 +8,19 @@ function Bank(npc) {
 
     var deposit = dom.button(T("Deposit"), "", () => send("deposit"));
     var withdraw = dom.button(T("Withdraw"), "", () => send("withdraw"));
-    var max = dom.button(T("Max"), "", () => maxCurrency());
-
-    function maxCurrency() {
+    var clear = dom.button(T("Clear"), "", function() {
+        price.set(0, 0, 0);
+    });
+    var max = dom.button(T("Max"), "", function () {
         var items = game.player.findItems(["currency"]);
-        _(items.currency).groupBy("Type").forEach((v, k) => (
-            price.setTypeValue(k, _.sumBy(v, 'Amount'))
-        ));
-    }
+        var currencies = _.groupBy(items.currency, "Type");
+        _.forEach(currencies, function(v, k) {
+            const currency = price.currency[k];
+            if (currency) {
+                currency.value = _.sumBy(v, "Amount");
+            }
+        });
+    });
 
     function send(action) {
         var cost = price.cost();
@@ -53,19 +58,25 @@ function Bank(npc) {
     var contents = [
         balance,
         dom.hr(),
-        price,
-        max,
-        deposit,
-        withdraw,
+        dom.wrap("price-controller", [
+            price,
+            deposit,
+            withdraw,
+            max,
+            clear,
+        ]),
         dom.hr(),
         dom.make("div", [
             T("Claim"),
             claimRent,
             claimPaidTill,
-            claimGet,
-            claimPay,
+            dom.wrap("claim-controller", [
+                claimGet,
+                claimPay,
+            ]),
         ]),
         dom.hr(),
+        T("Vault"),
         vault,
     ];
     var panel = new Panel("bank", "Bank", contents);

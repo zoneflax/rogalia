@@ -1,4 +1,4 @@
-/* global T, Game, localStorage, config */
+/* global T, Game, localStorage, config, util */
 
 "use strict";
 
@@ -7,6 +7,10 @@ main();
 function main() {
     var args = parseArgs();
     var lang = localStorage.getItem("lang") || defaultLang(args);
+
+    if (args["skewer"]) {
+        util.loadScript("http://localhost:8888/skewer");
+    }
 
     T.init(lang, function() {
         new Game(lang, args);

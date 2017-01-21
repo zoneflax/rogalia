@@ -1,3 +1,5 @@
+/* global loader */
+
 "use strict";
 function Sprite(path, width, height, speed) {
     this.name = "";
@@ -54,7 +56,7 @@ Sprite.prototype = {
             this.loading = false;
 
             var canvas = null;
-            while (canvas = this.pending.pop()) {
+            while ((canvas = this.pending.pop())) {
                 this.renderIcon(canvas);
             }
             if (this._onload) {

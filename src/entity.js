@@ -785,11 +785,11 @@ Entity.prototype = {
 
         var p = this.getDrawPoint();
 
-        if (this.Disposition == "roof" && game.controller.hideStatic()) {
+        if (this.Disposition == "roof" && game.controller.hideStatic) {
             return;
         }
         if ((this.MoveType == Entity.MT_STATIC || this.CanCollide) &&
-            game.controller.hideStatic()) {
+            game.controller.hideStatic) {
             this.drawBox(this.getDrawBoxColor());
         } else if (this.shouldBeAutoHidden()) {
             this.drawBox(this.getDrawBoxColor());
@@ -939,7 +939,7 @@ Entity.prototype = {
             return false;
         if (!this.sprite.outline)
             return false;
-        if (this.MoveType == Entity.MT_STATIC && game.controller.hideStatic())
+        if (this.MoveType == Entity.MT_STATIC && game.controller.hideStatic)
             return false;
 
 

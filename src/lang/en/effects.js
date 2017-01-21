@@ -1,6 +1,7 @@
-/* global EffectDesc */
+/* global Effects */
 
-EffectDesc.effects = {
+
+Effects.descriptions = {
     "Overeat": {
         "class": "bad",
         "effect": "Character movement speed decreases by 45.",
@@ -117,5 +118,11 @@ EffectDesc.effects = {
         "effect": "Death penalty.",
         "desc": "Lvl 1 to 9 - keep bag and equipment.\nLvl 10 to 19 - keep bag, but lose it's contents.\nFrom lvl 20 - losing all equipment and inventory.",
         "note": "On any level you lose all vitamins and learning points.",
+    },
+    "Nya": {
+        "class": "fight",
+    },
+    "Inspiration": {
+        "class": "fight",
     },
 };

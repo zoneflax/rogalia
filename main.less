@@ -23,7 +23,11 @@
 @button-color: #ffca8c;
 @dark-color: #292b2f;
 @bg-color: #3f4244;
+@bg-transparent-color: rgba(38, 41, 44, 0.8);
+@bg-transparent-border-color: #7f858a;
+@bg-transparent-border: 1px solid @bg-transparent-border-color;
 @placeholder-color: #999;
+
 
 @font-face {
     font-family: "Dejavu Sans";
@@ -353,7 +357,7 @@ hr {
     font-size: 10px;
     width: 50px; /* update Container.SLOT_SIZE */
     height: 47px;
-    line-height: 48px; /* for img align, but why? */
+    line-height: 47px;
     white-space: nowrap;
     margin: 1px;
     float: left;
@@ -635,90 +639,45 @@ hr {
     background: url("assets/bg/exit.png") no-repeat center bottom;
 }
 
-#controls-bar, #action-hotbar-container{
-    position: absolute;
-    right: 4px;
-}
-
 #controls-bar {
+    position: absolute;
     bottom: 0;
     top: 0;
+    right: 3px;
+    height: 384px;
     margin: auto;
-    height: 376px;
 
-    .icon {
-	width: 50px;
-	height: 43px;
-	display: inline-block;
-	background-repeat: no-repeat;
+    .button {
+        margin-bottom: 4px;
+
+        .icon {
+            position: relative;
+            left: -3px;
+            top: -4px;
+        }
     }
 
-    .button.active {
-	background-image: url("assets/bg/button-active.png");
-    }
-
-    .button:hover > .icon {
-	-webkit-filter: brightness(135%);
-	filter: brightness(135%);
-    }
-
-    #shop-button.active {
-	background-image: url("assets/bg/shop-button-active.png");
+    .button.alert {
+        animation: blink-brightness 1s;
+        animation-iteration-count: infinite;
     }
 }
 
 #shop-button {
-    background-image: url("assets/bg/shop-button.png");
     position: absolute;
-    top: -63px;
-    right: 5px;
+    top: -48px;
+    height: 28px;
+    border-color: #069e8a;
 
-    width: 60px;
-    height: 37px;
-    .icon {
-	width: 60px;
-	height: 37px;
+    &.button.active {
+        border-color: #07b19b;
+        background-color: #046a5d;
     }
-}
 
-#shop-button > .icon {
-    background-image: url("assets/icons/controls/shop.png");
-}
-
-#stats-button > .icon {
-    background-image: url("assets/icons/controls/stats.png");
-}
-
-#help-button > .icon {
-    background-image: url("assets/icons/controls/help.png");
-}
-
-#system-button > .icon {
-    background-image: url("assets/icons/controls/system.png");
-}
-
-#map-button > .icon {
-    background-image: url("assets/icons/controls/map.png");
-}
-
-#inventory-button > .icon {
-    background-image: url("assets/icons/controls/inventory.png");
-}
-
-#craft-button > .icon {
-    background-image: url("assets/icons/controls/craft.png");
-}
-
-#skills-button > .icon {
-    background-image: url("assets/icons/controls/skills.png");
-}
-
-#chat-button > .icon {
-    background-image: url("assets/icons/controls/chat.png");
-}
-
-#journal-button > .icon {
-    background-image: url("assets/icons/controls/journal.png");
+    &.button .icon {
+        left: 0;
+        top: 0;
+    }
 }
 
 #system button, #links button {
@@ -739,103 +698,42 @@ hr {
     margin: auto;
 }
 
-#effects {
-    top: 28px;
-    left: 160px;
-    position: absolute;
-    display: inline-block;
-}
-.effect {
-    .cursor-pointer;
-    float: left;
-    position: relative;
-}
-.effect-bad {
-    color: #c3401f;
-}
-.effect-good {
-    color: #4eaf4e;
-}
-.effect-desc, .effect-note {
-    font-size: 11px;
-    line-height: 12px;
-    white-space: pre-wrap;
-}
-
-.effect-note {
-    color: #c38234;
-}
-
-.effect-stacks {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    color: #fff;
-    font-size: 10px;
-}
-
-.effect-progress-bg, .effect-progress {
-    position: absolute;
-    width: 30px;
-    height: 6px;
-    background: #4d3314;
-}
-.effect-progress-bg {
-    top: 34px;
-    left: 1px;
-}
-.effect-progress {
-    background: #7b5323;
-}
-
 .button {
     .cursor-pointer;
-    background-image: url("assets/bg/button.png");
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    color: #202325;
-    width: 68px;
-    height: 45px;
-    line-height: 45px;
+    background-color: @bg-transparent-color;
     position: relative;
-    margin: -1px -7px;
+    color: #202325;
+    width: 48px;
+    height: 40px;
+    box-sizing: border-box;
+    padding: 1px;
+    border: 1px solid #8e602a;
+    outline: 1px solid @bg-transparent-color;
+
+    &.active {
+        border-color: #d89108;
+        background-color: #8d5e05;
+    }
+
+    &:hover .icon {
+	filter: brightness(135%);
+    }
 }
 
 .button-icon {
     font-size: x-large;
-}
-.button.alert:before {
-    position: absolute;
-    background-color: #563a11;
-    box-shadow: 0 0 1px 1px #fee70f;
-    border-radius: 50%;
-    height: 6px;
-    width: 6px;
-    content: "";
-    display: block;
-    top: 20px;
 }
 
 .button-bar i, .button i {
     display: block;
     font-size: 10px;
     position: absolute;
-    left: 13px;
-    top: 5px;
+    right: 0;
+    top: 0;
     font-style: normal;
     z-index: 1;
     line-height: 1;
     color: @text-color;
-}
-
-#action-button:after {
-    content: "(Space)";
-    font-style: italic;
-    font-size: smaller;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -14px;
 }
 
 #blinking-warning {
@@ -844,7 +742,7 @@ hr {
     left: 0;
     right: 0;
     text-align: center;
-    animation: highlight-news 1s;
+    animation: blink-brightness 1s;
     animation-iteration-count: infinite;
     z-index: 2001;
 
@@ -1065,7 +963,7 @@ hr {
 
 #chat-always-visible-label, #chat-settings-icon {
     position: absolute;
-    top: 12px;
+    top: 8px;
     right: 9px;
     width: 16px;
     height: 16px;
@@ -1073,17 +971,12 @@ hr {
 #chat-settings-icon {
     right: 28px;
 }
-#chat #chat-settings-icon {
-    right: 8px;
-    top: 22px;
-}
 #chat-always-visible-label {
     display: none;
     pointer-events: all;
     background: url("assets/icons/tab/always-visible.png");
 }
-#chat-always-visible-label:hover,
-#chat-settings-icon:hover {
+#chat-always-visible-label:hover {
     -webkit-filter: brightness(150%);
     filter: brightness(150%);
 }
@@ -1161,21 +1054,36 @@ hr {
     }
 
     &.attached-chat {
-        left: 0!important;
+        left: -2px!important;
+        bottom: -2px!important;
         top: auto!important;
-        bottom: 0!important;
         z-index: 1;
+        background: @bg-transparent-color;
+        padding: 1px;
+
+        hr {
+            background: @bg-transparent-border-color;
+            height: 1px;
+        }
+
+        .contents {
+            background: none;
+            padding: 5px;
+            border: @bg-transparent-border;
+        }
+
+        .chat-tab {
+            margin: -2px 4px 1px 0;
+        }
 
         #chat-always-visible-label {
             display: block;
         }
 
-        #chat-wrapper {
-            padding: 5px 0;
-        }
-
         .messages {
-            height: 8em;
+            width: 32em;
+            height: 10em;
+            padding: 0;
         }
 
         .semi-hidden, .semi-hidden a {
@@ -1191,12 +1099,7 @@ hr {
         }
 
         #new-message {
-            margin-left: 5px;
-            width: 95%;
-        }
-
-        .messages {
-            margin-right: -16px;
+            width: 99%;
         }
     }
 }
@@ -1214,6 +1117,7 @@ hr {
 .message {
     word-wrap: break-word;
     padding: 0 2em 0 0;
+    line-height: 16px;
 }
 .message .from {
     .cursor-pointer;
@@ -1879,7 +1783,7 @@ ol li a:hover {
     }
 }
 
-@keyframes highlight-news {
+@keyframes blink-brightness {
     0% {
         -webkit-filter: none;
         filter: none;
@@ -1900,7 +1804,7 @@ ol li a:hover {
 
     &.breaking-news {
         background-image: url("assets/icons/breaking-news.png");
-        animation: highlight-news 1s;
+        animation: blink-brightness 1s;
         animation-iteration-count: infinite;
     }
 }
@@ -2005,7 +1909,217 @@ big {
     }
 }
 
-#avatar-container, #minimap-container {
+#player-avatar {
+    position: absolute;
+    top: 7px;
+    left: 11px;
+
+    .avatar-effects {
+        height: 28px;
+    }
+}
+
+
+.effect {
+    .cursor-pointer;
+    position: relative;
+    border: 1px solid;
+    box-sizing: border-box;
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
+    display: inline-block;
+
+    img {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+.effect-neutral {
+    border-color: #453205;
+    background-color: #8e5e30;
+}
+.effect-bad {
+    background-color: #9a3b2e;
+    border-color: #622000;
+    color: #c3401f;
+}
+
+.effect-good {
+    background-color: #567a08;
+    border-color: #2a3e00;
+    color: #4eaf4e;
+}
+
+.effect-fight {
+    background-color: #31688b;
+    border-color: #103758;
+}
+
+.effect-effect {
+    background: none;
+}
+
+.effect-desc, .effect-note {
+    font-size: 11px;
+    line-height: 12px;
+    white-space: pre-wrap;
+}
+
+.effect-note {
+    color: #c38234;
+}
+
+.effect-stacks {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: #fff;
+    font-size: 10px;
+    line-height: 10px;
+}
+
+.effect-progress-container, .effect-progress {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0px;
+}
+.effect-progress-container {
+    left: 0px;
+}
+.effect-progress {
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+#interface {
+    .avatar-container {
+        width: 222px;
+        background-color: @bg-transparent-color;
+        padding: 1px;
+        margin-left: -2px;
+
+        .avatar-contents {
+            position: relative;
+            display: flex;
+            justify-content: flex-end;
+            border: @bg-transparent-border;
+            box-sizing: border-box;
+
+            .avatar-info {
+                position: relative;
+                z-index: 1;
+                width: 160px;
+                padding: 3px;
+            }
+
+            .avatar-image {
+                position: absolute;
+                bottom: 0;
+                right: 160px;
+            }
+
+            .avatar-name {
+                text-align: left;
+                color: #cbe2e7;
+                text-shadow: 1px 1px #333;
+            }
+
+        }
+
+        .avatar-effects {
+            display: flex;
+            align-items: center;
+            background-color: rgba(127, 133, 138, 0.4);
+            padding-left: 1px;
+        }
+    }
+}
+
+.param-bar {
+    width: 100%;
+    margin: 2px 0;
+    box-sizing: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    height: 14px;
+    line-height: 12px;
+    text-align: left;
+    font-size: 11px;
+    position: relative;
+    padding-left: 3px;
+    text-shadow: 1px 1px #333;
+
+    .param-name {
+        position: relative;
+        z-index: 1;
+    }
+
+    .param-status {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        z-index: 2;
+    }
+
+    &.hp {
+        background-color: #9f2d21;
+        height: 17px;
+        line-height: 13px;
+    }
+
+    &.fullness {
+        background-color: #c69b08;
+    }
+
+    &.stamina {
+        background-color: #1173b1;
+    }
+
+    &.xp {
+        background-color: #6a8e8d;
+    }
+
+    .param-bar-value {
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        right: 0;
+        top: 0;
+        position: absolute;
+    }
+
+    .param-bar-overflow {
+        height: 100%;
+        background: rgba(255, 255, 255, 0.25);
+        left: 0;
+        top: 0;
+        position: absolute;
+    }
+}
+
+#party {
+    position: absolute;
+    top: 115px;
+    left: 11px;
+
+    .avatar-container {
+        width: 180px;
+        margin-top: 32px;
+
+        .avatar-contents {
+            .avatar-info {
+                width: 120px;
+            }
+
+            .avatar-image {
+                right: 121px;
+            }
+        }
+    }
+}
+
+#minimap-container {
     position: absolute;
     width: 154px;
     height: 90px;
@@ -2015,99 +2129,31 @@ big {
     background-image: url("assets/bg/minimap.png");
 }
 
-#avatar-container {
-    background-image: url("assets/bg/rhombus.png");
-    left: 0;
-}
-#avatar {
-    position: absolute;
-    left: 26px;
-}
-
-#strips {
-    position: absolute;
-    top: 30px;
-    left: 57%;
-    width: 65px;
-    height: 29px;
-    background: url("assets/bg/strips.png") no-repeat;
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
-    align-content: flex-start;
-}
-#strips div {
-    height: 7px;
-}
-#strips > div {
-    width: 59px;
-    position: relative;
-    margin-top: 2px;
-}
-#strips > div > div {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 0;
-}
-#strips #hp{
-    background: linear-gradient(to bottom,  #57130e 0%, #9e3320 100%);
-}
-#strips #hp > div:first-child{
-    background: linear-gradient(to bottom,  #5a140f 0%, #e23d23 100%);
-}
-
-#strips #fullness{
-    background: linear-gradient(to bottom,  #49440c 0%, #8c771d 100%);
-}
-#strips #fullness > div:first-child {
-    background: linear-gradient(to bottom,  #7b7000 0%, #cfb20d 100%);
-}
-
-#strips #stamina{
-    background: linear-gradient(to bottom,  #0d3550 0%, #3c6378 100%);
-}
-#strips #stamina > div:first-child {
-    background: linear-gradient(to bottom,  #155783 0%, #4690bc 100%);
-}
-
 .character-avatar-container {
     position: relative;
-    background-image: url("assets/bg/rhombus-small.png");
-    width: 103px;
-    height: 60px;
+
+    > img {
+        margin-left: -30px;
+        width: 38px;
+    }
 }
+
 .character-avatar-not-available {
     .cursor-help;
     line-height: 60px;
     font-size: 19px;
 }
-.character-avatar-container > img {
-    margin-left: -30px;
-    width: 38px;
-}
 
 #target-container {
     position: absolute;
-    left: 151px;
-    top: 66px;
-}
-#target-container > canvas {
-    margin-top: 10px;
-    max-height: 40px;
-    max-width: 40px;
-}
+    left: 260px;
+    top: 68px;
 
-#party {
-    position: absolute;
-    top: 85px;
-}
-.party-member-name {
-    position: absolute;
-    left: 75px;
-    top: 41px;
-    border-radius: 2px;
-    text-shadow: 0px 0px 3px #000;
+    > canvas {
+        margin-top: 10px;
+        max-height: 40px;
+        max-width: 40px;
+    }
 }
 
 #minimap-container {
@@ -2302,28 +2348,42 @@ input[type=number], .lot-quantity > input, .price > input {
     }
 }
 
-#bank > .contents {
-    text-align: right;
-}
-#bank label {
-    text-align: left;
-    display: block;
-}
-#bank label > span {
-    float: right;
-    margin-left: 5px;
-}
+#bank{
+    .price-controller, .claim-controller {
+        width: 156px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
-#bank .lot-price {
-    margin: 5px auto;
-    display: block;
-    width: auto;
-}
-#bank button+button {
-    clear: none;
-}
-#bank .vault {
-    overflow: auto;
+    .price-controller .price {
+        margin-bottom: 2px;
+        margin-right: 0;
+    }
+
+    label {
+        text-align: left;
+        display: block;
+    }
+
+    label > span {
+        float: right;
+        margin-left: 5px;
+    }
+
+    .lot-price {
+        margin: 5px auto;
+        display: block;
+        width: auto;
+    }
+
+    button+button {
+        clear: none;
+    }
+
+    .vault {
+        overflow: auto;
+    }
 }
 
 #action-progress-value {
@@ -2466,59 +2526,48 @@ input[type=number], .lot-quantity > input, .price > input {
     display: block;
 }
 
-#action-hotbar-container {
-    bottom: 4px;
-    display: flex;
-    align-items: flex-end;
-}
-
-#main-action-button {
-    background-image: url("assets/bg/main-button.png");
-    width: 105px;
-    height: 67px;
-    display: flex;
-    justify-content: space-around;
-}
-
-#main-action-button.active {
-    background-image: url("assets/bg/main-button-active.png");
-}
-
-#main-action-button > img {
+#hotbars-container {
+    position: absolute;
+    width: 304px;
+    left: 0;
+    right: 0;
+    bottom: 3px;
     margin: auto;
-}
-#main-action-button:hover > img {
-    -webkit-filter: brightness(135%);
-    filter: brightness(135%);
-}
 
-#xp-progress-bar {
-    position: relative;
-    margin: 4px;
-    background: url("assets/bg/xp.png") repeat-x;
-}
-#xp-progress-bar:before {
-    position: absolute;
-    top: -6px;
-    left: -4px;
-    content: url("assets/bg/xp-left.png");
-}
-#xp-progress-bar:after {
-    position: absolute;
-    top: -6px;
-    right: -4px;
-    content: url("assets/bg/xp-right.png");
-}
-#xp-progress {
-    background: url("assets/bg/xp-full.png") repeat-x;
-    height: 7px;
-}
-#action-hotbar {
-    display: flex;
+    #hotbars {
+        display: flex;
+    }
 
-    .button > img {
-        position: relative;
-        top: 4px;
+    .button-bar {
+        display: flex;
+    }
+
+    .button {
+        width: 41px;
+        height: 36px;
+        margin: 0 0 4px 4px;
+    }
+
+    #main-action-button {
+        width: 84px;
+        height: 76px;
+        margin: 0;
+        display: flex;
+        justify-content: space-around;
+        border-color: @bg-transparent-border-color;
+
+        > img {
+            margin: auto;
+        }
+
+        &:hover > img {
+            -webkit-filter: brightness(135%);
+            filter: brightness(135%);
+        }
+    }
+
+    #action-hotbar .button {
+        border-color: @bg-transparent-border-color;
     }
 }
 
@@ -2902,16 +2951,6 @@ input[type=number], .lot-quantity > input, .price > input {
 .red-team th > img, .blue-team th > img {
     float: left;
     margin-right: 3px;
-}
-
-.talk-avatar {
-    max-height: 150px;
-    display: block;
-    margin: auto;
-
-    position: absolute;
-    top: -149px;
-    z-index: -1;
 }
 
 .add-entity-button {

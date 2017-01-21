@@ -1,5 +1,6 @@
-/* global EffectDesc */
-EffectDesc.effects = {
+/* global Effects */
+
+Effects.descriptions = {
     "Overeat": {
         "class": "bad",
         "effect": "キャラクターの移動速度が 45.",

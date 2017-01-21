@@ -73,7 +73,7 @@ function lobbyStage(data) {
     });
 
     characters.forEach(function(info) {
-        var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png").cloneNode();
+        var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png", true);
         add({name:  info.Name, karma: info.Karma, icon}, function() {
             game.playerName = info.Name;
             game.setStage("loading", lobbyStage.metadataVersion);
@@ -81,7 +81,7 @@ function lobbyStage(data) {
     });
 
     for (var i = maxChars - characters.length; i > 0; i--) {
-        var create = loader.loadImage("avatars/new.png").cloneNode();
+        var create = loader.loadImage("avatars/new.png", true);
         create.className = "create";
         add({name: T("Create"), icon: create}, function() {
             game.setStage("createCharacter");

@@ -1,4 +1,4 @@
-/* global Point, dom, config, util, T, TS, Container */
+/* global Point, dom, config, util, T, TS, Container, Avatar, Effects, loader, ParamBar */
 
 "use strict";
 
@@ -9,6 +9,9 @@ function Controller(game) {
     this.stats = null; // TODO: what is it?
 
     this.actionQueue = [];
+    this.avatar = null;
+    this.xpBar = new ParamBar("XP");
+    this.effects = new Effects();
 
     this.LMB = 0;
     this.MMB = 1;
@@ -63,13 +66,13 @@ function Controller(game) {
     this.keys = {};
     this.currentTarget = null;
     this._hideStatic = false;
+    this._drawMapGrid = false;
 
     this.lastCreatingType = "";
     this.lastCreatingCommand = "";
     this.lastCreatingRotation = 0;
 
     this.actionProgress = document.getElementById("action-progress");
-    this.actionHotbar = document.getElementById("action-hotbar");
     this.targetContainer = document.getElementById("target-container");
     this.party = document.getElementById("party");
 
@@ -268,8 +271,16 @@ function Controller(game) {
         return this.highlight.bind(this, buttonName, off);
     };
 
-    var lastContainersUpdate = Date.now();
+    var lastTickUpdate = Date.now();
     this.update = function() {
+        if (this.targetContainer.avatar) {
+            this.targetContainer.avatar.update();
+        }
+
+        if (this.party.avatars) {
+            this.party.avatars.forEach(avatar => avatar.update());
+        }
+
         this.updateCamera();
         if (this.world.cursor instanceof Entity || this.cursor.entity)
             document.body.classList.add("cursor-hidden");
@@ -285,8 +296,10 @@ function Controller(game) {
         }
         this.minimap.update();
         var now = Date.now();
-        if (now - lastContainersUpdate > 500) {
-            lastContainersUpdate = now;
+        if (now - lastTickUpdate > 500) {
+            this.avatar.update();
+            this.effects.update();
+            lastTickUpdate = now;
             _.forEach(game.containers, (cnt) => cnt.updateProgress());
         }
     };
@@ -318,38 +331,9 @@ function Controller(game) {
         }
     };
 
-    this.initAvatar = function() {
-        var cnt = document.getElementById("avatar-container");
-        cnt.onmousedown = function(e) {
-            e.stopPropagation();
-            switch (e.button) {
-            case game.controller.LMB:
-                game.controller.stats.panel.toggle();
-                break;
-            case game.controller.RMB:
-                var actions = {};
-                if (game.player.Party) {
-                    actions.leaveParty = function() {
-                        game.chat.send("*part");
-                    };
-                }
-                actions.suicide = function() {
-                    game.popup.confirm(T("Commit suicide?"), () => game.chat.send("*suicide"));
-                };
-                actions.unstuck = function() {
-                    game.chat.send("*unstuck");
-                };
-                actions.returnHome = function() {
-                    game.network.send("return-home");
-                };
-                game.menu.show(actions);
-                break;
-            }
-            return true;
-        };
-
-        var avatar = document.getElementById("avatar");
-        avatar.src = "assets/avatars/" + game.player.sex() + ".png";
+    this.initAvatar = function(character) {
+        this.avatar = new Avatar(character);
+        dom.append(document.getElementById("player-avatar"), this.avatar.element);
     };
 
     this.wasd = function(x, y, up) {
@@ -407,10 +391,17 @@ function Controller(game) {
         Z: {
             allowedModifiers: ["shift"],
             callback: function() {
-                if (this.modifier.shift)
-                    this._hideStatic = !this._hideStatic;
+                if (this.modifier.shift) {
+                    this.toggleHideStatic();
+                }
             },
             help: "Hide big objects",
+        },
+        G: {
+            callback: function() {
+                this.toggleDrawpMapGrid();
+            },
+            help: "Toggle map grid drawing",
         },
         B: {
             callback: this.toggleBag,
@@ -541,57 +532,32 @@ function Controller(game) {
     };
 
     this.makeHotbarButton = function({name, hotkey, description}, onclick) {
-        var base = "assets/icons/actions/" + name;
-        var icon = dom.img(base + ".png");
-        var action = util.ucfirst(TS(name));
-        var button = dom.wrap("button tooltip", [
+        const action = util.ucfirst(TS(name));
+        return dom.wrap("button tooltip", [
             dom.make("i", hotkey),
             dom.make("span", [
-                action + " [" + hotkey +"]",
+                `${action} [${hotkey}]`,
                 dom.make("small", description || action),
             ]),
-            icon,
-        ]);
-        button.onmouseover = () => { icon.src = base + "-hover.png"; };
-        button.onmouseleave = () => { icon.src = base + ".png"; };
-        button.onclick = onclick;
-        return button;
+            dom.img(`assets/icons/actions/${name}.png`, "icon"),
+
+        ], {onclick});
     };
 
     this.initHotbar = function() {
-        //TODO: fixme
-        /*
-		  <div class="button tooltip" id="pick-up-button">
-          <i>X</i>
-		  <span>Поднять [X]</span>
-		  </div>
-		  <div class="button tooltip" id="lift-button">
-          <i>V</i>
-		  <span>Тащить [V]</span>
-		  </div>
-        */
-        dom.append(this.actionHotbar, [
+        const hotbar = document.getElementById("action-hotbar");
+        dom.append(hotbar, [
             this.makeHotbarButton({name: "pick-up", hotkey: "X"}, () => game.player.pickUp()),
-            this.makeHotbarButton({name: "lift", hotkey: "V"}, () => game.player.pickUp()),
+            this.makeHotbarButton({name: "lift", hotkey: "V"}, () => game.player.liftStart()),
+            this.makeHotbarButton({name: "detector", hotkey: "Ctrl+X"}, () => this.detector()),
+            this.makeHotbarButton({name: "hide-static", hotkey: "Shift+Z"}, () => this.toggleHideStatic()),
+            this.makeHotbarButton({name: "grid", hotkey: "G"}, () => this.toggleDrawpMapGrid()),
         ]);
-        // dom.forEach("#action-hotbar > .button",  function() {
-        //     var icon = new Image();
-        //     var base = "assets/icons/actions/" + this.id.replace("-button", "");
-        //     icon.src = base + ".png";
-        //     this.appendChild(icon);
-        //     icon.parentNode.addEventListener("mouseover", function() {
-        //         icon.src = base + "-hover.png";
-        //     });
-        //     icon.parentNode.addEventListener("mouseleave", function() {
-        //         icon.src = base + ".png";
-        //     });
-        // });
-        // document.getElementById("pick-up-button").onclick = function() {
-        //     game.player.pickUp();
-        // };
-        // document.getElementById("lift-button").onclick = function() {
-        //     game.player.liftStart();
-        // };
+        dom.append(document.getElementById("hotbars-container"), this.xpBar.element);
+    };
+
+    this.detector = function() {
+
     };
 
     this.fps = function() {
@@ -650,20 +616,18 @@ function Controller(game) {
         this.inventory = {panel: {}};
 
         this.createButton(this.shop.panel, "shop");
-        this.createButton(this.skills.panel, "skills");
         this.createButton(this.stats.panel, "stats");
         this.createButton(this.inventory.panel, "inventory");
+        this.createButton(this.skills.panel, "skills");
         this.createButton(this.craft.panel, "craft");
+        this.createButton(this.minimap.panel, "map");
         this.createButton(this.chat.panel, "chat");
         this.createButton(this.journal.panel, "journal");
-        this.createButton(this.minimap.panel, "map");
-
-        this.createButton(this.help.panel, "help");
         this.createButton(this.system.panel, "system");
+        this.createButton(this.help.panel, "help");
 
         this.inventory.panel.button.onclick = this.toggleBag;
 
-        this.initAvatar();
         this.initHotkeys();
         this.initHotbar();
 
@@ -683,16 +647,15 @@ function Controller(game) {
 
     this.createButton = function(panel, buttonName) {
         buttonName = buttonName || panel.name;
-        var button = document.getElementById(buttonName + "-button");
-        button.style.display = "block";
-        if (panel.visible)
+        const button = dom.wrap("button", dom.img(`assets/icons/controls/${buttonName}.png`, "icon"));
+        button.id = buttonName + "-button";
+        button.title = TS(buttonName);
+        button.onclick = () => panel.toggle();
+        if (panel.visible) {
             button.classList.add("active");
+        }
         panel.button = button;
-        button.onclick = function() {
-            panel.toggle();
-        };
-
-        dom.append(button, dom.div("icon"));
+        dom.append(document.getElementById("controls-bar"), button);
     };
 
     this.terraCursor = function(tile) {
@@ -1164,11 +1127,28 @@ function Controller(game) {
         }, 5000);
     };
 
-    this.hideStatic = function() {
-        if (this._hideStatic)
-            return !this.keys.Z;
-        else
-            return this.keys.Z;
+    Object.defineProperty(this, "hideStatic", {
+        get() {
+            if (this._hideStatic)
+                return !this.keys.Z;
+            else
+                return this.keys.Z;
+
+        }
+    });
+
+    this.toggleHideStatic = function() {
+        this._hideStatic = !this._hideStatic;
+    };
+
+    Object.defineProperty(this, "drawMapGrid", {
+        get() {
+            return this._drawMapGrid;
+        }
+    });
+
+    this.toggleDrawpMapGrid = function() {
+        this._drawMapGrid = !this._drawMapGrid;
     };
 
     this.reset = function() {

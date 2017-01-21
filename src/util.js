@@ -24,7 +24,7 @@ var util = new function() {
                     callback && callback(oReq.responseText);
                 } else {
                     if (onError)
-                        onError(oReq.statusText);
+                        onError(oReq.statusText || "Error");
                     else
                         console.log("Error", oReq.statusText);
                 }

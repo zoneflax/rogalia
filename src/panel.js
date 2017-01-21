@@ -1,4 +1,4 @@
-/* global dom, game */
+/* global dom, game, T */
 
 "use strict";
 //TODO: make panels linked via back button

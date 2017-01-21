@@ -427,6 +427,7 @@ class Game {
         if (character.Name == this.playerName) {
             character.isPlayer = true;;
             this.player = character;
+            this.controller.initAvatar(character);
         }
     }
 

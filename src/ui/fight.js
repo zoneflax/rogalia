@@ -35,7 +35,7 @@ function Fight() {
         },
     ];
 
-    var hotbar = game.controller.actionHotbar;
+    var hotbar = document.getElementById("fight-hotbar");
     dom.append(hotbar, _.map(actions, function(action) {
         action.button = game.controller.makeHotbarButton(action, () => apply(action.name, true));
         return action.button;

@@ -373,7 +373,7 @@ function WorldMap() {
             this.layerDraw();
         }
 
-        if (config.graphics.mapGrid || game.controller.keys.G) {
+        if (game.controller.drawMapGrid) {
             this.drawGrid();
         }
 

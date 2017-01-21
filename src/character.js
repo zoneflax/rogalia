@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect */
 
 "use strict";
 function Character(id) {
@@ -56,7 +56,6 @@ function Character(id) {
     };
 
     this.ballon = null;
-    this.shownEffects = {};
     this.isPlayer = false;
 
     this.Action = {};
@@ -185,9 +184,14 @@ Character.prototype = {
         }
     },
     avatar: function() {
-        if (this.IsNpc)
-            return dom.img("assets/" + Character.npcAvatarSpriteDir + this.Type + ".png", "talk-avatar");
-        return loader.loadImage("avatars/" + this.sex() + ".png");
+        if (this.IsMob) {
+            return this.sprite.icon();
+        }
+        if (this.IsNpc) {
+            return dom.img("assets/" + Character.npcAvatarSpriteDir + this.Type + ".png");
+        }
+        const suffix = (this.isPlayer) ? "-full" : "";
+        return loader.loadImage("avatars/" + this.sex() + suffix + ".png", true);
     },
     updateParty: function(members) {
         var party = game.controller.party;
@@ -195,25 +199,29 @@ Character.prototype = {
         if (!members)
             return;
 
+        party.avatars = [];
         members.forEach(function(name, i) {
             if (name == game.playerName)
                 return;
             var member = game.characters.get(name);
             if (member) {
-                var avatar = member.avatar();
+                var avatar = new Avatar(member);
             } else {
-                avatar = dom.div(".character-avatar-not-available", {text: "?"});
-                avatar.title = T("Out of sight");
+                avatar = new Avatar({
+                    Name: name,
+                    avatar() {
+                        return loader.loadImage("avatars/new.png", true);
+                    },
+                });
+                avatar.element.title = T("Out of sight");
                 Character.partyLoadQueue[name] = true;
             }
-            var cnt = dom.div(".character-avatar-container");
-            cnt.appendChild(avatar);
-            var prefix = (i == 0 && party[0] != game.playerName) ? "★" : "";
-            cnt.appendChild(dom.span(prefix + name, "party-member-name"));
-            cnt.onmousedown = function(e) {
-                return game.chat.nameMenu(e, name);
-            };
-            party.appendChild(cnt);
+            // party leader
+            if (i == 0 && party[0] != game.playerName) {
+                avatar.setIcon("★");
+            }
+            party.appendChild(avatar.element);
+            party.avatars.push(avatar);
         });
     },
     syncMessages: function(messages) {
@@ -392,12 +400,11 @@ Character.prototype = {
             }
         }
 
-        var common = {};
-        if (this.IsMob || !this.IsNpc) {
-            common.Select = game.player.setTarget.bind(game.player, this);
-        }
+        var common = {
+            Select: () => game.player.setTarget(this),
+        };
         if (!this.IsMob && !this.IsNpc) {
-            common.Inspect = game.player.inspect.bind(game.player, this);
+            common.Inspect = () => game.player.inspect(this);
         }
         if (this.isInteractive()) {
             common.Interact =  this.interact;
@@ -707,7 +714,7 @@ Character.prototype = {
             }
         }
 
-        if (game.debug.player.box || game.controller.hideStatic()) {
+        if (game.debug.player.box || game.controller.hideStatic) {
             if (!this.mount)
                 this.drawBox();
         }
@@ -1125,7 +1132,7 @@ Character.prototype = {
             if (config.graphics.autoHideWalls) {
                 this.updateBuilding();
             }
-            this.updateBar();
+            this.updateActionButton();
         }
 
         this.info = this.info.filter(function(info) {
@@ -1257,20 +1264,6 @@ Character.prototype = {
         }
 
     },
-    updateBar: function() {
-        var self = this;
-        // TODO: refactor
-        ["Hp", "Fullness", "Stamina"].map(function(name) {
-            var strip = document.getElementById(util.lcfirst(name));
-            var param = self[name];
-            var value = Math.round(param.Current / param.Max * 100);
-            strip.firstChild.style.width = Math.min(100, value) + '%';
-            strip.title = name + ": " + util.toFixed(param.Current) + " / " + util.toFixed(param.Max);
-            strip.lastChild.style.width = Math.max(0, value - 100) + '%';
-        });
-
-        this.updateActionButton();
-    },
     fish: function fish(data) {
         var repeat = fish.bind(this);
         var panel = game.panels["fishing"];
@@ -1351,95 +1344,7 @@ Character.prototype = {
             }));
         }
     },
-    updateEffect: function(name, effect) {
-        var id = "effect-" + name;
-        var efdiv = document.getElementById(id);
-        var hash = JSON.stringify(effect);
-        if (efdiv) {
-            if (efdiv.hash == hash)
-                return;
 
-            dom.clear(efdiv);
-            clearInterval(efdiv.interval);
-        } else {
-            efdiv = dom.div("#" + id);
-        }
-
-        efdiv.hash = hash;
-
-        let symbolName = util.stringToSymbol(name);
-        var title = TS(symbolName);
-
-        var duration = effect.Duration / 1e6;
-        if (duration > 0) {
-            var last = new Date(duration - (Date.now() - effect.Added*1000));
-
-            var progress = dom.div("effect-progress");
-            efdiv.appendChild(dom.wrap("effect-progress-bg", progress));
-
-            var tick = 66;
-            efdiv.interval = setInterval(function() {
-                last = new Date(last.getTime() - tick);
-                var hours = last.getUTCHours();
-                var mins = last.getUTCMinutes();
-                var secs = last.getUTCSeconds();
-                efdiv.title = sprintf("%s %02d:%02d:%02d\n", title, hours, mins, secs);
-                progress.style.width = 100 / (duration / last) + "%";
-                if (last <= 0) {
-                    clearInterval(efdiv.interval);
-                }
-            }, tick);
-        }
-
-        var stacks = dom.span("", "effect-stacks", T("Stacks"));
-        var effectElem = dom.wrap("effect", [
-            dom.img("assets/icons/effects/" + symbolName + ".png", "effect-name"),
-            stacks,
-        ]);
-
-        if (effect.Stacks > 1)
-            stacks.textContent = effect.Stacks;
-
-        efdiv.className  = "effect " + EffectDesc.className(name);
-        efdiv.name = name;
-        efdiv.title = title;
-        efdiv.onclick = function() {
-            var panel = new Panel("effect-description", title, [new EffectDesc(name)]);
-            panel.show();
-        };
-        efdiv.appendChild(effectElem);
-
-        var effects = document.getElementById("effects");
-        effects.appendChild(efdiv);
-        this.shownEffects[name] = efdiv;
-    },
-    removeEffect: function(name) {
-        dom.remove(this.shownEffects[name]);
-        delete this.shownEffects[name];
-    },
-    updateEffects: function() {
-        if (this.synodProtection()) {
-            this.Effects["SynodProtection"] = {Duration: 0};
-        } else {
-            delete this.Effects["SynodProtection"];
-        }
-
-        if (this.Lvl <= 20) {
-            this.Effects["NewbieProtection"] = {Duration: 0};
-        } else {
-            delete this.Effects["NewbieProtection"];
-        }
-
-        for(var name in this.shownEffects) {
-            if (!this.Effects[name]) {
-                this.removeEffect(name);
-            }
-        }
-
-        for (name in this.Effects) {
-            this.updateEffect(name, this.Effects[name]);
-        }
-    },
     findMovePosition: function(k = 50/1000) {
         var delta = this.Speed.Current * k;
         var cell = game.map.getCell(this.X, this.Y);
@@ -1743,6 +1648,7 @@ Character.prototype = {
     },
     interact: function() {
         var self = this;
+        game.player.setTarget(this);
         game.player.interactTarget = this;
         game.network.send("follow", {Id: this.Id}, function interact() {
             switch (self.Type) {
@@ -1916,12 +1822,9 @@ Character.prototype = {
         if (cnt.dataset.targetId == target.Id)
             return;
 
-        var name = dom.div("#target-name");
-        name.textContent = target.getName();
         cnt.dataset.targetId = target.Id;
-        dom.clear(cnt);
-        cnt.appendChild(target.sprite.icon());
-        cnt.appendChild(name);
+        cnt.avatar = new Avatar(target);
+        dom.setContents(cnt, cnt.avatar.element);
         dom.show(cnt);
     },
     inspect: function(target) {

@@ -39,7 +39,7 @@ Character.sync = function(data, remove) {
             to.sync(from);
         }
     }
-    game.player.updateEffects();
+    game.controller.effects.update();
     game.controller.syncMinimap();
 };
 
@@ -167,7 +167,6 @@ Character.npcActions = {
             "interaction",
             this.Name,
             [
-                // self.avatar(),
                 dom.wrap("", util.mklist(info.talks).map(function(html) {
                     return dom.tag("p", "", {html});
                 })),
