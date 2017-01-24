@@ -108,6 +108,10 @@ Character.prototype = {
     getZ: function() {
         return 0;
     },
+
+    /**
+     * @return {string}
+     */
     get Name() {
         // TODO: remove fix
         if (this.IsMob && this.name.match(/-\d+/))
@@ -208,7 +212,10 @@ Character.prototype = {
                 var avatar = new Avatar(member);
             } else {
                 avatar = new Avatar({
-                    Name: name,
+                    Name: this.getName(),
+                    getName() {
+                        return name;
+                    },
                     avatar() {
                         return loader.loadImage("avatars/new.png", true);
                     },
@@ -1460,7 +1467,7 @@ Character.prototype = {
             this.setPos(p.x, p.y);
         }
 
-        if (this.isPlayer) {
+        if (this.isPlayer || this.rider && this.rider.isPlayer) {
             game.controller.updateVisibility();
             game.controller.minimap.update();
         }
@@ -1524,24 +1531,29 @@ Character.prototype = {
         this._pathHistory = [];
     },
     isNear: function(entity) {
+        const target = this.mount || this;
+        var padding = target.Radius * 2;
+
+
         if (entity.belongsTo(game.player))
             return true;
         if (entity.Width) {
-            var padding = this.Radius*2;
             return util.rectIntersects(
                 entity.leftTopX() - padding,
                 entity.leftTopY() - padding,
                 entity.Width + padding * 2,
                 entity.Height + padding * 2,
-                this.leftTopX(),
-                this.leftTopY(),
-                this.Width,
-                this.Height
+                target.leftTopX(),
+                target.leftTopY(),
+                target.Width,
+                target.Height
             );
         }
-        var len_x = entity.X - this.X;
-        var len_y = entity.Y - this.Y;
-        var r = 2*this.Radius + Math.max(entity.Radius, Math.min(entity.Width, entity.Height) / 2) + 1;
+
+        var len_x = entity.X - target.X;
+        var len_y = entity.Y - target.Y;
+
+        var r = padding + Math.max(entity.Radius, Math.min(entity.Width, entity.Height) / 2) + 1;
 
         return util.distanceLessThan(len_x, len_y, r);
     },
@@ -1732,8 +1744,9 @@ Character.prototype = {
         return false;
     },
     canUse: function(entity) {
-        if (entity instanceof Character)
-            return this.distanceTo(entity) < 2*CELL_SIZE;
+        if (entity instanceof Character) {
+            return this.distanceTo(entity) < 2 * CELL_SIZE;
+        }
 
         switch (entity.Group) {
         case "shit":
@@ -1789,6 +1802,9 @@ Character.prototype = {
         }.bind(this));
     },
     distanceTo: function(e) {
+        if (this.Mount)
+            return Math.hypot(this.mount.X - e.X, this.mount.Y - e.Y );
+
         return Math.hypot(this.X - e.X, this.Y - e.Y);
     },
     selectNextTarget: function(p = new Point(this)) {
