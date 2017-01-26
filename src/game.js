@@ -220,8 +220,13 @@ class Game {
         if (!args["steam"]) {
             return args;
         }
-        var argv = _.map(require("nw.gui").App.argv, (arg) => arg.replace(/^--?/, ""));
-        return _.merge(args, _.zipObject(argv, _.map(argv, () => true)));
+        const cmdArgs = require("nw.gui").App.argv.reduce(function(args, arg) {
+            const [key, value] = arg.split("=");
+            args[key.replace(/^--?/, "")] = value || true;
+            return args;
+        }, {});
+
+        return _.merge(args, cmdArgs);
     };
 
     setFontSize(size) {
@@ -229,13 +234,13 @@ class Game {
     }
 
     _gatewayAddr() {
-        if (game.args["steam"]) {
-            return "http://quasar.rogalik.tatrix.org/gateway";
-        }
         var gateway = this.args["gateway"];
+        if (gateway) {
+            return this.proto() + "//" + gateway + "/gateway";
+        }
 
-        return (gateway)
-            ? this.proto() + "//" + gateway + "/gateway"
+        return (game.args["steam"])
+            ? "http://quasar.rogalik.tatrix.org/gateway"
             : this.proto() + "//rogalik.tatrix.org/gateway";
     }
 

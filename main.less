@@ -1861,11 +1861,14 @@ ol li a:hover {
 }
 
 #new-mail {
-    animation: newMail 2s infinite;
+    .cursor-help();
+    animation: newMail 1s infinite;
     background-image: url("assets/icons/new-mail.png");
+    background-color: #154c3d;
+    border: 1px solid #297765;
     position: absolute;
-    right: 15px;
-    top: 141px;
+    left: 234px;
+    top: 15px;
     width: 22px;
     height: 22px;
 }
@@ -2842,11 +2845,14 @@ input[type=number], .lot-quantity > input, .price > input {
     .cursor-pointer;
     min-height: 32px;
     position: relative;
+    border: 1px solid #23282d;
+    border-radius: 3px;
+    margin: 3px;
+    padding: 1px 4px;
 }
 
 .letter:hover {
-    background: #99682e;
-    border-radius: 3px;
+    background: #23282d;
 }
 
 .letter.shop {
@@ -2875,6 +2881,9 @@ input[type=number], .lot-quantity > input, .price > input {
 
 .letter-from {
     .allow-user-select;
+    font-size: 15px;
+    font-weight: bold;
+    text-shadow: 0 0 2px #000;
 }
 
 .letter-subject, .letter-created {
@@ -2924,14 +2933,14 @@ input[type=number], .lot-quantity > input, .price > input {
 .lot-list {
     margin: 0 -5px!important;
 }
-.lot, .letter {
+.lot {
     overflow: auto;
     padding: 2px 5px 5px;
     background: url("assets/bg/hr.png") repeat-x 0 100%;
-}
-.lot:last-child,
-.letter:last-child {
-    background-image: none;
+
+    &:last-child, {
+        background-image: none;
+    }
 }
 .lot-icon {
     margin-right: 5px;
