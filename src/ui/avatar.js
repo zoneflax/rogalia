@@ -12,13 +12,12 @@ class Avatar {
         this.effects = dom.wrap("avatar-effects");
         const params = (character.isPlayer) ? ["Hp", "Fullness", "Stamina"] : ["Hp"];
         this.bars = params.map(param => new ParamBar(param));
+        const fullName = character.getFullName();
         const contents = dom.wrap("avatar-contents", [
             this.avatar,
             dom.wrap("avatar-info", [
-                dom.wrap(
-                    "avatar-name",
-                    [character.getName()].concat(this.bars.map(bar => bar.element))
-                ),
+                dom.wrap("avatar-name", fullName, {title: fullName}),
+                dom.wrap("avatar-bars", this.bars.map(bar => bar.element)),
             ]),
         ]);
 

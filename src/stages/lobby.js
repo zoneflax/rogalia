@@ -44,28 +44,22 @@ function lobbyStage(data) {
     // createCharacter stage (back button)
     lobbyStage.characters = characters;
 
-    var avatars = document.createElement("div");
+    var avatars = dom.div("avatars");
 
     function add({name, karma, icon}, callback) {
-        var avatarContainer = document.createElement("div");
-        avatarContainer.className = "avatar-container";
-
-        var avatar = document.createElement("div");
-        avatar.className = "avatar";
-        avatar.appendChild(icon);
-
-        var nameElem = document.createElement("div");
-        nameElem.className = "avatar-name";
+        var nameElem = dom.wrap("avatar-name", (name == "+") ? T("Create") : name);
         if (karma < 0) {
             nameElem.className += " avatar-pk";
         }
-        nameElem.textContent = (name == "+") ? T("Create") : name;
 
-        avatarContainer.appendChild(avatar);
-        avatarContainer.appendChild(nameElem);
-        avatarContainer.onclick = callback;
-
-        avatars.appendChild(avatarContainer);
+        dom.append(avatars, dom.wrap(
+            "avatar-container",
+            [
+                dom.wrap("avatar",  icon),
+                nameElem,
+            ],
+            {onclick: callback}
+        ));
     }
 
     characters = characters.sort(function(a, b) {
@@ -73,7 +67,7 @@ function lobbyStage(data) {
     });
 
     characters.forEach(function(info) {
-        var icon = loader.loadImage("avatars/" + Character.sex(info.Sex) + ".png", true);
+        var icon = loader.loadImage("characters/avatars/" + Character.sex(info.Sex) + ".png", true);
         add({name:  info.Name, karma: info.Karma, icon}, function() {
             game.playerName = info.Name;
             game.setStage("loading", lobbyStage.metadataVersion);
@@ -81,7 +75,7 @@ function lobbyStage(data) {
     });
 
     for (var i = maxChars - characters.length; i > 0; i--) {
-        var create = loader.loadImage("avatars/new.png", true);
+        var create = loader.loadImage("characters/avatars/new.png", true);
         create.className = "create";
         add({name: T("Create"), icon: create}, function() {
             game.setStage("createCharacter");

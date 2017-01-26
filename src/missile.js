@@ -1,3 +1,5 @@
+/* global Point, Sprite, util, CELL_SIZE, game */
+
 "use strict";
 class Missile {
     constructor({From, To, Type, Speed}) {
@@ -8,7 +10,7 @@ class Missile {
         this.sprite = new Sprite(Type + ".png");
 
         var velocity = this.to.clone().sub(this.from);
-        this.angle = Math.atan2(velocity.y, velocity.x);
+        this.angle = Math.atan2(velocity.y, velocity.x) + Math.PI/4;
     }
 
     update(k) {

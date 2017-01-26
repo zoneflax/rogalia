@@ -1,4 +1,4 @@
-/* global loader */
+/* global loader, game */
 
 "use strict";
 function Sprite(path, width, height, speed) {
@@ -137,7 +137,7 @@ Sprite.prototype = {
         if(now - this.lastUpdate > this.speed) {
             this.frame++;
 
-            var wrap = this.frame >= this.framesNum - 1;
+            var wrap = this.frame > this.framesNum - 1;
             if (cycle) {
                 this.cycleAnimate(cycle, wrap);
             } else if(wrap) {

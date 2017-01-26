@@ -24,9 +24,17 @@
 @dark-color: #292b2f;
 @bg-color: #3f4244;
 @bg-transparent-color: rgba(38, 41, 44, 0.8);
-@bg-transparent-border-color: #7f858a;
+@bg-transparent-border-color: #657480;
 @bg-transparent-border: 1px solid @bg-transparent-border-color;
+@bg-transparent-text-shadow: 0 0 4px #000;
 @placeholder-color: #999;
+
+.bg-transparent() {
+    background-color: @bg-transparent-color;
+    outline: 1px solid @bg-transparent-color;
+    border: @bg-transparent-border;
+    box-sizing: border-box;
+}
 
 
 @font-face {
@@ -301,7 +309,7 @@ hr {
     background-image: url("assets/bg/loading.png");
     background-size: 100%;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center top;
     position: relative;
     margin: auto;
     border: 4px solid #64696f;
@@ -636,7 +644,7 @@ hr {
     display: none!important;
 }
 .exit-stage #world {
-    background: url("assets/bg/exit.png") no-repeat center bottom;
+    background-image: url("assets/bg/exit.png");
 }
 
 #controls-bar {
@@ -700,15 +708,13 @@ hr {
 
 .button {
     .cursor-pointer;
-    background-color: @bg-transparent-color;
+    .bg-transparent;
+    border: 1px solid #8e602a;
+
     position: relative;
     color: #202325;
     width: 48px;
     height: 40px;
-    box-sizing: border-box;
-    padding: 1px;
-    border: 1px solid #8e602a;
-    outline: 1px solid @bg-transparent-color;
 
     &.active {
         border-color: #d89108;
@@ -717,6 +723,10 @@ hr {
 
     &:hover .icon {
 	filter: brightness(135%);
+    }
+
+    &:active .icon {
+        filter: brightness(175%);
     }
 }
 
@@ -1512,9 +1522,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 #lobby, #create-character {
     text-align: center;
 }
-#lobby {
-    width: 452px;
-}
+
 #create-character {
     width: 236px;
 }
@@ -1545,41 +1553,43 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 }
 
 #lobby {
+    width: 400px;
+
+    .avatars {
+        display: flex;
+        justify-content: space-around;
+        padding-top: 7px;
+        padding-bottom: 2px;
+    }
+
     .avatar-container {
         .cursor-pointer;
-        background: url("assets/bg/main-button.png") no-repeat;
-        width: 105px;
-        height: 86px;
-        display: inline-block;
-        margin-right: 3px;
         position: relative;
-    }
 
-    .create {
-        margin: auto;
-        left: 0;
-        right: 0;
-        position: absolute;
-    }
+        &:hover {
+            filter: brightness(130%);
 
-    .avatar-name {
-        margin-top: 8px;
-    }
+        }
 
-    .avatar-pk {
-        color: red;
-    }
+        .avatar {
+            .bg-transparent();
+            width: 77px;
+            height: 64px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
 
-    .avatar-container:hover {
-        -webkit-filter: brightness(130%);
-        filter: brightness(130%);
-    }
+        .create {
+            margin: auto;
+            left: 0;
+            right: 0;
+            position: absolute;
+        }
 
-    .avatar {
-        width: 60px;
-        height: 58px;
-        overflow: hidden;
-        margin: auto;
+        .avatar-pk {
+            color: red;
+        }
     }
 }
 
@@ -1613,15 +1623,19 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     text-align: left;
 }
 #new-male {
-    background: url("assets/avatars/new-male.png") center, url("assets/bg/main-button.png");
+    background-image: url("assets/characters/avatars/new-male.png");
 }
 #new-female {
-    background: url("assets/avatars/new-female.png") center, url("assets/bg/main-button.png");
+    background-image: url("assets/characters/avatars/new-female.png");
 }
 .new-sex {
-    background-repeat: no-repeat!important;
-    width: 105px;
-    height: 67px;
+    .bg-transparent;
+    .cursor-pointer;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    width: 77px;
+    height: 64px;
+    margin: 3px 7px;
 }
 .new-sex:hover {
     -webkit-filter: brightness(110%);
@@ -2023,8 +2037,12 @@ big {
 
             .avatar-name {
                 text-align: left;
-                color: #cbe2e7;
-                text-shadow: 1px 1px #333;
+                color: #f7f7f7;
+                text-shadow: @bg-transparent-text-shadow;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                width: 100%;
             }
 
         }
@@ -2044,21 +2062,23 @@ big {
     box-sizing: border-box;
     border: 1px solid rgba(0, 0, 0, 0.5);
     height: 14px;
-    line-height: 12px;
+    line-height: 13px;
     text-align: left;
     font-size: 11px;
     position: relative;
     padding-left: 3px;
-    text-shadow: 1px 1px #333;
+    color: #f7f7f7;
+    text-shadow: @bg-transparent-text-shadow;
 
     .param-name {
         position: relative;
         z-index: 1;
+        text-transform: lowercase;
     }
 
     .param-status {
         position: absolute;
-        bottom: 0;
+        top: 0;
         right: 0;
         z-index: 2;
     }
@@ -2066,7 +2086,8 @@ big {
     &.hp {
         background-color: #9f2d21;
         height: 17px;
-        line-height: 13px;
+        line-height: 16px;
+        font-size: 12px;
     }
 
     &.fullness {
@@ -2568,6 +2589,9 @@ input[type=number], .lot-quantity > input, .price > input {
 
     #action-hotbar .button {
         border-color: @bg-transparent-border-color;
+        &.active {
+            background-color: #3f51b5;
+        }
     }
 }
 
@@ -2960,7 +2984,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
 #combos {
     position: absolute;
-    bottom: 0;
+    bottom: 100px;
     left: 0;
     right: 0;
     width: 100px;
@@ -3275,5 +3299,46 @@ input[type=number], .lot-quantity > input, .price > input {
     iframe {
         width: 1000px;
         height: 600px;
+    }
+}
+
+
+#customization {
+    max-width: 276px;
+
+    .contents {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .customization {
+        .bg-transparent();
+        .cursor-pointer;
+        width: 48px;
+        height: 45px;
+        margin: 3px 8px;
+        position: relative;
+
+        &:hover {
+            filter: brightness(130%);
+        }
+
+        .info {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-bottom: 1px solid @bg-transparent-border-color;
+            border-left: 1px solid @bg-transparent-border-color;
+        }
+
+        .info.color {
+            background-color: #ccc;
+            .preview {
+                width: 100%;
+                height: 100%;
+            }
+        }
     }
 }

@@ -1,4 +1,4 @@
-/* global game, dom, TS, T */
+/* global game, dom, TS, T, Panel, Panel, TT */
 
 "use strict";
 function Vendor() {
@@ -153,7 +153,11 @@ Vendor.prototype = {
             });
         }
 
-        this.panel = new Panel("vendor", TT("Vendor of {name}", {name: vendor.getName()}), [dom.tabs(this.tabs)]);
+        this.panel = new Panel(
+            "vendor",
+            TT("Vendor of {name}", {name: vendor.getFullName()}),
+            [dom.tabs(this.tabs)]
+        );
         this.panel.entity = vendor;
         // this.panel.temporary = true;
         this.panel.hooks.hide = this.removeItems.bind(this);

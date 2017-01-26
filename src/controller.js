@@ -1,4 +1,4 @@
-/* global Point, dom, config, util, T, TS, Container, Avatar, Effects, loader, ParamBar */
+/* global Point, dom, config, util, T, TS, Container, Avatar, Effects, loader, ParamBar, Panel, CELL_SIZE, Character */
 
 "use strict";
 
@@ -441,7 +441,7 @@ function Controller(game) {
             callback: function() {
                 game.player.liftStart();
             },
-            help: "Lift nearest item",
+            help: "Lift up nearest item",
         },
         9: { //tab
             callback: function() {
@@ -531,9 +531,9 @@ function Controller(game) {
         }.bind(this));
     };
 
-    this.makeHotbarButton = function({name, hotkey, description}, onclick) {
+    this.makeHotbarButton = function({name, hotkey, description, toggle}, onclick) {
         const action = util.ucfirst(TS(name));
-        return dom.wrap("button tooltip", [
+        const button = dom.wrap("button tooltip", [
             dom.make("i", hotkey),
             dom.make("span", [
                 `${action} [${hotkey}]`,
@@ -541,23 +541,56 @@ function Controller(game) {
             ]),
             dom.img(`assets/icons/actions/${name}.png`, "icon"),
 
-        ], {onclick});
+        ], {onclick: (e) => {
+            if (toggle) {
+                button.classList.toggle("active");
+            }
+            return onclick(e);
+        }});
+        return button;
     };
 
     this.initHotbar = function() {
         const hotbar = document.getElementById("action-hotbar");
         dom.append(hotbar, [
-            this.makeHotbarButton({name: "pick-up", hotkey: "X"}, () => game.player.pickUp()),
-            this.makeHotbarButton({name: "lift", hotkey: "V"}, () => game.player.liftStart()),
-            this.makeHotbarButton({name: "detector", hotkey: "Ctrl+X"}, () => this.detector()),
-            this.makeHotbarButton({name: "hide-static", hotkey: "Shift+Z"}, () => this.toggleHideStatic()),
-            this.makeHotbarButton({name: "grid", hotkey: "G"}, () => this.toggleDrawpMapGrid()),
+            this.makeHotbarButton({
+                name: "pick-up",
+                hotkey: "X",
+            }, () => game.player.pickUp()),
+
+            this.makeHotbarButton({
+                name: "lift",
+                hotkey: "V",
+            }, () => game.player.liftStart()),
+
+            this.makeHotbarButton({
+                name: "detector",
+                hotkey: "Ctrl+X",
+            }, () => this.detector()),
+
+            this.makeHotbarButton({
+                name: "hide-static",
+                hotkey: "Shift+Z",
+                toggle: true,
+            }, () => this.toggleHideStatic()),
+
+            this.makeHotbarButton({
+                name: "grid",
+                hotkey: "G",
+                toggle: true,
+            }, () => this.toggleDrawpMapGrid()),
         ]);
         dom.append(document.getElementById("hotbars-container"), this.xpBar.element);
     };
 
     this.detector = function() {
-
+        this.setClick(
+            () => this.drawItemsMenu(),
+            () => {
+                game.ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+                game.iso.fillCircle(this.world.x, this.world.y, 2*CELL_SIZE);
+            }
+        );
     };
 
     this.fps = function() {
@@ -1005,7 +1038,7 @@ function Controller(game) {
         }
         var p = this.world.point;
         this.world.hovered = game.sortedEntities.findReverse(function(entity) {
-            return entity.intersects(p.x, p.y);
+            return entity.intersects(p.x, p.y) && !entity.intersects(game.player.X, game.player.Y);
         });
     };
 

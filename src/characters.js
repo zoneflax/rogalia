@@ -1,4 +1,4 @@
-/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel, TS, util */
+/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel, TS, util, Quest */
 
 "use strict";
 Character.equipSlots =  [
@@ -50,10 +50,6 @@ Character.drawActions = function() {
 };
 
 Character.spriteDir = "characters/";
-Character.mobSpriteDir = "characters/mobs/";
-Character.npcSpriteDir = "characters/npcs/";
-Character.npcAvatarSpriteDir = "characters/npcs/avatars/";
-
 Character.animations = ["idle", "run", "dig", "craft", "attack", "sit", "ride"];
 Character.clothes = ["feet", "legs", "body", "head"];
 

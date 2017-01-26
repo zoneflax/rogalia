@@ -254,8 +254,8 @@ Entity.prototype = {
     },
     getDrawDy: function() {
         // switch (this.Type) {
-        // case "honey-extractor":
-        //     return window.y || 55;
+        // case "wall-torch":
+        //     return window.y || 85;
         // }
 
         if (this.Sprite.Dy)
@@ -271,7 +271,7 @@ Entity.prototype = {
         if (this.round) {
             if (r > 32)
                 k = 8;
-            else if (r < 16)
+            else if (r < 8)
                 k = 16;
         }
         r = this.sprite.width/k;
@@ -788,8 +788,7 @@ Entity.prototype = {
         if (this.Disposition == "roof" && game.controller.hideStatic) {
             return;
         }
-        if ((this.MoveType == Entity.MT_STATIC || this.CanCollide) &&
-            game.controller.hideStatic) {
+        if ((this.MoveType == Entity.MT_STATIC || this.CanCollide) && game.controller.hideStatic) {
             this.drawBox(this.getDrawBoxColor());
         } else if (this.shouldBeAutoHidden()) {
             this.drawBox(this.getDrawBoxColor());
@@ -802,7 +801,13 @@ Entity.prototype = {
                     game.iso.fillRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
                 }
             }
-            this.sprite.draw(p);
+            if (this.MoveType == Entity.MT_STATIC &&
+                this.CanCollide &&
+                this.intersects(game.player.X, game.player.Y)) {
+                this.sprite.drawOutline(p);
+            } else {
+                this.sprite.draw(p);
+            }
         }
 
         if (this.Creator && this.almostBroken()) {

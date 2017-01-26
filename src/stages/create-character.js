@@ -108,7 +108,6 @@ function createCharacterStage() {
         dom.hr(),
         male.label,
         female.label,
-        dom.hr(),
         name,
         dom.hr(),
         tabs,

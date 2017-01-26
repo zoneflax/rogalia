@@ -7,7 +7,7 @@ Quest.quests =  {
             "Hello, settler.",
             "Everyone who arrives here gets my Academy. My job here is to teach you survival basics.",
         ],
-        final: "Great, let's begin. Remember: <i>wild beasts won't attack you 'till you get level 10, and your bag will stay with you after death.</i>",
+        final: "Great, let's begin.",
     },
     "craft-1": {
         name: "Picking resources",

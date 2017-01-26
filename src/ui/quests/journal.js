@@ -1,3 +1,5 @@
+/* global game, Quest, dom, T, util */
+
 "use strict";
 function Journal() {
     this.list = document.createElement("ol");

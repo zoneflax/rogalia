@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT */
 
 "use strict";
 function Character(id) {
@@ -188,14 +188,14 @@ Character.prototype = {
         }
     },
     avatar: function() {
-        if (this.IsMob) {
-            return this.sprite.icon();
-        }
+        let name = "";
         if (this.IsNpc) {
-            return dom.img("assets/" + Character.npcAvatarSpriteDir + this.Type + ".png");
+            name = this.Type;
+        } else {
+            const suffix = (this.isPlayer) ? "-full" : "";
+            name = this.sex() + suffix;
         }
-        const suffix = (this.isPlayer) ? "-full" : "";
-        return loader.loadImage("avatars/" + this.sex() + suffix + ".png", true);
+        return dom.img("assets/" + this.spriteDir() + "avatars/" + name + ".png");
     },
     updateParty: function(members) {
         var party = game.controller.party;
@@ -212,8 +212,8 @@ Character.prototype = {
                 var avatar = new Avatar(member);
             } else {
                 avatar = new Avatar({
-                    Name: this.getName(),
-                    getName() {
+                    Name: name,
+                    getFullName() {
                         return name;
                     },
                     avatar() {
@@ -271,11 +271,6 @@ Character.prototype = {
             return;
 
         this.initSprite();
-
-        if (this.IsMob) {
-            this.loadMobSprite();
-            return;
-        }
 
         if (this.IsNpc) {
             this.loadNpcSprite();
@@ -358,22 +353,30 @@ Character.prototype = {
         });
     },
     loadNpcSprite: function() {
-        var type = this.Type;
-        switch (type) {
+        let name = this.Type;
+        switch (name) {
         case "margo":
-            type = (this.Owner == game.player.Id) ? "margo-naked" : "margo";
+            name = (this.Owner == game.player.Id) ? "margo-naked" : "margo";
             break;
         case "vendor":
-            type = "vendors/vendor-" + ([].reduce.call(this.Name, function(hash, c) {
+            name = "vendors/vendor-" + ([].reduce.call(this.Name, function(hash, c) {
                 return hash + c.charCodeAt(0);
                 }, 0) % 12 + 1);
             break;
+        default:
+            if (this.IsMob) {
+                name = this.Type + "/" + this.sprite.name;
+            }
         }
 
-        this.sprite.load(Character.npcSpriteDir + type + ".png");
+        this.sprite.load(this.spriteDir() + name + ".png");
     },
-    loadMobSprite: function() {
-        this.sprite.load(Character.mobSpriteDir + this.Type + "/" + this.sprite.name + ".png");
+    spriteDir: function() {
+        let dir = Character.spriteDir;
+        if (this.IsNpc) {
+            dir += (this.IsMob) ? "mobs/" : "npcs/";
+        }
+        return dir;
     },
     getActions: function() {
         var actions = {};
@@ -819,7 +822,7 @@ Character.prototype = {
         game.iso.strokeRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
         game.iso.strokeCircle(this.X, this.Y, this.Radius);
     },
-    getName: function() {
+    getFullName: function() {
         var name = this.Name;
         if (this.Type == "vendor") {
             return name.substring(1);
@@ -842,7 +845,7 @@ Character.prototype = {
         return pvpExpires > Date.now();
     },
     drawName: function(drawHp, drawName) {
-        var name = this.getName();
+        var name = this.getFullName();
 
         if (game.controller.modifier.shift) {
             name += " | " + T("Lvl") + ": " + this.Lvl;

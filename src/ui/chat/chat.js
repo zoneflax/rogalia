@@ -207,8 +207,8 @@ function Chat() {
 
         //TODO: encapsulate
         var text = "";
-        if ("getName" in entity)
-            text = entity.getName();
+        if ("getFullName" in entity)
+            text = entity.getFullName();
         else
             text = entity.name || entity.Name;
 

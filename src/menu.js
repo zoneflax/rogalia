@@ -103,7 +103,7 @@ Menu.prototype = {
     },
     createMenu: function(actions, object) {
         var menu = document.createElement("ul");
-        var sorted = _.sortBy(_.keys(actions), function(a, b) {
+        var sorted = Object.keys(actions).sort(function(a, b) {
             if (a == "Destroy")
                 return +1;
             else
