@@ -472,7 +472,7 @@ T.items = {
     "wooden-shovel": "Used to dig the earth of this world, the shovel is a very long and hardy tool. Not having anything better, I'd be happy to have this.",
     "copper-shovel": "A little digging and I have a garden and worms for fishing.",
     "iron-shovel": "The most common shovel with the most common functions. Dig the graves of your enemies, maintain the garden, and beat the foe over the head.",
-    "titanium-shovel": "An indestructible shovel for the working class.",
+    "titanium-shovel": "A hard shovel for the working class.",
     "meteorite-shovel": "Shovel of celestial alloy. You can dig through a stone surface with this.",
     "hammer": "Hammer.",
     "stone-hammer": "Working with metal, that's what men must do, and a hammer like this in the hands of a good man, he could forge a great sword.",

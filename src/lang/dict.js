@@ -55,7 +55,7 @@ window.T = function(text, symbol) {
 };
 
 T.init = function(lang, callback) {
-    var scripts = [
+    const scripts = [
         "dict",
         "time",
         "items",
@@ -66,8 +66,9 @@ T.init = function(lang, callback) {
         "talks",
         "quests",
         "professions",
+        "shop",
     ];
-    var loaded = 0;
+    let loaded = 0;
     scripts.forEach(function(script) {
         util.loadScript(
             "src/lang/" + lang + "/" + script + ".js",

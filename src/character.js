@@ -190,7 +190,9 @@ Character.prototype = {
     avatar: function() {
         let name = "";
         if (this.IsNpc) {
-            name = this.Type;
+            name = (this.Type == "vendor")
+                ? Character.vendorSpriteName(this.Name)
+                : this.Type;
         } else {
             const suffix = (this.isPlayer) ? "-full" : "";
             name = this.sex() + suffix;
@@ -359,9 +361,7 @@ Character.prototype = {
             name = (this.Owner == game.player.Id) ? "margo-naked" : "margo";
             break;
         case "vendor":
-            name = "vendors/vendor-" + ([].reduce.call(this.Name, function(hash, c) {
-                return hash + c.charCodeAt(0);
-                }, 0) % 12 + 1);
+            name = Character.vendorSpriteName(this.Name);
             break;
         default:
             if (this.IsMob) {
@@ -375,6 +375,9 @@ Character.prototype = {
         let dir = Character.spriteDir;
         if (this.IsNpc) {
             dir += (this.IsMob) ? "mobs/" : "npcs/";
+            if (this.Type == "vendor") {
+                dir += "vendors/";
+            }
         }
         return dir;
     },
@@ -1595,8 +1598,8 @@ Character.prototype = {
             this.equipSlot("left-hand"),
         ].map(Entity.get).map(search);
 
-        game.controller.iterateContainers(function (slot) {
-            kinds.forEach(function (kind) {
+        game.controller.iterateContainers(function(slot) {
+            kinds.forEach(function(kind) {
                 if (slot.entity && slot.entity.is(kind)) {
                     found[kind].push(slot.entity);
                 }
@@ -1608,10 +1611,10 @@ Character.prototype = {
                 return;
 
             var items = (entity.Props.Slots) ? entity.Props.Slots.map(Entity.get) : [entity];
-            items.forEach(function (entity) {
+            items.forEach(function(entity) {
                 if (!entity)
                     return;
-                kinds.forEach(function (kind) {
+                kinds.forEach(function(kind) {
                     if (entity.is(kind)) {
                         found[kind].push(entity);
                     }
@@ -1805,7 +1808,7 @@ Character.prototype = {
         }.bind(this));
     },
     distanceTo: function(e) {
-        if (this.Mount)
+        if (this.mount)
             return Math.hypot(this.mount.X - e.X, this.mount.Y - e.Y );
 
         return Math.hypot(this.X - e.X, this.Y - e.Y);

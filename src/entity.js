@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point, Container, Stats, Character, BBox */
+/* global dom, T, util, game, Panel, config, Point, Container, Stats, Character, BBox, TS */
 
 "use strict";
 function Entity(type, id) {
@@ -39,7 +39,6 @@ Entity.prototype = {
     Durability: null,
     Dye: "",
     sprite: null,
-    _canUse: false,
     _icon: null,
     _spriteVersion: "",
     graph: null,
@@ -87,6 +86,10 @@ Entity.prototype = {
                 return this.Props.Text;
         }
 
+        if (this.CustomLabel) {
+            name += "\n[" + this.CustomLabel + "]";
+        }
+
         if ("Damage" in this)
             name += "\n" + T("Damage") + ": " + this.damage();
         else if (this.Props.Energy)
@@ -99,6 +102,7 @@ Entity.prototype = {
 
         if (this.Comment)
             name += "\n" + this.Comment;
+
         return name;
     },
     set name(value) {
@@ -132,6 +136,9 @@ Entity.prototype = {
         if (this.Type.contains("-corpse") || this.Type == "head")
             return T(title);
 
+        if (this.CustomLabel) {
+            suffix += ` [${this.CustomLabel}]`;
+        }
         return TS(title) + suffix;
     },
     get point() {
@@ -140,6 +147,10 @@ Entity.prototype = {
     get round() {
         return this.Width == 0;
     },
+    get usable() {
+        return _.includes("label", this.Group);
+    },
+
     durabilityPercent: function() {
         var dur = this.Durability;
         return util.toFixed(dur.Current / dur.Max * 100);
@@ -263,12 +274,13 @@ Entity.prototype = {
 
         if (this.Disposition == "roof" && this.Location != Entity.LOCATION_BURDEN)
             return 128; // default wall sprite height - wall width / 2  === (136 - 8)
-
         // fucking hate it
         var r = this.Radius;
         var k = 4;
 
-        if (this.round) {
+        if (this.Group == "tree") {
+            k = 16;
+        } else if (this.round) {
             if (r > 32)
                 k = 8;
             else if (r < 8)
@@ -530,7 +542,7 @@ Entity.prototype = {
         this.queueActionMaybe(action);
     },
     queueActionMaybe: function(action) {
-        if (_.includes(Entity.QUEUEABLE_ACTIONS, action) && this.inContainer() && game.controller.modifier.ctrl && game.controller.modifier.shift) {
+        if (Entity.queueable(this, action)) {
             var container = Container.getEntityContainer(this);
             if (!container) {
                 game.network.send(action, {id: this.Id});
@@ -656,7 +668,9 @@ Entity.prototype = {
 
         switch(this.Group) {
         case "jukebox":
-            this.defaultActionSuccess = () => { game.jukebox.open(); };
+            this.defaultActionSuccess = () => { game.jukebox.open(this); };
+            break;
+        case "label":
         case "portal":
         case "book":
         case "grave":
@@ -803,6 +817,8 @@ Entity.prototype = {
             }
             if (this.MoveType == Entity.MT_STATIC &&
                 this.CanCollide &&
+                this.X > game.player.X &&
+                this.Y > game.player.Y &&
                 this.intersects(game.player.X, game.player.Y)) {
                 this.sprite.drawOutline(p);
             } else {
@@ -1064,11 +1080,15 @@ Entity.prototype = {
         game.network.send("dwim", {id: this.Id});
     },
     use: function(e) {
-        game.network.send("entity-use", {Id: e.Id, Equipment: this.Id});
+        if (e.usable) {
+            game.network.send("entity-use", {Id: this.Id, Equipment: e.Id});
+        } else {
+            game.network.send("entity-use", {Id: e.Id, Equipment: this.Id});
+        }
         return true;
     },
     canUse: function(e) {
-        return this._canUse;
+        return this._canUse || e.usable;
     },
     belongsTo: function(character) {
         if (this.Owner == character.Id)

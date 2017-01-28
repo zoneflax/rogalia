@@ -1,4 +1,4 @@
-/* global game, dom, TS, T, Panel, Panel, TT */
+/* global game, dom, TS, T, Panel, Panel, TT, Container */
 
 "use strict";
 function Vendor() {

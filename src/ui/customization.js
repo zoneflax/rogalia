@@ -5,7 +5,6 @@
 function Customization() {
     const customizations = game.player.Customization || [];
     this.panel = new Panel("customization", "Customization", customizations.map(function(customization) {
-        console.log(customization);
         let name = customization.Group;
         let info = null;
         switch (customization.Group) {

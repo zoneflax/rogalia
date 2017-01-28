@@ -1,0 +1,7 @@
+body {
+    font-family: "Dejavu Sans";
+    font-size: 14px;
+    src: url("../assets/fonts/DejaVuSans.ttf");
+    background: #3f4244;
+    color: #61d4c9;
+}

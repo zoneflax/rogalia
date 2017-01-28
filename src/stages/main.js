@@ -169,7 +169,7 @@ function mainStage(data) {
 
     this.drawTopologic = function() {
         let list = this.getDrawableList();
-        for(let i = 0; i < list.length; i++) {
+        for (let i = 0; i < list.length; i++) {
             let entity = list[i];
             const width = (entity.Width/2 || entity.Radius);
             const height = (entity.Height/2 || entity.Radius);
@@ -187,7 +187,7 @@ function mainStage(data) {
 
         for (let i = 0; i < list.length; i++) {
             let entity = list[i].graph;
-            for(let j = i+1; j < list.length; j++) {
+            for (let j = i+1; j < list.length; j++) {
                 let other = list[j].graph;
                 if (entity.z !== other.z)
                     continue;

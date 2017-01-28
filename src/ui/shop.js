@@ -4,7 +4,8 @@
 
 function Shop() {
     var self = this;
-    var currency = "₽";
+    var currency = (cost) => "$" + cost;
+
     this.tabs = null;
 
     var buyButton = null;
@@ -26,8 +27,16 @@ function Shop() {
     });
 
     this.sync = function(data) {
+        const input = dom.tag("input");
+        input.value = data.Url;
+        input.readonly = true;
         new Panel("steam-payment", "Steam", [
-            dom.link(data.Url, T("Open payment link in your browser")),
+            dom.wrap("urlbar", [
+                input,
+                dom.button(T("Open"), "", () => window.open(data.Url, "_blank")),
+            ]),
+            dom.hr(),
+            T("For security reasons, Steam may ask you to enter your login and password."),
             dom.hr(),
             dom.iframe(data.Url),
         ]).show();
@@ -39,29 +48,6 @@ function Shop() {
             onload = function(){};
         };
         this.panel.show();
-    };
-
-    var descriptions = {
-        "hairstyle": [
-            'Нажмите "Примерить" и выберите желаемый цвет, нажмите "Ок".',
-            'Нажмите кнопку "Купить", выберите способ оплаты, нажмите "Оплатить".',
-            'Получите посылку с товаром у почтового ящика в городе. Далее ПКМ - "Распаковать". Шлем можно отключить в Настройках.',
-        ],
-        "misc": [
-            'Введите желаемый префикс и суфикс к своему имени, нажмите "Ок".',
-            'Нажмите кнопку "Купить", выберите способ оплаты, нажмите "Оплатить".',
-            'Получите посылку с товаром у почтового ящика в городе. Далее ПКМ - "Распаковать".',
-        ],
-        "chopper": [
-            'Нажмите кнопку "Купить", выберите способ оплаты, нажмите "Оплатить".',
-            'Получите посылку с товаром у почтового ящика в городе. Далее ПКМ - "Распаковать".',
-            'От нанесения урона байк ломается. Топливо не требуется.',
-        ],
-        "wall": [
-            'Нажмите кнопку "Купить", выберите способ оплаты, нажмите "Оплатить".',
-            'Получите посылку с товаром у почтового ящика в городе. Далее ПКМ - "Распаковать".',
-            'В посылке находится мешочек с 64 чертежами выбранной стены, которые нужно применить в крафте стен.',
-        ],
     };
 
     var cards = [];
@@ -93,9 +79,9 @@ function Shop() {
                         contents.push(dom.wrap("product-tag", TS(tag)));
                     }
                     var card = dom.wrap("product-card product-card-" + tag, [
-                        dom.wrap("product-desc", [
+                        dom.wrap("product-info", [
                             productName(product),
-                            dom.wrap("product-cost", product.Cost + currency),
+                            dom.wrap("product-cost", currency(product.Cost)),
                         ]),
                     ]);
                     card.name = product.Name;
@@ -121,17 +107,27 @@ function Shop() {
             // }
             return false;
         });
+        const help = dom.link("#", Shop.descriptions["how-to"], "product-help");
+        help.onclick = function(event) {
+            new Panel("shop-help", "Shop", [
+                dom.iframe(`shop/${game.lang}.html`),
+            ]).show();
+            event.preventDefault();
+            return false;
+        };
+        const desc = Shop.descriptions[product.Tag];
         self.panel.setContents([
             dom.wrap("product-name", productName(product)),
-            dom.wrap("product-cost big", product.Cost + currency),
+            dom.hr(),
+            dom.wrap("product-cost big", currency(product.Cost)),
             buyButton,
             (product.Tag == "hairstyle" && hairstylePreview(product)),
-            dom.wrap("product-desc-container", descriptions[product.Tag].map(function(text, index) {
-                return dom.wrap("product-desc", [
-                    dom.img("assets/shop/" + product.Name + "/" + (index + 1) +".png"),
-                    text,
-                ]);
+            dom.wrap("product-images", _.range(1, 4).map(function(index) {
+                return dom.img(`assets/shop/${product.Name}/${index}.png`);
             })),
+            dom.wrap("product-desc", desc),
+            (product.Tag == "wall" && recipeLink(product)),
+            help,
             (product.Name == "title" && titleEditor(product)),
             dom.button(T("Back"), "back", back),
         ]);
@@ -255,5 +251,11 @@ function Shop() {
                 result,
             ])
         ]);
+    }
+
+    function recipeLink(product) {
+        return dom.button(T("Recipe"), "product-recipe", function() {
+            game.controller.craft.search(product.Name.replace(/-wall$/, ""), true);
+        });
     }
 }

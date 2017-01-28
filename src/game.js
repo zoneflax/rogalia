@@ -51,6 +51,7 @@ class Game {
         this.controller = new Controller(this);
         this.network = new Network();
 
+        // TODO: change quadtree size using (game.map.full)
         this.quadtree = new Quadtree(0, 0, 65568, 65568);
 
         this.entities = new HashTable();
@@ -165,7 +166,6 @@ class Game {
                 return authors;
             },
         };
-
 
         this.jukebox = new Jukebox();
 

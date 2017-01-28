@@ -10,7 +10,15 @@ Entity.LOCATION_IN_CONTAINER = 1;
 Entity.LOCATION_EQUIPPED = 2;
 Entity.LOCATION_BURDEN = 3;
 Entity.LOCATION_VENDOR = 4;
-Entity.QUEUEABLE_ACTIONS = ["disassemble", "entity-destroy", "BreakOff", "Rinse"];
+
+Entity.queueable = function(entity, action) {
+    return _.includes(["disassemble", "entity-destroy", "BreakOff", "Rinse"], action) &&
+        entity.inContainer() &&
+        game.controller.modifier.ctrl &&
+        game.controller.modifier.shift;
+};
+
+Entity.usable = ["label"];
 
 Entity.templates = {};
 

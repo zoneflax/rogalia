@@ -1750,4 +1750,5 @@ T.dict = {
     "Change faction?": "Сменить фракцию?",
     "Bundle of wood": "Вязанка",
     "Herb rack": "Сушилка для трав",
+    "Customization": "Кастомизация",
 };

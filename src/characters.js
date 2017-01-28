@@ -77,6 +77,12 @@ Character.flags = {
     Confederation: null,
 };
 
+Character.vendorSpriteName = function(name) {
+    return "vendor-" + ([].reduce.call(name, function(hash, c) {
+        return hash + c.charCodeAt(0);
+    }, 0) % 12 + 1);
+};
+
 Character.sex = function(sex) {
     return ["male", "female"][sex];
 };

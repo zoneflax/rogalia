@@ -541,12 +541,14 @@ function Controller(game) {
             ]),
             dom.img(`assets/icons/actions/${name}.png`, "icon"),
 
-        ], {onclick: (e) => {
+        ]);
+        button.onclick = function(event) {
             if (toggle) {
                 button.classList.toggle("active");
             }
-            return onclick(e);
-        }});
+            return onclick(event);
+        };
+        button.id = "action-button-" + name;
         return button;
     };
 
@@ -1038,7 +1040,9 @@ function Controller(game) {
         }
         var p = this.world.point;
         this.world.hovered = game.sortedEntities.findReverse(function(entity) {
-            return entity.intersects(p.x, p.y) && !entity.intersects(game.player.X, game.player.Y);
+            // check Disposition to allow "waypoints" to be easily selected
+            return entity.intersects(p.x, p.y) &&
+                (entity.Disposition != "" || !entity.intersects(game.player.X, game.player.Y));
         });
     };
 
@@ -1172,6 +1176,7 @@ function Controller(game) {
 
     this.toggleHideStatic = function() {
         this._hideStatic = !this._hideStatic;
+        document.getElementById("action-button-hide-static").classList.toggle("active");
     };
 
     Object.defineProperty(this, "drawMapGrid", {
@@ -1182,6 +1187,7 @@ function Controller(game) {
 
     this.toggleDrawpMapGrid = function() {
         this._drawMapGrid = !this._drawMapGrid;
+        document.getElementById("action-button-grid").classList.toggle("active");
     };
 
     this.reset = function() {
