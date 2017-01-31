@@ -28,70 +28,70 @@ function WorldMap() {
     this.tiles = [];
 
     this.gl = {
-        camera: new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, - 500, 1000 ),
+        camera: new THREE.OrthographicCamera(1280 / -2, 1280 / 2, 720 / 2, 720 / -2, -500, 1000 ),
+        // camera: new THREE.OrthographicCamera(window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, -500, 1000 ),
         // camera: new THREE.OrthographicCamera(-1280/2, 1280/2,  -720/2, 720/2, -500, 1000),
         scene: new THREE.Scene(),
         renderer: new THREE.WebGLRenderer(),
         init() {
-            this.camera.position.x = 200;
-            this.camera.position.y = 200;
-            this.camera.position.z = 200;
+            // this.camera.position.x = 10;
+            // this.camera.position.y = 10;
+            // this.camera.position.z = 10;
+            // this.camera.lookAt(this.scene.position);
 
-            this.camera.lookAt(this.scene.position);
+            this.camera.position.set(20, 20, 20);
+            this.camera.rotation.x = -Math.PI / 2;
+            this.camera.rotation.z = Math.PI / 4;
+            this.camera.scale.x = 0.5;
 
             this.renderer.setSize(1280, 720);
+
             // this.renderer.setClearColor( 0xf0f0f0 );
 
             game.world.appendChild(this.renderer.domElement);
         },
         sync() {
-	        var size = 64*10, step = 64;
-	        var geometry = new THREE.Geometry();
-	        for ( var i = - size; i <= size; i += step ) {
-		        geometry.vertices.push( new THREE.Vector3( - size, 0, i ) );
-		        geometry.vertices.push( new THREE.Vector3(   size, 0, i ) );
-		        geometry.vertices.push( new THREE.Vector3( i, 0, - size ) );
-		        geometry.vertices.push( new THREE.Vector3( i, 0,   size ) );
-	        }
-	        var material = new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.2 } );
-	        var line = new THREE.LineSegments( geometry, material );
-	        this.scene.add(line);
+            // var texture = new THREE.TextureLoader().load( "assets/map/test.png" );
+            // var material = new THREE.MeshLambertMaterial( { map: texture } );
+            console.time("IN");
+            this.scene = new THREE.Scene();
+            var geometry = new THREE.PlaneGeometry(CELL_SIZE, CELL_SIZE);
 
-
-            var geometry = new THREE.PlaneGeometry(64, 64);
-            // var material = new THREE.MeshLambertMaterial( { color: 0xffffff, overdraw: 0.5 } );
-
-            var texture = new THREE.TextureLoader().load( "assets/map/test.png" );
-            var material = new THREE.MeshLambertMaterial( { map: texture } );
-
-            for ( var x = 0; x < 10; x++ ) {
-                for ( var y = 0; y < 10; y++ ) {
-                    var cube = new THREE.Mesh( geometry, material );
-                    cube.position.x = x * 64;
-                    cube.position.y = 64/2;
-                    cube.position.z = y * 64;
+            const map = game.map;
+            for (var x = 0; x < map.cells_x; x++) {
+                for (var y = 0; y < map.cells_y; y++) {
+                    var color = map.data[y*map.cells_x + x];
+                    let material = new THREE.LineBasicMaterial({color: color + util.rand(5, 30)});
+                    var cube = new THREE.Mesh(geometry, material);
+                    cube.position.x = x * CELL_SIZE + CELL_SIZE/2;
+                    cube.position.y = 0;
+                    cube.position.z = y * CELL_SIZE + CELL_SIZE/2;
                     cube.rotation.x = -Math.PI/2;
-                    this.cube = cube;
                     this.scene.add(cube);
                 }
             }
-	        // for ( var i = 0; i < 10; i ++ ) {
-		    //     var cube = new THREE.Mesh( geometry, material );
-		    //     // cube.scale.y = Math.floor( Math.random() * 2 + 1 );
-		    //     // cube.position.x = Math.floor( ( Math.random() * 1000 - 500 ) / 50 ) * 50 + 25;
-		    //     // cube.position.y = ( cube.scale.y * 50 ) / 2;
-		    //     // cube.position.z = Math.floor( ( Math.random() * 1000 - 500 ) / 50 ) * 50 + 25;
-		    //     cube.position.x = i * 64;
-		    //     cube.position.y = 0;
-		    //     cube.position.z = i * 32;
 
-		    //     this.scene.add( cube );
-	        // }
+            this.addGrid();
 
-
-            	// Lights
             var ambientLight = new THREE.AmbientLight( 0xffffff );
-	        this.scene.add( ambientLight );
+	        this.scene.add(ambientLight);
+            console.timeEnd("IN");
+        },
+        addGrid() {
+            const step = CELL_SIZE;
+            const size = game.map.width * step;
+	        var geometry = new THREE.Geometry();
+            const y = 0;
+            for ( var i = 0; i <= size; i += step ) {
+		        geometry.vertices.push(new THREE.Vector3(0, y, i));
+		        geometry.vertices.push(new THREE.Vector3(size, y, i));
+		        geometry.vertices.push(new THREE.Vector3(i, y, 0));
+		        geometry.vertices.push(new THREE.Vector3(i, y, size));
+	        }
+
+	        var material = new THREE.LineBasicMaterial({ color: 0xffffff, opacity: 0.2 });
+	        var line = new THREE.LineSegments(geometry, material);
+	        this.scene.add(line);
         },
         draw() {
             // var timer = Date.now() * 0.0001;
@@ -102,12 +102,14 @@ function WorldMap() {
             // this.cube.rotation.y = (window.y || 0);
             // this.cube.rotation.z = (window.z || 0);
 
+            var pl = game.player;
+            this.scene.position.x = -(pl.X - pl.Location.X);
+            this.scene.position.z = -(pl.Y - pl.Location.Y);
             this.renderer.render(this.scene, this.camera);
         },
     };
 
     this.gl.init();
-
 
     var worker = new Worker("src/map-parser.js");
     worker.onmessage = function(e) {
@@ -141,7 +143,6 @@ function WorldMap() {
 
         this.syncMinimap(data, width, height);
 
-        this.gl.sync();
         if (config.graphics.fastRender) {
             var loc = game.player.Location;
             this.location.set(loc.X, loc.Y);
@@ -155,6 +156,8 @@ function WorldMap() {
                 cells_y: this.cells_y,
             });
         }
+
+        this.gl.sync();
 
         if (map) {
             this.full.width = map.Width;

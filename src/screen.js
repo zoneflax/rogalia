@@ -21,8 +21,8 @@ class Screen {
                 DEFAULT_CLIENT_HEIGHT : window.innerHeight;
         }
 
-        this.cells_x = this.width / CELL_SIZE;
-        this.cells_y = this.height / CELL_SIZE;
+        this.cells_x = this.width / CELL_SIZE << 0;
+        this.cells_y = this.height / CELL_SIZE << 0;
         game.canvas.width = this.width;
         game.canvas.height = this.height;
         game.world.style.width = this.width + "px";
