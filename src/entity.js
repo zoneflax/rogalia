@@ -38,6 +38,7 @@ Entity.prototype = {
     Actions: null,
     Durability: null,
     Dye: "",
+    visibiliyObstacle: false,
     sprite: null,
     _icon: null,
     _spriteVersion: "",
@@ -160,6 +161,10 @@ Entity.prototype = {
         elements.push(Stats.prototype.createValue("Level", this.Lvl));
         elements.push(Stats.prototype.createValue("Quality", this.Quality));
         elements.push(Stats.prototype.createParam("Durability", this.Durability));
+
+        if ("Readiness" in this) {
+            elements.push(Stats.prototype.createParam("Readiness", this.Readiness));
+        }
 
         if (this.Group == "food") {
             elements.push(dom.hr());
@@ -815,13 +820,17 @@ Entity.prototype = {
                     game.iso.fillRect(this.leftTopX(), this.leftTopY(), this.Width, this.Height);
                 }
             }
-            if (this.MoveType == Entity.MT_STATIC &&
+            if (config.graphics.autoHideObjects &&
+                this.MoveType == Entity.MT_STATIC &&
                 this.CanCollide &&
                 this.X > game.player.X &&
                 this.Y > game.player.Y &&
                 this.intersects(game.player.X, game.player.Y)) {
-                this.sprite.drawOutline(p);
+                this.sprite.drawAlpha(p, 0.2);
+                this.drawBox();
+                this.visibiliyObstacle = true;
             } else {
+                this.visibiliyObstacle = false;
                 this.sprite.draw(p);
             }
         }
@@ -900,10 +909,10 @@ Entity.prototype = {
         this.x = p.x;
         this.y = p.y;
 
-        if (reinsert) {
-            game.quadtree.remove(this);
-            game.quadtree.insert(this);
-        }
+        // if (reinsert) {
+        //     game.quadtree.remove(this);
+        //     game.quadtree.insert(this);
+        // }
 
         if (reinsert)
             game.sortedEntities.add(this);

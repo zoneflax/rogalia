@@ -1,4 +1,4 @@
-/* global game, dom, T, TS */
+/* global game, dom, T, TS, Panel */
 
 "use strict";
 function Craft() {
@@ -382,7 +382,7 @@ Craft.prototype = {
             // we need to defer panel showing because searchOrHelp will be called from click handler
             // which will focus previous panel
             _.defer(function() {
-                new Panel("craft-help", T("Help"), [dom.span(help)]).show();
+                new Panel("craft-help", T("Help"), dom.span(help)).show();
             });
         } else if (pattern && pattern.match(/-wall-plan$/)) {
             _.defer(function() {

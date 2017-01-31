@@ -1,3 +1,5 @@
+/* global Panel, dom, game, T */
+
 "use strict";
 
 function Barbershop(selectHaircut, onupdate) {

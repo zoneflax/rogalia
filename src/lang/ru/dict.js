@@ -205,7 +205,7 @@ T.dict = {
     "Leather boots": "Кожаные ботинки ",
     "Rogalik": "Рогалик",
     "Sharp stone": "Острый камень",
-    "Crushed stone": "Камененная крошка",
+    "Crushed stone": "Каменная крошка",
     "Soulstone": "Камень души",
     "Steel shovel": "Стальная лопата",
     "Steel helmet": "Стальной шлем",
@@ -1751,4 +1751,7 @@ T.dict = {
     "Bundle of wood": "Вязанка",
     "Herb rack": "Сушилка для трав",
     "Customization": "Кастомизация",
+    "Linen label": "Льняная метка",
+    "Wooden label": "Деревянная метка",
+    "Label has no text": "На метке ничего не написано",
 };

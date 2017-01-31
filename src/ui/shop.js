@@ -109,9 +109,7 @@ function Shop() {
         });
         const help = dom.link("#", Shop.descriptions["how-to"], "product-help");
         help.onclick = function(event) {
-            new Panel("shop-help", "Shop", [
-                dom.iframe(`shop/${game.lang}.html`),
-            ]).show();
+            new Panel("shop-help", "Shop", dom.iframe(`shop/${game.lang}.html`)).show();
             event.preventDefault();
             return false;
         };
@@ -182,7 +180,7 @@ function Shop() {
         form.action = "https://money.yandex.ru/quickpay/confirm.xml";
         form.method = "POST";
         form.target = "_blank";
-        var panel = new Panel("payment", T("Payment"), [form]).show();
+        var panel = new Panel("payment", T("Payment"), form).show();
     }
 
     function param(name, value) {

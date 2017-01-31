@@ -1,3 +1,5 @@
+/* global Panel, dom */
+
 "use strict";
 
 function Popup(buttons) {

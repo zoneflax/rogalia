@@ -1,3 +1,5 @@
+/* global Panel */
+
 "use strict";
 
 function Exchange(npc) {
@@ -66,6 +68,6 @@ function Exchange(npc) {
         );
         table.id = "exchange-rates-table";
 
-        new Panel("exchange", "Exchange", [table]).show();
+        new Panel("exchange", "Exchange", table).show();
     });
 }

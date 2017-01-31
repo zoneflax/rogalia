@@ -13,7 +13,7 @@ function Settings() {
     this.panel = new Panel(
         "settings",
         "Settings",
-        [dom.tabs(tabs)]
+        dom.tabs(tabs)
     );
 
     function setPlayerSettings() {

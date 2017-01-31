@@ -1,3 +1,5 @@
+/* global Panel, T, dom, game */
+
 "use strict";
 function Users() {
     var lists = {};

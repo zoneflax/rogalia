@@ -3,8 +3,16 @@
 "use strict";
 
 function Customization() {
-    const customizations = game.player.Customization || [];
-    this.panel = new Panel("customization", "Customization", customizations.map(function(customization) {
+    const customizations = game.player.Customization;
+    this.panel = new Panel("customization", "Customization", [
+        dom.button(T("Shop"), "", () => game.controller.shop.panel.show()),
+        dom.hr(),
+        (customizations)
+            ? dom.wrap("customizations", customizations.map(makeCustomization))
+            : T("No customizations")
+    ]).show();
+
+    function makeCustomization(customization) {
         let name = customization.Group;
         let info = null;
         switch (customization.Group) {
@@ -33,7 +41,7 @@ function Customization() {
                 }
             }
         );
-    })).show();
+    }
 
     function makeColorInfo(color, opacity = 1) {
         const preview = dom.div("preview");

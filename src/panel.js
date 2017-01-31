@@ -40,7 +40,7 @@ function Panel(name, title, elements, hooks) {
         clsoe: hooks.close,
     };
 
-    if (elements && elements.length) {
+    if (elements) {
         this.setContents(elements);
     } else {
         var contents = document.getElementById(name);

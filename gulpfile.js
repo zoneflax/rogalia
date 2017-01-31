@@ -74,6 +74,7 @@ gulp.task("nwbuild", function() {
             "./assets/**",
             "./books/**",
             "./news/**",
+            "./shop/**",
             "./src/**",
             "./lib/**",
         ],

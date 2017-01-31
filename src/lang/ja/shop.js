@@ -3,9 +3,9 @@
 "use strict";
 
 Shop.descriptions = {
-    "hairstyle": "Сначала выберите желаемый цвет волос. Теперь прическа выделит вашего персонажа среди прочих.",
-    "misc": "Отличный способ выделиться для важных особ.",
-    "chopper": "Это средство передвижения не требует еды. Призвать его можно только в клейме.",
-    "wall": "Мешочек с 64 чертежами. Теперь можно строить своё поместье.",
-    "how-to": "Как получить покупку?",
+    "hairstyle": "Select the desired hair color first. With new hairstyle, your character will stand out among the others.",
+    "misc": "Perfect method to get noticed by very important people.",
+    "chopper": "This vehicle doesn't need food. You may summon it in the claim only.",
+    "wall": "Sac with 64 plans. Now you can build your house.",
+    "how-to": "Instructions to collect the purchase",
 };

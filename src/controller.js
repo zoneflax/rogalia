@@ -300,7 +300,7 @@ function Controller(game) {
             this.avatar.update();
             this.effects.update();
             lastTickUpdate = now;
-            _.forEach(game.containers, (cnt) => cnt.updateProgress());
+            _.forEach(game.containers, (cnt) => cnt.visible && cnt.updateProgress());
         }
     };
 
@@ -531,7 +531,7 @@ function Controller(game) {
         }.bind(this));
     };
 
-    this.makeHotbarButton = function({name, hotkey, description, toggle}, onclick) {
+    this.makeHotbarButton = function({name, hotkey, description}, onclick) {
         const action = util.ucfirst(TS(name));
         const button = dom.wrap("button tooltip", [
             dom.make("i", hotkey),
@@ -542,12 +542,7 @@ function Controller(game) {
             dom.img(`assets/icons/actions/${name}.png`, "icon"),
 
         ]);
-        button.onclick = function(event) {
-            if (toggle) {
-                button.classList.toggle("active");
-            }
-            return onclick(event);
-        };
+        button.onclick = onclick;
         button.id = "action-button-" + name;
         return button;
     };
@@ -573,13 +568,11 @@ function Controller(game) {
             this.makeHotbarButton({
                 name: "hide-static",
                 hotkey: "Shift+Z",
-                toggle: true,
             }, () => this.toggleHideStatic()),
 
             this.makeHotbarButton({
                 name: "grid",
                 hotkey: "G",
-                toggle: true,
             }, () => this.toggleDrawpMapGrid()),
         ]);
         dom.append(document.getElementById("hotbars-container"), this.xpBar.element);
@@ -1041,8 +1034,7 @@ function Controller(game) {
         var p = this.world.point;
         this.world.hovered = game.sortedEntities.findReverse(function(entity) {
             // check Disposition to allow "waypoints" to be easily selected
-            return entity.intersects(p.x, p.y) &&
-                (entity.Disposition != "" || !entity.intersects(game.player.X, game.player.Y));
+            return !entity.visibiliyObstacle && entity.intersects(p.x, p.y);
         });
     };
 

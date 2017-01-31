@@ -1,6 +1,6 @@
 {
     "name": "rogalia",
-    "version": "0.25.0",
+    "version": "0.27.0",
     "main": "index.html?steam=true",
     "description": "Rogalia sandbox mmorpg client",
     "scripts": {

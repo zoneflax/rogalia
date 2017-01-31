@@ -97,6 +97,6 @@ function Statistics() {
                 ],
             },
         ];
-        new Panel("statistics", "Statistics", [dom.tabs(tabs)]).show();
+        new Panel("statistics", "Statistics", dom.tabs(tabs)).show();
     });
 }

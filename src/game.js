@@ -52,7 +52,7 @@ class Game {
         this.network = new Network();
 
         // TODO: change quadtree size using (game.map.full)
-        this.quadtree = new Quadtree(0, 0, 65568, 65568);
+        // this.quadtree = new Quadtree(0, 0, 65568, 65568);
 
         this.entities = new HashTable();
         this.sortedEntities = new BinarySearchTree();
@@ -452,7 +452,7 @@ class Game {
         var entity = Entity.get(id);
         entity.onremove();
         this.sortedEntities.remove(entity);
-        this.quadtree.remove(entity);
+        // this.quadtree.remove(entity);
         this.entities.remove(id);
         this.claims.remove(id);
     }

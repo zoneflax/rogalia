@@ -156,7 +156,7 @@ Vendor.prototype = {
         this.panel = new Panel(
             "vendor",
             TT("Vendor of {name}", {name: vendor.getFullName()}),
-            [dom.tabs(this.tabs)]
+            dom.tabs(this.tabs)
         );
         this.panel.entity = vendor;
         // this.panel.temporary = true;

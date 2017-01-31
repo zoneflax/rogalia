@@ -1070,6 +1070,7 @@ hr {
         z-index: 1;
         background: @bg-transparent-color;
         padding: 1px;
+        visibility: visible!important;
 
         hr {
             background: @bg-transparent-border-color;
@@ -2124,8 +2125,12 @@ big {
 
 #party {
     position: absolute;
-    top: 115px;
+    top: 105px;
     left: 11px;
+
+    .param-bar {
+        font-size: 11px;
+    }
 
     .avatar-container {
         width: 180px;
@@ -2411,36 +2416,21 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 #action-progress-value {
-    background: #b9bcd3;
+    background: #dd7704;
 }
 #action-progress {
-    background:
-    url("assets/bg/action-progress/top.png") repeat-x top,
-    url("assets/bg/action-progress/bottom.png") repeat-x bottom, #85889f;
-    bottom: 170px;
-    height: 23px;
+    background: fade(#41280b, 80%);
+    position: absolute;
+    right: 0;
     left: 0;
+    bottom: 170px;
+    width: 300px;
+    height: 19px;
     box-sizing: border-box;
     display: flex;
-    padding: 3px;
+    padding: 1px;
     margin: auto;
-    position: absolute;
-    right: 0;
-    width: 300px;
     z-index: 3000;
-}
-#action-progress:before,
-#action-progress:after {
-    position: absolute;
-    top: -2px;
-}
-#action-progress:before {
-    content: url("assets/bg/action-progress/left.png");
-    left: 0;
-}
-#action-progress:after {
-    content: url("assets/bg/action-progress/right.png");
-    right: 0;
 }
 
 #talk, #story {
@@ -2553,10 +2543,8 @@ input[type=number], .lot-quantity > input, .price > input {
 #hotbars-container {
     position: absolute;
     width: 304px;
-    left: 0;
-    right: 0;
+    right: 3px;
     bottom: 3px;
-    margin: auto;
 
     #hotbars {
         display: flex;
@@ -2592,8 +2580,9 @@ input[type=number], .lot-quantity > input, .price > input {
 
     #action-hotbar .button {
         border-color: @bg-transparent-border-color;
+
         &.active {
-            background-color: #3f51b5;
+            background-color: #053571;
         }
     }
 }
@@ -2993,7 +2982,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
 #combos {
     position: absolute;
-    bottom: 100px;
+    bottom: 3px;
     left: 0;
     right: 0;
     width: 100px;
@@ -3343,7 +3332,7 @@ input[type=number], .lot-quantity > input, .price > input {
 #customization {
     max-width: 276px;
 
-    .contents {
+    .customizations {
         display: flex;
         flex-wrap: wrap;
     }
@@ -3371,7 +3360,8 @@ input[type=number], .lot-quantity > input, .price > input {
         }
 
         .info.color {
-            background-color: #ccc;
+            background-color: #555;
+
             .preview {
                 width: 100%;
                 height: 100%;

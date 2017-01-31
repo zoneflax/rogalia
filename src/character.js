@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization */
 
 "use strict";
 function Character(id) {
@@ -185,6 +185,10 @@ Character.prototype = {
             if (data.Fullness) {
                 game.controller.updateItemInfo();
             }
+
+            if (data.Customization && "customization" in game.panels) {
+                new Customization();
+            }
         }
     },
     avatar: function() {
@@ -219,7 +223,7 @@ Character.prototype = {
                         return name;
                     },
                     avatar() {
-                        return loader.loadImage("avatars/new.png", true);
+                        return loader.loadImage("characters/avatars/new.png", true);
                     },
                 });
                 avatar.element.title = T("Out of sight");
@@ -497,12 +501,12 @@ Character.prototype = {
         return this.sprite.nameOffset || this.sprite.height;
     },
     drawAction: function() {
-        if(this.Action.Duration) {
+        if (this.Action.Duration) {
             var progress = Math.min(this.action.progress, 1);
-            if (this.isPlayer) {
-                var ap = game.controller.actionProgress.firstChild;
-                ap.style.width = progress * 100 + "%";
-            } else {
+            // if (this.isPlayer) {
+            //     var ap = game.controller.actionProgress.firstChild;
+            //     ap.style.width = progress * 100 + "%";
+            // } else {
                 var w = 64;
                 var h = FONT_SIZE * 0.5;
                 var p = this.screen();
@@ -519,7 +523,7 @@ Character.prototype = {
 
                 game.ctx.fillStyle = '#cf9d62';
                 game.ctx.fillRect(x, y, progress * w, h);
-            }
+            // }
         }
     },
     see: function(character) {
@@ -555,10 +559,10 @@ Character.prototype = {
             return;
 
         this._setDst(x, y);
-        if (this.willCollide(this.findMovePosition())) {
-            this.stop();
-            return;
-        }
+        // if (this.willCollide(this.findMovePosition())) {
+        //     this.stop();
+        //     return;
+        // }
 
         game.network.send("set-dst", {x: x, y: y});
         game.controller.resetAction();
@@ -1108,18 +1112,18 @@ Character.prototype = {
                 this.action.progress = 0;
                 this.action.last = this.Action.Started;
                 this.toggleActionSound();
-                if (this.isPlayer) {
-                    dom.show(game.controller.actionProgress);
-                    game.controller.actionButton.startProgress();
-                }
+                // if (this.isPlayer) {
+                //     dom.show(game.controller.actionProgress);
+                //     game.controller.actionButton.startProgress();
+                // }
             }
             if (this.Action.Duration) {
                 this.action.progress += (1 / this.Action.Duration * 1000 * k);
             } else {
-                if (this.isPlayer) {
-                    dom.hide(game.controller.actionProgress);
-                    game.controller.actionButton.stopProgress();
-                }
+                // if (this.isPlayer) {
+                //     dom.hide(game.controller.actionProgress);
+                //     game.controller.actionButton.stopProgress();
+                // }
                 this.action.progress = 0;
             }
         }
@@ -1358,7 +1362,7 @@ Character.prototype = {
         }
     },
 
-    findMovePosition: function(k = 50/1000) {
+    findMovePosition: function(k = 16/1000) {
         var delta = this.Speed.Current * k;
         var cell = game.map.getCell(this.X, this.Y);
         if (cell) {
@@ -1467,8 +1471,8 @@ Character.prototype = {
         if (p.x == this.Dst.X && p.y == this.Dst.Y) {
             this.setPos(p.x, p.y);
             this.stop();
-        } else if (this.isPlayer && this.willCollide(p)) {
-            this.stop();
+        // } else if (this.isPlayer && this.willCollide(p)) {
+        //     this.stop();
         } else {
             this.setPos(p.x, p.y);
         }

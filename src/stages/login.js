@@ -51,7 +51,7 @@ function loginStage() {
             cancelSignupButton,
         ]);
 
-        self.panel = new Panel("login", "", [form])
+        self.panel = new Panel("login", "",  form)
             .hideCloseButton()
             .show()
             .center(0.5, 0.05);

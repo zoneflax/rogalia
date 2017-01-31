@@ -31,7 +31,7 @@ Auction.prototype = {
     open: function(broker) {
         this.broker = broker;
         if (!this.panel) {
-            this.panel = new Panel("auction", "Auction", [dom.tabs(this.tabs)]);
+            this.panel = new Panel("auction", "Auction", dom.tabs(this.tabs));
         }
         this.panel.show();
     },

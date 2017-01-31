@@ -102,8 +102,7 @@ function mainStage(data) {
 
         // this.drawPotentialFields();
 
-        // TODO: calc max items using game.controller.fps()
-        if (config.graphics.topologicalSort || game.sortedEntities.length < 200) {
+        if (config.graphics.topologicalSort) {
             this.drawTopologic();
         } else {
             game.sortedEntities.traverse(drawObject);

@@ -25,7 +25,7 @@ function Help() {
     this.panel = new Panel(
         "help",
         "Help",
-        [tabs]
+        tabs
     );
 
     function dashboard(title, contents) {

@@ -1,4 +1,4 @@
-/* global game, Character */
+/* global game, Character, Panel, dom, T */
 
 "use strict";
 function Skills() {

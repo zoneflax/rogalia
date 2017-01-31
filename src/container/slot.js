@@ -111,7 +111,7 @@ ContainerSlot.prototype = {
     updateProgress: function() {
         if (!this.entity)
             return;
-        if ("Readiness" in this.entity && "Fuel" in this.container.entity) {
+        if ("Readiness" in this.entity) {
             var rd = this.entity.Readiness;
             if (rd.Max != 0) {
                 this.setBar(100*rd.Current / rd.Max, "progress");
