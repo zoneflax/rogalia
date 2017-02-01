@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree, Pixi */
 
 "use strict";
 
@@ -16,7 +16,6 @@ class Game {
         this.ctx.clear = function() {
             game.ctx.clearRect(0, 0, game.canvas.width, game.canvas.height);
         };
-
 
         this.gateway = this._gatewayAddr();
 
@@ -65,6 +64,16 @@ class Game {
         this.camera = new Point();
 
         this.iso = new IsoDrawer(this.ctx);
+
+        if (config.graphics.fastRender) {
+            this.pixi = new Pixi();
+            const canvas = this.pixi.renderer.view;
+            canvas.classList.add("bg-canvas");
+            this.world.appendChild(canvas);
+
+        } else {
+            this.canvas.classList.add("bg-canvas");
+        }
 
         this.popup = new Popup();
 
@@ -492,6 +501,7 @@ class Game {
     toggleFullscreen() {
         this.fullscreen = !this.fullscreen;
         this.screen.update();
+        game.pixi && game.pixi.updateMap();
         localStorage.setItem("fullscreen", this.fullscreen);
     }
 

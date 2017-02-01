@@ -8,12 +8,14 @@ function mainStage(data) {
     game.controller.initInterface();
 
     game.controller.chat.init(data.Chat);
+    game.pixi && game.pixi.updateMap();
 
     this.sync = function (data) {
         if (data.Warning) {
             game.controller.showWarning(data.Warning);
             return;
         }
+
         Character.sync(data.Players || [], data.RemovePlayers || null);
         Character.sync(data.Mobs || [], data.RemoveMobs || null);
         Character.sync(data.NPCs || [], data.RemoveNPCs || null);

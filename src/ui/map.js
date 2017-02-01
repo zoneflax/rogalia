@@ -1,4 +1,4 @@
-/* global game, Point, CELL_SIZE, config, loader */
+/* global game, Point, CELL_SIZE, config, loader, PIXI */
 
 "use strict";
 function WorldMap() {
@@ -26,6 +26,8 @@ function WorldMap() {
     this.location = new Point();
 
     this.tiles = [];
+
+
 
     var worker = new Worker("src/map-parser.js");
     worker.onmessage = function(e) {
@@ -368,7 +370,8 @@ function WorldMap() {
 
     this.draw = function() {
         if (config.graphics.fastRender) {
-            this.fastDraw();
+            game.pixi.drawMap();
+            // this.fastDraw();
         } else {
             this.layerDraw();
         }
@@ -489,6 +492,9 @@ function WorldMap() {
 
         this.darkness = loader.loadImage("map/darkness.png");
         this.simpleDarkness = loader.loadImage("map/simple-darkness.png");
+        if (game.pixi) {
+            game.loader.ready(() => game.pixi.initTiles(this.tiles));
+        }
     };
 
     this.initMap = function(map) {

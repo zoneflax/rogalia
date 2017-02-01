@@ -5,6 +5,7 @@
     "./src/quadtree.js",
     "./src/polyfill.js",
     "./src/hashtable.js",
+    "./src/pixi.js",
     "./src/config.js",
     "./src/dom.js",
     "./src/util.js",
