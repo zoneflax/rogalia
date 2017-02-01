@@ -21,7 +21,7 @@ Settings.descriptions = {
     ui: {
         language: [
             "Russian",
-            "Switch game language between russian and english.",
+            "日本語、英語、ロシア語のいずれかを選択して、言語設定を切り替えることができます。",
         ],
         hp: [
             "ヘルスバー",
