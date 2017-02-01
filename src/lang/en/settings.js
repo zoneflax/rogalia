@@ -22,8 +22,8 @@ Settings.descriptions = {
     },
     ui: {
         language: [
-            "Russian",
-            "Switch game language between russian and english.",
+            "Language",
+            "Switch game language.",
         ],
         hp: [
             "Health bar",
