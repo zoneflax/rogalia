@@ -331,9 +331,9 @@ function Controller(game) {
         }
     };
 
-    this.initAvatar = function(character) {
-        this.avatar = new Avatar(character);
-        dom.append(document.getElementById("player-avatar"), this.avatar.element);
+    this.updatePlayerAvatar = function(player) {
+        this.avatar = new Avatar(player);
+        dom.setContents(document.getElementById("player-avatar"), this.avatar.element);
     };
 
     this.wasd = function(x, y, up) {

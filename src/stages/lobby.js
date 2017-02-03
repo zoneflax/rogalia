@@ -18,16 +18,16 @@ function lobbyStage(data) {
 
     var avatars = dom.div("avatars");
 
-    function add({name, karma, icon}, callback) {
+    function add({name, karma, avatar}, callback) {
         var nameElem = dom.wrap("avatar-name", (name == "+") ? T("Create") : name);
         if (karma < 0) {
             nameElem.className += " avatar-pk";
         }
 
         dom.append(avatars, dom.wrap(
-            "avatar-container",
+            "avatar-container avatar-non-player",
             [
-                dom.wrap("avatar",  icon),
+                dom.wrap("avatar",  avatar),
                 nameElem,
             ],
             {onclick: callback}
@@ -39,8 +39,8 @@ function lobbyStage(data) {
     });
 
     characters.forEach(function(info) {
-        var icon = loader.loadImage("characters/avatars/" + Character.sex(info.Sex) + ".png", true);
-        add({name:  info.Name, karma: info.Karma, icon}, function() {
+        const avatar = Character.makeAvatar(Character.sex(info.Sex), info.Hairstyle);
+        add({name:  info.Name, karma: info.Karma, avatar}, function() {
             game.playerName = info.Name;
             game.setStage("loading", lobbyStage.metadataVersion);
         });
@@ -49,7 +49,7 @@ function lobbyStage(data) {
     for (var i = maxChars - characters.length; i > 0; i--) {
         var create = loader.loadImage("characters/avatars/new.png", true);
         create.className = "create";
-        add({name: T("Create"), icon: create}, function() {
+        add({name: T("Create"), avatar: create}, function() {
             game.setStage("createCharacter");
         });
     };

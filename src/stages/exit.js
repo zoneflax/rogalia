@@ -1,4 +1,4 @@
-/* global game */
+/* global game, T, CELL_SIZE, dom, Panel, Stage */
 
 "use strict";
 function exitStage(message) {
@@ -31,4 +31,5 @@ function exitStage(message) {
         .hideCloseButton()
         .show();
 };
+
 Stage.add(exitStage);

@@ -1,4 +1,4 @@
-/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel, TS, util, Quest */
+/* global Bank, Exchange, game, dom, Vendor, T, Character, Panel, TS, util, Quest, ImageFilter */
 
 "use strict";
 Character.equipSlots =  [
@@ -33,6 +33,10 @@ Character.sync = function(data, remove) {
         var to = game.entities.get(id);
         if (!to) {
             to = new Character(id);
+            if (from.Name == game.playerName) {
+                to.isPlayer = true;;
+                game.player = to;
+            }
             to.init(from);
             game.addCharacter(to);
         } else {
@@ -88,6 +92,23 @@ Character.sex = function(sex) {
 };
 
 Character.partyLoadQueue = {};
+
+Character.makeAvatar = function(sex, hairstyle = null) {
+    const dir = "assets/" + Character.spriteDir + "avatars/";
+    const img = dom.img(dir + sex + ".png", "avatar-face");
+    if (!hairstyle) {
+        return img;
+    }
+    const [haircut, color, opacity] = hairstyle.split("#");
+    const hair = dom.img(dir + "hair/" + sex + "/" + haircut + ".png");
+    hair.onload = function() {
+        const coloredHair = ImageFilter.tint(hair, color, opacity);
+        coloredHair.classList.add("avatar-hair");
+        dom.insert(coloredHair, img.parentNode);
+    };
+
+    return dom.wrap("avatar-haircut", img);
+};
 
 Character.npcActions = {
     "Set citizenship": function() {

@@ -68,6 +68,7 @@ class Game {
         if (config.graphics.fastRender) {
             this.pixi = new Pixi();
             const canvas = this.pixi.renderer.view;
+            canvas.classList.add("map-canvas");
             canvas.classList.add("bg-canvas");
             this.world.appendChild(canvas);
 
@@ -437,12 +438,6 @@ class Game {
     addCharacter(character) {
         this.addEntity(character);
         this.characters.set(character.name || character.Id, character);
-
-        if (character.Name == this.playerName) {
-            character.isPlayer = true;;
-            this.player = character;
-            this.controller.initAvatar(character);
-        }
     }
 
     addEntity(entity) {

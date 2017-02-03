@@ -24,10 +24,7 @@ class Avatar {
         contents.onmousedown = (e) => this.onmousedown(e);
 
         this.element = dom.wrap("avatar-container", [contents, this.effects]);
-
-        if (character.isPlayer) {
-            this.element.classList.add("avatar-player");
-        }
+        this.element.classList.add((character.isPlayer) ? "avatar-player" : "avatar-non-player");
     }
 
     setIcon(name) {

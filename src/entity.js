@@ -296,7 +296,7 @@ Entity.prototype = {
         return this.sprite.height - r;
     },
     getDrawPoint: function() {
-        var p = new Point(this.X, this.Y).toScreen();
+        var p = new Point(this.x, this.y).toScreen();
         p.x -= this.getDrawDx();
         p.y -= this.getDrawDy();
         return p.round();

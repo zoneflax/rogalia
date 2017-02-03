@@ -36,29 +36,30 @@ class Pixi {
     }
 
     updateMap() {
+        // TODO: const -> var (currently chrome deoptimize function)
         game.controller.updateCamera();
-        const map = game.map;
-        const scr = game.screen;
-        const cam = game.camera;
+        var map = game.map;
+        var scr = game.screen;
+        var cam = game.camera;
 
-        const leftTop = cam
+        var leftTop = cam
               .clone()
               .toWorld()
               .div(CELL_SIZE)
               .floor();
-        const rightTop = cam
+        var rightTop = cam
               .clone()
               .add(new Point(scr.width, 0))
               .toWorld()
               .div(CELL_SIZE)
               .floor();
-        const leftBottom = cam
+        var leftBottom = cam
               .clone()
               .add(new Point(0, scr.height))
               .toWorld()
               .div(CELL_SIZE)
               .ceil();
-        const rightBottom = cam
+        var rightBottom = cam
               .clone()
               .add(new Point(scr.width, scr.height))
               .toWorld()
@@ -69,7 +70,7 @@ class Pixi {
 
         for (let x = leftTop.x; x < rightBottom.x; x++) {
             for (let y = rightTop.y; y < leftBottom.y; y++) {
-                const p = new Point(x * CELL_SIZE, y * CELL_SIZE).toScreen();
+                var p = new Point(x * CELL_SIZE, y * CELL_SIZE).toScreen();
 
                 if (p.x + CELL_SIZE < cam.x)
                     continue;
@@ -82,20 +83,20 @@ class Pixi {
 
                 p.x -= CELL_SIZE;
 
-                const w = x - map.location.x / CELL_SIZE;
-                const h = y - map.location.y / CELL_SIZE;
+                var w = x - map.location.x / CELL_SIZE;
+                var h = y - map.location.y / CELL_SIZE;
                 if (w < 0 || h < 0 || w >= map.cells_x || h >= map.cells_y) {
                     continue;
                 }
-                const color = map.data[h*map.cells_x + w];
-                const index = map.colorMap[color];
-                const tile = map.tiles[index];
-                const textures = this.tiles[tile.alt];
-                const variant = (tile.width > 2*CELL_SIZE) ?
+                var color = map.data[h*map.cells_x + w];
+                var index = map.colorMap[color];
+                var tile = map.tiles[index];
+                var textures = this.tiles[tile.alt];
+                var variant = (tile.width > 2*CELL_SIZE) ?
                       Math.floor(tile.width/(4*CELL_SIZE)*(1+Math.sin(x*y)))
                     : 0;
 
-                const sprite = new PIXI.Sprite(textures[variant]);
+                var sprite = new PIXI.Sprite(textures[variant]);
                 sprite.x = p.x - game.camera.x;
                 sprite.y = p.y - game.camera.y;
 

@@ -1,27 +1,18 @@
 "use strict";
-function Point(x, y) {
-    switch(arguments.length) {
-    case 0:
-        this.x = 0;
-        this.y = 0;
-        break;
-    case 1:
-        if (x instanceof Object && "x" in x && "y" in x) {
+function Point(x = 0, y = 0) {
+    if (x instanceof Object) {
+        if ("x" in x && "y" in x) {
             this.x = x.x;
             this.y = x.y;
-        } else if (x instanceof Object && "X" in x && "Y" in x) {
+        } else if ( "X" in x && "Y" in x) {
             this.x = x.X;
             this.y = x.Y;
         } else {
-            game.error("No x or y in", x);
+            throw new Error("No x or y in", x);
         }
-        break;
-    case 2:
+    } else {
         this.x = x;
         this.y = y;
-        break;
-    default:
-        game.error("Illegal arguments in point constructor");
     }
 }
 

@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter */
 
 "use strict";
 function Character(id) {
@@ -189,19 +189,21 @@ Character.prototype = {
             if (data.Customization && "customization" in game.panels) {
                 new Customization();
             }
+
+            if (data.Style) {
+                game.controller.updatePlayerAvatar(this);
+            }
         }
     },
     avatar: function() {
-        let name = "";
-        if (this.IsNpc) {
-            name = (this.Type == "vendor")
-                ? Character.vendorSpriteName(this.Name)
-                : this.Type;
-        } else {
-            const suffix = (this.isPlayer) ? "-full" : "";
-            name = this.sex() + suffix;
+        if (!this.IsNpc) {
+            return Character.makeAvatar(this.sex(), this.Style && this.Style.Hair);
         }
-        return dom.img("assets/" + this.spriteDir() + "avatars/" + name + ".png");
+        const name = (this.Type == "vendor")
+            ? Character.vendorSpriteName(this.Name)
+            : this.Type;
+        return dom.img("assets/" + this.spriteDir() + "avatars/" + name + ".png", "avatar-face");
+
     },
     updateParty: function(members) {
         var party = game.controller.party;
@@ -331,6 +333,7 @@ Character.prototype = {
                             tmpCtx.putImageData(e.data, 0, 0);
                             ctx.drawImage(tmpCanvas, 0, 0);
                         };
+                        console.log(part);
                         worker.postMessage({
                             imageData: tmpCtx.getImageData(0, 0, image.width, image.height),
                             color: part.color,

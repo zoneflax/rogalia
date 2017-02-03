@@ -624,6 +624,9 @@ hr {
     animation-iteration-count: infinite;
     animation-play-state: paused;
 }
+.exit-stage .map-canvas {
+    display: none;
+}
 
 #canvas.animated {
     animation-play-state: running;
@@ -1560,7 +1563,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     .avatars {
         display: flex;
         justify-content: space-around;
-        padding-top: 7px;
+        padding-top: 20px;
         padding-bottom: 2px;
     }
 
@@ -2020,6 +2023,15 @@ big {
         padding: 1px;
         margin-left: -2px;
 
+        &.avatar-non-player .avatar-image {
+            // transform-origin: bottom center;
+            // transform: scale(0.8);
+            img, canvas {
+                width: 60px;
+                margin-right: 2px;
+            }
+        }
+
         .avatar-contents {
             position: relative;
             display: flex;
@@ -2059,6 +2071,23 @@ big {
             padding-left: 1px;
         }
     }
+}
+
+.avatar-haircut {
+    position: absolute;
+}
+
+.avatar-face {
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.avatar-hair {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
 }
 
 .param-bar {
