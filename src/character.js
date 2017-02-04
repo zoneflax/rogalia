@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter, FONT_SIZE */
 
 "use strict";
 function Character(id) {
@@ -333,7 +333,6 @@ Character.prototype = {
                             tmpCtx.putImageData(e.data, 0, 0);
                             ctx.drawImage(tmpCanvas, 0, 0);
                         };
-                        console.log(part);
                         worker.postMessage({
                             imageData: tmpCtx.getImageData(0, 0, image.width, image.height),
                             color: part.color,
@@ -505,28 +504,26 @@ Character.prototype = {
     },
     drawAction: function() {
         if (this.Action.Duration) {
-            var progress = Math.min(this.action.progress, 1);
-            // if (this.isPlayer) {
-            //     var ap = game.controller.actionProgress.firstChild;
-            //     ap.style.width = progress * 100 + "%";
-            // } else {
-                var w = 64;
-                var h = FONT_SIZE * 0.5;
-                var p = this.screen();
-                var x = p.x - w/2;
-                var y = p.y - this.nameOffset() + h + 1;
-                h -= 2;
+            const progress = Math.min(this.action.progress, 1);
+            if (this.isPlayer) {
+                var ap = game.controller.actionProgress.firstChild;
+                ap.style.width = progress * 100 + "%";
+            }
+            var w = 64;
+            var h = FONT_SIZE * 0.5;
+            var p = this.screen();
+            var x = p.x - w/2;
+            var y = p.y - this.nameOffset() + h + 1;
+            h -= 2;
 
-                if (!config.ui.simpleFonts) {
-                    game.ctx.fillStyle = '#333';
-                    game.ctx.fillRect(x-1, y-1, w+2, h+2);
-                }
-                game.ctx.fillStyle = '#99682e';
-                game.ctx.fillRect(x, y, w, h);
+            game.ctx.fillStyle = '#333';
+            game.ctx.fillRect(x-1, y-1, w+2, h+2);
 
-                game.ctx.fillStyle = '#cf9d62';
-                game.ctx.fillRect(x, y, progress * w, h);
-            // }
+            game.ctx.fillStyle = '#99682e';
+            game.ctx.fillRect(x, y, w, h);
+
+            game.ctx.fillStyle = '#cf9d62';
+            game.ctx.fillRect(x, y, progress * w, h);
         }
     },
     see: function(character) {
@@ -906,10 +903,9 @@ Character.prototype = {
                 var pad = 2;
                 game.ctx.fillRect(p.x - w/2 - pad, y - pad, w + 2*pad, dy + 2*pad); //wtf
             }
-            if (!config.ui.simpleFonts) {
-                game.ctx.fillStyle = '#333';
-                game.ctx.fillRect(p.x - w/2-1, y-1, w+2, dy+2); //wtf
-            }
+
+            game.ctx.fillStyle = '#333';
+            game.ctx.fillRect(p.x - w/2-1, y-1, w+2, dy+2); //wtf
 
             //full red rect
             game.ctx.fillStyle = '#883527';
@@ -1115,18 +1111,18 @@ Character.prototype = {
                 this.action.progress = 0;
                 this.action.last = this.Action.Started;
                 this.toggleActionSound();
-                // if (this.isPlayer) {
-                //     dom.show(game.controller.actionProgress);
-                //     game.controller.actionButton.startProgress();
-                // }
+                if (this.isPlayer) {
+                    dom.show(game.controller.actionProgress);
+                    game.controller.actionButton.startProgress();
+                }
             }
             if (this.Action.Duration) {
                 this.action.progress += (1 / this.Action.Duration * 1000 * k);
             } else {
-                // if (this.isPlayer) {
-                //     dom.hide(game.controller.actionProgress);
-                //     game.controller.actionButton.stopProgress();
-                // }
+                if (this.isPlayer) {
+                    dom.hide(game.controller.actionProgress);
+                    game.controller.actionButton.stopProgress();
+                }
                 this.action.progress = 0;
             }
         }

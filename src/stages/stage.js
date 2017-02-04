@@ -1,3 +1,5 @@
+/* global game */
+
 "use strict";
 function Stage() {}
 
@@ -26,7 +28,7 @@ Stage.makeEllipsisDrawer = function() {
             ellipsis = 0;
         game.ctx.clear();
         game.ctx.fillStyle = "#fff";
-        game.forceDrawStrokedText(T("Connecting") + " " + "|".repeat(ellipsis), CELL_SIZE, CELL_SIZE);
+        game.drawStrokedText(T("Connecting") + " " + "|".repeat(ellipsis), CELL_SIZE, CELL_SIZE);
     };
 };
 

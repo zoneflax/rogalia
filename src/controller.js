@@ -457,10 +457,13 @@ function Controller(game) {
         },
         27: { //esc
             callback: function() {
-                if (Panel.top && Panel.top.name != "chat") {
+                if (document.activeElement == game.chat.newMessageElement) {
+                    game.controller.chat.deactivate();
+                } else if(this.mouse.isValid()) {
+                    game.player.setTarget(null);
+                } else if (Panel.top) {
                     Panel.top.hide();
                 }
-                game.player.setTarget(null);
             },
             help: "Close top window or unselect current target",
         },

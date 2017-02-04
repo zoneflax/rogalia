@@ -281,14 +281,6 @@ class Game {
     }
 
     drawStrokedText(text, x, y, strokeStyle) {
-        if (this.config.ui.simpleFonts) {
-            this.ctx.fillText(text, x, y);
-            return;
-        }
-        this.forceDrawStrokedText(text, x, y, strokeStyle);
-    }
-
-    forceDrawStrokedText(text, x, y, strokeStyle) {
         var lineJoin = this.ctx.lineJoin;
         this.ctx.strokeStyle = strokeStyle || "#292b2f";
         this.ctx.lineWidth = 2.5;

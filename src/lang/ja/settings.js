@@ -35,10 +35,6 @@ Settings.descriptions = {
             "NPC",
             "ほかの人のニックネームやヘルスを表示",
         ],
-        simpleFonts: [
-            "シンプルフォント",
-            "黒い枠線のないフォントをレンダリングします（この設定を有効にすると、パフォーマンスが向上する可能性があります）。",
-        ],
         minimapObjects: [
             "ミニマップ",
             "ミニマップのアイテム表示",
@@ -46,10 +42,6 @@ Settings.descriptions = {
         allowSelfSelection: [
             "キャラクターセレクト",
             "キャラクターの選択とマウス操作が可能になります。 右ボタンはアクティブ・アクションに割り当てられます。",
-        ],
-        showMeterValues: [
-            "ショウ・ナンバー",
-            "バーの正確な数値を表示します（ヘルスバーなど）。",
         ],
         fillClaim: [
             "クライム・エリア",
@@ -66,6 +58,10 @@ Settings.descriptions = {
         chatBalloons: [
             "メッセージ・バブル",
             "キャラクターの頭の上にメッセージを表示",
+        ],
+        chatEnterBlur: [
+            "Unfocus chat on Enter",
+            "When message is empty Enter key will unfocus the chat.",
         ],
         showAttackRadius: [
             "攻撃範囲",

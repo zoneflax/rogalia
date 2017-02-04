@@ -62,12 +62,10 @@ Stats.prototype = {
             meterWrapper.appendChild(img);
         }
 
-        if (config.ui.showMeterValues)  {
-            var titleElem = document.createElement("div");
-            titleElem.className = "meter-title";
-            titleElem.textContent = text;
-            meterWrapper.appendChild(titleElem);
-        }
+        var titleElem = document.createElement("div");
+        titleElem.className = "meter-title";
+        titleElem.textContent = text;
+        meterWrapper.appendChild(titleElem);
 
         var elem = dom.wrap(".param", [
             dom.wrap("param-label", T(label)),

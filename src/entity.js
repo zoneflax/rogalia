@@ -863,7 +863,7 @@ Entity.prototype = {
         var y = this.Y - no;
 
         var color = (game.player.Id == this.Creator) ? "255,255,255" : "255,0,0";
-        if (config.ui.fillClaimfill) {
+        if (config.ui.fillClaim) {
             game.ctx.fillStyle = "rgba(" + color + ", 0.3)";
             game.iso.fillRect(x, y, w, h);
         }

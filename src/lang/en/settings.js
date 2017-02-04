@@ -37,10 +37,6 @@ Settings.descriptions = {
             "NPC",
             "Show nicknames and health bars above NPCs.",
         ],
-        simpleFonts: [
-            "Simple fonts",
-            "Render fonts without dark border (Enabling this setting may increase perfomance).",
-        ],
         minimapObjects: [
             "Minimap items",
             "Show items on minimap.",
@@ -48,10 +44,6 @@ Settings.descriptions = {
         allowSelfSelection: [
             "Character selection",
             "Allows character selection and mouse interaction. Right button activates action.",
-        ],
-        showMeterValues: [
-            "Show numbers",
-            "Show the exact values of your bars (like the health bar). Will work when value updates.",
         ],
         fillClaim: [
             "Fill the claim area",
@@ -68,6 +60,10 @@ Settings.descriptions = {
         chatBalloons: [
             "Message bubbles",
             "Show message bubbles above character's head.",
+        ],
+        chatEnterBlur: [
+            "Unfocus chat on Enter",
+            "When message is empty Enter key will unfocus the chat.",
         ],
         showAttackRadius: [
             "Attack area",

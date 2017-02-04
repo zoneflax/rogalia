@@ -52,7 +52,7 @@ function loadingStage(version) {
     this.draw = function() {
         game.ctx.clear();
         game.ctx.fillStyle = "#fff";
-        game.forceDrawStrokedText(
+        game.drawStrokedText(
             game.loader.status,
             CELL_SIZE,
             CELL_SIZE

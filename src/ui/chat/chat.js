@@ -277,7 +277,7 @@ function Chat() {
             e.target.value = myMessages.next();
             return true;
         case 13: //enter
-            if (message.length == 0) {
+            if (message.length == 0 && config.ui.chatEnterBlur) {
                 e.target.blur();
             }
             break;
@@ -968,6 +968,10 @@ function Chat() {
         }
 
         scrollAllToTheEnd();
+    };
+
+    this.deactivate = function() {
+        this.newMessageElement.blur();
     };
 
     this.save = function() {

@@ -113,6 +113,11 @@ Effects.descriptions = {
         "desc": "Does not work under the ground, if you answered onto the attack or if you have negative karma.",
         "note": "Allows you to return to your respawn if there is one or to the city.",
     },
+    "Prospecting": {
+        "class": "good",
+        "effect": "Allows you to see nearby veins",
+        "desc": "Gained from using a prospector",
+    },
     "NewbieProtection": {
         "class": "",
         "effect": "Death penalty.",
