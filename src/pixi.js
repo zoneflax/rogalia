@@ -13,7 +13,8 @@ class Pixi {
         ),
         this.tiles = {};
 
-        this.mapLocation = new Point();
+        this.leftTop = new Point(NaN, NaN);
+        this.camera = new Point();
     }
 
     sync() {
@@ -36,7 +37,7 @@ class Pixi {
     }
 
     updateMap() {
-        // TODO: const -> var (currently chrome deoptimize function)
+        // TODO: var -> const (currently chrome deoptimize function)
         game.controller.updateCamera();
         var map = game.map;
         var scr = game.screen;
@@ -64,22 +65,31 @@ class Pixi {
               .add(new Point(scr.width, scr.height))
               .toWorld()
               .div(CELL_SIZE)
-              .ceil();
+            .ceil();
+
+        if (this.leftTop.equals(leftTop)) {
+            var offset = cam.clone().sub(this.camera);
+            this.stage.position.set(-offset.x, -offset.y);
+            return;
+        }
+
+        this.leftTop.fromPoint(leftTop);
+        this.camera.fromPoint(cam);
+        this.stage.position.set(0, 0);
 
         this.stage = new PIXI.Container();
-
         for (let x = leftTop.x; x < rightBottom.x; x++) {
             for (let y = rightTop.y; y < leftBottom.y; y++) {
                 var p = new Point(x * CELL_SIZE, y * CELL_SIZE).toScreen();
 
-                if (p.x + CELL_SIZE < cam.x)
-                    continue;
-                if (p.y + CELL_SIZE < cam.y)
-                    continue;
-                if (p.x - CELL_SIZE > cam.x + scr.width)
-                    continue;
-                if (p.y > cam.y + scr.height)
-                    continue;
+                // if (p.x + CELL_SIZE < cam.x)
+                //     continue;
+                // if (p.y + CELL_SIZE < cam.y)
+                //     continue;
+                // if (p.x - CELL_SIZE > cam.x + scr.width)
+                //     continue;
+                // if (p.y > cam.y + scr.height)
+                //     continue;
 
                 p.x -= CELL_SIZE;
 
@@ -106,9 +116,9 @@ class Pixi {
     }
 
     drawMap() {
-        if (!this.mapLocation.equals(new Point(game.player))) {
-            this.updateMap();
-        }
+        this.updateMap();
+        // this.stage.scale.set(0.5, 0.5);
+        // this.stage.position.set(300, 300);
         this.renderer.render(this.stage);
     }
 }

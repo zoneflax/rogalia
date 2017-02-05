@@ -30,7 +30,7 @@ function WorldMap() {
 
 
     var worker = new Worker("src/map-parser.js");
-    worker.onmessage = function(e) {
+    worker.onmessage = (e) => {
         var data = e.data;
         if (data.error) {
             game.error(data.error);
@@ -43,7 +43,7 @@ function WorldMap() {
         this.location.set(loc.X, loc.Y);
         this.reset();
         this.ready = true;
-    }.bind(this);
+    };
 
     this.sync = function(data, map) {
         var width = Math.sqrt(data.length);

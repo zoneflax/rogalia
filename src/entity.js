@@ -262,24 +262,17 @@ Entity.prototype = {
         return this.point.toScreen();
     },
     getDrawDx: function() {
-        // switch (this.Type) {
-        // case "honey-extractor":
-        //     return window.x || 15;
-        // }
         return this.Sprite.Dx || this.sprite.width/2;
     },
     getDrawDy: function() {
-        // switch (this.Type) {
-        // case "wall-torch":
-        //     return window.y || 85;
-        // }
-
-        if (this.Sprite.Dy)
+        if (this.Sprite.Dy) {
             return this.Sprite.Dy;
+        }
 
-        if (this.Disposition == "roof" && this.Location != Entity.LOCATION_BURDEN)
+        if (this.Disposition == "roof" && this.Location != Entity.LOCATION_BURDEN) {
             return 128; // default wall sprite height - wall width / 2  === (136 - 8)
-        // fucking hate it
+        }
+
         var r = this.Radius;
         var k = 4;
 
@@ -490,6 +483,7 @@ Entity.prototype = {
             "needle",
             "taming",
             "insect-net",
+            "prospector",
             "fishing-rod",
         ], this.Group);
     },
