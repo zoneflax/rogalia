@@ -484,6 +484,7 @@ Entity.prototype = {
             "taming",
             "insect-net",
             "prospector",
+            "tool",
             "fishing-rod",
         ], this.Group);
     },

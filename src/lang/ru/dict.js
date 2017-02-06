@@ -1754,4 +1754,6 @@ T.dict = {
     "Linen label": "Льняная метка",
     "Wooden label": "Деревянная метка",
     "Label has no text": "На метке ничего не написано",
+    "Always visible": "Всегда виден",
+    "Pin chat": "Прикрепить чат",
 };

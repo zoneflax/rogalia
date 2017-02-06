@@ -58,7 +58,7 @@ Menu.prototype = {
             this.container.hideTitle();
         }
         this.container.show(x, y);
-
+        this.container.fitToScreen();
         this.visible = true;
         return true;
     },

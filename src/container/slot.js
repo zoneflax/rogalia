@@ -167,6 +167,10 @@ ContainerSlot.prototype = {
             game.menu.show(entity);
             return;
         }
+        // character.js inspect
+        if (this.container.inspect) {
+            return;
+        }
 
         if (game.controller.hovered) // swap
             return;

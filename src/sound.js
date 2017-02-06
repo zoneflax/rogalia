@@ -1,4 +1,4 @@
-/* global game, config, config, Audio */
+/* global game, config, config, Audio, Settings */
 
 "use strict";
 //TODO: make playlist shuffle

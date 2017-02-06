@@ -66,6 +66,7 @@ function WorldMap() {
             this.location.set(loc.X, loc.Y);
             this.data = data;
             this.ready = true;
+            game.pixi.updateMap(true);
         } else {
             worker.postMessage({
                 bioms: this.bioms,

@@ -1864,7 +1864,7 @@ Character.prototype = {
                     new Doll(target),
                     dom.wrap("equip", data.Equip.map(function(item, i) {
                         var title = Character.equipSlots[i];
-                        var slot = new ContainerSlot({panel: panel, entity: {}}, i);
+                        var slot = new ContainerSlot({panel: panel, entity: {}, inspect: true}, i);
                         if (item) {
                             var entity = new Entity(item.Type);
                             entity.sync(item);

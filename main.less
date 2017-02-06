@@ -972,32 +972,58 @@ hr {
 
 #chat {
     max-width: none;
+
+    .contents {
+        position: relative;
+    }
 }
 
 
-#chat-always-visible-label, #chat-settings-icon {
+#chat-settings-icons {
+    display: flex;
     position: absolute;
+    right: 8px;
     top: 8px;
-    right: 9px;
-    width: 16px;
-    height: 16px;
-}
-#chat-settings-icon {
-    right: 28px;
-}
-#chat-always-visible-label {
-    display: none;
-    pointer-events: all;
-    background: url("assets/icons/tab/always-visible.png");
-}
-#chat-always-visible-label:hover {
-    -webkit-filter: brightness(150%);
-    filter: brightness(150%);
+
+    .chat-settings-icon {
+        width: 16px;
+        height: 16px;
+        margin-left: 7px;
+
+        &:hover {
+            filter: brightness(150%);
+        }
+
+    }
 }
 
 #chat-always-visible {
-    display:none;
+    pointer-events: all;
+    background: url("assets/icons/tab/always-visible.png");
+
+    .semi-hidden & {
+        background: url("assets/icons/tab/not-always-visible.png");
+    }
 }
+
+#chat-toggle-pin {
+    background: url("assets/icons/tab/pin.png");
+    .detached-chat & {
+        background: url("assets/icons/tab/unpin.png");
+    }
+}
+
+.detached-chat {
+    #chat-settings-icons {
+        right: 11px;
+        top: 12px;
+    }
+
+    #chat-always-visible {
+        display: none;
+    }
+}
+
 
 .tab-title {
     .cursor-pointer;
@@ -1089,10 +1115,6 @@ hr {
 
         .chat-tab {
             margin: -2px 4px 1px 0;
-        }
-
-        #chat-always-visible-label {
-            display: block;
         }
 
         .messages {
@@ -2554,7 +2576,7 @@ input[type=number], .lot-quantity > input, .price > input {
     border: 1px solid #4e3313;
     display: none;
     bottom: 110%;
-    left: -10%;
+    right: 0;
     line-height: 1.25;
     text-align: left;
     white-space: nowrap;

@@ -1,4 +1,4 @@
-/* global dom, Panel, game, localStorage, TT, config, util, TS, T, ChatRing */
+/* global dom, Panel, game, localStorage, TT, config, util, TS, T, ChatRing, Settings */
 
 "use strict";
 function Chat() {
@@ -403,19 +403,27 @@ function Chat() {
         always: true,
     };
 
-    var semihide = function() {
+    var semihide = () => {
         if (!semi.focus && !semi.always)
             this.panel.contents.classList.add("semi-hidden");
-    }.bind(this);
-    var semishow = function() {
+    };
+    var semishow = () =>  {
         this.panel.contents.classList.remove("semi-hidden");
-    }.bind(this);
+    };
 
     this.init = function (data) {
         this.sync(data || []);
         this.initNotifications();
-        if (config.ui.chatAttached)
+        if (config.ui.chatAttached) {
             this.attach();
+        } else {
+            this.detach();
+        }
+
+        if (localStorage.getItem("chat.alwaysVisible") == "false") {
+            semi.always = false;
+            this.panel.contents.classList.add("semi-hidden");
+        }
 
         setTimeout(scrollAllToTheEnd, 100);
     };
@@ -423,6 +431,7 @@ function Chat() {
     this.attach = function() {
         dom.move(this.panel.element, game.world);
         this.panel.element.classList.add("attached-chat");
+        this.panel.element.classList.remove("detached-chat");
         this.panel.hideTitle();
         dom.hide(this.panel.button);
         semihide();
@@ -431,26 +440,29 @@ function Chat() {
     this.detach = function() {
         dom.move(this.panel.element, document.body);
         this.panel.element.classList.remove("attached-chat");
+        this.panel.element.classList.add("detached-chat");
         this.panel.showTitle();
         dom.show(this.panel.button);
     };
 
-    var alwaysVisible = dom.checkbox();
-    alwaysVisible.id = "chat-always-visible";
-    alwaysVisible.label.id = "chat-always-visible-label";
-    alwaysVisible.label.title = T("Always visible");
-
-    var savedValue = localStorage.getItem("chat.alwaysVisible");
-    if (savedValue == null)
-        alwaysVisible.checked = true;
-    else
-        alwaysVisible.checked = (savedValue == "true");
-
-    alwaysVisible.onclick = function() {
+    var alwaysVisible = dom.div("#chat-always-visible", {title: T("Always visible")});
+    alwaysVisible.classList.add("chat-settings-icon");
+    alwaysVisible.onclick = () =>  {
         semi.always = !semi.always;
         localStorage.setItem("chat.alwaysVisible", semi.always);
         this.panel.contents.classList.toggle("semi-hidden");
-    }.bind(this);
+    };
+
+    var togglePin = dom.div("#chat-toggle-pin", {title: T("Pin chat")});
+    togglePin.classList.add("chat-settings-icon");
+    togglePin.onclick = () => {
+        if (config.ui.chatAttached) {
+            this.detach();
+        } else {
+            this.attach();
+        }
+        Settings.toggle("settings.ui.chatAttached");
+    };
 
     var tabs = [
         {
@@ -526,14 +538,14 @@ function Chat() {
         "Chat",
         [
             tabElem,
-            alwaysVisible.label,
+            dom.wrap("#chat-settings-icons", [
+                alwaysVisible,
+                togglePin,
+            ])
         ]
     ).show();
-    this.removeAlert = game.controller.makeHighlightCallback("chat", false);
 
-    // hide on load
-    if (!alwaysVisible.checked)
-        alwaysVisible.onclick();
+    this.removeAlert = game.controller.makeHighlightCallback("chat", false);
 
     this.panel.hooks.show = function() {
         this.initNotifications();

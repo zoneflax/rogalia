@@ -210,6 +210,14 @@ Panel.prototype = {
         window.scrollTo(0, 0);
         return this;
     },
+    fitToScreen: function() {
+        if (this.x + this.width > window.innerWidth) {
+            this.x = window.innerWidth - this.width;
+        }
+        if (this.y + this.height > window.innerHeight) {
+            this.y = window.innerHeight - this.height;
+        }
+    },
     toggle: function() {
         if (this.visible)
             this.hide();

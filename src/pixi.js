@@ -36,7 +36,7 @@ class Pixi {
         });
     }
 
-    updateMap() {
+    updateMap(force = false) {
         // TODO: var -> const (currently chrome deoptimize function)
         game.controller.updateCamera();
         var map = game.map;
@@ -67,7 +67,7 @@ class Pixi {
               .div(CELL_SIZE)
             .ceil();
 
-        if (this.leftTop.equals(leftTop)) {
+        if (!force && this.leftTop.equals(leftTop)) {
             var offset = cam.clone().sub(this.camera);
             this.stage.position.set(-offset.x, -offset.y);
             return;
