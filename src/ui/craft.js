@@ -673,7 +673,7 @@ Craft.prototype = {
     },
     makeEquipRequirementes: function(type) {
         let tmpl = Entity.templates[type];
-        if (tmpl.EffectiveParam) {
+        if (tmpl.EffectiveParam && tmpl.Lvl > 1) {
             var canEquip = tmpl.nonEffective() ? "unavailable" : "";
 
             return dom.wrap("equip-requirements", [

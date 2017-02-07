@@ -201,7 +201,7 @@ Entity.prototype = {
             elements.push(Stats.prototype.createParam("Capacity", this.Props.Capacity));
         }
 
-        if (this.EffectiveParam) {
+        if (this.EffectiveParam && this.Lvl > 1) {
             var requirement = Stats.prototype.createValue(this.EffectiveParam, this.template().Lvl);
             if (this.nonEffective()) {
                 requirement.classList.add("unavailable");
@@ -221,7 +221,7 @@ Entity.prototype = {
         new Panel("item-info", TS(this.Name), elements).setEntity(this).show();
     },
     nonEffective: function() {
-        if (!this.EffectiveParam) {
+        if (!this.EffectiveParam || this.Lvl <= 1) {
             return false;
         }
         var attr = game.player.Attr[this.EffectiveParam];
@@ -483,7 +483,6 @@ Entity.prototype = {
             "needle",
             "taming",
             "insect-net",
-            "prospector",
             "tool",
             "fishing-rod",
         ], this.Group);

@@ -124,6 +124,12 @@ Effects.descriptions = {
         "desc": "Lvl 1 to 9 - keep bag and equipment.\nLvl 10 to 19 - keep bag, but lose it's contents.\nFrom lvl 20 - losing all equipment and inventory.",
         "note": "On any level you lose all vitamins and learning points.",
     },
+    "De": {
+        "class": "fight",
+    },
+    "Su": {
+        "class": "fight",
+    },
     "Nya": {
         "class": "fight",
     },

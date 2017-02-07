@@ -127,4 +127,16 @@ Effects.descriptions = {
         "effect": "Позволяет видеть близлежайщие жилы руды",
         "desc": "Приобретается за счет использования лозы.",
     },
+    "De": {
+        "class": "fight",
+    },
+    "Su": {
+        "class": "fight",
+    },
+    "Nya": {
+        "class": "fight",
+    },
+    "Inspiration": {
+        "class": "fight",
+    },
 };

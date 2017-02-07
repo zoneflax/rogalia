@@ -322,7 +322,7 @@ Character.prototype = {
             canvas.height = naked.image.height;
             ctx.drawImage(naked.image, 0, 0);
             for (var type in parts) {
-                var part = parts[type];;
+                var part = parts[type];
                 var image = part.image;
                 if (image && image.width > 0) {
                     if (part.color && part.opacity) {

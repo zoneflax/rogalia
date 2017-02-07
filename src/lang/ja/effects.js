@@ -118,4 +118,16 @@ Effects.descriptions = {
         "desc": "Lvl 1〜9：バッグの中身は失いません。\nLvl 10〜19：バッグはありますが、中身は失われます。\n Lvl 20：全てを失います。",
         "note": "どのレベルでも、すべてのビタミンとラーニング・ポイントを失います。",
     },
+    "De": {
+        "class": "fight",
+    },
+    "Su": {
+        "class": "fight",
+    },
+    "Nya": {
+        "class": "fight",
+    },
+    "Inspiration": {
+        "class": "fight",
+    },
 };

@@ -429,6 +429,7 @@ function Chat() {
     };
 
     this.attach = function() {
+        _.defer(scrollAllToTheEnd);
         dom.move(this.panel.element, game.world);
         this.panel.element.classList.add("attached-chat");
         this.panel.element.classList.remove("detached-chat");
@@ -438,6 +439,7 @@ function Chat() {
     };
 
     this.detach = function() {
+        _.defer(scrollAllToTheEnd);
         dom.move(this.panel.element, document.body);
         this.panel.element.classList.remove("attached-chat");
         this.panel.element.classList.add("detached-chat");

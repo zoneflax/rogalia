@@ -97,7 +97,9 @@ Character.makeAvatar = function(sex, hairstyle = null) {
     const dir = "assets/" + Character.spriteDir + "avatars/";
     const img = dom.img(dir + sex + ".png", "avatar-face");
     if (!hairstyle) {
-        return img;
+        if (sex == "male")
+            return img;
+        hairstyle = "short#000#0";
     }
     const [haircut, color, opacity] = hairstyle.split("#");
     const hair = dom.img(dir + "hair/" + sex + "/" + haircut + ".png");
