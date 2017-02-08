@@ -66,6 +66,8 @@ function Character(id) {
 
     this.animation = {up: null, down: null};
 
+    this.path = [];
+
     this.sprites = {};
     Character.animations.forEach(function(animation) {
         var s = new Sprite();
@@ -94,11 +96,15 @@ Character.prototype = {
     set X(x) {},
     set Y(y) {},
     positionSyncRequired: function(x, y) {
+        const tooFar =  (Math.abs(this.x - x) > CELL_SIZE) || (Math.abs(this.y - y) > CELL_SIZE);
+        if (tooFar) {
+            this.path = [];
+        }
         if (this.Dx == 0 && this.Dy == 0) {
             this.stop();
             return true;
         }
-        return (Math.abs(this.x - x) > CELL_SIZE) || (Math.abs(this.y - y) > CELL_SIZE);
+        return tooFar;
     },
     syncPosition: function(x, y) {
         if (this.positionSyncRequired(x, y)) {
@@ -561,7 +567,7 @@ Character.prototype = {
             return;
 
         if (usePathfinding && config.character.pathfinding) {
-            this.path = astar(new Point(this), new Point(x, y), this.Speed.Current / 5);
+            this.path = astar(new Point(this), new Point(x, y));
             if (this.path.length) {
                 const next = this.path.pop();
                 x = next.x;
@@ -1495,7 +1501,7 @@ Character.prototype = {
         this.updatePlow();
     },
     willCollide: function(point, gap = 0) {
-        let bbox = BBox.centeredAtPoint(point, 2*this.Radius + gap, 2*this.Radius + gap);
+        let bbox = BBox.centeredAtPoint(point, 2*(this.Radius + gap), 2*(this.Radius + gap));
         return game.quadtree.find(bbox, (object) => {
             if (object == this || !object.canCollideNow())
                 return false;
@@ -1546,7 +1552,7 @@ Character.prototype = {
         }
     },
     stop: function() {
-        if (this.path && this.path.length > 0) {
+        if (this.path.length > 0) {
             const next = this.path.pop();
             this._setDst(next.x, next.y);
             game.network.send("set-dst", {x: next.x, y: next.y});

@@ -15,22 +15,28 @@ class PathNode {
     }
 
     neighbors(step) {
-        return PathNode
-            .directions(step)
-            .map(dir => this.point.clone().add(dir));
+        return PathNode.directions.map(dir => this.point.clone().add(dir.clone().mul(step)));
     }
 
     costTo(node) {
-        return this.manhattenDistanceTo(node);
+        return this.addBiomCost(this.distanceTo(node));
     }
 
     distanceTo(node) {
-        return this.point.distanceTo(node.point);
+        return this.addBiomCost(this.point.distanceTo(node.point));
     }
 
     manhattenDistanceTo(node) {
         return Math.abs(this.point.x - node.point.x) + Math.abs(this.point.y - node.point.y);
     }
+
+    addBiomCost(cost) {
+        const cell = game.map.getCell(this.point.x, this.point.y);
+        return (cell)
+            ? cost / ((cell.biom.Speed + 3)/4)
+            : cost;
+    }
+
 
     path() {
         let path = [this.point];
@@ -42,30 +48,7 @@ class PathNode {
         return path;
     }
 
-    static directions(step) {
-        // const step = Math.PI/4;
-        // let directions = [];
-        // for (let angle = 0; angle < 2*Math.PI; angle += step) {
-        //     var dx = Math.cos(angle);
-        //     var dy = Math.sin(angle);
-        //     directions.push(new Point(dx * step, dy * step));
-        // }
-        // return directions;
-        return [
-            new Point(-step, -step),
-            new Point(0, -step),
-            new Point(+step, -step),
-
-            new Point(-step, 0),
-            new Point(+step, 0),
-
-            new Point(-step, +step),
-            new Point(0, +step),
-            new Point(+step, +step),
-        ];
-    }
-
-    static collide(point, step) {
+    static collide(point, step, gap = PathNode.gap) {
         const halfStep = step / 2;
         let cell = game.map.getCell(point.x - halfStep, point.y - halfStep);
         if (cell && cell.biom.Blocked)
@@ -83,18 +66,43 @@ class PathNode {
         if (cell && cell.biom.Blocked)
             return true;
 
-        return game.player.willCollide(point, 3);
+        return game.player.willCollide(point, gap);
     }
 }
 
-PathNode.distanceLimit = 600;
+// PathNode.debug = {};
+PathNode.gap = 4;
 
-function astar(startPoint, goalPoint, step) {
-    if (startPoint.distanceTo(goalPoint) >= PathNode.distanceLimit || PathNode.collide(goalPoint, step)) {
+// PathNode.directions = _.range(0, 2*Math.PI, Math.PI/4).map(function(angle) {
+//     const dx = Math.cos(angle);
+//     const dy = Math.sin(angle);
+//     return new Point(+dx.toFixed(2), +dy.toFixed(2));
+// });
+
+PathNode.directions = [
+    new Point(-1, -1),
+    new Point(0, -1),
+    new Point(+1, -1),
+
+    new Point(-1, 0),
+    new Point(+1, 0),
+
+    new Point(-1, +1),
+    new Point(0, +1),
+    new Point(+1, +1),
+];
+
+PathNode.distanceLimit = 900;
+
+
+function astar(startPoint, goalPoint, step = 15) {
+    if (startPoint.distanceTo(goalPoint) >= PathNode.distanceLimit ||
+        PathNode.collide(startPoint, step, 0) ||
+        PathNode.collide(goalPoint, step, 0)) {
         return [];
     }
 
-    let steps = 0;
+    let started = Date.now();
 
     const start = new PathNode(startPoint);
     const goal = new PathNode(goalPoint);
@@ -105,11 +113,12 @@ function astar(startPoint, goalPoint, step) {
 
     const closed = new Set();
 
+    // PathNode.debug = {};
+
     while (open.size > 0) {
-        steps++;
         // too long or infinite loop;
-        if (steps > 1000) {
-            console.warn("Aborting pathfinding");
+        if (Date.now() - started > 10) {
+            // console.warn("Aborting pathfinding");
             return [];
         }
         let current = new PathNode();
@@ -144,6 +153,8 @@ function astar(startPoint, goalPoint, step) {
                 neighbor.f = g + neighbor.costTo(goal);
                 if (!inOpen) {
                     open.set(neighbor.key, neighbor);
+
+                    // PathNode.debug[neighbor.key] = neighbor;
                 }
             }
         });

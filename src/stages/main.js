@@ -1,4 +1,4 @@
-/* global game, Character, util, util, config */
+/* global game, Character, util, util, config, PathNode */
 
 "use strict";
 function mainStage(data) {
@@ -114,13 +114,9 @@ function mainStage(data) {
 
         _.forEach(game.missiles, draw);
 
-        if (game.player.path) {
-            game.ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
-            game.player.path.forEach(function(point) {
-                game.iso.fillCircle(point.x, point.y, 2);
-            });
+        if (config.graphics.drawPath) {
+            this.drawPath();
         }
-
 
         snow.draw();
 
@@ -131,6 +127,21 @@ function mainStage(data) {
         game.controller.draw();
         // this.debug();
         game.ctx.restore();
+    };
+
+    this.drawPath = function() {
+        // if (PathNode.debug) {
+        //     _.forEach(PathNode.debug, function(node) {
+        //         game.ctx.fillStyle = `rgba(0, 0, 0, 0.5)`;
+        //         game.iso.fillCircle(node.point.x, node.point.y, 5);
+        //     });
+        // }
+        if (game.player.path.length) {
+            game.ctx.fillStyle = "#c33";
+            game.player.path.forEach(function(point) {
+                game.iso.fillCircle(point.x, point.y, 2);
+            });
+        }
     };
 
     var hueRotate = 0;

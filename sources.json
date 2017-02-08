@@ -1,7 +1,6 @@
 [
     "./src/image-filters.js",
     "./src/binary-search-tree.js",
-    "./src/pathfinding.js",
     "./src/bbox.js",
     "./src/quadtree.js",
     "./src/polyfill.js",
@@ -16,6 +15,7 @@
     "./src/lang/dict.js",
     "./src/talks.js",
     "./src/point.js",
+    "./src/pathfinding.js",
     "./src/sprite.js",
     "./src/rloader.js",
     "./src/sound.js",

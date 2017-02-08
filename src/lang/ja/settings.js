@@ -2,7 +2,7 @@ Settings.descriptions = {
     character: {
         pathfinding: [
             "Pathfinding",
-            "[!Unstable feature!] Activates pathfinding for your character. Disables WASD.",
+            "Activates pathfinding.",
         ],
 
         hideHelmet: [
