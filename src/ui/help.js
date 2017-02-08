@@ -14,7 +14,7 @@ function Help() {
         },
         {
             title: T("Feedback"),
-            contents: makeFeedback(),
+            update: feedback,
         },
         {
             title: T("Fight"),
@@ -70,20 +70,30 @@ function Help() {
         dom.setContents(contents, iframe);
     }
 
-    function makeFeedback() {
-        var textarea = dom.tag("textarea");
-        return [
-            dom.make("h5", T("Send a bug report or feedback")),
-            textarea,
-            dom.button(T("Send"), "", report),
-        ];
+    function feedback(title, contents) {
+        tabs.tabs[2].update = null;
+        var iframe = dom.tag("iframe");
+        iframe.resize = true;
+        iframe.nwdisable = true;
+        iframe.nwfaketop = true;
+        iframe.src = {
+            ja: "https://steamcommunity.com/app/528460/discussions/3/",
+        }[game.lang] || "https://steamcommunity.com/app/528460/discussions/";
+        dom.setContents(contents, iframe);
 
-        function report() {
-            var msg = {Text: textarea.value};
-            textarea.value = "";
-            game.popup.alert(T("Your message is sent. Thank you."));
-            game.network.send("bugreport", msg);
-        }
+        // var textarea = dom.tag("textarea");
+        // return [
+        //     dom.make("h5", T("Send a bug report or feedback")),
+        //     textarea,
+        //     dom.button(T("Send"), "", report),
+        // ];
+
+        // function report() {
+        //     var msg = {Text: textarea.value};
+        //     textarea.value = "";
+        //     game.popup.alert(T("Your message is sent. Thank you."));
+        //     game.network.send("bugreport", msg);
+        // }
     }
 
     function makeFight() {
