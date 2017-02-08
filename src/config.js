@@ -9,7 +9,7 @@ var DEFAULT_CLIENT_HEIGHT = 720;
 
 var config = {
     character: {
-        // pathfinding: function() { return game.player.Settings.Pathfinding; },
+        pathfinding: true,
         hideHelmet: function() { return game.player.Style.HideHelmet; },
         rotateWasd: false,
         autoTarget: true,

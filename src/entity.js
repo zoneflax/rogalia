@@ -903,10 +903,10 @@ Entity.prototype = {
         this.x = p.x;
         this.y = p.y;
 
-        // if (reinsert) {
-        //     game.quadtree.remove(this);
-        //     game.quadtree.insert(this);
-        // }
+        if (reinsert) {
+            game.quadtree.remove(this);
+            game.quadtree.insert(this);
+        }
 
         if (reinsert)
             game.sortedEntities.add(this);

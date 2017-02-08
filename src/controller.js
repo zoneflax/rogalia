@@ -902,7 +902,7 @@ function Controller(game) {
                 case this.MMB:
                     if (this.targetInWorld(e.target)) {
                         e.preventDefault();
-                        game.player.setDst(this.world.x, this.world.y);
+                        game.player.setDst(this.world.x, this.world.y, false);
                         return false;
                     }
                     break;

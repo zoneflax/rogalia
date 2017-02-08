@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter, FONT_SIZE */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter, FONT_SIZE, astar */
 
 "use strict";
 function Character(id) {
@@ -95,6 +95,7 @@ Character.prototype = {
     set Y(y) {},
     positionSyncRequired: function(x, y) {
         if (this.Dx == 0 && this.Dy == 0) {
+            this.stop();
             return true;
         }
         return (Math.abs(this.x - x) > CELL_SIZE) || (Math.abs(this.y - y) > CELL_SIZE);
@@ -534,7 +535,8 @@ Character.prototype = {
         var len_y = character.Y - this.Y;
         return util.distanceLessThan(len_x, len_y, Math.hypot(game.screen.width, game.screen.height));
     },
-    setDst: function(x, y) {
+    setDst: function(x, y, usePathfinding = true) {
+        this.path = [];
         if (this.Speed.Current <= 0 || this.Disabled)
             return;
         var leftBorder, rightBorder, topBorder, bottomBorder;
@@ -558,7 +560,16 @@ Character.prototype = {
         if (x == this.Dst.X && y == this.Dst.Y)
             return;
 
-        this._setDst(x, y);
+        if (usePathfinding && config.character.pathfinding) {
+            this.path = astar(new Point(this), new Point(x, y), this.Speed.Current / 5);
+            if (this.path.length) {
+                const next = this.path.pop();
+                x = next.x;
+                y = next.y;
+            }
+        }
+
+        // this._setDst(x, y);
         // if (this.willCollide(this.findMovePosition())) {
         //     this.stop();
         //     return;
@@ -1483,15 +1494,15 @@ Character.prototype = {
 
         this.updatePlow();
     },
-    willCollide: function(point) {
-        let bbox = BBox.centeredAtPoint(point, 2*this.Radius, 2*this.Radius);
+    willCollide: function(point, gap = 0) {
+        let bbox = BBox.centeredAtPoint(point, 2*this.Radius + gap, 2*this.Radius + gap);
         return game.quadtree.find(bbox, (object) => {
             if (object == this || !object.canCollideNow())
                 return false;
             if (object.Width && object.Height) {
                 return true;
             }
-            const radius = object.Radius + this.Radius;
+            const radius = object.Radius + this.Radius + gap;
             return util.distanceLessThan(point.x - object.X, point.y - object.Y, radius);
         });
     },
@@ -1535,6 +1546,12 @@ Character.prototype = {
         }
     },
     stop: function() {
+        if (this.path && this.path.length > 0) {
+            const next = this.path.pop();
+            this._setDst(next.x, next.y);
+            game.network.send("set-dst", {x: next.x, y: next.y});
+            return;
+        }
         this.Dx = 0;
         this.Dy = 0;
         this._pathHistory = [];

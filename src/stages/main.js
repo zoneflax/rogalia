@@ -114,6 +114,13 @@ function mainStage(data) {
 
         _.forEach(game.missiles, draw);
 
+        if (game.player.path) {
+            game.ctx.fillStyle = "rgba(255, 0, 0, 0.5)";
+            game.player.path.forEach(function(point) {
+                game.iso.fillCircle(point.x, point.y, 2);
+            });
+        }
+
 
         snow.draw();
 
