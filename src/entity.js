@@ -148,9 +148,6 @@ Entity.prototype = {
     get round() {
         return this.Width == 0;
     },
-    get usable() {
-        return _.includes("label", this.Group);
-    },
 
     durabilityPercent: function() {
         var dur = this.Durability;
@@ -411,7 +408,7 @@ Entity.prototype = {
         game.network.send("equip", {Id: this.Id});
     },
     gut: function() {
-        var gut = () => game.network.send("Gut", {Id: this.Id});
+        const gut = () => this.queueActionMaybe("Gut");
         if (this.Group == "player-corpse") {
             game.popup.confirm(T("Warning: This action can cause bad karma, continue at your own risk!"), gut);
         } else {
@@ -538,7 +535,7 @@ Entity.prototype = {
         this.queueActionMaybe(action);
     },
     queueActionMaybe: function(action) {
-        if (Entity.queueable(this, action)) {
+        if (this.inContainer() && Entity.queueable(action)) {
             var container = Container.getEntityContainer(this);
             if (!container) {
                 game.network.send(action, {id: this.Id});
@@ -1097,7 +1094,7 @@ Entity.prototype = {
         game.network.send("dwim", {id: this.Id});
     },
     use: function(e) {
-        if (e.usable) {
+        if (Entity.usable(e)) {
             game.network.send("entity-use", {Id: this.Id, Equipment: e.Id});
         } else {
             game.network.send("entity-use", {Id: e.Id, Equipment: this.Id});
@@ -1105,7 +1102,7 @@ Entity.prototype = {
         return true;
     },
     canUse: function(e) {
-        return this._canUse || e.usable;
+        return this._canUse || Entity.usable(e);
     },
     belongsTo: function(character) {
         if (this.Owner == character.Id)

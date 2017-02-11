@@ -11,18 +11,24 @@ Entity.LOCATION_EQUIPPED = 2;
 Entity.LOCATION_BURDEN = 3;
 Entity.LOCATION_VENDOR = 4;
 
-Entity.queueable = function(entity, action) {
-    return _.includes(["disassemble", "entity-destroy", "BreakOff", "Rinse"], action) &&
-        entity.inContainer() &&
-        game.controller.modifier.ctrl &&
-        game.controller.modifier.shift;
+Entity.queueable = function(action) {
+    return _.includes([
+        "slice",
+        "disassemble",
+        "entity-destroy",
+        "BreakOff",
+        "Rinse",
+        "Gut",
+    ], action) && game.controller.modifier.ctrl && game.controller.modifier.shift;
 };
 
 Entity.repeatable = function(action) {
     return _.includes(["Prospect"], action);
 }
 
-Entity.usable = ["label"];
+Entity.usable = function(entity) {
+    return _.includes(["label"], entity.Group);
+};
 
 Entity.templates = {};
 
