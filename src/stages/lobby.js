@@ -3,7 +3,7 @@
 "use strict";
 function lobbyStage(data) {
     if (data) {
-        game.setLogin(data.Login);
+        game.setLogin(data.Email || data.Login);
         document.getElementById("version").textContent =  data.Version;
         lobbyStage.metadataVersion = data.MetadataVersion;
     }

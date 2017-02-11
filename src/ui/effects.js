@@ -116,7 +116,7 @@ class Effect {
     className() {
         var effect = Effects.descriptions[this.name];
         if (!effect) {
-            return "";
+            return "effect-neutral";
         }
         return "effect-" + (effect.class || "neutral");
     }

@@ -42,6 +42,7 @@
     "./src/ui/param-bar.js",
     "./src/ui/effects.js",
     "./src/ui/skills.js",
+    "./src/ui/profile.js",
     "./src/ui/settings.js",
     "./src/ui/system.js",
     "./src/ui/fight.js",

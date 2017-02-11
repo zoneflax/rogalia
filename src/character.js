@@ -78,6 +78,8 @@ function Character(id) {
 
     this._parts = "{}"; // defaults for npcs
 
+    // this._lerp = new Point();
+
     this._marker = {
         opacity: 1,
         delta: -1,
@@ -107,6 +109,7 @@ Character.prototype = {
         return tooFar;
     },
     syncPosition: function(x, y) {
+        // this._lerp.set(x, y).sub(new Point(this));
         if (this.positionSyncRequired(x, y)) {
             this._pathHistory = [];
             this.setPos(x, y);
@@ -263,6 +266,7 @@ Character.prototype = {
         this.IsMob = "Aggressive" in data;
 
         this.sync(data, true);
+        // this._lerp.set(0, 0);
         this.loadSprite();
     },
     initSprite: function() {
@@ -1479,6 +1483,7 @@ Character.prototype = {
     updatePosition: function(k) {
         if (this.mount)
             return;
+
         if (this.Dx == 0 && this.Dy == 0) {
             return;
         }
@@ -1490,6 +1495,10 @@ Character.prototype = {
         // } else if (this.isPlayer && this.willCollide(p)) {
         //     this.stop();
         } else {
+            // const interpolation = 0.5;
+            // p.x += this._lerp.x * k * interpolation;
+            // p.y += this._lerp.y * k * interpolation;
+
             this.setPos(p.x, p.y);
         }
 

@@ -63,7 +63,7 @@ function Users() {
     this.panel = new Panel(
         "users",
         "Users",
-        [this.tabs]
+        this.tabs
     );
 
     this.updateOnlinePlayersTab = this.tabs.tabs[0].update;

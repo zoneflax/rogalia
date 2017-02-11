@@ -113,11 +113,6 @@ label {
     display: inline-block;
 }
 
-:focus {
-    box-shadow: 0 0 1px 1px @dark-color;
-    outline-offset: 0;
-    outline: none;
-}
 
 .input-bg() {
     border: 1px solid #575b65;
@@ -129,6 +124,15 @@ input[type=text], input[type=number], input[type=password], input:not([type]), t
     .input-bg;
     padding-left: 3px;
     background: url("assets/bg/tab/send.png") no-repeat 99%, @dark-color;
+
+    &:focus {
+        border-color: #7f899e;
+    }
+}
+
+:focus {
+    outline-offset: 0;
+    outline: none;
 }
 
 .range {
@@ -233,7 +237,7 @@ button {
     padding: 4px;
 }
 
-button:focus {
+button:active {
     box-shadow: none;
 }
 
@@ -1086,7 +1090,7 @@ hr {
 
     #new-message {
         pointer-events: auto;
-        width: 99%;
+        width: 98%;
     }
 
     .tabs > hr {
@@ -1136,7 +1140,7 @@ hr {
         }
 
         #new-message {
-            width: 99%;
+            width: 98%;
         }
     }
 }
@@ -3425,5 +3429,21 @@ input[type=number], .lot-quantity > input, .price > input {
     .contents {
         display: flex;
         flex-direction: column;
+    }
+}
+
+
+#profile {
+    label {
+        display: block;
+    }
+
+    input {
+        display: block;
+        margin: 0;
+    }
+
+    .error {
+        border-color: red;
     }
 }

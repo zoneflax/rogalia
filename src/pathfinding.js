@@ -19,11 +19,13 @@ class PathNode {
     }
 
     costTo(node) {
-        return this.addBiomCost(this.distanceTo(node));
+        return this.manhattenDistanceTo(node);
+        // return this.addBiomCost(this.distanceTo(node));
     }
 
     distanceTo(node) {
-        return this.addBiomCost(this.point.distanceTo(node.point));
+        return this.point.distanceTo(node.point);
+        // return this.addBiomCost(this.point.distanceTo(node.point));
     }
 
     manhattenDistanceTo(node) {
@@ -70,15 +72,6 @@ class PathNode {
     }
 }
 
-// PathNode.debug = {};
-PathNode.gap = 4;
-
-// PathNode.directions = _.range(0, 2*Math.PI, Math.PI/4).map(function(angle) {
-//     const dx = Math.cos(angle);
-//     const dy = Math.sin(angle);
-//     return new Point(+dx.toFixed(2), +dy.toFixed(2));
-// });
-
 PathNode.directions = [
     new Point(-1, -1),
     new Point(0, -1),
@@ -92,10 +85,19 @@ PathNode.directions = [
     new Point(+1, +1),
 ];
 
-PathNode.distanceLimit = 900;
+// PathNode.debug = {};
+PathNode.gap = 3;
+PathNode.distanceLimit = 600;
+PathNode.step = 13;
+PathNode.timeLimit = 10;
 
+// PathNode.directions = _.range(0, 2*Math.PI, Math.PI/4).map(function(angle) {
+//     const dx = Math.cos(angle);
+//     const dy = Math.sin(angle);
+//     return new Point(+dx.toFixed(2), +dy.toFixed(2));
+// });
 
-function astar(startPoint, goalPoint, step = 15) {
+function astar(startPoint, goalPoint, step = PathNode.step) {
     if (startPoint.distanceTo(goalPoint) >= PathNode.distanceLimit ||
         PathNode.collide(startPoint, step, 0) ||
         PathNode.collide(goalPoint, step, 0)) {
@@ -117,7 +119,7 @@ function astar(startPoint, goalPoint, step = 15) {
 
     while (open.size > 0) {
         // too long or infinite loop;
-        if (Date.now() - started > 10) {
+        if (Date.now() - started > PathNode.timeLimit) {
             // console.warn("Aborting pathfinding");
             return [];
         }
@@ -153,7 +155,6 @@ function astar(startPoint, goalPoint, step = 15) {
                 neighbor.f = g + neighbor.costTo(goal);
                 if (!inOpen) {
                     open.set(neighbor.key, neighbor);
-
                     // PathNode.debug[neighbor.key] = neighbor;
                 }
             }

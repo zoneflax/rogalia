@@ -1,31 +1,21 @@
-/* global game, dom, T, Panel, FpsStats, Users, Settings */
+/* global game, dom, T, Panel, FpsStats, Users, Settings, Profile */
 
 "use strict";
 
 function System() {
-    var self = this;
     this.fps = new FpsStats();
 
-    var fps = dom.wrap("#fps-stats", this.fps.domElement);
+    const fps = dom.wrap("#fps-stats", this.fps.domElement);
 
     this.ping = dom.span("Ping: -");
 
     this.users = new Users();
     this.settings = new Settings();
+    this.profile = new Profile();
 
-    var users = dom.button(T("Users"), "", this.users.panel.toggle.bind(this.users.panel));
-    var settings = dom.button(T("Settings"),"", this.settings.panel.toggle.bind(this.settings.panel));
-
-    var links = dom.button(T("Links"));
-    links.onclick = function() {
-        new Panel("links", "", [
-            game.button.forum(),
-            game.button.blog(),
-            game.button.vk(),
-            game.button.twitter(),
-            game.button.authors(),
-        ]).show();
-    };
+    const users = dom.button(T("Users"), "", () => this.users.panel.toggle());
+    const settings = dom.button(T("Settings"), "", () => this.settings.panel.toggle());
+    const profile = dom.button(T("Profile"), "", () => this.profile.panel.toggle());
 
     this.update = function(ping) {
         this.ping.textContent = "Ping: " + ping + "ms";
@@ -40,9 +30,7 @@ function System() {
             dom.hr(),
             settings,
             users,
-            dom.hr(),
-            links,
-            !game.args["steam"] && game.button.donate(),
+            profile,
             dom.hr(),
             game.args["steam"] ?
                 dom.button(T("Change character"), "", game.reload)
