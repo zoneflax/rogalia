@@ -182,7 +182,13 @@ ContainerSlot.prototype = {
             return;
         }
 
-
+        if (mods.alt) {
+            const top = this.container.getTopExcept(entity.Container);
+            if (top && top.entity.canUse(entity)) {
+                top.entity.use(entity);
+                return;
+            }
+        }
         if (mods.ctrl) {
             this.container.dwim(this);
             return;
