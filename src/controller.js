@@ -68,9 +68,18 @@ function Controller(game) {
     this._hideStatic = false;
     this._drawMapGrid = false;
 
-    this.lastCreatingType = "";
-    this.lastCreatingCommand = "";
-    this.lastCreatingRotation = 0;
+    this.lastAction = {
+        type: "",
+        rotation: 0,
+        action: null,
+        set(action, type = "") {
+            this.action = action;
+            this.type = type;
+        },
+        repeat() {
+            this.action && this.action();
+        },
+    };
 
     this.actionProgress = document.getElementById("action-progress");
     this.targetContainer = document.getElementById("target-container");
@@ -383,8 +392,7 @@ function Controller(game) {
         },
         R: {
             callback: function() {
-                if (this.lastCreatingType)
-                    this.newCreatingCursor(this.lastCreatingType, this.lastCreatingCommand);
+                this.lastAction.repeat();
             },
             help: "Repeat last action",
         },
@@ -755,24 +763,20 @@ function Controller(game) {
         entity.initSprite();
         return this.creatingCursor(entity, command, callback);
     };
-    this.creatingCursor = function(entity, command, callback) {
-        command = command || "entity-add";
-        var lastType = entity.Type;
+
+    this.creatingCursor = function(entity, command = "entity-add", callback) {
         this.world.cursor = entity;
 
-        var rotate = 0;
-        if (this.lastCreatingType == lastType)
-            rotate = this.lastCreatingRotation;
-        else
-            this.lastCreatingRotation = 0;
+        if (this.lastAction.type != entity.Type)
+            this.lastAction.rotation = 0;
 
-        while (rotate-- > 0) {
+        for (let i = 0; i < this.lastAction.rotation; i++) {
             this.world.cursor.rotate();
-            this.lastCreatingRotation--;
         }
 
-        this.lastCreatingType = lastType;
-        this.lastCreatingCommand = command;
+        this.lastAction.set(() => {
+            this.newCreatingCursor(entity.Type, command, callback);
+        }, entity.Type);
 
         this.callback[this.LMB] = function() {
             if (!controller.mouse.isValid())
@@ -1025,6 +1029,7 @@ function Controller(game) {
         if (!cursor)
             return;
         cursor.rotate(delta);
+        this.lastAction.rotation += delta;
     };
 
 

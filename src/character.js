@@ -1299,7 +1299,6 @@ Character.prototype = {
             cursor.sprite.height = icon.height;
             game.controller.creatingCursor(cursor, action, callback);
         }
-
     },
     fish: function fish(data) {
         var repeat = fish.bind(this);
@@ -1619,6 +1618,9 @@ Character.prototype = {
     },
     bag: function() {
         return Entity.get(this.Equip[0]);
+    },
+    findItem: function(type) {
+        return this.findItems([type])[type];
     },
     findItems: function(kinds) {
         var found = {};

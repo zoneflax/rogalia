@@ -18,6 +18,10 @@ Entity.queueable = function(entity, action) {
         game.controller.modifier.shift;
 };
 
+Entity.repeatable = function(action) {
+    return _.includes(["Prospect"], action);
+}
+
 Entity.usable = ["label"];
 
 Entity.templates = {};

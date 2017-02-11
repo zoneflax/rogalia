@@ -66,10 +66,10 @@ function Craft() {
         },
     };
 
-    this.build = function(e) {
+    this.build = (e) => {
         game.controller.newCreatingCursor(this.blank.type, "build");
         this.panel.hide();
-    }.bind(this);
+    };
 
     if (this.searchInput.value != "")
         this.search(this.searchInput.value, true);

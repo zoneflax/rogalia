@@ -190,6 +190,13 @@ ContainerSlot.prototype = {
 
         event.stopPropagation();
         this.lock();
-        game.controller.cursor.set(entity, event.pageX, event.pageY, this.unlock.bind(this));
+        game.controller.cursor.set(entity, event.pageX, event.pageY, () => this.unlock());
+    },
+    // TODO: this is ugly; fixme; used in "R - repeat"
+    click: function() {
+        this.element.dispatchEvent(new MouseEvent("mousedown", {
+            clientX: game.controller.mouse.x,
+            clientY: game.controller.mouse.y,
+        }))
     },
 };

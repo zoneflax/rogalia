@@ -398,9 +398,6 @@ Entity.prototype = {
 
         this._spriteVersion = spriteVersion;
     },
-    add: function() {
-        game.controller.newCreatingCursor(this.Type);
-    },
     is: function(type) {
         if (this.Type == type || this.Group == type) {
             return true;
@@ -549,6 +546,14 @@ Entity.prototype = {
             }
             this.queueAction(action, container.filter(entity => entity && entity.is(this.Type)));
         } else {
+            if (Entity.repeatable(action)) {
+                game.controller.lastAction.set(() => {
+                    // check if object was removed
+                    if (Entity.get(this.Id)) {
+                        this.queueActionMaybe(action)
+                    }
+                })
+            }
             game.network.send(action, {id: this.Id});
         }
     },
@@ -1078,6 +1083,15 @@ Entity.prototype = {
             X: x,
             Y: y,
         });
+
+        game.controller.lastAction.set(() => {
+            const entity = game.player.findItem(this.Type)[0];
+            if (!entity) {
+                return;
+            }
+            const slot = Container.getEntitySlot(entity);
+            slot && slot.click();
+        });
     },
     dwim: function() {
         game.network.send("dwim", {id: this.Id});
@@ -1177,7 +1191,6 @@ Entity.prototype = {
         this.Height = w;
 
         this.initSprite();
-        game.controller.lastCreatingRotation++;
     },
     cast: function() {
         switch (this.Type) {

@@ -52,6 +52,11 @@ Container.getEntityContainer = function(entity) {
         return null;
 };
 
+Container.getEntitySlot = function(entity) {
+    const cnt = Container.getEntityContainer(entity);
+    return cnt && cnt.findSlot(entity);
+};
+
 Container.move = function(entity, toContainer, slotIndex) {
     game.network.send("entity-move", {
         Id: +entity.Id,
