@@ -340,6 +340,17 @@ function Controller(game) {
         }
     };
 
+    this.toggleAllBags = function() {
+        if (this.toggleAllBags.containers) {
+            this.toggleAllBags.containers.forEach(cnt => game.containers[cnt.id] && cnt.panel.show());
+            this.toggleAllBags.containers = null;
+            return;
+        }
+        const containers = _.filter(game.containers, (cnt) => cnt.panel.visible);
+        this.toggleAllBags.containers = containers;
+        containers.forEach(cnt => cnt.panel.hide());
+    };
+
     this.updatePlayerAvatar = function(player) {
         this.avatar = new Avatar(player);
         dom.setContents(document.getElementById("player-avatar"), this.avatar.element);
@@ -412,7 +423,7 @@ function Controller(game) {
             help: "Toggle map grid drawing",
         },
         B: {
-            callback: this.toggleBag,
+            callback: this.toggleAllBags,
             help: "Open bag",
         },
         I: {

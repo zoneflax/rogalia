@@ -144,6 +144,7 @@ Container.prototype = {
         const buttons = this.makeButtons();
         if (buttons) {
             dom.insert(dom.wrap(".container-actions", buttons), this.panel.titleBar);
+            this.panel.element.classList.add("has-container-actions");
         }
 
         this.panel.entity = this.entity;
