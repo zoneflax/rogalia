@@ -551,7 +551,7 @@ Craft.prototype = {
             ingredients,
             this.makeInfo(this.current.type),
             this.makeEquipRequirementes(this.current.type),
-            dom.wrap("#recipe-slost", slots),
+            dom.wrap(".slots-wrapper", slots),
             dom.hr(),
             buttons,
             dom.hr(),

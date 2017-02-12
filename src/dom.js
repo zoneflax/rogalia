@@ -152,19 +152,38 @@ var dom = {
         return this.input(text, null, "checkbox", name, true);
     },
     range: function(value, onchange) {
-        var handle = dom.div("handle draggable");
-        handle.ondrag = function(event, drag) {
+        const handle = dom.div("handle");
+        const range = this.wrap("range", handle)
+        let x = 0;
+
+        handle.style.left = value * 100 + "%";
+        range.onmousedown = function(event) {
+            if (event.target == range) {
+                x = range.getBoundingClientRect().left;
+                onmousemove(event);
+            } else {
+                x = event.pageX - handle.offsetLeft;
+            }
+            window.addEventListener("mousemove", onmousemove);
+            window.addEventListener("mouseup", function cancel() {
+                window.removeEventListener("mouseup", cancel);
+                window.removeEventListener("mousemove", onmousemove);
+            });
+        };
+        return range;
+
+        function onmousemove(event) {
             handle.style.marginLeft = 0; // remove margin, to fix left: 100% problem
             var oldX =  parseInt(handle.style.left);
             var maxX = handle.parentNode.clientWidth - handle.clientWidth;
-            var newX = Math.max(0, Math.min(event.pageX - drag.dx, maxX));
-            if (oldX == newX)
+            var newX = Math.max(0, Math.min(event.pageX - x, maxX));
+            if (oldX == newX) {
                 return;
+            }
             handle.style.left = newX + "px";
             onchange(newX / maxX);
         };
-        handle.style.left = value * 100 + "%";
-        return this.wrap("range", handle);
+
     },
     iframe: function(src, classOrName) {
         var iframe = dom.tag("iframe", classOrName);

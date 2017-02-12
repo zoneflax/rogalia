@@ -121,42 +121,40 @@ Container.prototype = {
 
         this.updateFuel();
 
-        var id = this.id;
-        var buttons = this.makeButtons();
-        switch (this.entity.Type) {
-        case "chess-table":
-            buttons.push(dom.button(T("Toggle color"), "", function() {
-                slots.classList.toggle("chess-toggle");
-            }));
-            break;
-        }
-
         var contents = [
             slots,
             this.slots.length > 0 && this.fuel && dom.hr(),
             this.fuel,
         ];
-        if (buttons) {
-            contents.push(dom.hr());
-            contents.push(dom.wrap(".container-actions", buttons));
+
+        switch (this.entity.Type) {
+        case "chess-table":
+            contents.push(dom.button(T("Toggle color"), "", function() {
+                slots.classList.toggle("chess-toggle");
+            }))
+            break;
         }
+
         this.panel = new Panel(
             "container-" + this.id,
             this.name,
             contents
         );
 
+        const buttons = this.makeButtons();
+        if (buttons) {
+            dom.insert(dom.wrap(".container-actions", buttons), this.panel.titleBar);
+        }
+
         this.panel.entity = this.entity;
         this.panel.hooks.hide = this.markAllAsSeen.bind(this);
-        this.panel.hooks.show = function() {
+        this.panel.hooks.show = () => {
             if (this._syncReq) {
                 this.update();
                 this._syncReq = false;
             }
-        }.bind(this);
-        this.panel.hooks.close = function() {
-            delete game.containers[id];
-        };
+        }
+        this.panel.hooks.close = () => { delete game.containers[this.id]; };
         this.panel.element.classList.add("container");
         this.panel.container = this;
 
@@ -168,7 +166,7 @@ Container.prototype = {
         }
         var id = this.id;
 
-        var moveAll = dom.img("assets/icons/panel/move-all.png", "icon-button");
+        var moveAll = dom.img("assets/icons/panel/move-all.png", "container-action");
         moveAll.title = T("Move all");
 
         moveAll.onclick = function() {
@@ -179,13 +177,13 @@ Container.prototype = {
             }
         }.bind(this);
 
-        var sort = dom.img("assets/icons/panel/sort.png", "icon-button");
+        var sort = dom.img("assets/icons/panel/sort.png", "container-action");
         sort.title = T("Sort");
         sort.onclick = function() {
             game.network.send("Sort", {Id: id});
         };
 
-        var openAll = dom.img("assets/icons/panel/open-all.png", "icon-button");
+        var openAll = dom.img("assets/icons/panel/open-all.png", "container-action");
         openAll.title = T("Open all");
         var slots = this.slots;
         openAll.onclick = function() {

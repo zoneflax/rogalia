@@ -4,8 +4,8 @@ function DragManager() {
 
     var drag = {
         target: null,
-        dx: 0,
-        dy: 0,
+        x: 0,
+        y: 0,
     };
 
     window.addEventListener("mousedown", function(event) {
@@ -21,8 +21,8 @@ function DragManager() {
         };
 
         drag.target = target;
-        drag.dx = event.pageX - target.offsetLeft;
-        drag.dy = event.pageY - target.offsetTop;
+        drag.x = event.pageX - parseInt(target.dataset.x || 0);
+        drag.y = event.pageY - parseInt(target.dataset.y || 0);
     });
 
     window.addEventListener("mouseup", function() {
@@ -30,14 +30,15 @@ function DragManager() {
     });
 
     window.addEventListener("mousemove", function(event) {
-        if (!drag.target)
+        const target = drag.target
+        if (!target)
             return;
-        if (drag.target.ondrag) {
-            drag.target.ondrag(event, drag);
-            return;
-        }
-        drag.target.style.left = event.pageX - drag.dx + "px";
-        drag.target.style.top = event.pageY - drag.dy + "px";
+
+        const x = event.pageX - drag.x;
+        const y = event.pageY - drag.y;
+        target.dataset.x = x;
+        target.dataset.y = y;
+        target.style.transform = `translate(${x}px, ${y}px)`;
     });
 
     function dragIgnore(element) {

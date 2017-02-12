@@ -22,7 +22,7 @@ function Panel(name, title, elements, hooks) {
     this.title = dom.div("title-text");
     this.setTitle(title);
 
-    this.closeButton = dom.tag("span", "close");
+    this.closeButton = dom.wrap("close", "✕");
     this.closeButton.panel = this;
     this.closeButton.onclick = this.hide.bind(this);
 
@@ -88,16 +88,18 @@ Panel.stack = [];
 
 Panel.prototype = {
     get x() {
-        return this.element.offsetLeft;
-    },
-    set x(x) {
-        this.element.style.left = x + "px";
+        return parseInt(this.element.dataset.x || 0);
     },
     get y() {
-        return this.element.offsetTop;
+        return parseInt(this.element.dataset.y || 0);
+    },
+    set x(x) {
+        this.element.dataset.x = x;
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     },
     set y(y) {
-        this.element.style.top = y + "px";
+        this.element.dataset.y = y;
+        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     },
     get width() {
         return parseInt(getComputedStyle(this.element).width);
@@ -242,7 +244,7 @@ Panel.prototype = {
         return this;
     },
     setWidth: function(w) {
-        var pad = 20;
+        const pad = 6;
         this.element.style.width = w + pad + "px";
         this.element.style.maxWidth = w + pad + "px";
     },
