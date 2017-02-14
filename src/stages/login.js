@@ -1,4 +1,4 @@
-/* global game, FormData, dom */
+/* global game, FormData, dom, Panel */
 
 "use strict";
 

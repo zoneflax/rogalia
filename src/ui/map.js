@@ -20,6 +20,7 @@ function WorldMap() {
     this.full = {x:0,y:0};
 
     this.minimapContainer = document.getElementById("minimap-container");
+    this.minimapContainer.onclick = () => { game.controller.minimap.panel.toggle(); };
     this.minimap = document.getElementById("minimap");
     this.minimapCanvas = document.getElementById("minimap-canvas");
     this.minimapCanvas.ctx = this.minimapCanvas.getContext("2d");

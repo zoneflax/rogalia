@@ -1427,7 +1427,7 @@ T.dict = {
     "{attr} increased by {value}": "Атрибут {attr} увеличился на {value}",
     "{attr} decreased by {value}": "Атрибут {attr} уменьшился на {value}",
     "Vendor": "Торговец",
-    "Internal server error; Please try again later": "Внутреняя ошибка сервер; Пожалуйста, попробуйте позже",
+    "Internal server error; Please try again later": "Внутреняя ошибка сервера; Пожалуйста, попробуйте позже",
     "Poker table": "Покерный стол",
     "Registered": "Регистрация",
     "Online (hours)": "Онлайн (часов)",
@@ -1756,4 +1756,6 @@ T.dict = {
     "Label has no text": "На метке ничего не написано",
     "Always visible": "Всегда виден",
     "Pin chat": "Прикрепить чат",
+    "Find recipes by ingredient": "Найти рецепты по ингредиенту",
+    "Filters": "Фильтры",
 };

@@ -132,7 +132,6 @@ function Info(message, character) {
         break;
     case ".invite":
         var name = this.data;
-        var invite = dom.tag("p", "", {text: TT("{name} invites you to a party", {name: name})});
         var accept = dom.button(T("Accept"));
         accept.onclick = function() {
             game.chat.send("*accept-invite " + name);
@@ -144,7 +143,10 @@ function Info(message, character) {
             panel.close();
         };
 
-        var panel = new Panel("invite", "Invite", [invite, accept, deny]);
+        var panel = new Panel("invite", "Invite", [
+            TT("{name} invites you to a party", {name}),
+            dom.wrap("buttons", [accept, deny]),
+        ]);
         panel.show();
         return;
     }

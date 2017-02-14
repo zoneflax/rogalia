@@ -56,12 +56,10 @@ function lobbyStage(data) {
 
     var contents = [
         dom.wrap("lobby-account",  game.getLogin()),
-        dom.hr(),
         avatars,
     ];
 
     if (!game.inVK()) {
-        contents.push(dom.hr());
         contents.push(dom.button(T("Back"), "", function() {
             lobbyStage.characters = [];
             game.clearServerInfo();

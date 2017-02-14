@@ -1,4 +1,4 @@
-/* global game, Image, dom, CELL_SIZE, T */
+/* global game, Image, dom, CELL_SIZE, T, Panel, Point */
 
 "use strict";
 function Minimap() {

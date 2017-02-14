@@ -105,14 +105,12 @@ function createCharacterStage() {
 
     var panel = new Panel("create-character", "Create character", dom.make("form", [
         account,
-        dom.hr(),
         male.label,
         female.label,
         name,
         dom.hr(),
         tabs,
         professions,
-        dom.hr(),
         submit,
         back,
     ])).hideCloseButton().show().center(0.5, 0.05);

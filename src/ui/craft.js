@@ -17,7 +17,15 @@ function Craft() {
 
     this.listWrapper = dom.wrap("#recipe-list-wrapper", [
         this.createSearchField(),
-        dom.wrap("#recipe-filters", [this.searchSlot, this.createFilters()]),
+        dom.wrap("#search-by-ingredient", [
+            T("Find recipes by ingredient"),
+            this.searchSlot,
+        ]),
+        dom.hr(),
+        dom.wrap("#recipe-filters", [
+            T("Filters") + ":",
+            this.createFilters()
+        ]),
         dom.hr(),
         this.list
     ]);
@@ -178,8 +186,10 @@ Craft.prototype = {
             this.slot,
             dom.hr(),
             this.ingredientsList,
-            auto,
-            this.buildButton,
+            dom.wrap("buttons", [
+                auto,
+                this.buildButton,
+            ]),
         ]);
 
         this.render(blank);
@@ -304,10 +314,7 @@ Craft.prototype = {
         });
         clear.title = T("Clear search");
 
-        var label = dom.tag("label", "recipe-search");
-        dom.append(label, [input, clear]);
-
-        return label;
+        return dom.wrap("recipe-search", [input, clear]);
     },
     createSearchSlot: function() {
         var self = this;
@@ -353,20 +360,25 @@ Craft.prototype = {
     },
     createFilters: function() {
         var recipeList = this.list;
-        return dom.wrap("craft-filters", ["portable", "liftable", "static", "unavailable"].map(function(name) {
-            var label = dom.tag("label", "", {title: T(name)});
-            var checkbox = dom.checkbox();
-            var saved = localStorage.getItem("craft.filter." + name);
-            checkbox.checked = (saved) ? JSON.parse(saved) : true;
-            if (!checkbox.checked)
+        return dom.wrap("#recipe-filters", ["portable", "liftable", "static", "unavailable"].map(function(name) {
+            const checkbox = dom.div("recipe-filter", {title: T(name)});
+            const saved = localStorage.getItem("craft.filter." + name);
+            const checked = (saved) ? JSON.parse(saved) : true;
+
+            checkbox.style.backgroundImage = `url(assets/icons/craft/${name}.png)`;
+
+            if (checked)
+                checkbox.classList.add("checked");
+            else
                 recipeList.classList.add("filter-" + name);
 
-            checkbox.onchange = function(e) {
-                var checked = !recipeList.classList.toggle("filter-"+name);
+            checkbox.onclick = function(e) {
+                checkbox.classList.toggle("checked");
+                const checked = !recipeList.classList.toggle("filter-"+name);
                 localStorage.setItem("craft.filter." + name, checked);
             };
-            dom.append(label, checkbox);
-            return label;
+            return checkbox;
+
         }));
     },
     searchHandler: function(e) {

@@ -1,4 +1,4 @@
-/* global game, util, T, dom */
+/* global game, util, T, dom, Panel */
 
 "use strict";
 function Help() {

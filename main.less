@@ -291,13 +291,13 @@ hr {
 }
 
 .vr {
-    background: url("assets/bg/vr.png") repeat-y;
-    width: 3px;
+    background: @outline-color;
+    width: 1px;
     margin: -3px 4px -3px; /* should be used between hrs */
 }
 
 .contents > .vr {
-    margin: -5px 4px -5px;
+    margin: -3px 4px -4px;
 }
 
 #account {
@@ -360,15 +360,20 @@ hr {
     .cursor-pointer;
     color: #e2a04e;
 }
-#vendor > .contents {
-    min-width: 250px;
+#vendor {
+    .contents {
+        min-width: 250px;
+    }
+
+    .tabs-contents {
+        min-height: 187px;
+    }
 }
 
 .slots-wrapper {
     overflow: auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
 
     .slot {
         margin: 2px;
@@ -526,11 +531,13 @@ hr {
     outline: 1px solid @outline-color;
     color: #e2e9ec;
     position: absolute;
+    top: 0;
+    left: 0;
     visibility: hidden;
     z-index: 1;
     text-align: left;
     max-width: 500px;
-    min-width: 72px;
+    min-width: 58px;
 
     .title-bar {
         @background-color: #a06a31;
@@ -609,9 +616,12 @@ hr {
 
 
     .contents {
-        border-top: 1px solid @outline-color;
 	background-color: @bg-color;
 	padding: 3px; /* update Panel.setWidth(); pad = 2*(padding) */
+    }
+
+    .buttons {
+        text-align: center;
     }
 }
 
@@ -866,16 +876,45 @@ hr {
     }
 }
 
+#craft-help {
+    width: 300px;
+}
+
 #recipe-list-wrapper {
     width: 198px;
 }
+
+#search-by-ingredient {
+    display: flex;
+    margin: 3px 0;
+}
+
 #recipe-filters {
     display: flex;
-    align-items: center;
-    margin-top: 3px;
+
+    .recipe-filter {
+        width: 16px;
+        height: 16px;
+        margin-left: 3px;
+
+        filter: brightness(25%);
+
+        &:hover {
+            filter: brightness(125%);
+        }
+
+        &:active {
+            filter: brightness(135%);
+        }
+
+        &.checked {
+            filter: none;
+        }
+    }
 }
+
 #recipe-details {
-    width: 260px;
+    width: 312px;
 
     ul {
         margin: 0;
@@ -1045,8 +1084,8 @@ hr {
 
 .detached-chat {
     #chat-settings-icons {
-        right: 11px;
-        top: 12px;
+        right: 4px;
+        top: 4px;
     }
 
     #chat-always-visible {
@@ -1091,7 +1130,6 @@ hr {
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
 }
 
 .tabs-contents {
@@ -1102,6 +1140,7 @@ hr {
 
 .tabs-titles {
     display: flex;
+    min-height: 20px; // fix tab content overflow
 }
 
 .tab-content {
@@ -1160,6 +1199,7 @@ hr {
         background: @bg-transparent-color;
         padding: 1px;
         visibility: visible!important;
+        outline: none;
 
         hr {
             background: @bg-transparent-border-color;
@@ -1173,7 +1213,7 @@ hr {
         }
 
         .chat-tab {
-            margin: -2px 4px 1px 0;
+            margin: -2px 4px 3px 0;
         }
 
         .messages {
@@ -1994,18 +2034,12 @@ big {
     display: none!important;
 }
 #exit {
-    position: absolute;
-    top: 10px!important;
-    left: 0!important;
-    right: 0!important;
-    margin: auto;
     display: block!important;
     width: 150px;
     z-index: 1;
 
     button {
         width: 100%;
-        margin-bottom: 5px;
     }
 }
 
@@ -2737,6 +2771,10 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 #quest-desc {
     width: 65%;
+
+    .slot {
+        float: left;
+    }
 }
 .quest-button:before {
     content: "(!) ";
@@ -2924,15 +2962,16 @@ input[type=number], .lot-quantity > input, .price > input {
     justify-content: space-between;
     align-items: center;
 }
-#mail .contents {
-    width: 304px;
-    min-height: 237px;
-}
-#mail .tab-content {
-    padding-top: 3px;
-    max-height: 400px;
-    overflow-x: hidden;
-    overflow-y: auto;
+#mail {
+    .contents {
+        width: 304px;
+        height: 237px;
+    }
+
+    .tabs-contents {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 }
 .letter {
     .cursor-pointer;
@@ -2998,6 +3037,10 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 #auction {
     min-width: 250px;
+
+    .slot {
+        float: left;
+    }
 }
 
 #auction .back-button, {
@@ -3126,7 +3169,6 @@ input[type=number], .lot-quantity > input, .price > input {
 
     .contents {
 	width: 192px;
-	overflow: auto;
     }
 }
 

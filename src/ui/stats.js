@@ -1,4 +1,4 @@
-/* global game, dom, sprintf, Panel, T, config, Image, util, Statistics, Ratings, Customization */
+/* global game, dom, sprintf, Panel, T, config, Image, util, Statistics, Ratings, Customization, ContainerEquip */
 
 "use strict";
 function Stats() {

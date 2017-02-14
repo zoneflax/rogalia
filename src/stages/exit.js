@@ -29,7 +29,8 @@ function exitStage(message) {
     new Panel("exit", "", buttons)
         .hideTitle()
         .hideCloseButton()
-        .show();
+        .show()
+        .center(0.5, 0.05);
 };
 
 Stage.add(exitStage);
