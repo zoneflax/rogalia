@@ -280,8 +280,9 @@ var dom = {
         var hr = dom.hr();
         var contents = dom.div("tabs-contents");
 
-        cfg.forEach(function(tab) {
+        cfg.forEach(function(tab, index) {
             var title = dom.div("tab-title");
+            title.style.zIndex = cfg.length - index;
             if (tab.icon) {
                 tab.icon.classList.add("tab-icon");
                 title.appendChild(tab.icon);
@@ -329,10 +330,8 @@ var dom = {
         });
 
         tabs.appendChild(titles);
-        tabs.appendChild(hr);
         tabs.appendChild(contents);
         tabs.titles = titles;
-        tabs.hr = hr;
         tabs.contents = contents;
         tabs.tabs = cfg;
 

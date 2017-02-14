@@ -143,8 +143,14 @@ Container.prototype = {
 
         const buttons = this.makeButtons();
         if (buttons) {
-            dom.insert(dom.wrap(".container-actions", buttons), this.panel.titleBar);
-            this.panel.element.classList.add("has-container-actions");
+            const actions = dom.wrap("container-actions", buttons);
+            const menu = dom.wrap("container-menu", [
+                dom.wrap("container-menu-icon", "⚙"),
+                actions,
+            ]);
+            menu.onclick = () => { dom.toggle(actions); };
+            dom.hide(actions);
+            dom.insert(menu, this.panel.titleBar);
         }
 
         this.panel.entity = this.entity;

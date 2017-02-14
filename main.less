@@ -286,7 +286,7 @@ hr {
     border: 0;
     height: 1px;
     background: @outline-color;
-    margin: 2px -5px;
+    margin: 3px -4px;
     clear: both;
 }
 
@@ -368,6 +368,7 @@ hr {
     overflow: auto;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 
     .slot {
         margin: 2px;
@@ -397,7 +398,7 @@ hr {
     }
 
     &.plus {
-        background-image: url("assets/bg/plus.png");
+        background: url("assets/bg/plus.png") center no-repeat;
     }
 
     &.has-item {
@@ -545,11 +546,11 @@ hr {
         align-items: center;
 
         .title-text {
+            flex-grow: 1;
 	    overflow: hidden;
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
 	    font-size: 12px;
-            flex-grow: 1;
             padding: 0 2px;
         }
 
@@ -564,26 +565,45 @@ hr {
 	    filter: brightness(120%);
         }
 
-        .container-actions {
-            display: none;
-            white-space: nowrap;
+        .container-menu {
+            position: relative;
 
+            .container-menu-icon {
+                width: 13px;
+                border-right: 1px solid @border-color;
+                text-align: center;
+                &:hover {
+                    filter: brightness(120%);
+                }
+            }
+        }
+
+        .container-actions {
+            position: absolute;
+            top: 0;
+            left: 13px;
+            white-space: nowrap;
+            z-index: 1;
+            background-color: @bg-color;
 
             .container-action {
                 width: 13px;
                 height: 13px;
-                border-right: 1px solid @border-color;
-            }
+                padding: 2px;
+                border: 1px solid @border-color;
 
-            .container-action:hover {
-                filter: brightness(120%);
+                &:hover {
+                    filter: brightness(120%);
+                }
             }
         }
     }
 
     .main-stage &.top {
-        .title-bar, .title-text, .close, .container-action {
+        .title-bar, .title-text, .close, .container-menu-icon {
             border-color: #e2a25d;
+            background-color: #c78238;
+            color: @dark-color;
         }
     }
 
@@ -599,16 +619,6 @@ hr {
     button {
         margin-top: 3px;
         vertical-align: top;
-    }
-
-    &.has-container-actions .title-bar:hover {
-        .title-text {
-            display: none;
-        }
-
-        .container-actions {
-            display: block;
-        }
     }
 }
 
@@ -1047,31 +1057,57 @@ hr {
 
 .tab-title {
     .cursor-pointer;
-    color: #99b1bb;
-    background: url("assets/bg/tab/tab.png") no-repeat;
-    width: 122px;
-    display: inline-block;
-    padding-left: 15px;
+    .button-background;
+    box-shadow: inset 0px 1px 0px 0px #b1804a;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid #46280c;
+    color: @button-color;
+    width: 111px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 8px;
     box-sizing: border-box;
     position: relative;
+    white-space: nowrap;
+    margin-left: -5px;
+
+    &:first-child {
+        margin-left: 0;
+        padding-left: 5px;
+    }
+
+    &.active {
+        color: #faecdc;
+        background: linear-gradient(to bottom, lighten(#8e602c, 10%) 5%, lighten(#654323, 10%) 100%);
+        z-index: 1000!important;
+    }
+
+    &.has-new-messages {
+        color: lightgreen;
+    }
 }
 
-.tab-title.has-new-messages {
-    color: lightgreen;
+.tabs {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
-.tabs > hr {
-    margin: -2px 2px 0 0;
+.tabs-contents {
+    border: 1px solid #25292f;
+    margin-top: -1px;
+    flex-grow: 1;
 }
 
-.tab-title.active {
-    background: url("assets/bg/tab/tab-active.png") no-repeat;
-    color: #eee;
+.tabs-titles {
+    display: flex;
 }
 
 .tab-content {
     display: none;
     position: relative;
+    padding: 3px;
 }
 .tab-content.active {
     display: block;
@@ -1093,6 +1129,8 @@ hr {
         text-align: center;
         margin-right: 4px;
         padding: 1px 5px;
+        box-shadow: none;
+        color: @text-color;
 
         &.active {
             background-color: #565f68;
@@ -1502,11 +1540,16 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 .equip {
     position: relative;
     height: 200px;
-}
 
-.equip > .slot {
-    position: absolute;
-    margin: auto;
+
+    .slot {
+        position: absolute;
+        margin: auto;
+
+        &.has-item {
+            background-image: none;
+        }
+    }
 }
 
 /* left column */
@@ -2438,7 +2481,8 @@ input[type=number], .lot-quantity > input, .price > input {
     }
 
     table {
-        margin: 10px 0;
+        margin: 10px;
+        width: calc(~"100% - 20px");
     }
 }
 
@@ -2473,10 +2517,6 @@ input[type=number], .lot-quantity > input, .price > input {
 
     button+button {
         clear: none;
-    }
-
-    .vault {
-        overflow: auto;
     }
 }
 
@@ -3139,7 +3179,6 @@ input[type=number], .lot-quantity > input, .price > input {
 
 #vendor-license .contents {
     width: 250px;
-    overflow: auto;
 }
 
 .shop-panel() {

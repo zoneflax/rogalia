@@ -53,7 +53,7 @@ function Bank(npc) {
     });
 
 
-    var vault = dom.div("vault");
+    var vault = dom.div("vault slots-wrapper");
 
     var contents = [
         balance,
