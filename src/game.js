@@ -253,7 +253,7 @@ class Game {
 
         return (game.args["steam"])
             ? "http://quasar.rogalik.tatrix.org/gateway"
-            : this.proto() + "//rogalik.tatrix.org/gateway";
+            : this.proto() + "//quasar.rogalik.tatrix.org/gateway";
     }
 
     proto() {
