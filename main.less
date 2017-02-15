@@ -397,6 +397,7 @@ hr {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0;
 
     &.new {
         border-color: #636c7b;
@@ -1130,7 +1131,7 @@ hr {
 
 .tabs-titles {
     display: flex;
-    min-height: 20px; // fix tab content overflow
+    flex-shrink: 0;
 }
 
 .tab-content {
