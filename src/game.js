@@ -10,6 +10,7 @@ class Game {
         this.args = this._initArgs(args);
 
         this.world = document.getElementById("world");
+        this.canvasContainer = document.getElementById("canvas-container");
         this.interface = document.getElementById("interface");
         this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
@@ -70,7 +71,7 @@ class Game {
             const canvas = this.pixi.renderer.view;
             canvas.classList.add("map-canvas");
             canvas.classList.add("bg-canvas");
-            this.world.appendChild(canvas);
+            this.canvasContainer.appendChild(canvas);
 
         } else {
             this.canvas.classList.add("bg-canvas");

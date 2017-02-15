@@ -1758,4 +1758,5 @@ T.dict = {
     "Pin chat": "Прикрепить чат",
     "Find recipes by ingredient": "Найти рецепты по ингредиенту",
     "Filters": "Фильтры",
+    "Cannot add more": "Не могу добавить больше",
 };

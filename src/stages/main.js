@@ -147,12 +147,12 @@ function mainStage(data) {
     var hueRotate = 0;
     this.drawGlobalEffects = function() {
         if ("MushroomTrip" in game.player.Effects || "BadTrip" in game.player.Effects) {
-            game.canvas.style.filter = "hue-rotate(" + (hueRotate % 360) +"deg)";
+            game.canvasContainer.style.filter = "hue-rotate(" + (hueRotate % 360) +"deg)";
             hueRotate += 20;
         } else if (game.player.Instance == "sanctuary") {
-            game.canvas.style.filter = "grayscale(100%)";
+            game.canvasContainer.style.filter = "grayscale(100%)";
         } else {
-            game.canvas.style.filter = "";
+            game.canvasContainer.style.filter = "";
         }
     };
 
