@@ -41,7 +41,7 @@ var config = {
         autoHideObjects: true,
         fastRender: false,
         topologicalSort: false,
-        drawPath: true,
+        // drawPath: true,
     },
     sound: {
         playSound: true,

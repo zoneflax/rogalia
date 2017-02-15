@@ -1085,7 +1085,8 @@ Entity.prototype = {
         });
 
         game.controller.lastAction.set(() => {
-            const entity = game.player.findItem(this.Type)[0];
+            const items = game.player.findItems([this.Type])[this.Type];
+            const entity = items.find(item => item != this);
             if (!entity) {
                 return;
             }

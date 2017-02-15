@@ -1619,9 +1619,6 @@ Character.prototype = {
     bag: function() {
         return Entity.get(this.Equip[0]);
     },
-    findItem: function(type) {
-        return this.findItems([type])[type];
-    },
     findItems: function(kinds) {
         var found = {};
         var self = this;
