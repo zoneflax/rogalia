@@ -116,6 +116,7 @@ function Info(message, character) {
                     // game.sendErrorf("(Info.js) Cannot find item %d", id);
                     return;
                 }
+
                 var cnt = entity.findContainer();
                 // container is not available for current player
                 if (!cnt) {

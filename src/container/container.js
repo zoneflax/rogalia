@@ -154,7 +154,7 @@ Container.prototype = {
         }
 
         this.panel.entity = this.entity;
-        this.panel.hooks.hide = this.markAllAsSeen.bind(this);
+        this.panel.hooks.hide = () => this.markAllAsSeen();
         this.panel.hooks.show = () => {
             if (this._syncReq) {
                 this.update();

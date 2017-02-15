@@ -86,6 +86,8 @@ function Character(id) {
     };
 
     this._pathHistory = [];
+
+    this._messages = [];
 }
 
 Character.prototype = {
@@ -162,8 +164,13 @@ Character.prototype = {
         this.burden = (this.Burden) ? Entity.get(this.Burden) : null;
         this.plow = ("Plowing" in this.Effects) ? Entity.get(this.Effects.Plowing.Plow) : null;
 
-        this.syncMessages(this.Messages);
-        this.syncMessages(this.PrivateMessages);
+
+        if (data.Messages)
+            this._messages = this._messages.concat(data.Messages);
+
+        if (data.PrivateMessages)
+            this._messages = this._messages.concat(data.PrivateMessages);
+
 
         if ("Waza" in data) {
             game.controller.updateCombo(data.Waza);
@@ -249,10 +256,10 @@ Character.prototype = {
             party.avatars.push(avatar);
         });
     },
-    syncMessages: function(messages) {
-        while(messages && messages.length > 0) {
-            var message = messages.shift();
-            this.info.push(new Info(message, this));
+    processMessages: function() {
+        if (this._messages.length > 0) {
+            this._messages.forEach(message => this.info.push(new Info(message, this)));
+            this._messages = [];
         }
     },
     reloadSprite: function() {
@@ -1114,6 +1121,7 @@ Character.prototype = {
             game.sound.playSound(this.action.name, 0);
     },
     update: function(k) {
+        this.processMessages();
         this.animate();
         if ("Plague" in this.Effects) {
             this.playAnimation({
