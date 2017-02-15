@@ -167,6 +167,9 @@ Container.prototype = {
 
         this.panel.setWidth(this._slotsWidth * Container.SLOT_SIZE);
     },
+    sort: function() {
+        game.network.send("Sort", {Id: this.id});
+    },
     makeButtons: function() {
         if (this.slots.length < 3) {
             return null;
@@ -186,9 +189,7 @@ Container.prototype = {
 
         var sort = dom.img("assets/icons/panel/sort.png", "container-action");
         sort.title = T("Sort");
-        sort.onclick = function() {
-            game.network.send("Sort", {Id: id});
-        };
+        sort.onclick = () => this.sort();
 
         var openAll = dom.img("assets/icons/panel/open-all.png", "container-action");
         openAll.title = T("Open all");

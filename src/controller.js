@@ -378,38 +378,45 @@ function Controller(game) {
 
     this.hotkeys = {
         W: {
-            callback: function() {
+            callback() {
                 this.wasd(0, -1);
             },
             help: "Go up",
         },
         S: {
-            callback: function() {
+            callback() {
                 this.wasd(0, +1);
             },
             help: "Go down",
         },
         A: {
-            callback: function() {
+            callback() {
                 this.wasd(-1, 0);
             },
             help: "Go left",
         },
         D: {
-            callback: function() {
+            callback() {
                 this.wasd(+1, 0);
             },
             help: "Go right",
         },
+        Q: {
+            callback() {
+                const cnt = Panel.top && Panel.top.container;
+                cnt && cnt.sort();
+            },
+            help: "Sort top container",
+        },
         R: {
-            callback: function() {
+            callback() {
                 this.lastAction.repeat();
             },
             help: "Repeat last action",
         },
         Z: {
             allowedModifiers: ["shift"],
-            callback: function() {
+            callback() {
                 if (this.modifier.shift) {
                     this.toggleHideStatic();
                 }
@@ -417,7 +424,7 @@ function Controller(game) {
             help: "Hide big objects",
         },
         G: {
-            callback: function() {
+            callback() {
                 this.toggleDrawpMapGrid();
             },
             help: "Toggle map grid drawing",
@@ -450,32 +457,32 @@ function Controller(game) {
         },
         X: {
             button: "pick-up",
-            callback: function() {
+            callback() {
                 game.player.pickUp();
             },
             help: "Pick up nearest item",
         },
         V: {
             "button": "lift",
-            callback: function() {
+            callback() {
                 game.player.liftStart();
             },
             help: "Lift up nearest item",
         },
         9: { //tab
-            callback: function() {
+            callback() {
                 game.player.selectNextTarget();
             },
             help: "Select next target",
         },
         13: { //enter
-            callback: function() {
+            callback() {
                 game.controller.chat.activate();
             },
             help: "Open chat",
         },
         27: { //esc
-            callback: function() {
+            callback() {
                 if (document.activeElement == game.chat.newMessageElement) {
                     game.controller.chat.deactivate();
                 } else if(this.mouse.isValid()) {
@@ -489,23 +496,23 @@ function Controller(game) {
         32: { //space
             allowedModifiers: ["shift"],
             button: "action",
-            callback: function(e) {
+            callback(e) {
                 game.player.defaultAction();
             },
             help: "Use item in hands"
         },
         37: { // left
-            callback: function() {
+            callback() {
                 this.rotate(-1);
             }
         },
         39: { // right
-            callback: function() {
+            callback() {
                 this.rotate(+1);
             }
         },
         42: { // Print Screen
-            callback: function() {
+            callback() {
                 var name = new Date().toISOString().slice(0, 19).replace("T", "_");
                 this.takeScreenshot(name);
             },

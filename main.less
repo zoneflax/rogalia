@@ -1082,16 +1082,6 @@ hr {
     }
 }
 
-.detached-chat {
-    #chat-settings-icons {
-        right: 4px;
-        top: 4px;
-    }
-
-    #chat-always-visible {
-        display: none;
-    }
-}
 
 
 .tab-title {
@@ -1166,7 +1156,7 @@ hr {
         border: 1px solid #282b2f;
         border-radius: 6px;
         text-align: center;
-        margin-right: 4px;
+        margin: -2px 4px 0px 0;
         padding: 1px 5px;
         box-shadow: none;
         color: @text-color;
@@ -1179,6 +1169,7 @@ hr {
     #chat-wrapper {
         width: 30em;
         overflow: hidden;
+        border: none;
     }
 
     #new-message {
@@ -1186,8 +1177,23 @@ hr {
         width: 98%;
     }
 
-    .tabs > hr {
-        margin: 2px -5px;
+    &.detached-chat {
+        #chat-settings-icons {
+            right: 4px;
+            top: 4px;
+        }
+
+        .tabs {
+            margin-top: 2px;
+
+            > hr {
+                margin: 2px -4px;
+            }
+        }
+
+        #chat-always-visible {
+            display: none;
+        }
     }
 
     &.attached-chat {
@@ -1201,19 +1207,14 @@ hr {
         visibility: visible!important;
         outline: none;
 
-        hr {
-            background: @bg-transparent-border-color;
-            height: 1px;
+        #chat-wrapper {
+            border: none;
         }
 
         .contents {
             background: none;
             padding: 5px;
             border: @bg-transparent-border;
-        }
-
-        .chat-tab {
-            margin: -2px 4px 3px 0;
         }
 
         .messages {

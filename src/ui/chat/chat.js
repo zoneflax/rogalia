@@ -529,6 +529,8 @@ function Chat() {
     tabElem.contents.id = "chat-wrapper";
     tabElem.addEventListener("mousedown", onmousedown);
 
+    tabElem.insertBefore(dom.hr(), tabElem.contents);
+
     function scrollAllToTheEnd(element) {
         tabs.forEach(function(tab) {
             scrollToTheEnd(tab.messagesElement);

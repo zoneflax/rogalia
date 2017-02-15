@@ -194,6 +194,16 @@ class Game {
 
         this.setFontSize();
 
+        if (game.args["steam"]) {
+            var gui = require("nw.gui");
+            var win = gui.Window.get();
+            this.clearCredentials();
+            win.on("new-win-policy", function(frame, url, policy) {
+                gui.Shell.openExternal(url);
+                policy.ignore();
+            });
+        }
+
         this.stage = new Stage();
         this.setStage("login");
 
@@ -212,16 +222,6 @@ class Game {
             game.exit(T("Client error. Refresh page or try again later."));
             return false;
         };
-
-        if (game.args["steam"]) {
-            var gui = require("nw.gui");
-            var win = gui.Window.get();
-            this.clearCredentials();
-            win.on("new-win-policy", function(frame, url, policy) {
-                gui.Shell.openExternal(url);
-                policy.ignore();
-            });
-        }
 
         T.update();
         this._tick();
