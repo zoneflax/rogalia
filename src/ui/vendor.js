@@ -309,6 +309,10 @@ Vendor.prototype = {
         var slot = dom.slot();
 
         var button = dom.button(T("Sell"), "", function() {
+            if (price.cost() <= 0) {
+                game.popup.alert(T("Please enter price"));
+                return;
+            }
             game.network.send(
                 "buy-add",
                 {
@@ -356,6 +360,14 @@ Vendor.prototype = {
         var quantity = dom.input(T("Quantity"), 1);
         quantity.label.className = "lot-quantity";
         var button = dom.button(T("Buy up"), "", function() {
+            if (price.cost() <= 0) {
+                game.popup.alert(T("Please enter price"));
+                return;
+            }
+            if (quantity.value <= 0) {
+                game.popup.alert(T("Please enter amount"));
+                return;
+            }
             game.network.send(
                 "sell-add",
                 {
@@ -423,22 +435,17 @@ Vendor.canBeSold = function(type) {
 };
 
 Vendor.sellPrompt = function(items, args, callback) {
-    var quantity = dom.input(T("Quantity"), items.length, "number");
+    const quantity = dom.input(T("Quantity"), items.length, "number");
     quantity.min = 1;
     quantity.max = items.length;
     quantity.style.width = "auto";
-    var sell = dom.button(T("Sell"));
-    sell.onclick = function() {
-        var list = items.slice(0, quantity.value).map(function(entity) {
+    const sell = dom.button(T("Sell"), "", function() {
+        const list = items.slice(0, quantity.value).map(function(entity) {
             return entity.Id;
         });
         prompt.hide();
         args.List = list;
-        game.network.send("sell", args, function(data) {
-            callback(data, list.length);
-        });
-    };
-    var prompt = new Panel("prompt", T("Sell"), [quantity.label, sell]);
-    prompt.show();
-
+        game.network.send("sell", args, (data) => { callback(data, list.length); });
+    });
+    var prompt = new Panel("prompt", T("Sell"), [quantity.label, sell]).show();
 };
