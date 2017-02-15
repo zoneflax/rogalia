@@ -77,7 +77,7 @@ function Network() {
             return;
 
         if (data.Ok) {
-            var callback = this.queue.shift();
+            var callback = this.queue.pop();
             var result = callback(data);
             if (result instanceof Function)
                 this.queue.push(result);
