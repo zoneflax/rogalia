@@ -328,12 +328,15 @@ Entity.prototype = {
 
         switch (this.Type) {
         case "wooden-table":
+        case "dining-table":
         case "herb-rack":
         case "bookshelf":
         case "wooden-trough":
         case "steel-pike":
         case "stack-of-wood":
         case "stack-of-boards":
+        case "bundle-of-wood":
+        case "stone-pile":
         case "winepress":
             if (!this.Props.Slots)
                 break;
