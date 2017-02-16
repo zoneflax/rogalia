@@ -3,6 +3,7 @@
 "use strict";
 function loadingStage(version) {
     game.addEventListeners();
+    playerStorage.setPrefix(game.playerName + ".");
 
     var req = new XMLHttpRequest();
     req.open("GET", "metadata.json?version=" + version, true);

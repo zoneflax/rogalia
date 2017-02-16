@@ -1,4 +1,4 @@
-/* global game, Panel, dom, localStorage, config, _, TS, util */
+/* global game, Panel, dom, config, _, TS, util */
 
 "use strict";
 function Settings() {
@@ -29,7 +29,7 @@ function Settings() {
             game.controller.wasd.point.set(0, 0);
         },
         "settings.ui.language": function(lang) {
-            localStorage.setItem("lang", lang);
+            gameStorage.setItem("lang", lang);
             game.reload();
         },
         "settings.sound.playMusic": function() {
@@ -96,9 +96,9 @@ Settings.load = function(map) {
             if (group[prop] instanceof Function)
                 return;
             var key = ["settings", name, prop].join(".");
-            var saved = localStorage.getItem(key);
+            var saved = gameStorage.getItem(key);
             if (saved !== null) {
-                group[prop] = JSON.parse(saved);
+                group[prop] = saved;
             }
         });
     });
@@ -111,7 +111,7 @@ Settings.toggle = function(key) {
     var option = path[2];
     var value = !config[section][option];
     config[section][option] = value;
-    localStorage.setItem(key, value);
+    gameStorage.setItem(key, value);
 
     var checkbox = document.getElementById(key);
     if (checkbox)
@@ -190,7 +190,7 @@ Settings.prototype = {
                 }
 
                 function trigger() {
-                    localStorage.setItem(key, group[prop]);
+                    gameStorage.setItem(key, group[prop]);
                     self.triggers[key] && self.triggers[key](group[prop]);
                 }
             });

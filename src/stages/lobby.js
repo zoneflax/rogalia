@@ -1,4 +1,4 @@
-/* global game, util, Panel, dom, localStorage, loader, Character, Stage */
+/* global game, util, Panel, dom, loader, Character, Stage */
 
 "use strict";
 function lobbyStage(data) {
@@ -106,12 +106,12 @@ function lobbyStage(data) {
             var icon = document.getElementById("news-icon");
             dom.show(icon);
             icon.onclick = function() {
-                localStorage.setItem("news.title", title);
+                gameStorage.setItem("news.title", title);
                 panel.toggle();
                 icon.classList.remove("breaking-news");
             };
 
-            if (title != localStorage.getItem("news.title")) {
+            if (title != gameStorage.getItem("news.title")) {
                 icon.classList.add("breaking-news");
             }
         });

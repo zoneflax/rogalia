@@ -34,7 +34,7 @@ Character.sync = function(data, remove) {
         if (!to) {
             to = new Character(id);
             if (from.Name == game.playerName) {
-                to.isPlayer = true;;
+                to.isPlayer = true;
                 game.player = to;
             }
             to.init(from);

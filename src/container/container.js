@@ -66,11 +66,11 @@ Container.move = function(entity, toContainer, slotIndex) {
 };
 
 Container.save = function() {
-    localStorage.setItem("containers", JSON.stringify(Object.keys(game.containers)));
+    playerStorage.setItem("containers", Object.keys(game.containers));
 };
 
 Container.load = function() {
-    var saved = JSON.parse(localStorage.getItem("containers"));
+    var saved = playerStorage.getItem("containers");
     if (saved) {
         saved.filter(Entity.exists).map(Entity.get).forEach(Container.open);
     }

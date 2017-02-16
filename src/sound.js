@@ -12,11 +12,11 @@ function Sound() {
 
     var lastTrackLsKey = "last-track";
     function loadLastTrack() {
-        return +localStorage.getItem(lastTrackLsKey) || firstTrackId;
+        return +gameStorage.getItem(lastTrackLsKey) || firstTrackId;
     };
 
     function saveLastTrack() {
-        localStorage.setItem(lastTrackLsKey, trackId);
+        gameStorage.setItem(lastTrackLsKey, trackId);
     };
 
     var currentTrack = null;
@@ -53,7 +53,7 @@ function Sound() {
             config.sound.playSound = false;
         } else {
             //TODO: remove after settings update
-            var enabled = localStorage.getItem("settings.sound.playMusic");
+            var enabled = gameStorage.getItem("settings.sound.playMusic");
             if (typeof enabled == "string")
                 config.sound.playMusic =  (enabled == "true");
         }

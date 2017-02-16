@@ -102,12 +102,12 @@ function Minimap() {
                 title: point.title,
             };
         });
-        localStorage.setItem("map.markers", JSON.stringify(markers));
+        gameStorage.setItem("map.markers", markers);
     };
 
     function loadMarkers() {
-        var markers = localStorage.getItem("map.markers");
-        markers &&  _.forEach(JSON.parse(markers), function(point) {
+        const markers = gameStorage.getItem("map.markers") || [];
+        _.forEach(markers, function(point) {
             self.addMarker(point.x, point.y, point.title);
         });
     }

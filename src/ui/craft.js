@@ -302,7 +302,7 @@ Craft.prototype = {
         var input = dom.tag("input");
         input.placeholder = T("search");
         input.addEventListener("keyup", this.searchHandler.bind(this));
-        input.value = localStorage.getItem("craft.search") || "";
+        input.value = playerStorage.getItem("craft.search") || "";
 
         this.searchInput = input;
 
@@ -362,7 +362,7 @@ Craft.prototype = {
         var recipeList = this.list;
         return dom.wrap("#recipe-filters", ["portable", "liftable", "static", "unavailable"].map(function(name) {
             const checkbox = dom.div("recipe-filter", {title: T(name)});
-            const saved = localStorage.getItem("craft.filter." + name);
+            const saved = playerStorage.getItem("craft.filter." + name);
             const checked = (saved) ? JSON.parse(saved) : true;
 
             checkbox.style.backgroundImage = `url(assets/icons/craft/${name}.png)`;
@@ -375,7 +375,7 @@ Craft.prototype = {
             checkbox.onclick = function(e) {
                 checkbox.classList.toggle("checked");
                 const checked = !recipeList.classList.toggle("filter-"+name);
-                localStorage.setItem("craft.filter." + name, checked);
+                playerStorage.setItem("craft.filter." + name, checked);
             };
             return checkbox;
 
@@ -807,6 +807,6 @@ Craft.prototype = {
         });
     },
     save: function() {
-        localStorage.setItem("craft.search", this.searchInput.value);
+        playerStorage.setItem("craft.search", this.searchInput.value);
     },
 };

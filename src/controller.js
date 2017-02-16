@@ -1209,7 +1209,8 @@ function Controller(game) {
     };
 
     this.reset = function() {
-        localStorage.clear();
+        gameStorage.clear();
+        playerStorage.clear();
         game.panels = {}; //dont save positions;
         game.reload();
     };

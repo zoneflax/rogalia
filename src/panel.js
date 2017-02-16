@@ -15,7 +15,7 @@ function Panel(name, title, elements, hooks) {
     this.temporary = false; //do not save on quit
 
     this.lsKey = "panels." + this.name;
-    var config = JSON.parse(localStorage.getItem(this.lsKey)) || {};
+    var config = playerStorage.getItem(this.lsKey) || {};
 
     this.contents = dom.div("contents");
 
@@ -229,14 +229,14 @@ Panel.prototype = {
     savePosition: function() {
         if (this.temporary)
             return;
-        var config = {
+
+        playerStorage.setItem(this.lsKey, {
             position: {
                 x: this.x,
                 y: this.y,
             },
             visible: this.visible,
-        };
-        localStorage.setItem(this.lsKey, JSON.stringify(config));
+        });
     },
     center: function(ratioX = 0.5, ratioY = 0.5) {
         this.x = game.offset.x + (game.world.offsetWidth - this.element.offsetWidth) * ratioX;

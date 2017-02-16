@@ -1,4 +1,4 @@
-/* global dom, Panel, game, localStorage, TT, config, util, TS, T, ChatRing, Settings */
+/* global dom, Panel, game, TT, config, util, TS, T, ChatRing, Settings */
 
 "use strict";
 function Chat() {
@@ -420,7 +420,7 @@ function Chat() {
             this.detach();
         }
 
-        if (localStorage.getItem("chat.alwaysVisible") == "false") {
+        if (playerStorage.getItem("chat.alwaysVisible") === false) {
             semi.always = false;
             this.panel.contents.classList.add("semi-hidden");
         }
@@ -451,7 +451,7 @@ function Chat() {
     alwaysVisible.classList.add("chat-settings-icon");
     alwaysVisible.onclick = () =>  {
         semi.always = !semi.always;
-        localStorage.setItem("chat.alwaysVisible", semi.always);
+        playerStorage.setItem("chat.alwaysVisible", semi.always);
         this.panel.contents.classList.toggle("semi-hidden");
     };
 
@@ -516,7 +516,7 @@ function Chat() {
         };
 
         var messagesElement = dom.div("messages");
-        messagesElement.innerHTML = localStorage.getItem("chat.log." + name) || "";
+        messagesElement.innerHTML = playerStorage.getItem("chat.log." + name) || "";
 
         tab.contents = [messagesElement];
         tab.messagesElement = messagesElement;
@@ -992,7 +992,7 @@ function Chat() {
 
     this.save = function() {
         tabs.forEach(function(tab) {
-            localStorage["chat.log." + tab.name] = tab.messagesElement.innerHTML;
+            playerStorage.setItem("chat.log." + tab.name, tab.messagesElement.innerHTML);
         });
         myMessages.saveToStorage();
     };

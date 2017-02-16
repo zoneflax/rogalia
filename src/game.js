@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, localStorage, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree, Pixi */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree, Pixi */
 
 "use strict";
 
@@ -24,7 +24,7 @@ class Game {
 
         new DragManager();
 
-        this.fullscreen = JSON.parse(localStorage.getItem("fullscreen"));
+        this.fullscreen = gameStorage.getItem("fullscreen");
         this.screen = new Screen();
         this.time = 0;
         this.timeElement = document.getElementById("time");
@@ -334,14 +334,11 @@ class Game {
                     } else {
                         win.zoomLevel += 0.5;
                     }
-                    localStorage.zoomLevel = win.zoomLevel;
+                    gameStorage.setItem("zoomLevel", win.zoomLevel);
                 }
             });
 
-            // load zoom level from localStorage
-            if (localStorage.zoomLevel) {
-                win.zoomLevel = parseFloat(localStorage.zoomLevel);
-            }
+            win.zoomLevel = gameStorage.getItem("zoomLevel") || 0;
         }
     }
 
@@ -377,36 +374,35 @@ class Game {
     getLogin() {
         return (this.args["steam"])
             ? "Rogalia"
-            : localStorage.getItem("login");
+            : gameStorage.getItem("login");
     }
 
     setLogin(login) {
-        localStorage.setItem("login", login);
+        gameStorage.setItem("login", login);
     }
 
     loadServerInfo() {
-        var server = localStorage.getItem("server");
-        return server && JSON.parse(server);
+        return gameStorage.getItem("server");
     }
 
     setServerInfo(server) {
-        localStorage.setItem("server", JSON.stringify(server));
+        gameStorage.setItem("server", server);
     }
 
     loadSessionToken() {
-        return localStorage.getItem("session.token");
+        return gameStorage.getItem("session.token");
     }
 
     setSessionToken(token) {
-        localStorage.setItem("session.token", token);
+        gameStorage.setItem("session.token", token);
     }
 
     clearSessionToken() {
-        localStorage.removeItem("session.token");
+        gameStorage.removeItem("session.token");
     }
 
     clearServerInfo() {
-        localStorage.removeItem("server");
+        gameStorage.removeItem("server");
     }
 
     clearCredentials() {
@@ -491,7 +487,7 @@ class Game {
         this.fullscreen = !this.fullscreen;
         this.screen.update();
         game.pixi && game.pixi.updateMap();
-        localStorage.setItem("fullscreen", this.fullscreen);
+        gameStorage.setItem("fullscreen", this.fullscreen);
     }
 
     exit(message) {
