@@ -143,14 +143,7 @@ Container.prototype = {
 
         const buttons = this.makeButtons();
         if (buttons) {
-            const actions = dom.wrap("container-actions", buttons);
-            const menu = dom.wrap("container-menu", [
-                dom.wrap("container-menu-icon", "⚙"),
-                actions,
-            ]);
-            menu.onclick = () => { dom.toggle(actions); };
-            dom.hide(actions);
-            dom.insert(menu, this.panel.titleBar);
+            dom.insert(buttons, this.panel.titleBar);
         }
 
         this.panel.entity = this.entity;
@@ -174,47 +167,48 @@ Container.prototype = {
         if (this.slots.length < 3) {
             return null;
         }
-        var id = this.id;
 
-        var moveAll = dom.img("assets/icons/panel/move-all.png", "container-action");
-        moveAll.title = T("Move all");
+        const moveAll = dom.wrap("container-action", "⇥", {
+            title: T("Move all"),
+            onclick: () => {
+                var top = this.getTopExcept(this.id);
+                if (top) {
+                    game.network.send("move-all", {From: this.id, To: top.id});
+                    top.panel.toTop();
+                }
+            },
+        });
 
-        moveAll.onclick = function() {
-            var top = this.getTopExcept(id);
-            if (top) {
-                game.network.send("move-all", {From: id, To: top.id});
-                top.panel.toTop();
+        const sort = dom.wrap("container-action", "⇅", {
+            title: T("Sort"),
+            onclick: () => this.sort(),
+        });
+
+        const openAll = dom.wrap("container-action", "↥", {
+            title: T("Open all"),
+            onclick: () => {
+                const containers = this.slots.filter(function(slot) {
+                    return (slot.entity && slot.entity.isContainer());
+                }).map(function(slot) {
+                    return slot.entity;
+                });
+                const opened = containers.reduce(function(opened, entity) {
+                    const cnt = Container.get(entity);
+                    return (cnt && cnt.visible) ? opened + 1 : opened;
+                }, 0);
+
+                const open = opened < containers.length;
+                containers.forEach(function(entity) {
+                    const cnt = Container.open(entity);
+                    if (open)
+                        cnt.panel.show();
+                    else
+                        cnt.panel.hide();
+                });
             }
-        }.bind(this);
+        });
 
-        var sort = dom.img("assets/icons/panel/sort.png", "container-action");
-        sort.title = T("Sort");
-        sort.onclick = () => this.sort();
-
-        var openAll = dom.img("assets/icons/panel/open-all.png", "container-action");
-        openAll.title = T("Open all");
-        var slots = this.slots;
-        openAll.onclick = function() {
-            var containers = this.slots.filter(function(slot) {
-                return (slot.entity && slot.entity.isContainer());
-            }).map(function(slot) {
-                return slot.entity;
-            });
-            var opened = containers.reduce(function(opened, entity) {
-                var cnt = Container.get(entity);
-                return (cnt && cnt.visible) ? opened + 1 : opened;
-            }, 0);
-
-            var open = opened < containers.length;
-            containers.forEach(function(entity) {
-                var cnt = Container.open(entity);
-                if (open)
-                    cnt.panel.show();
-                else
-                    cnt.panel.hide();
-            });
-        }.bind(this);
-        return [moveAll, sort, openAll];
+        return dom.wrap("container-actions", [moveAll, sort, openAll])
     },
     markAllAsSeen: function() {
         this.slots.forEach(function(slot) {

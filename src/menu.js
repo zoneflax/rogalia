@@ -65,46 +65,42 @@ Menu.prototype = {
     mouseover: function(e) {
         var menuItem = e.target;
         var item = menuItem.item;
-        if (!item)
-            return;
-        game.controller.world.menuHovered = item;
+        if (item) {
+            game.controller.world.menuHovered = item;
+        }
     },
     hide: function() {
-        if(!this.visible)
-            return;
-        this.container.hide();
-        this.visible = false;
-        game.controller.world.menuHovered = null;
+        if (this.visible) {
+            this.container.hide();
+            this.visible = false;
+            game.controller.world.menuHovered = null;
+        }
     },
     createMenuItem: function(title, action, object, index) {
-        if (title == "Destroy")
+        if (title == "Destroy" || title == "suicide")
             index = 0;
 
-        var item_a = document.createElement("a");
-        item_a.textContent = index + ". " + TS(util.stringToSymbol(title));
-        item_a.className = "action";
+        const item = dom.make("a", index + ". " + TS(util.stringToSymbol(title)), "action")
         if (action instanceof Function) {
             var callback = action.bind(object);
         } else {
-            item_a.item = action.item;
-            item_a.addEventListener("mousemove", this.mouseover);
+            item.item = action.item;
+            item.onmousemove = this.mouseover;
             callback = action.callback.bind(action.item);
         }
 
-        item_a.onclick = function() {
+        item.onclick = () => {
             this.hide();
             callback();
-        }.bind(this);
-        item_a.id = "menu-item-" + index;
+        };
+        item.id = "menu-item-" + index;
 
-        var item = document.createElement("li");
-        item.appendChild(item_a);
-        return item;
+        return dom.make("li", item);
     },
     createMenu: function(actions, object) {
         var menu = document.createElement("ul");
         var sorted = Object.keys(actions).sort(function(a, b) {
-            if (a == "Destroy")
+            if (a == "Destroy" || a == "suicide")
                 return +1;
             else
                 return TS(a) > TS(b);

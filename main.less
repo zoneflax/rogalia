@@ -70,15 +70,6 @@ a:hover {
     height: 100%;
 }
 
-canvas {
-    image-rendering: optimizeSpeed;             /* Older versions of FF          */
-    image-rendering: -moz-crisp-edges;          /* FF 6.0+                       */
-    image-rendering: -webkit-optimize-contrast; /* Safari                        */
-    image-rendering: -o-crisp-edges;            /* OS X & Windows Opera (12.02+) */
-    image-rendering: pixelated;                 /* Awesome future-browsers       */
-    -ms-interpolation-mode: nearest-neighbor;   /* IE                            */
-}
-
 iframe {
     border: 0;
 }
@@ -562,53 +553,31 @@ hr {
             padding: 0 2px;
         }
 
-        .close {
+        .container-actions {
+            display: flex;
+        }
+
+        .close, .container-action {
 	    .cursor-pointer;
             width: 13px;
             text-align: center;
+        }
+
+        .close {
             border-left: 1px solid @border-color;
         }
 
-        .close:hover {
+        .container-action {
+            border-right: 1px solid @border-color;
+        }
+
+        .close:hover, .container-action:hover {
 	    filter: brightness(120%);
-        }
-
-        .container-menu {
-            position: relative;
-
-            .container-menu-icon {
-                width: 13px;
-                border-right: 1px solid @border-color;
-                text-align: center;
-                &:hover {
-                    filter: brightness(120%);
-                }
-            }
-        }
-
-        .container-actions {
-            position: absolute;
-            top: 0;
-            left: 13px;
-            white-space: nowrap;
-            z-index: 1;
-            background-color: @bg-color;
-
-            .container-action {
-                width: 13px;
-                height: 13px;
-                padding: 2px;
-                border: 1px solid @border-color;
-
-                &:hover {
-                    filter: brightness(120%);
-                }
-            }
         }
     }
 
     .main-stage &.top {
-        .title-bar, .title-text, .close, .container-menu-icon {
+        .title-bar, .title-text, .close, .container-action {
             border-color: #e2a25d;
             background-color: #c78238;
             color: @dark-color;
@@ -1116,10 +1085,6 @@ hr {
         background: linear-gradient(to bottom, lighten(#8e602c, 10%) 5%, lighten(#654323, 10%) 100%);
         z-index: 1000!important;
     }
-
-    &.has-new-messages {
-        color: lightgreen;
-    }
 }
 
 .tabs {
@@ -1169,6 +1134,10 @@ hr {
 
         &.active {
             background-color: #565f68;
+        }
+
+        &.has-new-messages {
+            color: lightgreen;
         }
     }
 
@@ -1721,7 +1690,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
         }
 
         .avatar-pk {
-            color: red;
+            color: #e22626;
         }
     }
 }
@@ -3519,6 +3488,8 @@ input[type=number], .lot-quantity > input, .price > input {
 
 
 #profile {
+    width: 180px;
+
     label {
         display: block;
     }

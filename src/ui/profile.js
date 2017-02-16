@@ -34,6 +34,9 @@ class Profile {
         this.createButton.disabled = true;
 
         this.panel = new Panel("profile", "Profile", [
+            dom.make("p", T("Create account to play from a browser (latest Chrome and Opera only)")),
+            dom.link("http://play.rogalia.ru", T("Open browser client")),
+            dom.hr(),
             this.email.label,
             this.password.label,
             this.repeatPassword.label,
