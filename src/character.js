@@ -920,7 +920,8 @@ Character.prototype = {
         if (!drawHp && !drawName)
             return;
 
-        var x = p.x - game.ctx.measureText(name).width / 2;
+        const nameWidth = game.ctx.measureText(name).width;
+        var x = p.x - nameWidth / 2;
 
         if (drawHp) {
             var w = 64;
@@ -969,8 +970,14 @@ Character.prototype = {
             game.ctx.fillStyle = nameColor;
             game.drawStrokedText(name, x, y - dy / 2);
             var flag = this.flag();
-            if (flag)
+            if (flag) {
                 flag.draw({x: x - 20, y: y - dy/2  - 14});
+            }
+
+            if (this.Style && this.Style.Chevron) {
+                const chevron = loader.loadImage(`icons/chevrons/${this.Style.Chevron}.png`);
+                chevron.width && game.ctx.drawImage(chevron, x + nameWidth + 5, y - dy/2  - 14, 16, 16);
+            }
         }
     },
     flag: function() {

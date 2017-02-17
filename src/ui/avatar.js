@@ -18,6 +18,7 @@ class Avatar {
             dom.wrap("avatar-info", [
                 dom.wrap("avatar-name", fullName, {title: fullName}),
                 dom.wrap("avatar-bars", this.bars.map(bar => bar.element)),
+                this.makeChevron(),
             ]),
         ]);
 
@@ -28,6 +29,12 @@ class Avatar {
     }
 
     setIcon(name) {
+    }
+
+    makeChevron() {
+        return (this.character.Style && this.character.Style.Chevron)
+            ? dom.img(`assets/icons/chevrons/${this.character.Style.Chevron}.png`, "avatar-chevron")
+            : null;
     }
 
     update() {

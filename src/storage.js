@@ -10,11 +10,14 @@ class GameStorage {
     }
 
     getItem(key) {
-        const value = localStorage.getItem(this.prefix + key);
+        let value = localStorage.getItem(this.prefix + key);
+        // check global storage (inherit + migration)
+        if (value === null && this.prefix != "") {
+            value = localStorage.getItem(key);
+        }
         try {
             return JSON.parse(value);
         } catch(ex) {
-            console.log("GameStorage:", ex);
             this.setItem(key, value);
             return value;
         }

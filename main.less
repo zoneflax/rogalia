@@ -23,6 +23,7 @@
 @button-color: #ffca8c;
 @dark-color: #292b2f;
 @bg-color: #3f4244;
+@top-panel-border-color: #bb8247;
 
 @outline-color: #212d2f;
 @bg-transparent-color: rgba(38, 41, 44, 0.8);
@@ -59,6 +60,7 @@ html, body {
     color: @text-color;
     overflow: hidden;
     background: url("assets/bg/bg.png") repeat;
+    -webkit-font-smoothing: antialiased;
 }
 
 canvas {
@@ -281,7 +283,7 @@ hr {
     border: 0;
     height: 1px;
     background: @outline-color;
-    margin: 3px -4px;
+    margin: 3px -3px;
     clear: both;
 }
 
@@ -292,7 +294,7 @@ hr {
 }
 
 .contents > .vr {
-    margin: -3px 4px -4px;
+    margin: -3px 3px;
 }
 
 #account {
@@ -339,6 +341,7 @@ hr {
     text-align: left;
     position: absolute;
     z-index: 9000!important;
+    border-color: @top-panel-border-color;
 }
 #menu ul {
     margin: 0;
@@ -581,7 +584,7 @@ hr {
     }
 
     .main-stage &.top {
-        border-color: #bb8247;
+        border-color: @top-panel-border-color;
 
         .title-bar, .title-text, .close, .container-action {
             border-color: #e6a664;
@@ -951,6 +954,8 @@ hr {
 }
 .group-toggle {
     padding-left: 20px;
+    display: flex;
+    justify-content: space-between;
 }
 .recipe-list li li {
     list-style-type: none;
@@ -2140,6 +2145,12 @@ big {
                 z-index: 1;
                 width: 160px;
                 padding: 3px;
+            }
+
+            .avatar-chevron {
+                position: absolute;
+                right: 1px;
+                top: 1px;
             }
 
             .avatar-image {
@@ -3444,7 +3455,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
 
 #customization {
-    max-width: 276px;
+    max-width: 262px;
 
     .customizations {
         display: flex;
@@ -3458,6 +3469,9 @@ input[type=number], .lot-quantity > input, .price > input {
         height: 45px;
         margin: 3px 8px;
         position: relative;
+        display: flex;
+        align-items: baseline;
+        justify-content: center;
 
         &:hover {
             filter: brightness(130%);

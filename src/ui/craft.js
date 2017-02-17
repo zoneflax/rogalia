@@ -234,27 +234,27 @@ Craft.prototype = {
     },
     createList: function() {
 
-        var groups = {};
+        const groups = {};
         _.flatMap(Skills.byAttr).forEach(function(group) {
             groups[group] = {};
         });
 
         Entity.getSortedRecipeTuples().forEach(function(tuple) {
-            var type = tuple[0];
-            var recipe = tuple[1];
+            const type = tuple[0];
+            const recipe = tuple[1];
             groups[recipe.Skill][type] = recipe;
         });
 
-        var onclick = this.onclick.bind(this);
-        var list = dom.tag("ul", "recipe-list");
-        for (var group in groups) {
-            var recipes = groups[group];
-            var subtree = dom.tag("ul", (this.visibleGroups[group]) ? "" : "hidden");
+        const onclick = this.onclick.bind(this);
+        const list = dom.tag("ul", "recipe-list");
+        for (const group in groups) {
+            const recipes = groups[group];
+            const subtree = dom.tag("ul", (this.visibleGroups[group]) ? "" : "hidden");
             subtree.group = group;
 
-            for (var type in recipes) {
-                var recipe = recipes[type];
-                var item = dom.tag("li", "recipe");
+            for (const type in recipes) {
+                const recipe = recipes[type];
+                const item = dom.tag("li", "recipe");
                 item.classList.add(["portable", "liftable", "static"][Entity.templates[type].MoveType]);
                 item.recipe = recipe;
                 item.title = TS(type);
@@ -277,16 +277,22 @@ Craft.prototype = {
             if (subtree.children.length == 0)
                 continue;
 
-            var subtreeLi = dom.tag("li");
-            var groupToggle = dom.span(T(group), "group-toggle");
-            var visibleGroups = this.visibleGroups;
+            const subtreeLi = dom.tag("li");
+            const arrow = dom.wrap("group-arrow", "+");
+            const groupToggle = dom.wrap("group-toggle", [
+                T(group),
+                arrow,
+            ]);
+            const visibleGroups = this.visibleGroups;
             groupToggle.subtree = subtree;
-            groupToggle.onclick = function() {
-                dom.toggle(this);
-                visibleGroups[this.group] = !this.classList.contains("hidden");
-            }.bind(subtree);
+            groupToggle.onclick = () => {
+                dom.toggle(subtree);
+                const hidden = subtree.classList.contains("hidden");
+                arrow.textContent = (hidden) ? "+" : "‒";
+                visibleGroups[subtree.group] = !hidden;
+            };
 
-            var icon = new Image();
+            const icon = new Image();
             icon.src = "assets/icons/skills/" + group.toLowerCase() + ".png";
 
             dom.append(subtreeLi, [icon, groupToggle, subtree]);

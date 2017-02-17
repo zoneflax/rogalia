@@ -6,6 +6,7 @@ function Customization() {
     const customizations = game.player.Customization;
     this.panel = new Panel("customization", "Customization", [
         dom.button(T("Shop"), "", () => game.controller.shop.panel.show()),
+        dom.button(T("Promo"), "", enterPromo),
         dom.hr(),
         (customizations)
             ? dom.wrap("customizations", customizations.map(makeCustomization))
@@ -23,6 +24,9 @@ function Customization() {
             break;
         case "chopper":
             info = makeColorInfo(customization.Type.split("-")[0]);
+            break;
+        case "chevron":
+            name = customization.Data;
             break;
         }
         return dom.wrap(
@@ -48,5 +52,11 @@ function Customization() {
         preview.style.backgroundColor = color;
         preview.style.opacity = opacity;
         return dom.wrap("info color", preview);
+    }
+
+    function enterPromo() {
+        game.popup.prompt(T("Enter promocode"), "", function(promo) {
+            promo && game.network.send("enter-promo", {promo});
+        });
     }
 }
