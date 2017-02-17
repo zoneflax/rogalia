@@ -183,7 +183,7 @@ ContainerSlot.prototype = {
         }
 
         if (mods.alt) {
-            const top = this.container.getTopExcept(entity.Container);
+            const top = this.container.getTopExcept(entity.Container, true);
             if (top && top.entity.canUse(entity)) {
                 top.entity.use(entity);
                 return;

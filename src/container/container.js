@@ -318,11 +318,16 @@ Container.prototype = {
     hasSpace: function() {
         return this._slots.find(function(id) { return id == 0; }) !== undefined;
     },
-    getTopExcept: function(except) {
+    getTopExcept: function(except, allowFull = false) {
         for (var i = Panel.stack.length-1; i >= 0; i--) {
             var panel = Panel.stack[i];
-            if (panel.visible && panel.container && panel.container.id != except && panel.container.hasSpace())
+            if (panel.visible &&
+                panel.container &&
+                panel.container.id != except &&
+                (allowFull || panel.container.hasSpace())
+               ) {
                 return panel.container;
+            }
         };
         return null;
     },
