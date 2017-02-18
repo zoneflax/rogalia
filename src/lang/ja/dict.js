@@ -1740,4 +1740,5 @@ T.dict = {
     "Herb rack": "ハーブ・ラック",
     "Wooden label": "木製のラベル",
     "Check your stake claim!": "領地の権利金を確認しましょう!",
+    "EULA": "利用規約",
 };
