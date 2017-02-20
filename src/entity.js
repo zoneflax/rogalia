@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point, Container, Stats, Character, BBox, TS */
+/* global dom, T, util, game, Panel, config, Point, Container, Stats, Character, BBox, TS, Permission */
 
 "use strict";
 function Entity(type, id) {
@@ -214,6 +214,7 @@ Entity.prototype = {
             elements.push(dom.hr());
         }
         elements.push(this.makeDescription());
+        elements.push(Permission.make(this.Id, this.Perm));
 
         new Panel("item-info", TS(this.Name), elements).setEntity(this).show();
     },

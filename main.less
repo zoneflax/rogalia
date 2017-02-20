@@ -60,7 +60,7 @@ html, body {
     color: @text-color;
     overflow: hidden;
     background: url("assets/bg/bg.png") repeat;
-    -webkit-font-smoothing: antialiased;
+    // -webkit-font-smoothing: antialiased;
 }
 
 canvas {
@@ -1312,25 +1312,47 @@ hl {
     color: #ссс;
 }
 
-#users .tab-content {
-    max-height: 300px;
-    overflow: auto;
+#users {
+    .tab-content {
+        max-height: 300px;
+        overflow: auto;
+    }
+
+    li {
+        .cursor-pointer;
+        list-style-type: square;
+
+        &:hover {
+            color: lightgreen;
+        }
+    }
+
+    a {
+        .cursor-pointer;
+        margin-left: 0.5em;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
 }
 
-#users li {
-    .cursor-pointer;
-    list-style-type: square;
+.perms {
+    display: flex;
+
+    .perm {
+        transition: filter ease 100ms;
+        filter: contrast(20%);
+        margin: 0 2px;
+        width: 20px;
+        height: 20px;
+
+        &.enabled {
+            filter: contrast(120%);
+        }
+    }
 }
-#users li:hover {
-    color: lightgreen;
-}
-#users a {
-    .cursor-pointer;
-    margin-left: 0.5em;
-}
-#users a:hover {
-    text-decoration: underline;
-}
+
 
 #map {
     max-width: none;

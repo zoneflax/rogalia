@@ -35,7 +35,7 @@ class Profile {
 
         this.panel = new Panel("profile", "Profile", [
             dom.make("p", T("Create account to play from a browser (latest Chrome and Opera only)")),
-            dom.link("http://play.rogalia.ru", T("Open browser client")),
+            dom.link("http://play.rogalia.ru?lang=" + game.lang, T("Open browser client")),
             dom.hr(),
             this.email.label,
             this.password.label,

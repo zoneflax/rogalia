@@ -1,4 +1,4 @@
-/* global Panel, T, dom, game */
+/* global Panel, T, dom, game, Permission */
 
 "use strict";
 function Users() {
@@ -10,16 +10,36 @@ function Users() {
             (list)
                 ? [
                     dom.make("p", T("Total") + ": " + list.length),
-                    dom.make("ul", list.sort().map(function(name) {
-                        var li = dom.tag("li", "", {text: name});
-                        li.onmousedown = function(e) {
-                            return game.chat.nameMenu(e, name);
-                        };
-                        return li;
-                    })),
-                ]
-            : T(empty)
+                    isFriendList(list) ? makeFriendList(list) : makeSimpleList(list)
+                ] : T(empty)
         );
+    }
+
+    function isFriendList(list) {
+        return _.isObject(list[0]);
+    }
+
+    function makeSimpleList(list) {
+        return dom.make("ul", list.sort().map(function(name) {
+            const li = dom.tag("li", "", {text: name});
+            li.onmousedown = function(e) {
+                return game.chat.nameMenu(e, name);
+            };
+            return li;
+        }));
+    }
+
+    function makeFriendList(list) {
+        list.sort(function(a, b) {
+            return a.Name.localeCompare(b.Name);
+        });
+        return dom.make("ul", list.map(function({Id, Name, Perm}) {
+            const name = dom.span(Name);
+            name.onmousedown = function(e) {
+                return game.chat.nameMenu(e, Name);
+            };
+            return dom.make("li", [name, Permission.make(Id, Perm)]);
+        }));
     }
 
     function render(content, data, selector, empty) {

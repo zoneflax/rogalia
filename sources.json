@@ -34,6 +34,7 @@
     "./src/ui/chat/ring.js",
     "./src/ui/craft.js",
     "./src/ui/minimap.js",
+    "./src/ui/permission.js",
     "./src/ui/users.js",
     "./src/ui/stats.js",
     "./src/ui/statistics.js",

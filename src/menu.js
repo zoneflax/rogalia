@@ -80,7 +80,7 @@ Menu.prototype = {
         if (title == "Destroy" || title == "suicide")
             index = 0;
 
-        const item = dom.make("a", index + ". " + TS(util.stringToSymbol(title)), "action")
+        const item = dom.make("a", index + ". " + TS(util.stringToSymbol(title)), "action");
         if (action instanceof Function) {
             var callback = action.bind(object);
         } else {
