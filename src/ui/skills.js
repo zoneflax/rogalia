@@ -1,4 +1,4 @@
-/* global game, Character, Panel, dom, T */
+/* global game, Character, Panel, dom, T, ParamBar */
 
 "use strict";
 function Skills() {
@@ -49,7 +49,7 @@ Skills.prototype = {
         for (var attr in Skills.byAttr) {
             Skills.byAttr[attr].forEach(function(name) {
                 var skill = game.player.Skills[name];
-                var item = Stats.prototype.createParam(
+                var item = ParamBar.makeParam(
                     name,
                     skill.Value,
                     2,
@@ -99,7 +99,7 @@ Skills.prototype = {
     showDescription: function(item) {
         var skill = item.skill;
         var name = item.name;
-        var text = T("Value") + ": " + Stats.formatParam(skill.Value) + "\n";
+        var text = T("Value") + ": " + ParamBar.formatParam(skill.Value) + "\n";
 
         if (this.descriptions[name])
             text += this.descriptions[name] + "\n\n";

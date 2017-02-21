@@ -1,4 +1,7 @@
+/* global Container */
+
 "use strict";
+
 function ContainerEquip() {
     Container.call(this, {Id: 0});
     this.hash = "";

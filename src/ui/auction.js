@@ -1,4 +1,4 @@
-/* global T, game, dom, Panel */
+/* global T, game, dom, Panel, ParamBar, Vendor */
 
 "use strict";
 
@@ -111,7 +111,7 @@ Auction.prototype = {
                     return [
                         lot.Vendor.substring(1),
                         lot.Quality,
-                        Stats.formatParam(lot.Durability),
+                        ParamBar.formatParam(lot.Durability),
                         Vendor.createPrice(lot.Cost),
                         dom.button(T("Buy"), "lot-buy", function(e) {
                             game.popup.confirm(T("Buy") + " " + TS(type) + "?", function() {

@@ -3,34 +3,41 @@
 "use strict";
 
 function Customization() {
-    const customizations = game.player.Customization;
+    const customizations = dom.div("customizations");
+    update();
     this.panel = new Panel("customization", "Customization", [
         dom.button(T("Shop"), "", () => game.controller.shop.panel.show()),
         dom.button(T("Promo"), "", enterPromo),
         dom.hr(),
-        (customizations)
-            ? dom.wrap("customizations", customizations.map(makeCustomization))
-            : T("No customizations")
+        customizations,
     ]).show();
+
+    function update() {
+        const list = game.player.Customization;
+        dom.setContents(customizations, (list) ? list.map(makeCustomization) : T("No customizations"));
+    }
 
     function makeCustomization(customization) {
         let name = customization.Group;
         let info = null;
+        let enabled = false;
         switch (customization.Group) {
         case "hairstyle":
             const [type, color, opacity] = customization.Data.split("#");
             name = game.player.sex() + "-" + type;
             info = makeColorInfo("#" + color, opacity);
+            enabled = (customization.Data == game.player.Style.Hair);
             break;
         case "chopper":
             info = makeColorInfo(customization.Type.split("-")[0]);
             break;
         case "chevron":
             name = customization.Data;
+            enabled = (customization.Data == game.player.Style.Chevron);
             break;
         }
         return dom.wrap(
-            "customization",
+            "customization" + (enabled ? " enabled" : ""),
             [
                 dom.img("assets/icons/customization/" + name + ".png"),
                 info,
@@ -40,7 +47,8 @@ function Customization() {
                 onclick: function() {
                     game.network.send(
                         "apply-customization",
-                        {Type: customization.Type, Data: customization.Data}
+                        {Type: customization.Type, Data: customization.Data},
+                        update
                     );
                 }
             }

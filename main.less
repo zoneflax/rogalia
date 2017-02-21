@@ -269,6 +269,8 @@ pre {
 button > img {
     vertical-align: text-bottom;
     margin: 0 3px;
+    height: 14px;
+    width: 14px;
 }
 
 a {
@@ -721,11 +723,15 @@ hr {
 }
 
 #fps-stats {
-    margin: 10px;
-    text-align: center;
+    margin: 10px 0 5px;
 }
-#fps-stats > #stats {
+
+#fps-stats-graph {
     margin: auto;
+}
+
+#ping-stats {
+    padding-left: 18px;
 }
 
 .button {
@@ -996,17 +1002,16 @@ hr {
         width: 270px;
         overflow: auto;
     }
-    .slot {
-        float: left;
+    img {
+        position: absolute;
+        left: -10px;
+        bottom: 6px;
     }
 }
+
 #terra-bar img, #map img {
     max-height: none;
     max-width: none;
-}
-#terra-bar img {
-    position: relative;
-    top: 22px;
 }
 #blank-panel .slot {
     margin: 10px auto;
@@ -1341,15 +1346,68 @@ hl {
     display: flex;
 
     .perm {
-        transition: filter ease 100ms;
-        filter: contrast(20%);
         margin: 0 2px;
         width: 20px;
         height: 20px;
+        position: relative;
+        box-sizing: border-box;
 
-        &.enabled {
-            filter: contrast(120%);
+        .perm-color {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            filter: contrast(25%);
+
         }
+
+        .perm-color-0 {
+            background-color: #fff;
+        }
+
+        .perm-color-1 {
+            background-color: #000;
+        }
+
+        .perm-color-2 {
+            background-color: #ded704;
+        }
+
+        .perm-color-3 {
+            background-color: #f3780f;
+        }
+
+        .perm-color-4 {
+            background-color: #c13111;
+        }
+
+        .perm-color-5 {
+            background-color: #2681d0;
+        }
+
+        .perm-color-6 {
+            background-color: #15b119;
+        }
+
+        .perm-color-7 {
+            background-color: #a739a9;
+        }
+
+        &.enabled .perm-color {
+            filter: contrast(100%);
+            border: 1px solid #25292f;
+            box-sizing: border-box;
+        }
+
+        > img {
+            position: relative;
+            z-index: 1;
+            margin: 1px;
+            width: 18px;
+            height: 18px;
+        }
+
     }
 }
 
@@ -1518,128 +1576,98 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     width: 220px;
 }
 
-.stats-panel {
-    width: 300px;
-}
-
-.stats-panel .summary {
-    background: url("assets/bg/strip/center.png") repeat-x;
-    height: 32px;
-    line-height: 32px;
-    display: table;
-    margin: auto;
-    position: relative;
-    text-align: center;
-    color: #161719;
-}
-
-.stats-panel .level {
-    border-radius: 3px;
-    padding: 1px;
-    border: 1px solid #683c20;
-    background: #824d12;
-    color: @text-color;
-    margin-right: 3px;
-}
-
-.stats-panel .summary:before,
-.stats-panel .summary:after {
-    position: absolute;
-    top: -5px;
-}
-.stats-panel .summary:before {
-    content: url("assets/bg/strip/left.png");
-    left: -60px;
-}
-.stats-panel .summary:after {
-    content: url("assets/bg/strip/right.png");
-    right: -60px;
-}
-
-.stats-panel .faction {
-    margin-top: -7px;
-    margin-bottom: -7px;
-    color: @text-color;
-}
-
-.stats-panel .main {
-    position: relative;
-    display: flex;
-    justify-content: space-around;
-}
-.stats-panel .attributes, .stats-panel .health {
-    width: 50%;
-}
-
-.doll {
-    position: absolute;
-    width: 71px;
-    height: 191px;
-    text-align: center;
-    margin: auto!important;
-    left: 0;
-    right: 0;
-}
-
-.doll.male {
-    background-image: url("assets/bg/doll/male/naked.png");
-}
-.doll.female {
-    background-image: url("assets/bg/doll/female/naked.png");
-}
-
 .equip {
-    position: relative;
-    height: 200px;
+    display: flex;
+    flex-wrap: wrap;
 
+    .equip-cell {
+        width: 48px;
+        height: 45px;
+        margin: 3px;
+    }
 
     .slot {
-        position: absolute;
-        margin: auto;
+        background: #4a5258;
 
-        &.has-item {
-            background-image: none;
+        .placeholder {
+            pointer-events: none;
+            display: block;
+        }
+
+        &.has-item .placeholder {
+            display: none;
+        }
+    }
+
+}
+
+#stats {
+    width: 314px;
+
+    .equip-and-lvl {
+        background: #78838c;
+        width: 162px;
+        border: 1px solid #1d2123;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .equip-and-params {
+        display: flex;
+
+        .stats-params {
+            flex-grow: 1;
+            padding: 0 3px;
+
+            .param-bar {
+                border: none;
+                background: none;
+                text-shadow: none;
+                padding: 0;
+
+                .param-name {
+                    text-transform: capitalize;
+                }
+
+                .param-bar-value {
+                    background: none;
+                }
+            }
+
+            .param-bar, .param {
+                font-size: 13px;
+                height: 16px;
+                line-height: 16px;
+                color: #c7cace;
+                margin: 0;
+            }
+
+            hr {
+                margin: 5px 0;
+            }
+        }
+    }
+
+    .parameters {
+        display: flex;
+
+        .param-bar {
+            height: 16px;
+        }
+
+        .arrow {
+            display: inline;
+            margin: 0 5px;
+        }
+
+        .vitamins, .attributes {
+            width: 50%;
         }
     }
 }
 
-/* left column */
-.equip-bag {
-    background-image: url("assets/bg/bag.png");
-}
-.equip-neck {
-    top: 50px;
-    background-image: url("assets/bg/neck.png");
-}
-.equip-right-hand {
-    top: 100px;
-    background-image: url("assets/bg/right-hand.png");
-}
 
-.equip-left-hand {
-    top: 150px;
-    background-image: url("assets/bg/left-hand.png");
-}
-/* right column */
-.equip-head {
-    right: 0;
-    background-image: url("assets/bg/head.png");
-}
-.equip-body {
-    top: 50px;
-    right: 0;
-    background-image: url("assets/bg/body.png");
-}
-.equip-legs {
-    top: 100px;
-    right: 0;
-    background-image: url("assets/bg/legs.png");
-}
-.equip-feet {
-    top: 150px;
-    right: 0;
-    background-image: url("assets/bg/feet.png");
-}
 .ballon {
     position: absolute;
     background: @bg-color;
@@ -2259,6 +2287,30 @@ big {
 
     &.stamina {
         background-color: #1173b1;
+    }
+
+    &.strength {
+        background-color: #df6a61;
+    }
+
+    &.vitality {
+        background-color: #dbb73b;
+    }
+
+    &.dexterity {
+        background-color: #64cf4b;
+    }
+
+    &.intellect {
+        background-color: #4bbecf;
+    }
+
+    &.perception {
+        background-color: #d565af;
+    }
+
+    &.wisdom {
+        background-color: #7b65cb;
     }
 
     &.xp {
@@ -3477,7 +3529,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
 
 #customization {
-    max-width: 262px;
+    max-width: 222px;
 
     .customizations {
         display: flex;
@@ -3489,14 +3541,18 @@ input[type=number], .lot-quantity > input, .price > input {
         .cursor-pointer;
         width: 48px;
         height: 45px;
-        margin: 3px 8px;
+        margin: 3px;
         position: relative;
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: center;
 
         &:hover {
             filter: brightness(130%);
+        }
+
+        &.enabled {
+            border-color: @top-panel-border-color;
         }
 
         .info {

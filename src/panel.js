@@ -13,6 +13,7 @@ function Panel(name, title, elements, hooks) {
     this.name = name;
     this.visible = false;
     this.temporary = false; //do not save on quit
+    this.canSnap = true;
 
     this.lsKey = "panels." + this.name;
     var config = playerStorage.getItem(this.lsKey) || {};

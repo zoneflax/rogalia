@@ -5,9 +5,10 @@
 function System() {
     this.fps = new FpsStats();
 
+    this.fps.domElement.id = "fps-stats-graph";
     const fps = dom.wrap("#fps-stats", this.fps.domElement);
 
-    this.ping = dom.span("Ping: -");
+    this.ping = dom.wrap("#ping-stats", "Ping: -");
 
     this.users = new Users();
     this.settings = new Settings();

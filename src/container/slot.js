@@ -1,4 +1,4 @@
-/* global util, dom, game */
+/* global util, dom, game, Container */
 
 "use strict";
 function ContainerSlot(container, index) {
@@ -18,8 +18,7 @@ function ContainerSlot(container, index) {
 
     this.sub = null;
     this.bar = null;
-
-    this.onclear = function() {};
+    this.placeholder = null;
 }
 
 ContainerSlot.prototype = {
@@ -44,13 +43,12 @@ ContainerSlot.prototype = {
         this.entity = null;
         this.sub = null;
         this.bar = null;
-        dom.clear(this.element);
+        dom.setContents(this.element, this.placeholder);
         this.element.classList.remove("has-item");
         this.element.classList.remove("non-effective");
-        this.setTitle("");
+        this.setTitle(this.placeholder && this.placeholder.title || "");
         this.markAsSeen();
         this.unlock();
-        this.onclear();
     },
     set: function(entity) {
         if (this.entity == entity && this.spriteVersion == entity.spriteVersion()) {
@@ -81,6 +79,15 @@ ContainerSlot.prototype = {
         dom.append(this.element, [icon, quality]);
 
         this.update();
+    },
+    setPlaceholder(src, title = "") {
+        if (this.placeholder == null) {
+            this.placeholder = dom.img(src, "placeholder");
+            this.placeholder.title = title;
+            this.setTitle(title);
+            dom.append(this.element, this.placeholder);
+        }
+        this.placeholder.src = src;
     },
     setSub: function(text) {
         if (this.sub == null) {

@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree, Pixi */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree, Pixi, gameStorage */
 
 "use strict";
 

@@ -270,7 +270,6 @@ var dom = {
     //         contents: [elem, ...],
     //         update: function(title, contents){}, // *optional
     //         init: function(title, contents){}, // *optional
-    //         load: function(title, contents){}, // *optional
     //     },
     //         ...
     // ]);

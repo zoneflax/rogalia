@@ -1,4 +1,4 @@
-/* global game, dom, T, TS, Panel */
+/* global game, dom, T, TS, Panel, ParamBar */
 
 "use strict";
 function Craft() {
@@ -104,7 +104,7 @@ Craft.prototype = {
             var has = ingredients[group];
             var required = recipe.Ingredients[group];
             var name = TS(group.replace("meta-", ""));
-            var ingredient = Stats.prototype.createParam(
+            var ingredient = ParamBar.makeParam(
                 _.truncate(name, {length: 14}),
                 {Current: has, Max: required}
             );

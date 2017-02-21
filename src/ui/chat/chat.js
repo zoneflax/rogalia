@@ -1,4 +1,4 @@
-/* global dom, Panel, game, TT, config, util, TS, T, ChatRing, Settings */
+/* global dom, Panel, game, TT, config, util, TS, T, ChatRing, Settings, Character, playerStorage */
 
 "use strict";
 function Chat() {
@@ -363,18 +363,16 @@ function Chat() {
                 new Panel(
                     "terra-bar",
                     "Terraforming",
-                    game.map.bioms.map(function(biom, i) {
-                        return dom.wrap(
-                            "slot",
-                            game.map.tiles[i],
-                            {
-                                title: biom.Name,
-                                onclick: function() {
-                                    game.controller.terraCursor(game.map.tiles[i]);
-                                }
+                    dom.wrap("slots-wrapper", game.map.bioms.map((biom, i) => dom.wrap(
+                        "slot",
+                        game.map.tiles[i],
+                        {
+                            title: biom.Name,
+                            onclick: function() {
+                                game.controller.terraCursor(game.map.tiles[i]);
                             }
-                        );
-                    })
+                        }
+                    )))
                 ).show();
                 break;
             case "to" :
@@ -433,6 +431,7 @@ function Chat() {
         dom.move(this.panel.element, game.world);
         this.panel.element.classList.add("attached-chat");
         this.panel.element.classList.remove("detached-chat");
+        this.panel.canSnap = false;
         this.panel.hideTitle();
         dom.hide(this.panel.button);
         semihide();
@@ -443,6 +442,7 @@ function Chat() {
         dom.move(this.panel.element, document.body);
         this.panel.element.classList.remove("attached-chat");
         this.panel.element.classList.add("detached-chat");
+        this.panel.canSnap = true;
         this.panel.showTitle();
         dom.show(this.panel.button);
     };

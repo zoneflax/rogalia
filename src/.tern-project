@@ -4,7 +4,7 @@
         "lodash"
     ],
     "loadEagerly": [
-        "*.js"
+    "**/*.js"
     ],
     "dontLoad": [
         "lang/*"

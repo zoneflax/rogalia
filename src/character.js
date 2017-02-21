@@ -199,6 +199,11 @@ Character.prototype = {
 
         if (this.isPlayer) {
             game.controller.updateMail(this.NewMail);
+
+            if (data.Exp) {
+                game.controller.xpBar.update(game.player.Exp);
+            }
+
             if (data.Fullness) {
                 game.controller.updateItemInfo();
             }
