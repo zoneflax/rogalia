@@ -123,7 +123,7 @@ function Bank(npc) {
             } else {
                 slot.classList.add("plus");
                 slot.onclick = function() {
-                    var cost = Math.pow(100, i);
+                    var cost = Math.pow(100, i) * 100;
                     game.popup.confirm(TT("Buy slot for {cost}?", {cost: Vendor.priceString(cost)}), function() {
                         game.network.send("buy-bank-vault-slot", {id: npc.Id}, callback);
                     });

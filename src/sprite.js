@@ -116,7 +116,7 @@ Sprite.prototype = {
     drawOutline: function(p) {
         if (!this.outline)
             return;
-        game.ctx.globalAlpha = 0.4;
+        game.ctx.globalAlpha = 0.25;
         var w = this.width;
         var h = this.height;
         game.ctx.drawImage(
