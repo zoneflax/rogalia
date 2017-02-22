@@ -136,6 +136,12 @@ Character.prototype = {
     leftTopX: Entity.prototype.leftTopX,
     leftTopY: Entity.prototype.leftTopY,
     compare: Entity.prototype.compare,
+    get statusPoints() {
+        return {
+            Current: this.Citizenship.StatusPoints,
+            Max: Math.pow(10, this.Citizenship.Rank),
+        };
+    },
     setPoint: function(p) {
         this.setPos(p.x, p.y);
     },

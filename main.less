@@ -1318,6 +1318,8 @@ hl {
 }
 
 #users {
+    width: 314px;
+
     .tab-content {
         max-height: 300px;
         overflow: auto;
@@ -1584,6 +1586,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
         width: 48px;
         height: 45px;
         margin: 3px;
+        text-align: center;
     }
 
     .slot {
@@ -1604,13 +1607,46 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 #stats {
     width: 314px;
 
+    .square, .circle {
+        background: #3f4244;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: auto;
+    }
+
+    .circle {
+        border-radius: 50%;
+    }
+
+    .level, .faction {
+        position: relative;
+        top: -3px;
+    }
+
+    .stats-faction {
+        text-align: center;
+    }
+
     .equip-and-lvl {
         background: #78838c;
         width: 162px;
         border: 1px solid #1d2123;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-end;
+        padding-top: 5px;
+    }
+
+    .stats-name, .stats-lvl {
+        text-align: center;
+        color: #e6a664;
+    }
+
+    .stats-name {
+        font-size: 16px;
     }
 
     .equip-and-params {
@@ -1618,7 +1654,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 
         .stats-params {
             flex-grow: 1;
-            padding: 0 3px;
+            padding-left: 3px;
 
             .param-bar {
                 border: none;
@@ -1649,11 +1685,24 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
         }
     }
 
-    .parameters {
+    .vitamins-and-attrs {
         display: flex;
+        padding-left: 2px;
 
         .param-bar {
-            height: 16px;
+            height: 19px;
+            line-height: 17px;
+            font-size: 13px;
+            text-shadow: 0 0 3px #000;
+        }
+
+        .param {
+            line-height: 18px;
+            margin: 3px 0;
+
+            .value.zero {
+                color: grey;
+            }
         }
 
         .arrow {
@@ -2782,6 +2831,13 @@ input[type=number], .lot-quantity > input, .price > input {
         &:hover > img {
             -webkit-filter: brightness(135%);
             filter: brightness(135%);
+        }
+
+        .action-help {
+            position: absolute;
+            color: @text-color;
+            bottom: 0;
+            font-size: 11px;
         }
     }
 

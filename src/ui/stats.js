@@ -3,34 +3,39 @@
 "use strict";
 class Stats {
     constructor() {
-        // var contents = this.initSections();
-
         this.equipContainer = new ContainerEquip();
-        const player = game.player;
+        this.fields = new Set(["Lvl", "Health", "Attr", "Citizenship"]);
+        this.panel = this.makePanel(game.player);
+    }
 
-        this.panel = new Panel(
+    makePanel(player) {
+        return new Panel(
             "stats",
             "Characteristics",
-            [
-                dom.wrap("stats-name", player.Name),
-                dom.hr(),
-                dom.wrap("equip-and-params", [
-                    dom.wrap("equip-and-lvl", [
-                        dom.wrap("lvl", T("Level") + ": " + player.Lvl),
-                        this.makeEquip(player, this.equipContainer),
-                    ]),
-                    this.makeParams(player),
-                ]),
-                dom.hr(),
-                this.makeParameters(player),
-                dom.hr(),
-                dom.wrap("", [
-                    this.makeCustomization(),
-                    dom.button(T("Statistics"), "",  () => { new Statistics(); }),
-                    dom.button(T("Ratings"), "", () => { new Ratings(); }),
-                ]),
-            ]
+            this.makeContents(player)
         );
+    }
+
+    makeContents(player) {
+        return [
+            dom.wrap("stats-name", player.getFullName()),
+            dom.hr(),
+            dom.wrap("equip-and-params", [
+                dom.wrap("equip-and-lvl", [
+                    this.makeFaction(player),
+                    this.makeEquipAndLvl(player, this.equipContainer),
+                ]),
+                this.makeParams(player),
+            ]),
+            dom.hr(),
+            this.makeVitaminsAndAttrs(player),
+            dom.hr(),
+            dom.wrap("", [
+                this.makeCustomization(),
+                dom.button(T("Statistics"), "",  () => { new Statistics(); }),
+                dom.button(T("Ratings"), "", () => { new Ratings(); }),
+            ]),
+        ];
     }
 
     makeCustomization() {
@@ -42,7 +47,7 @@ class Stats {
         return customization;
     }
 
-    makeEquip(player, equipContainer) {
+    makeEquipAndLvl(player, equipContainer) {
         equipContainer.update();
         const slots = equipContainer.slots.reduce(function(slots, slot, i) {
             var name = Character.equipSlots[i];
@@ -52,9 +57,15 @@ class Stats {
         }, {});
 
         return dom.wrap("equip", [
-            dom.div(),
+            dom.wrap("level", [
+                dom.make("small", T("Level")),
+                dom.wrap("circle", player.Lvl),
+            ]),
             slots["head"],
-            dom.div(),
+            dom.wrap("faction", [
+                dom.make("small", T("Rank")),
+                dom.wrap("square", player.Citizenship.Rank || "?"),
+            ]),
             slots["bag"],
             slots["body"],
             slots["neck"],
@@ -71,6 +82,16 @@ class Stats {
     }
 
     makeParams(player) {
+        const param = (name) => {
+            this.fields.add(name);
+            return new ParamBar(name, player[name]).element;
+        };
+
+        const value = (name, label = name) => {
+            this.fields.add(name);
+            return ParamBar.makeValue(label, player[name]);
+        };
+
         return dom.wrap("stats-params", [
             param("Hp"),
             param("Fullness"),
@@ -79,10 +100,7 @@ class Stats {
             dom.hr(),
             param("Exp"),
             value("LP"),
-            ParamBar.makeValue("Status points", {
-                Current: player.Citizenship.StatusPoints,
-                Max: Math.pow(10, player.Citizenship.Rank),
-            }),
+            value("statusPoints", "Status points"),
             value("Fame"),
             value("Addiction"),
             dom.hr(),
@@ -91,18 +109,10 @@ class Stats {
             value("Defence"),
             value("Accuracy"),
         ]);
-
-        function param(name) {
-            return new ParamBar(name, player[name]).element;
-        }
-
-        function value(name, label = name) {
-            return ParamBar.makeValue(label, player[name]);
-        }
     }
 
-    makeParameters(player) {
-        return dom.wrap("parameters", [
+    makeVitaminsAndAttrs(player) {
+        return dom.wrap("vitamins-and-attrs", [
             this.makeVitamins(player),
             this.makeAttrs(player),
         ]);
@@ -110,10 +120,11 @@ class Stats {
 
     makeVitamins(player) {
         return dom.wrap("vitamins", Character.vitamins.map(function(vitamin) {
+            const value = util.toFixed(player.Health[vitamin], 2);
             return dom.wrap(`param vitamin-${vitamin.toLowerCase()}`, [
                 T(vitamin),
-                dom.wrap("value", [
-                    util.toFixed(player.Health[vitamin], 2),
+                dom.wrap("value" + ((value == 0) ? " zero" : ""), [
+                    value,
                     dom.wrap("arrow",  "→"),
                 ]),
             ]);
@@ -133,42 +144,31 @@ class Stats {
         }));
     }
 
-    sync() {
+    sync(data) {
         if (!this.panel)
             return;
         if (!this.panel.visible) {
             this.panel.hooks.show = () => this.update();
             return;
         }
-        // this.update();
+        for (const field of this.fields) {
+            if (field in data) {
+                this.update();
+                return;
+            }
+        }
     }
 
     update() {
-        this.equipContainer.update();
-        // this.updateSections();
+        this.panel.setContents(this.makeContents(game.player));
     }
 
-    // this in sections is bound to section's element
-    sections() {
-        return [
-            {
-                name: "summary",
-                update: function(self, player) {
-                    var name = dom.span(player.Name);
-                    var lvl = dom.span(player.Lvl, "level", T("Level"));
-                    var factionWrapper = dom.div("faction");
-                    var faction = player.Citizenship.Faction;
-                    if (faction) {
-                        var citizenship = dom.span(T(faction));
-                        citizenship.style.marginTop = "10px";
-                        factionWrapper.appendChild(citizenship);
+    makeFaction(player) {
+        const faction = player.Citizenship.Faction || T("No faction");
+        return dom.wrap("stats-faction", T(faction));
+    }
 
-                        var rank = dom.span(" " + T("rank") + ": " + player.Citizenship.Rank);
-                        factionWrapper.appendChild(rank);
-                    }
-                    return [lvl, name, factionWrapper];
-                },
-            },
-        ];
+    makeLvl(player) {
+        return dom.wrap("stats-lvl", T("Level") + ": " + player.Lvl);
     }
 }

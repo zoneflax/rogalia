@@ -37,7 +37,7 @@ function mainStage(data) {
         game.controller.journal.update();
         game.controller.updateActiveQuest();
         if (data.Players && game.player.Id in data.Players) {
-            game.controller.stats.sync();
+            game.controller.stats.sync(data.Players[game.player.Id]);
         }
     };
 

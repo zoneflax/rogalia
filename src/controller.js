@@ -1,4 +1,4 @@
-/* global Point, dom, config, util, T, TS, Container, Avatar, Effects, loader, ParamBar, Panel, CELL_SIZE, Character */
+/* global Point, dom, config, util, T, TS, Container, Avatar, Effects, loader, ParamBar, Panel, CELL_SIZE, Character, gameStorage, playerStorage */
 
 "use strict";
 
@@ -219,6 +219,7 @@ function Controller(game) {
         icon: null,
         inProgress: false,
         element: document.getElementById("main-action-button"),
+        help: dom.wrap("action-help", T("Space")),
         active: function() {
             return this.handler && this.icon;
         },
@@ -256,9 +257,11 @@ function Controller(game) {
             this.inProgress = false;
         },
         loadIcon: function(action) {
-            dom.clear(this.element);
             this.icon = loader.loadImage("icons/tools/" + action + ".png");
-            this.element.appendChild(this.icon);
+            dom.setContents(this.element, [
+                this.icon,
+                this.help,
+            ]);
         },
     };
 

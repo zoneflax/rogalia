@@ -5,7 +5,7 @@
 class ParamBar {
     constructor(name, param = null, digits = 0) {
         this.name = name;
-        this.param = param;
+        this.param = {Current: "?", Max: "?"};
         this.digits = digits;
         this.current = dom.wrap("param-bar-value");
         this.overflow = dom.wrap("param-bar-overflow");
@@ -23,17 +23,21 @@ class ParamBar {
             }
         });
 
-        if (this.param) {
-            this.update(this.param);
+        if (param) {
+            this.update(param);
         }
     }
 
     update(param) {
+        if (this.param && param.Current == this.param.Current && param.Max == this.param.Max) {
+            return;
+        }
         this.param = param;
         const value = Math.round(param.Current / param.Max * 100);
         this.current.style.width = Math.min(100, 100 - value) + "%";
         this.overflow.style.width = Math.max(0, value - 100) + "%";
-        const status = util.toFixed(param.Current, this.digits) + "/" + util.toFixed(param.Max);
+        const digits = (param.Current == param.Max) ? 0 : this.digits;
+        const status = util.toFixed(param.Current, digits) + "/" + util.toFixed(param.Max);
         this.status.textContent = status;
         this.element.title = TS(this.name) + ": " + status;
     }

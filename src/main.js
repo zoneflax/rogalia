@@ -1,4 +1,4 @@
-/* global T, Game, config, util */
+/* global T, Game, config, util, gameStorage */
 
 "use strict";
 
