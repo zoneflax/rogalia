@@ -42,6 +42,7 @@
     "./src/ui/customization.js",
     "./src/ui/avatar.js",
     "./src/ui/param-bar.js",
+    "./src/ui/progress-bar.js",
     "./src/ui/effects.js",
     "./src/ui/skills.js",
     "./src/ui/profile.js",

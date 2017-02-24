@@ -7,7 +7,7 @@ function Loader(assetsDir) {
 
 Loader.prototype = {
     get status() {
-        return this._loaded + "/" + this._loading;
+        return {loaded: this._loaded, loading: this._loading};
     },
     _loaded: 0,
     _loading: 0,

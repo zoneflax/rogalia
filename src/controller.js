@@ -1,4 +1,4 @@
-/* global Point, dom, config, util, T, TS, Container, Avatar, Effects, loader, ParamBar, Panel, CELL_SIZE, Character, gameStorage, playerStorage */
+/* global Point, dom, config, util, T, TS, Container, Avatar, Effects, loader, ParamBar, Panel, CELL_SIZE, Character, gameStorage, playerStorage, ProgressBar */
 
 "use strict";
 
@@ -81,7 +81,9 @@ function Controller(game) {
         },
     };
 
-    this.actionProgress = document.getElementById("action-progress");
+    this.actionProgress = new ProgressBar(game.interface);
+    this.actionProgress.element.id = "action-progress-bar";
+
     this.targetContainer = document.getElementById("target-container");
     this.party = document.getElementById("party");
 
@@ -1369,7 +1371,9 @@ function Controller(game) {
         }
     };
 
+    this.ping = 0;
     this.updatePing = function(ping) {
+        this.ping = ping;
         this.system && this.system.update(ping);
     };
 

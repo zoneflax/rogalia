@@ -1,9 +1,12 @@
-/* global loader, Character, game, Stage, CELL_SIZE */
+/* global loader, Character, game, Stage, CELL_SIZE, playerStorage, ProgressBar, dom, T */
 
 "use strict";
 function loadingStage(version) {
+    game.ctx.clear();
     game.addEventListeners();
     playerStorage.setPrefix(game.playerName + ".");
+
+    const progress = new ProgressBar(game.world, T("Loading") + ": ");
 
     var req = new XMLHttpRequest();
     req.open("GET", "metadata.json?version=" + version, true);
@@ -34,12 +37,10 @@ function loadingStage(version) {
             Entity.sync(data.Entities);
             game.map.sync(data.Location);
 
-            var wait = setInterval(function() {
+            const wait = setInterval(function() {
                 if (!game.map.ready)
                     return;
-                var ready = game.entities.every(function(e) {
-                    return e.sprite.ready;
-                });
+                const ready = game.entities.every(e => e.sprite.ready);
 
                 if (!ready)
                     return;
@@ -51,13 +52,15 @@ function loadingStage(version) {
     };
 
     this.draw = function() {
-        game.ctx.clear();
-        game.ctx.fillStyle = "#fff";
-        game.drawStrokedText(
-            game.loader.status,
-            CELL_SIZE,
-            CELL_SIZE
-        );
+        const status = game.loader.status;
+        // wait a bit while sync start loading stuff
+        if (status.loaded > 1) {
+            progress.value = status.loaded/status.loading*100;
+        }
+    };
+
+    this.end = function() {
+        dom.remove(progress.element);
     };
 }
 Stage.add(loadingStage);

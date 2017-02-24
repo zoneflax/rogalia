@@ -335,6 +335,9 @@ function Chat() {
             case "blacklist-remove":
                 game.network.send(cmd, {Name: arg});
                 break;
+            case "ping":
+                self.addMessage(`ping: ${game.controller.ping}`);
+                break;
             case "add":
                 if (Entity.templates[arg]) {
                     game.controller.newCreatingCursor(arg);

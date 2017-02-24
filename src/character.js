@@ -535,8 +535,7 @@ Character.prototype = {
         if (this.Action.Duration) {
             const progress = Math.min(this.action.progress, 1);
             if (this.isPlayer) {
-                var ap = game.controller.actionProgress.firstChild;
-                ap.style.width = progress * 100 + "%";
+                game.controller.actionProgress.value = progress * 100;
             }
             var w = 64;
             var h = FONT_SIZE * 0.5;
@@ -1159,7 +1158,7 @@ Character.prototype = {
                 this.action.last = this.Action.Started;
                 this.toggleActionSound();
                 if (this.isPlayer) {
-                    dom.show(game.controller.actionProgress);
+                    game.controller.actionProgress.show();
                     game.controller.actionButton.startProgress();
                 }
             }
@@ -1167,7 +1166,7 @@ Character.prototype = {
                 this.action.progress += (1 / this.Action.Duration * 1000 * k);
             } else {
                 if (this.isPlayer) {
-                    dom.hide(game.controller.actionProgress);
+                    game.controller.actionProgress.hide();
                     game.controller.actionButton.stopProgress();
                 }
                 this.action.progress = 0;
