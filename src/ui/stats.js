@@ -157,6 +157,7 @@ class Stats {
                 return;
             }
         }
+        this.equipContainer.update();
     }
 
     update() {
