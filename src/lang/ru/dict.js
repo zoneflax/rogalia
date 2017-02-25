@@ -408,8 +408,10 @@ T.dict = {
     "Imperial floor": "Имперскый пол",
     "Imperial pillar": "Имперскый столб",
     "Imperial wall": "Имперская стена",
+    "Imperial floor": "Имперский пол",
     "Imperial window": "Имперское окно",
     "Imperial wall plan": "Чертеж имперской стены",
+    "Imperial floor plan": "Чертеж имперского пола",
 
     "Industrial arc": "Индустриальная арка",
     "Industrial door": "Индустриальная дверь",
@@ -432,8 +434,10 @@ T.dict = {
     "Painted floor": "Крашенный пол",
     "Painted pillar": "Крашенный столб",
     "Painted wall": "Крашенная стена",
+    "Painted floor": "Крашенный пол",
     "Painted window": "Крашенное окно",
     "Painted wall plan": "Чертеж крашенной стены",
+    "Painted floor plan": "Чертеж крашенного пола",
 
     "City arc": "Городская арка",
     "City door": "Городская дверь",
