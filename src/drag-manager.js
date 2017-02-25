@@ -39,7 +39,9 @@ function DragManager() {
         const {x, y} = snap(target, event.pageX - drag.x, event.pageY - drag.y);
         target.dataset.x = x;
         target.dataset.y = y;
-        target.style.transform = `translate(${x}px, ${y}px)`;
+        target.style.left = x + "px";
+        target.style.top = y + "px";
+        // target.style.transform = `translate(${x}px, ${y}px)`;
     });
 
     function dragIgnore(element) {

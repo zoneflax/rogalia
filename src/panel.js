@@ -96,11 +96,13 @@ Panel.prototype = {
     },
     set x(x) {
         this.element.dataset.x = x;
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.element.style.left = this.x + "px";
+        // this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     },
     set y(y) {
         this.element.dataset.y = y;
-        this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
+        this.element.style.top = this.y + "px";
+        // this.element.style.transform = `translate(${this.x}px, ${this.y}px)`;
     },
     get width() {
         return parseInt(getComputedStyle(this.element).width);

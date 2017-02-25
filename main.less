@@ -1206,10 +1206,10 @@ hr {
     }
 
     &.attached-chat {
-        transform: none!important;
-        left: -2px;
-        bottom: -2px;
-        top: auto;
+        // transform: none!important;
+        left: -2px!important;
+        bottom: -2px!important;
+        top: auto!important;
         z-index: 1;
         background: @bg-transparent-color;
         padding: 1px;
@@ -2689,7 +2689,7 @@ input[type=number], .lot-quantity > input, .price > input {
         position: absolute;
         text-align: center;
         width: 100%;
-        text-shadow: @bg-transparent-text-shadow;
+        text-shadow: 0 0 2px #000;
     }
 
     .progress-value {
@@ -3438,6 +3438,9 @@ input[type=number], .lot-quantity > input, .price > input {
 	    background: rgba(27, 70, 64, 0.8);
 	    font-size: 14px;
             text-shadow: 0 0 2px #000;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
 	}
     }
 

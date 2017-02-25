@@ -44,10 +44,10 @@ function Craft() {
         [this.listWrapper, dom.vr(), this.recipeDetails]
     );
     this.panel.hooks.hide = this.cleanUp.bind(this);
-    this.panel.hooks.show = function() {
+    this.panel.hooks.show = () => {
         this.searchInput.focus();
         this.update();
-    }.bind(this);
+    };
 
     this.blank = {
         type: null,
