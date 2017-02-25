@@ -167,10 +167,6 @@ Character.prototype = {
             this.syncPosition(data.X, data.Y);
         }
 
-        this.burden = (this.Burden) ? Entity.get(this.Burden) : null;
-        this.plow = ("Plowing" in this.Effects) ? Entity.get(this.Effects.Plowing.Plow) : null;
-
-
         if (data.Messages)
             this._messages = this._messages.concat(data.Messages);
 
@@ -1140,6 +1136,10 @@ Character.prototype = {
     update: function(k) {
         this.processMessages();
         this.animate();
+
+        this.burden = (this.Burden) ? Entity.get(this.Burden) : null;
+        this.plow = ("Plowing" in this.Effects) ? Entity.get(this.Effects.Plowing.Plow) : null;
+
         if ("Plague" in this.Effects) {
             this.playAnimation({
                 up: {

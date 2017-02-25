@@ -1161,6 +1161,15 @@ function Controller(game) {
         game.menu.show(actions);
     };
 
+    this.showMessage = function(message, duration = 2500) {
+        const record = dom.div("info-message", {text: message});
+        document.getElementById("messages").appendChild(record);
+        setTimeout(function() {
+            dom.remove(record);
+        }, duration);
+
+    };
+
     this.showError = function(message) {
         showMessage(message, "error");
     };

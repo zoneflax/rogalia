@@ -166,12 +166,7 @@ function Info(message, character) {
         console.warn(this.text, "Chat is null");
 
     if (!this.data) {
-        var record = dom.div("info-message", {text: this.text});
-
-        document.getElementById("messages").appendChild(record);
-        setTimeout(function() {
-            dom.remove(record);
-        }, this.duration);
+        game.controller.showMessage(this.text, this.duration);
     }
 };
 

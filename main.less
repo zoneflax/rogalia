@@ -240,6 +240,12 @@ button:active {
     box-shadow: none;
 }
 
+button.checked {
+    box-shadow: none;
+    background: linear-gradient(to bottom, #654323 5%, #ce7a1b 100%);
+    background-color: #aa703a;
+}
+
 button:hover {
     background: linear-gradient(to bottom, #654323 5%, #8e602c 100%);
     background-color: #aa703a;
@@ -740,6 +746,7 @@ hr {
         width: 30px;
         font-size: 10px;
         line-height: 10px;
+        height: 10px;
         vertical-align: middle;
         border: 1px solid #000;
         background-color: #ccc;
@@ -3440,7 +3447,6 @@ input[type=number], .lot-quantity > input, .price > input {
     }
 
     .product-card:hover {
-	-webkit-filter: brightness(125%);
 	filter: brightness(125%);
 
 	.product-desc, .product-cost {
@@ -3671,13 +3677,43 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 #slot-machine {
+    .contents {
+        display: flex;
+    }
+
+    .bets {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bet {
+        min-width: 30px;
+    }
+
+    .machine {
+        margin: 0 5px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+    }
+
     .slots-container {
         display: flex;
         overflow: hidden;
         height: 45px;
 
+        .slot {
+            transition: border-color ease-in 200ms;
+            margin: 0 1px;
+
+            &.win {
+                border: 1px solid #24b724;
+            }
+        }
+
         .slots {
-            transition: all ease-out 2000ms;
+            transition: transform ease-out 2000ms;
             transform: none;
         }
 

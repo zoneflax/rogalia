@@ -650,7 +650,7 @@ Entity.prototype = {
     },
     split: function() {
         var args = {Id: this.Id};
-        if (this.Group == "currency") {
+        if ("Amount" in this) {
             game.popup.prompt(T("How many?"), 1, function(amount) {
                 args.Amount = +amount;
                 game.network.send("split", args);

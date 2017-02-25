@@ -238,6 +238,12 @@ var dom = {
         old.parentNode.insertBefore(New, old);
         old.parentNode.removeChild(old);
     },
+    swap: function(one, two) {
+        const parent = two.parentNode;
+        const before = two.nextSibling;
+        dom.replace(one, two);
+        parent.insertBefore(one, before);
+    },
     setContents: function(element, contents) {
         this.clear(element);
         return this.append(element, contents);

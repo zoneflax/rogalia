@@ -67,6 +67,9 @@ function Shop() {
                     title: T("Mounts"),
                 },
                 {
+                    title: T("Walls"),
+                },
+                {
                     title: T("Items"),
                 },
             ];

@@ -1,4 +1,4 @@
-/* global Panel, dom, game, T, util */
+/* global Panel, dom, game, T, util, TT, Vendor */
 
 "use strict";
 
@@ -10,39 +10,78 @@ class SlotMachine {
         this.button = this.makeButton();
         this.slotsContainer = dom.wrap("slots-container", this.slots);
         this.panel = new Panel("slot-machine", "Slots", [
-            this.slotsContainer,
-            this.button,
+            this.makeBets([10, 25, 50]),
+            dom.wrap("machine", [
+                this.slotsContainer,
+                this.button,
+            ]),
+            this.makeBets([1000, 2500, 5000]),
         ]).setEntity(entity).show();
+        this.bet = this.panel.element.querySelector(".bet");
+        this.bet.classList.add("checked");
+        this.transitionend = () => {};
     }
 
     gamble() {
-        game.network.send("GambleTenSilver", {Id: this.entity.Id}, (data) => {
-            console.log(data);
-            this.run();
+        game.network.send("gamble", {Id: this.entity.Id, Cost: +this.bet.dataset.cost}, (data) => {
+            this.run(data.Win);
         });
     }
 
-    run() {
+
+    ending() {
         const N = this.pics.length - 1;
-        let waiting = this.slots.length;
-        this.slots.forEach(column => {
-            column.addEventListener("transitionend", () =>  {
-                waiting--;
-                if (waiting == 0) {
-                    this.button.disabled = false;
-                    this.reset();
+        const set = new Set();
+        return this.slots.map(column => {
+            _.forEach(column.children, (slot) => slot.classList.remove("win"));
+
+            for (let i = 0; i < N; i++) {
+                var n = util.rand(N/2 << 0, N);
+                var slot = column.children[n];
+                if (!set.has(slot.firstChild.src)) {
+                    break;
                 }
-            });
-            const n = util.rand(N/2, N) * 100;;
-            column.dataset.n = n;
-            column.style.transform = `translateY(-${n}%)`;
+            }
+
+            set.add(slot.firstChild.src);
+            column.dataset.index = n;
+            column.style.transform = `translateY(-${n*100}%)`;
+            return slot;
         });
+    }
+
+    run(win = 0) {
+        let waiting = this.slots.length;
+        let ending = this.ending();
+
+        this.transitionend = () => {
+            if (--waiting > 0) {
+                return;
+            }
+
+            this.button.disabled = false;
+            this.reset();
+            if (win > 0) {
+                game.controller.showMessage(TT("You win {cost}", {cost: Vendor.priceString(win)}));
+                _.defer(() => ending.forEach(slot => slot.classList.add("win")));
+            }
+        };
+
+        if (win > 0) {
+            // prepare "win" slots
+            const first = ending[0];
+            for (let i = 1; i < this.slots.length; i++) {
+                const slot = _.find(this.slots[i].children, (slot) => {
+                    return slot.firstChild.src == first.firstChild.src;
+                });
+                dom.swap(slot.firstChild, ending[i].firstChild);
+            }
+        }
     }
 
     reset() {
         const head = this.slots.map(column => {
-            const current = column.dataset.n / 100;
-            return column.removeChild(column.children[current]);
+            return column.removeChild(column.children[column.dataset.index]);
         });
         this.slotsContainer.classList.add("shuffle");
         _.defer(() => this.slotsContainer.classList.remove("shuffle"));
@@ -66,7 +105,14 @@ class SlotMachine {
             dom.wrap("slots", _.shuffle(this.pics).map(pic => dom.wrap("slot", pic.cloneNode()))),
             dom.wrap("slots", _.shuffle(this.pics).map(pic => dom.wrap("slot", pic.cloneNode()))),
             dom.wrap("slots", _.shuffle(this.pics).map(pic => dom.wrap("slot", pic.cloneNode()))),
-        ];
+        ].map(column => {
+            column.addEventListener("transitionend", (event) => {
+                if (event.target == column) {
+                    this.transitionend();
+                }
+            });
+            return column;
+        });
     }
 
     makeButton() {
@@ -77,8 +123,37 @@ class SlotMachine {
         return button;
     }
 
+    makeBets(bets) {
+        return dom.wrap("bets", bets.map(bet => {
+            const button = dom.button(bet, "bet", () => {
+                this.bet.classList.remove("checked");
+                this.bet = button;
+                this.bet.classList.add("checked");
+            });
+            button.dataset.cost = bet;
+            return button;
+        }));
+    }
+
     makePics() {
-        return _.range(1, 18).map(i => game.loader.loadImage(`flower-${i}.png`));
+        return [
+            "R",
+            "O",
+            "G",
+            "A",
+            "L",
+            "I",
+            "K",
+            "energy",
+            "R",
+            "O",
+            "G",
+            "A",
+            "L",
+            "I",
+            "K",
+            "energy",
+        ].map(type => game.loader.loadImage(type + ".png"));
     }
 
 }

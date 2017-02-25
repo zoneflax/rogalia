@@ -1,4 +1,4 @@
-/* global game, dom, T, TS, Panel, ParamBar */
+/* global game, dom, T, TS, Panel, ParamBar, playerStorage */
 
 "use strict";
 function Craft() {
@@ -14,6 +14,7 @@ function Craft() {
 
     this.searchInput = null;
     this.searchSlot = this.createSearchSlot();
+    this.lastSearch = playerStorage.getItem("craft.search") || "";
 
     this.listWrapper = dom.wrap("#recipe-list-wrapper", [
         this.createSearchField(),
@@ -308,7 +309,7 @@ Craft.prototype = {
         var input = dom.tag("input");
         input.placeholder = T("search");
         input.addEventListener("keyup", this.searchHandler.bind(this));
-        input.value = playerStorage.getItem("craft.search") || "";
+        input.value = this.lastSearch;
 
         this.searchInput = input;
 
@@ -388,10 +389,10 @@ Craft.prototype = {
         }));
     },
     searchHandler: function(e) {
-        // skip selection
-        if (e.shiftKey && e.keyCode < 65 || e.key == "Shift") {
+        if (e.target.value == this.lastSearch) {
             return true;
         }
+        this.lastSearch = e.target.value;
         return this.search(e.target.value);
     },
     searchOrHelp: function(pattern) {
@@ -412,8 +413,9 @@ Craft.prototype = {
     },
     search: function(pattern, selectMatching) {
         // we do not want to show on load
-        if (game.stage.name == "main")
+        if (game.stage.name == "main") {
             this.panel.show();
+        }
         //TODO: fast solution; make another one
         var id = "#" + this.panel.name + " ";
         dom.removeClass(id + ".recipe-list .found", "found");
@@ -435,7 +437,10 @@ Craft.prototype = {
             return;
         }
 
-        this.searchInput.value = (selectMatching) ? TS(pattern) : pattern;
+        const value = (selectMatching) ? TS(pattern) : pattern;
+        if (this.searchInput.value != value) {
+            this.searchInput.value = value;
+        }
 
         var matching = null;
         dom.forEach(id + ".recipe.found", function() {
