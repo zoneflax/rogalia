@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter, FONT_SIZE, astar */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter, FONT_SIZE, astar, ContainerSlot */
 
 "use strict";
 function Character(id) {
@@ -1912,25 +1912,47 @@ Character.prototype = {
         game.network.send("inspect", {Id: target.Id}, function(data) {
             if (!data.Equip)
                 return;
+            // TODO: merge with stats.js
+            const slots = data.Equip.reduce(function(slots, item, i) {
+                var name = Character.equipSlots[i];
+                var slot = new ContainerSlot({panel: panel, entity: {}, inspect: true}, i);
+                if (item) {
+                    var entity = new Entity(item.Type);
+                    entity.sync(item);
+                    slot.set(entity);
+                }
+                slot.setPlaceholder(`assets/icons/equip/${name}.png`, TS(name));
+                slots[name] = slot.element;
+                return slots;
+            }, {});
+
             target.Equip = data.Equip;
             var panel = new Panel(
                 "inspect",
                 target.Name,
-                [
-                    new Doll(target),
-                    dom.wrap("equip", data.Equip.map(function(item, i) {
-                        var title = Character.equipSlots[i];
-                        var slot = new ContainerSlot({panel: panel, entity: {}, inspect: true}, i);
-                        if (item) {
-                            var entity = new Entity(item.Type);
-                            entity.sync(item);
-                            slot.set(entity);
-                        }
-                        var elem = slot.element;
-                        elem.classList.add("equip-" + title);
-                        return elem;
-                    })),
-                ]
+                dom.wrap("equip-and-lvl", dom.wrap("equip", [
+                    dom.wrap("level", [
+                        dom.make("small", T("Level")),
+                        dom.wrap("circle", target.Lvl),
+                    ]),
+                    slots["head"],
+                    dom.wrap("faction", [
+                        dom.make("small", T("Rank")),
+                        dom.wrap("square", target.Citizenship.Rank || "?"),
+                    ]),
+                    slots["bag"],
+                    slots["body"],
+                    slots["neck"],
+                    slots["left-hand"],
+                    slots["legs"],
+                    slots["right-hand"],
+                    dom.div(),
+                    slots["feet"],
+                    dom.div(),
+                ].map(elem => {
+                    elem.classList.add("equip-cell");
+                    return elem;
+                })))
             );
             panel.element.classList.add("stats-panel");
             panel.temporary = true;
