@@ -461,6 +461,10 @@ T.dict = {
     "Japanese fence pillar": "Столб японского забора",
     "Japanese gate": "Японские ворота",
 
+    "Forged fence": "Кованый забор",
+    "Forged fence pillar": "Столб кованого забора",
+    "Forged gate": "Кованые ворота",
+
     "Log fence": "Бревенчатый забор",
     "Log fence pillar": "Столб бревенчатого забора",
     "Log gate": "Бревенчатые ворота",
@@ -1765,4 +1769,7 @@ T.dict = {
     "Profile": "Профиль",
     "Promo": "Промо",
     "Loading": "Загрузка",
+    "Blue night light": "Синий ночник",
+    "Желтый night light": "Желтый ночник",
+    "Green night light": "Зеленый ночник",
 };

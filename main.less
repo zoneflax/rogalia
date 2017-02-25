@@ -1751,28 +1751,10 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 }
 
 .lobby-account {
-    background: url("assets/bg/strip/center.png") repeat-x;
-    height: 32px;
+    height: 20px;
     line-height: 32px;
-    display: table;
-    margin: auto;
-    position: relative;
-    text-align: center;
-    color: #202325;
-}
-
-.lobby-account:before,
-.lobby-account:after {
-    position: absolute;
-    top: -5px;
-}
-.lobby-account:before {
-    content: url("assets/bg/strip/left.png");;
-    left: -60px;
-}
-.lobby-account:after {
-    content: url("assets/bg/strip/right.png");
-    right: -60px;
+    color: #e6a664;
+    font-size: 16px;
 }
 
 #lobby {
@@ -2704,7 +2686,6 @@ input[type=number], .lot-quantity > input, .price > input {
     }
 
     .progress-value {
-        transition: width linear 100ms;
         width: 0;
         background: #dd7704;
     }
@@ -3686,5 +3667,22 @@ input[type=number], .lot-quantity > input, .price > input {
 
     .error {
         border-color: red;
+    }
+}
+
+#slot-machine {
+    .slots-container {
+        display: flex;
+        overflow: hidden;
+        height: 45px;
+
+        .slots {
+            transition: all ease-out 2000ms;
+            transform: none;
+        }
+
+        &.shuffle .slots {
+            transition: none;
+        }
     }
 }

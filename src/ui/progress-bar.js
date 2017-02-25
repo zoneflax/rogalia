@@ -25,7 +25,7 @@ class ProgressBar {
     }
 
     set value(value) {
-        value = Math.max(value, this._value);
+        // value = Math.max(value, this._value);
         this._value = value;
         this._valueText.textContent = this._prefix + util.toFixed(value) + "%";
         this._valueElem.style.width = value + "%";

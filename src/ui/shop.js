@@ -13,6 +13,11 @@ function Shop() {
     var loaded = false;
     var onload = function(){};
 
+    // TODO: remove me;
+    // clear old data
+    gameStorage.removeItem("panels.shop");
+    playerStorage.removeItem("panels.shop");
+
     this.panel = new Panel("shop", "Shop", [], {
         show: function() {
             if (loaded) {
@@ -24,7 +29,7 @@ function Shop() {
                 });
             }
         },
-    });
+    }).setTemporary(true);
 
     this.sync = function(data) {
         const input = dom.tag("input");

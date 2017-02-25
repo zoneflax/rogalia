@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point, Container, Character, BBox, TS, Permission, ParamBar */
+/* global dom, T, util, game, Panel, config, Point, Container, Character, BBox, TS, Permission, ParamBar, SlotMachine */
 
 "use strict";
 function Entity(type, id) {
@@ -678,6 +678,9 @@ Entity.prototype = {
         switch(this.Group) {
         case "jukebox":
             this.defaultActionSuccess = () => { game.jukebox.open(this); };
+            break;
+        case "slot-machine":
+            this.defaultActionSuccess = () => { new SlotMachine(this); };
             break;
         case "label":
         case "portal":

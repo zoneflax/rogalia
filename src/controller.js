@@ -474,6 +474,21 @@ function Controller(game) {
             },
             help: "Lift up nearest item",
         },
+        T: {
+            callback() {
+                if (game.player.mount) {
+                    game.network.send("dismount");
+                } else {
+                    const mounts = game.findCharsNear(game.player.X, game.player.Y)
+                          .filter(c => c.Riding)
+                          .sort((a, b) => a.distanceTo(self) - b.distanceTo(self));
+                    if (mounts.length > 0) {
+                        game.network.send("mount", {Id: mounts[0].Id});
+                    }
+                }
+            },
+            "help": "Mount/unmount"
+        },
         9: { //tab
             callback() {
                 game.player.selectNextTarget();
