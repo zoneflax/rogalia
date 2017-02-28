@@ -435,7 +435,7 @@ Entity.prototype = {
             actions[1]["Disassemble"] = this.disassemble;
         }
 
-        if (this.isTool() && this.Location != Entity.LOCATION_EQUIPPED) {
+        if (this.canBeEquipped()) {
             actions[0]["To equip"] = this.equip;
         }
 
@@ -487,7 +487,15 @@ Entity.prototype = {
             "insect-net",
             "tool",
             "fishing-rod",
+            "prospector",
         ], this.Group);
+    },
+    canBeEquipped: function() {
+        if (this.Location == Entity.LOCATION_EQUIPPED)
+            return false;
+        if (this.Group == "prospector")
+            return false;
+        return this.isTool();
     },
     alignedData: function(p) {
         var align = this.Sprite && this.Sprite.Align;

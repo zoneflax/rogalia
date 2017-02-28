@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 // 1. "from" : "to"
 //
@@ -669,7 +669,7 @@ T.dict = {
     "Platinum ingot": "Lingote de platina",
     "Pike fillet": "Filé de lúcio",
     "Turnip seed": "Semente de nabo",
-    "Simple energy gun": "Arma simples de energia"
+    "Simple energy gun": "Arma simples de energia",
     "Heavy energy gun": "Arma pesada de energia",
     "Reactive energy gun": "Arma de reação de energia",
     "Cigarette": "Cigarro",
@@ -884,7 +884,7 @@ T.dict = {
     "Titanium axe": "Machado de titânio",
     "Calcium drug": "Droga de Cálcio",
     "Shashlik": "Shashlik (espeto de carne com legumes)",
-    "Stone stairs entrance": "Escada de pedra de entrada"
+    "Stone stairs entrance": "Escada de pedra de entrada",
     "Herbalist table": "Mesa do herbalista",
     "Golden ingot": "Lingote de ouro",
     "Golden rogalik banner": "Banner rogaliano dourado",
@@ -1711,7 +1711,7 @@ T.dict = {
     "Bleed": "Sangrando",
 
     "claim-help-text": "Expansão do território é deduzida automaticamente dos seus fundos no banco. O aluguel pode ser pago em adiantamento pelo período de 1 semana até 3 meses.",
-	
+
     "News": "Notícias e Novidades",
     "Second hand must be empty": "A segunda mão tem de estar vazia",
     "Copper bowl": "Tigela de cobre",
