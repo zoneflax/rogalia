@@ -618,6 +618,18 @@ hr {
     }
 }
 
+#container-item-search {
+    width: 370px;
+
+    .container-search-results {
+        height: 196px;
+    }
+
+    input {
+        margin: 0 3px;
+    }
+}
+
 .panel > img, .panel > canvas {
     max-width: 64px;
     max-height: 64px;
@@ -869,13 +881,127 @@ hr {
 
     .contents {
         display: flex;
-        justify-content: space-around;
-        min-height: 500px;
+        flex-direction: column;
+    }
+
+    .craft-header {
+        display: flex;
+        color: #b48e65;
+
+        .search-by-keyword {
+            .search-label {
+                display: flex;
+
+                .search-input {
+                    box-sizing: border-box;
+                    width: 100%;
+                }
+
+                .clear-search {
+                    min-width: 20px;
+                    padding: 0;
+                    margin-left: 3px;
+                }
+            }
+        }
+
+        .search-by-keyword, .search-filters {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .search-by-ingredient {
+            display: flex;
+            width: 30%;
+            align-items: center;
+
+            .slot {
+                background-color: #2f3237;
+                margin-right: 3px;
+            }
+        }
+
+        .search-filters {
+            .filters {
+                display: flex;
+
+                .search-filter {
+                    width: 16px;
+                    height: 16px;
+                    margin-left: 3px;
+
+                    filter: brightness(25%);
+
+                    &:hover {
+                        filter: brightness(125%);
+                    }
+
+                    &:active {
+                        filter: brightness(135%);
+                    }
+
+                    &.checked {
+                        filter: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .tabs {
+        margin-top: 5px;
+        flex-grow: 1;
     }
 
     .param-label {
         max-width: 150px;
         text-overflow: ellipsis;
+    }
+
+    .recipe-tree-container {
+        display: flex;
+        height: 400px;
+
+        .recipe-tree:first-child {
+            margin-left: 0;
+        }
+
+        .recipe-tree-root {
+            width: 35%;
+        }
+
+        .recipe-container {
+            background-color: #292b2f;
+            width: 65%;
+        }
+    }
+
+    .recipe-tree {
+        margin-left: 13px;
+    }
+
+    .recipe-subtree-header {
+        .cursor-pointer;
+        display: flex;
+
+        &:hover {
+            color: lightgreen;
+        }
+
+        .recipe-tree-toggle {
+            width: 13px;
+        }
+
+    }
+
+    .recipe {
+        .cursor-pointer;
+        padding-left: 5px;
+
+        &:hover {
+            color: lightgreen;
+        }
     }
 }
 
@@ -885,35 +1011,6 @@ hr {
 
 #recipe-list-wrapper {
     width: 198px;
-}
-
-#search-by-ingredient {
-    display: flex;
-    margin: 3px 0;
-}
-
-#recipe-filters {
-    display: flex;
-
-    .recipe-filter {
-        width: 16px;
-        height: 16px;
-        margin-left: 3px;
-
-        filter: brightness(25%);
-
-        &:hover {
-            filter: brightness(125%);
-        }
-
-        &:active {
-            filter: brightness(135%);
-        }
-
-        &.checked {
-            filter: none;
-        }
-    }
 }
 
 #recipe-details {
@@ -938,14 +1035,6 @@ hr {
 .recipe-search, .recipe-search > input {
     width: 170px;
     position: relative;
-}
-.recipe-search-clear {
-    min-width: 0;
-    right: -27px;
-    top: 1px;
-    position: absolute;
-    margin: 0;
-    padding: 1px 6px;
 }
 .recipe-list.filter-portable .recipe.portable,
 .recipe-list.filter-liftable .recipe.liftable,
@@ -1175,10 +1264,13 @@ hr {
         }
     }
 
-    #chat-wrapper {
-        width: 30em;
-        overflow: hidden;
+    .chat-wrapper {
         border: none;
+    }
+
+    .messages-wrapper {
+        width: 30em;
+        height: 20em;
     }
 
     #new-message {
@@ -1194,10 +1286,6 @@ hr {
 
         .tabs {
             margin-top: 2px;
-
-            > hr {
-                margin: 2px -4px;
-            }
         }
 
         #chat-always-visible {
@@ -1216,20 +1304,18 @@ hr {
         visibility: visible!important;
         outline: none;
 
-        #chat-wrapper {
+        .chat-wrapper {
             border: none;
+        }
+
+        .messages-wrapper {
+            height: 10em;
         }
 
         .contents {
             background: none;
             padding: 5px;
             border: @bg-transparent-border;
-        }
-
-        .messages {
-            width: 32em;
-            height: 10em;
-            padding: 0;
         }
 
         .semi-hidden, .semi-hidden a {
@@ -1245,19 +1331,10 @@ hr {
         }
 
         #new-message {
-            width: 98%;
+            width: 100%;
+            box-sizing: border-box;
         }
     }
-}
-
-.messages {
-    width: 31em;
-    height: 20em;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    position: relative;
-    padding: 5px;
-    margin: 0;
 }
 
 .message {
@@ -2242,12 +2319,6 @@ big {
                 padding: 3px;
             }
 
-            .avatar-chevron {
-                position: absolute;
-                right: 1px;
-                top: 1px;
-            }
-
             .avatar-image {
                 position: absolute;
                 bottom: 0;
@@ -2262,8 +2333,28 @@ big {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 width: 100%;
-            }
+                position: relative;
 
+                .avatar-icons {
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    margin: auto;
+                    z-index: 1;
+                    display: flex;
+
+                    .avatar-icon {
+                        width: 18px;
+                        text-align: center;
+                        margin-left: 3px;
+                    }
+
+                    .avatar-lvl {
+                        background: #d2680f;
+                    }
+                }
+            }
         }
 
         .avatar-effects {
@@ -2900,6 +2991,9 @@ input[type=number], .lot-quantity > input, .price > input {
     color: #FFA41B;
     font-style: normal;
 }
+#quest {
+    width: 300px;
+}
 #quest-list {
     width: 34%;
     margin: 0;
@@ -2909,9 +3003,7 @@ input[type=number], .lot-quantity > input, .price > input {
     .cursor-pointer;
     color: #ffae4a;
 }
-#quest-desc {
-    width: 65%;
-
+#quest-desc, .quest-goal {
     .slot {
         float: left;
     }
@@ -3396,8 +3488,6 @@ input[type=number], .lot-quantity > input, .price > input {
     }
 
     .products {
-	overflow-x: hidden;
-	overflow-y: auto;
 	height: 436px;
 	font: 12px/22px Dejavu Sans, Sans-serif;
     }
@@ -3718,5 +3808,54 @@ input[type=number], .lot-quantity > input, .price > input {
         &.shuffle .slots {
             transition: none;
         }
+    }
+}
+
+.scrollable {
+    overflow: hidden;
+
+    .scroll {
+        @handle-heigth: 50px;
+        .cursor-pointer;
+        transition: opacity ease-in 100ms;
+        opacity: 0;
+        width: 8px;
+        position: absolute;
+        z-index: 100;
+        height: 100%;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        background: rgba(37, 41, 47, 0.75);
+        box-sizing: border-box;
+        padding: @handle-heigth/2 0;
+
+        .scroll-handle {
+            border-radius: 3px;
+            box-sizing: border-box;
+            border: 1px solid #46280c;
+            position: relative;
+            top: 0;
+            background: rgb(150, 100, 46);
+            margin-top: -@handle-heigth/2;
+            height: @handle-heigth;
+        }
+    }
+
+    &:hover .scroll, .scroll.active {
+        opacity: 1;
+    }
+
+    .scrollable-wrapper {
+        width: 100%;
+        height: 100%;
+        position: relative;
+    }
+
+    .scrollable-contents {
+        height: 100%;
+        margin-right: -15px;
+        overflow-x: hidden;
+        overflow-y: scroll;
     }
 }

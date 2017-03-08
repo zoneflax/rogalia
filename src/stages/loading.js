@@ -17,8 +17,7 @@ function loadingStage(version) {
         game.map.initBioms(data.Bioms);
         Character.skillLvls = data.SkillLvls;
         // game.initTime(data.Tick);
-        Entity.recipes = data.Recipes;
-        Entity.init(data.EntitiesTemplates); //for [*add item]
+        Entity.init(data.EntitiesTemplates, data.Recipes); //for [*add item]
 
         game.network.send("enter", {Name: game.playerName}, sync);
     };

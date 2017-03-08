@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point, Container, Character, BBox, TS, Permission, ParamBar, SlotMachine */
+/* global dom, T, util, game, Panel, config, Point, Container, Character, BBox, TS, Permission, ParamBar, SlotMachine, CELL_SIZE */
 
 "use strict";
 function Entity(type, id) {
@@ -43,6 +43,7 @@ Entity.prototype = {
     _icon: null,
     _spriteVersion: "",
     graph: null,
+    tags: [],
     x: 0,
     y: 0,
     get X() {
@@ -215,7 +216,7 @@ Entity.prototype = {
         }
         elements.push(this.makeDescription());
 
-        if (this.isContainer() || this.Group == "gate") {
+        if (this.isContainer() || this.Group == "gate" || this.Group == "claim") {
             elements.push(dom.hr());
             elements.push(Permission.make(this.Id, this.Perm));
         }
@@ -448,8 +449,13 @@ Entity.prototype = {
                 game.network.send("rotate", {id: this.Id});
             };
         }
-        if (!(game.player.Instance && game.player.Instance.match(/^tutorial-/)) || game.player.IsAdmin)
+        if (!(game.player.Instance && game.player.Instance.match(/^tutorial-/)) || game.player.IsAdmin) {
             actions[2]["Destroy"] = this.destroy;
+
+            if (this.MoveType == Entity.MT_STATIC) {
+                actions[2]["Relocate"] = this.relocate;
+            }
+        }
 
         if (this.Location == Entity.LOCATION_IN_CONTAINER || this.Location == Entity.LOCATION_EQUIPPED)
             actions[2]["Drop"] =  function() { game.network.send("entity-drop", {id: this.Id}); };
@@ -464,31 +470,17 @@ Entity.prototype = {
         return actions;
     },
     isTool: function() {
-        return _.includes([
-            "sword",
-            "shield",
-            "legs-armor",
-            "head-armor",
-            "body-armor",
-            "feet-armor",
-            "saw",
-            "axe",
-            "pickaxe",
-            "hammer",
-            "knife",
-            "shovel",
-            "spear",
-            "necklace",
-            "bow",
-            "energy-gun",
-            "scissors",
-            "needle",
+        const tags = [
+            "tool",
+            "armor",
+            "weapon",
+            "accessory",
             "taming",
             "insect-net",
-            "tool",
             "fishing-rod",
-            "prospector",
-        ], this.Group);
+            "prospector"
+        ];
+        return this.tags.some(tag => tags.includes(tag));
     },
     canBeEquipped: function() {
         if (this.Location == Entity.LOCATION_EQUIPPED)
@@ -542,6 +534,12 @@ Entity.prototype = {
     destroy: function() {
         this.actionApplySimple("entity-destroy");
     },
+    relocate: function() {
+        const ghost = new Entity(this.Type);
+        ghost.initSprite();
+        ghost.Id =  this.Id;
+        game.controller.creatingCursor(ghost, "relocate");
+    },
     actionApplySimple: function(action) {
         if (this.isContainer()) {
             game.popup.confirm(T("It will be destroyed with all it's contents"), () => game.network.send(action, {id: this.Id}));
@@ -557,15 +555,15 @@ Entity.prototype = {
                 game.network.send(action, {id: this.Id});
                 return;
             }
-            this.queueAction(action, container.filter(entity => entity && entity.is(this.Type)));
+            this.queueAction(action, container.filter(entity => entity.is(this.Type)));
         } else {
             if (Entity.repeatable(action)) {
                 game.controller.lastAction.set(() => {
                     // check if object was removed
                     if (Entity.get(this.Id)) {
-                        this.queueActionMaybe(action)
+                        this.queueActionMaybe(action);
                     }
-                })
+                });
             }
             game.network.send(action, {id: this.Id});
         }
@@ -840,7 +838,8 @@ Entity.prototype = {
                 this.CanCollide &&
                 this.X > game.player.X &&
                 this.Y > game.player.Y &&
-                this.intersects(game.player.X, game.player.Y)) {
+                this.intersects(game.player.X, game.player.Y)
+               ) {
                 this.sprite.drawAlpha(p, 0.2);
                 this.drawBox();
                 this.visibiliyObstacle = true;
@@ -1076,12 +1075,17 @@ Entity.prototype = {
 
         var cmd = "entity-drop";
         var align = false;
-        if ((biom.Name == "plowed-soil" || biom.Name == "soil") && this.is("seed")) {
-            cmd = "plant";
-            align = true;
-        } else if ((biom.Name == "plowed-soil" || biom.Name == "shallow-water") && this.is("soil")) {
-            cmd = "swamp";
-            align = true;
+        // TODO: refactor
+        if (this.is("seed")) {
+            if (biom.Name == "plowed-soil" || biom.Name == "soil") {
+                cmd = "plant";
+                align = true;
+            }
+        } else if (this.is("soil")) {
+            if (biom.Name == "plowed-soil" || biom.Name == "shallow-water") {
+                cmd = "swamp";
+                align = true;
+            }
         }
         if (align) {
             var p = new Point(x, y);
@@ -1325,5 +1329,5 @@ Entity.prototype = {
             width,
             height
         );
-    }
+    },
 };

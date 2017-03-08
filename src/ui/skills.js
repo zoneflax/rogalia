@@ -34,6 +34,8 @@ Skills.byAttr = {
     wisdom: ["Herbalism", "Cooking", "Leadership"],
 };
 
+Skills.list = _.flatMap(Skills.byAttr);
+
 Skills.prototype = {
     update: function() {
         if (this.panel && !this.panel.visible)

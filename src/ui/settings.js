@@ -140,16 +140,13 @@ Settings.prototype = {
                 var key = ["settings", name, prop].join(".");
 
                 if (value instanceof Function) {
-                    if (game.player) // eval only when player is loaded
-                        value = value();
-                    else
-                        value = false;
+                    // eval only when player is loaded
+                    value = (game.player) ? value() : false;
                 }
 
-                var desc = Settings.descriptions[name] && Settings.descriptions[name][prop] ||
-                    [TS(util.stringToSymbol(prop)), ""];
-                var title = desc[0];
-                var tip = desc[1];
+                const [title, tip] = Settings.descriptions[name]
+                      && Settings.descriptions[name][prop]
+                      || [TS(util.stringToSymbol(prop)), ""];
 
 
                 var label = makeLabel(key, value, title);

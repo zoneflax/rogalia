@@ -1742,7 +1742,6 @@ T.dict = {
     "Check your stake claim!": "領地の権利金を確認しましょう!",
     "EULA": "利用規約",
     "Pin chat": "チャットを固定",
-    "Find recipes by ingredient": "アイテムからレシピを検索",
     "Filters": "フィルター",
     "Cannot add more": "更に追加することはできません",
     "Stone pile": "石置き場",

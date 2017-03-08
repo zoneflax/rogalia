@@ -1756,7 +1756,6 @@ T.dict = {
     "Label has no text": "Não há texto na etiqueta",
     "Always visible": "Sempre visível",
     "Pin chat": "Fixar a janela de chat",
-    "Find recipes by ingredient": "Encontre receitas pelo ingrediente",
     "Filters": "Filtro",
     "Cannot add more": "Não é possível adicionar mais",
     "Stone pile": "Pilha de pedra",

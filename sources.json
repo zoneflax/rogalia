@@ -54,6 +54,7 @@
     "./src/controller.js",
     "./src/network.js",
     "./src/container/container.js",
+    "./src/container/container-search.js",
     "./src/container/slot.js",
     "./src/container/equip.js",
     "./src/missile.js",

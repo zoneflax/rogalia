@@ -294,6 +294,7 @@ function Controller(game) {
         if (this.party.avatars) {
             this.party.avatars.forEach(avatar => avatar.update());
         }
+        this.avatar.update();
 
         this.updateCamera();
         if (this.world.cursor instanceof Entity || this.cursor.entity)
@@ -311,7 +312,6 @@ function Controller(game) {
         this.minimap.update();
         var now = Date.now();
         if (now - lastTickUpdate > 500) {
-            this.avatar.update();
             this.effects.update();
             lastTickUpdate = now;
             _.forEach(game.containers, (cnt) => cnt.visible && cnt.updateProgress());
@@ -356,7 +356,10 @@ function Controller(game) {
         containers.forEach(cnt => cnt.panel.hide());
     };
 
-    this.updatePlayerAvatar = function(player) {
+    this.initPlayerAvatar = function(player) {
+        if (this.avatar) {
+            return;
+        }
         this.avatar = new Avatar(player);
         dom.setContents(document.getElementById("player-avatar"), this.avatar.element);
     };
@@ -845,8 +848,6 @@ function Controller(game) {
             } else {
                 game.controller.actionQueue = [];
                 game.network.send(command, args, callback);
-                if (this.world.cursor instanceof Entity)
-                    game.sortedEntities.remove(this.world.cursor);
             }
 
             this.clearCursors();
@@ -895,8 +896,10 @@ function Controller(game) {
 
     this.clearCursors = function() {
         // clicking on player launches action, so don't cancel it
-        if (this.world.hovered != game.player)
+        if (this.world.hovered != game.player) {
+            game.sortedEntities.remove(this.world.cursor);
             this.world.cursor = null;
+        }
 
         this.world.hovered = null;
         this.hovered = null;
@@ -1382,7 +1385,7 @@ function Controller(game) {
             checked[container.id] = true;
             container.update();
             var containers = [];
-            container.forEach(function(slot) {
+            container.slots.forEach(function(slot) {
                 if (!slot.entity)
                     return;
 

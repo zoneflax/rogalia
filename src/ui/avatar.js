@@ -5,6 +5,10 @@
 class Avatar {
     constructor(character) {
         this.character = character;
+        this._state = {
+            lvl: 0,
+            chevron: null,
+        };
 
         this.avatar = character.avatar();
         this.avatar.classList.add("avatar-image");
@@ -12,13 +16,12 @@ class Avatar {
         this.effects = dom.wrap("avatar-effects");
         const params = (character.isPlayer) ? ["Hp", "Fullness", "Stamina"] : ["Hp"];
         this.bars = params.map(param => new ParamBar(param, character[param]));
-        const fullName = character.getFullName();
+        this.name = this.makeName();
         const contents = dom.wrap("avatar-contents", [
             this.avatar,
             dom.wrap("avatar-info", [
-                dom.wrap("avatar-name", fullName, {title: fullName}),
+                this.name,
                 dom.wrap("avatar-bars", this.bars.map(bar => bar.element)),
-                this.makeChevron(),
             ]),
         ]);
 
@@ -31,19 +34,39 @@ class Avatar {
     setIcon(name) {
     }
 
-    makeChevron() {
-        return (this.character.Style && this.character.Style.Chevron)
-            ? dom.img(`assets/icons/chevrons/${this.character.Style.Chevron}.png`, "avatar-chevron")
+    makeName(character = this.character) {
+        const fullName = character.getFullName();
+        this._state.lvl = character.Lvl;
+        return dom.wrap("avatar-name", [
+            fullName,
+            dom.wrap("avatar-icons", [
+                this.makeChevron(),
+                character.Domestical && dom.wrap("avatar-sex avatar-icon", ["♂", "♀"][character.Sex]),
+                character.Lvl && dom.wrap("avatar-lvl avatar-icon", character.Lvl),
+            ]),
+        ], {title: fullName});
+    }
+
+    makeChevron(character = this.character) {
+        const chevron = character.chevron();
+        this._state.chevron = chevron;
+
+        return (chevron)
+            ? dom.img(`assets/icons/chevrons/${chevron}.png`, "avatar-chevron")
             : null;
     }
 
-    update() {
+    update(character = this.character) {
         this.bars.forEach(bar => {
-            const param = this.character[bar.name];
+            const param = character[bar.name];
             if (param) {
                 bar.update(param);
             }
         });
+        // react, where are you?
+        if (this._state.lvl != character.Lvl || this._state.chevron != character.chevron()) {
+            this.name = dom.replace(this.name, this.makeName());
+        }
     }
 
     onmousedown(e) {

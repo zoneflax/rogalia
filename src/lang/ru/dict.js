@@ -1765,7 +1765,6 @@ T.dict = {
     "Label has no text": "На метке ничего не написано",
     "Always visible": "Всегда виден",
     "Pin chat": "Прикрепить чат",
-    "Find recipes by ingredient": "Найти рецепты по ингредиенту",
     "Filters": "Фильтры",
     "Cannot add more": "Не могу добавить больше",
     "Stone pile": "Груда камней",
@@ -1773,6 +1772,6 @@ T.dict = {
     "Promo": "Промо",
     "Loading": "Загрузка",
     "Blue night light": "Синий ночник",
-    "Желтый night light": "Желтый ночник",
+    "Yellow night light": "Желтый ночник",
     "Green night light": "Зеленый ночник",
 };

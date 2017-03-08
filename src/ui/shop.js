@@ -99,7 +99,7 @@ function Shop() {
                     cards.push(card);
                     contents.push(card);
                 });
-                tabs[index].contents = dom.wrap("products", contents);
+                tabs[index].contents = dom.scrollable("products", contents).element;
             });
             self.tabs = dom.tabs(tabs);
             self.panel.setContents(self.tabs);

@@ -53,7 +53,7 @@ function mainStage(data) {
         game.entities.forEach(function(e) {
             e.update(dt);
         });
-        game.missiles = game.missiles.filter((m) => m.update(dt));
+        game.missiles = game.missiles.filter(m => m.update(dt));
         game.controller.update();
         snow.update();
     };

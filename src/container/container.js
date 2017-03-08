@@ -1,4 +1,4 @@
-/* global Panel, dom, game, T, ContainerSlot */
+/* global Panel, dom, game, T, ContainerSlot, playerStorage, ContainerSearch */
 
 "use strict";
 function Container(entity) {
@@ -92,20 +92,56 @@ Container.prototype = {
     get visible() {
         return this.panel.visible;
     },
-    set visible(v){
+    set visible(v) {
         this.panel.visible = v;
     },
-    findSlot: function(entity) {
+    findSlot(entity) {
         var i = this._slots.indexOf(entity.Id);
         return (i != -1) ?  this.slots[i] : null;
     },
-    forEach: function(callback)  {
-        this.slots.forEach(callback);
+    find(predicate, recursive = true) {
+        const entities = this.slots
+              .filter(slot => slot.entity)
+              .map(slot => slot.entity);
+
+        return find(entities, recursive);
+
+        function find(entities, recursive) {
+            for (const entity of entities) {
+                if (predicate(entity)) {
+                    return entity;
+                }
+                if (!recursive || !entity.isContainer()) {
+                    continue;
+                }
+                // if (entity == this.entity) {
+                //     console.warn("Skiping recursive container", this);
+                //     continue;
+                // }
+                const found = find(_.compact(entity.Props.Slots.map(Entity.get)), recursive);
+                if (found) {
+                    return found;
+                }
+            }
+            return null;
+        };
     },
-    filter: function(predicate) {
-        return this.slots.filter((slot) => slot.entity).map((slot) => slot.entity).filter(predicate);
+    forEach(callback, recursive = true)  {
+        this.find((entity) => {
+            callback(entity);
+            return false;
+        }, recursive);
     },
-    createContainerPanel: function() {
+    filter(predicate, recursive = true) {
+        const found = [];
+        this.forEach(entity => {
+            if (predicate(entity)) {
+                found.push(entity);
+            }
+        });
+        return found;
+    },
+    createContainerPanel() {
         var slots = dom.div("slots-wrapper");
         this._slots.forEach(function(id, i) {
             var slot = new ContainerSlot(this, i);
@@ -131,7 +167,7 @@ Container.prototype = {
         case "chess-table":
             contents.push(dom.button(T("Toggle color"), "", function() {
                 slots.classList.toggle("chess-toggle");
-            }))
+            }));
             break;
         }
 
@@ -153,17 +189,17 @@ Container.prototype = {
                 this.update();
                 this._syncReq = false;
             }
-        }
+        };
         this.panel.hooks.close = () => { delete game.containers[this.id]; };
         this.panel.element.classList.add("container");
         this.panel.container = this;
 
         this.panel.setWidth(this._slotsWidth * Container.SLOT_SIZE);
     },
-    sort: function() {
+    sort() {
         game.network.send("Sort", {Id: this.id});
     },
-    makeButtons: function() {
+    makeButtons() {
         if (this.slots.length < 3) {
             return null;
         }
@@ -208,15 +244,21 @@ Container.prototype = {
             }
         });
 
-        return dom.wrap("container-actions", [moveAll, sort, openAll])
+        const search = dom.wrap("container-action", "⚲", {
+            title: T("Search"),
+            onclick: () => new ContainerSearch(this),
+        });
+
+
+        return dom.wrap("container-actions", [moveAll, sort, openAll, search]);
     },
-    markAllAsSeen: function() {
+    markAllAsSeen() {
         this.slots.forEach(function(slot) {
             slot.markAsSeen();
         });
     },
     // dwim want slot with entity
-    dwim: function(slot) {
+    dwim(slot) {
         if (!slot.entity) {
             console.log("dwim: got empty slot");
             return;
@@ -251,7 +293,7 @@ Container.prototype = {
 
         entity.dwim();
     },
-    init: function() {
+    init() {
         var entity = this.entity;
         var props = entity.Props;
         this._slots = props.Slots || [];
@@ -260,7 +302,7 @@ Container.prototype = {
         this.name = TS(entity.Name);
     },
     // called on each Entity.sync()
-    update: function() {
+    update() {
         this.sync();
         for (var i in this.slots) {
             var slot = this.slots[i];
@@ -280,16 +322,16 @@ Container.prototype = {
 
         this.updateFuel();
     },
-    updateProgress: function() {
+    updateProgress() {
         this.slots.forEach(slot => slot.updateProgress());
     },
-    syncReq: function() {
+    syncReq() {
         this._syncReq = true;
     },
-    sync: function() {
+    sync() {
         this._slots = this.entity.Props.Slots;
     },
-    updateFuel: function() {
+    updateFuel() {
         var fuel = this.entity.Fuel;
         if (!fuel)
             return;
@@ -315,10 +357,10 @@ Container.prototype = {
         this.fuel.update = update;
         dom.append(this.fuel, [slot, current, max]);
     },
-    hasSpace: function() {
+    hasSpace() {
         return this._slots.find(function(id) { return id == 0; }) !== undefined;
     },
-    getTopExcept: function(except, allowFull = false) {
+    getTopExcept(except, allowFull = false) {
         for (var i = Panel.stack.length-1; i >= 0; i--) {
             var panel = Panel.stack[i];
             if (panel.visible &&
