@@ -70,7 +70,10 @@ function Chat() {
 
         var actions = [
             {
-                privateMessage: () => self.preparePrivate(name)
+                privateMessage: () => self.preparePrivate(name),
+                // trade: function() {
+                //     game.network.send("trade", {Name: "offer", Trader: this.Id});
+                // },
             },
             "---",
             partyActions,

@@ -41,8 +41,16 @@ class Avatar {
             fullName,
             dom.wrap("avatar-icons", [
                 this.makeChevron(),
-                character.Domestical && dom.wrap("avatar-sex avatar-icon", ["♂", "♀"][character.Sex]),
-                character.Lvl && dom.wrap("avatar-lvl avatar-icon", character.Lvl),
+                character.Domestical && dom.wrap(
+                    "avatar-sex avatar-icon",
+                    ["♂", "♀"][character.Sex],
+                    {title: T(character.sex())}
+                ),
+                character.Lvl && dom.wrap(
+                    "avatar-lvl avatar-icon",
+                    character.Lvl,
+                    {title: T("Level")}
+                ),
             ]),
         ], {title: fullName});
     }

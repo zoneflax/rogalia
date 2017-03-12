@@ -40,7 +40,6 @@ Entity.prototype = {
     Dye: "",
     visibiliyObstacle: false,
     sprite: null,
-    _icon: null,
     _spriteVersion: "",
     graph: null,
     tags: [],
@@ -516,7 +515,7 @@ Entity.prototype = {
     defaultAction: function() {
         var self = this;
         function use() {
-            game.network.send("entity-use", { id: self.Id }, self.defaultActionSuccess.bind(self));
+            game.network.send("entity-use", {id: self.Id}, (data) => self.defaultActionSuccess(data));
         }
         switch (this.Type) {
         case "instance-exit":
@@ -710,6 +709,7 @@ Entity.prototype = {
         case "feeder":
         case "player-corpse":
         case "shredder":
+        case "altar":
             if (this.MoveType != Entity.MT_PORTABLE) {
                 this.defaultAction = () => this.open();
             }
@@ -1146,10 +1146,9 @@ Entity.prototype = {
         return false;
     },
     icon: function() {
-        if (this._icon)
-            return this._icon.cloneNode();
-        if (!this.sprite)
+        if (!this.sprite) {
             this.initSprite();
+        }
         return this.sprite.icon();
     },
     rotate: function(delta) {

@@ -1,4 +1,4 @@
-/* global Panel, dom */
+/* global Panel, dom, T */
 
 "use strict";
 
@@ -37,14 +37,17 @@ function Popup(buttons) {
             if (onclose)
                 callback = onclose;
         },
-        confirm: function(message, callback) {
+        confirm: function(message, callback, cancel = () => {}) {
             panel.setContents([
                 dom.wrap("popup-message", message),
                 dom.button(T("Ok"), "popup-ok", function() {
                     panel.hide();
                     callback();
                 }),
-                dom.button(T("Cancel"), "popup-cancel", panel.hide.bind(panel))
+                dom.button(T("Cancel"), "popup-cancel", () => {
+                    panel.hide();
+                    cancel();
+                }),
             ]);
             show();
         },

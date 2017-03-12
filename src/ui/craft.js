@@ -1,4 +1,4 @@
-/* global game, dom, T, TS, Panel, ParamBar, playerStorage, Skills, util */
+/* global game, dom, T, TS, Panel, ParamBar, playerStorage, Skills, util, ContainerSlot, Container */
 
 "use strict";
 class Craft {
@@ -7,31 +7,15 @@ class Craft {
         this.buildButton = null;
         this.selected = null;
         this.slots = [];
-        this.current = {};
-        this.requirements = null;
-
+        this.current = null;
         this.recipes = {};
 
-        this.list = this.makeList();
-        this.tree = this.makeTree();
+        this.availableIngredients = {};
 
         this.searchInput = null;
-        this.searchSlot = this.makeSearchSlot();
+        this.searchEntity = null;
+        this.filters = this.initFilters();
         this.lastSearch = playerStorage.getItem("craft.search") || "";
-
-        this.listWrapper = dom.wrap("#recipe-list-wrapper", [
-            // this.makeSearchField(),
-            dom.wrap("#search-by-ingredient", [
-                T("Find recipes by ingredient"),
-                this.searchSlot,
-            ]),
-            dom.hr(),
-            dom.wrap("#recipe-filters", [
-                T("Filters") + ":",
-            ]),
-            dom.hr(),
-            this.list
-        ]);
 
         this.titleElement = dom.div();
         this.ingredientsList = dom.tag("ul", "ingredients-list");
@@ -40,30 +24,35 @@ class Craft {
 
         this.history = [];
 
-        this.tabs = dom.tabs([
-            {
-                title: T("by skill"),
-                contents: this.makeRecipeTree(),
-            },
-            {
-                title: T("by purpose"),
-                contents: [],
-            },
-            {
-                title: T("favourites"),
-                contents: [],
-            }
-        ]);
         this.panel = new Panel(
             "craft",
             "Craft",
             [
                 this.makeHeader(),
                 dom.hr(),
-                this.tabs,
+                dom.tabs([
+                    {
+                        title: T("by skill"),
+                        update: (title, contents) => {
+                            dom.setContents(contents, this.makeRecipeTree(this.recipesBySkill()));
+                            this.repeatSearch();
+                        },
+                    },
+                    {
+                        title: T("by purpose"),
+                        update: (title, contents) => {
+                            dom.setContents(contents, this.makeRecipeTree(this.recipesByPurpose()));
+                            this.repeatSearch();
+                        },
+                    },
+                    // {
+                    //     title: T("favourites"),
+                    //     contents: [],
+                    // }
+                ])
             ]
         );
-        this.panel.hooks.hide = this.cleanUp.bind(this);
+        this.panel.hooks.hide = () => this.cleanUp();
         this.panel.hooks.show = () => {
             this.searchInput.focus();
             this.update();
@@ -96,12 +85,40 @@ class Craft {
         };
 
         this.build = (e) => {
-            game.controller.newCreatingCursor(this.blank.type, "build");
+            game.controller.newCreatingCursor(
+                this.blank.type,
+                "build",
+                () => { this.panel.show(); },
+                () => { this.panel.show(); }
+            );
             this.panel.hide();
         };
 
-        if (this.searchInput.value != "")
-            this.search(this.searchInput.value, true);
+        this.repeatSearch();
+    }
+
+    initFilters() {
+        return [
+            {
+                name: "craft",
+                test: (type) => Entity.templates[type].MoveType == Entity.MT_PORTABLE,
+            },
+            {
+                name: "building",
+                test: (type) => Entity.templates[type].MoveType != Entity.MT_PORTABLE,
+            },
+            {
+                name: "safe",
+                test: (type) => this.safeToCreate(Entity.recipes[type]),
+            },
+        ].map(filter => {
+            filter.enabled = playerStorage.getItem("craft.filter." + filter.name);
+            return filter;
+        });
+    }
+
+    repeatSearch(filter = null) {
+        this.search(this.searchInput.value, true, filter);
     }
 
     makeHeader() {
@@ -114,7 +131,31 @@ class Craft {
         ]);
     }
 
-    makeRecipeTree() {
+    moveMiscRecipes(root) {
+        for (const skill in root) {
+            const group = root[skill];
+            if (_.size(group) == 0) {
+                delete root[skill];
+                continue;
+            }
+            let misc = {};
+            for (const name in group) {
+                const subgroup = group[name];
+                if (["portable", "lifable", "static"].includes(name) || _.size(subgroup) == 1) {
+                    delete group[name];
+                    _.forEach(subgroup, (recipe, type) => {
+                        misc[type] = recipe;
+                    });
+                }
+            }
+            if (_.size(misc) > 0) {
+                root[skill] = _.merge({misc}, group);
+            }
+        }
+        return root;
+    }
+
+    recipesBySkill() {
         const root = _.fromPairs(Skills.list.map(skill => [skill, {}]));
         for (const [type, recipe] of Entity.sortedRecipes) {
             const group = Entity.templates[type].Group;
@@ -123,43 +164,63 @@ class Craft {
             root[recipe.Skill][group] = node;
         }
 
-        const recipeContainer = dom.wrap("recipe-container", T("No recipes"));
+        return this.moveMiscRecipes(root);
+    }
+
+    recipesByPurpose() {
+        const root = Entity.sortedTags.reduce(function(root, [tag, entities]) {
+            root[tag] = entities.reduce(function(group, entity) {
+                group[entity.Type] = entity.Recipe;
+                return group;
+            }, {});
+            return root;
+        }, {});
+
+        return this.moveMiscRecipes(root);
+    }
+
+
+    makeRecipeTree(root) {
+        const recipeContainer = dom.wrap("recipe-container", T("Select recipe"));
         this.recipeDetails = recipeContainer;
+        this.recipes = {};
+        this.root = this.makeNode(root);
         return dom.wrap("recipe-tree-container", [
-            dom.scrollable("recipe-tree-root", dom.show(this.makeNode(root))).element,
+            dom.scrollable("recipe-tree-root", this.root).element,
             recipeContainer,
             recipeContainer,
         ]);
     }
 
-    makeNode(tree) {
-        return dom.hide(dom.wrap("recipe-tree", _.map(tree, (leaf, name) => {
+    makeNode(tree, flat = false) {
+        return dom.wrap("recipe-tree", _.map(tree, (leaf, name) => {
             if ("Ingredients" in leaf) {
                 return this.makeRecipe(name, leaf);
-            } else {
-                const subtree = this.makeNode(leaf);
-                const toggleIcon = dom.wrap("recipe-tree-toggle", "+");
-                const header = dom.wrap(
+            }
+
+            const element = dom.wrap("recipe-subtree", [
+                dom.wrap(
                     "recipe-subtree-header",
                     [
-                        toggleIcon,
+                        dom.wrap("recipe-subtree-icon"),
                         TS(name),
                     ],
                     {
                         onclick: () => {
-                            dom.toggle(subtree);
-                            toggleIcon.textContent = dom.hidden(subtree) ? "+" : "‒";
+                            element.classList.toggle("expanded");
                         },
                     }
-                );
-                return dom.wrap("recipe-subtree", [header, subtree]);
-            }
-        })));
+                ),
+                this.makeNode(leaf, true),
+            ]);
+            return element;
+        }));
     }
 
     makeRecipe(type, recipe) {
-        const element =  dom.wrap("recipe", TS(type), {
-            click: () => {
+        const name = TS(type);
+        const element =  dom.wrap("recipe", name, {
+            onclick: () => {
                 if (game.controller.modifier.shift) {
                     game.chat.linkRecipe(type);
                     return;
@@ -168,13 +229,15 @@ class Craft {
                     game.controller.newCreatingCursor(type);
                     return;
                 }
-                this.openRecipe(element, true);
-
+                this.openRecipe({type, recipe, element});
             }
         });
-        element.recipe = recipe;
-        element.type = type;
-        element.title = TS(type);
+        if (!this.safeToCreate(recipe)) {
+            element.classList.add("unavailable");
+        }
+        element.dataset.type = type;
+        element.dataset.search = TS(type);
+        this.recipes[type] = element;
         return element;
     }
 
@@ -210,8 +273,16 @@ class Craft {
 
     update() {
         // update blank after server confirmation of ingredient being added
-        if (this.blank.entity)
+        if (this.blank.entity) {
             this.render(this.blank.entity);
+        }
+
+        if (this.current) {
+            const ingredients = game.player.findItems(Object.keys(this.current.recipe.Ingredients));
+            if (!_.isEqual(ingredients, this.availableIngredients)) {
+                this.openRecipe(this.current);
+            }
+        }
     }
 
     open(blank, burden) {
@@ -280,38 +351,10 @@ class Craft {
         }
     }
 
-    use(entity, to) {
-        if (!entity.is(to.group))
-            return false;
-
-        var from = Container.getEntityContainer(entity);
-        if (!from)
-            return false;
-
-        if (this.slots.some(function(slot) {
-            return slot.firstChild.id == entity.id;
-        })) {
-            return false;
-        }
-        var slot = from.findSlot(entity);
-
-        slot.lock();
-        var ingredient = entity.icon();
-        ingredient.id = entity.Id;
-        ingredient.unlock = slot.unlock.bind(slot);
-
-        var index = this.slots.indexOf(to);
-        this.slots[index].used = true;
-        this.slots[index].from = from;
-        this.slots[index].unlock = slot.unlock.bind(slot);
-        dom.setContents(to, ingredient);
-        return true;
-    }
-
     cleanUp() {
-        for(var i = 0, l = this.slots.length; i < l; i++) {
-            var slot = this.slots[i];
-            this.cancel(slot.item, slot);
+        this.slots.forEach(slot => slot.element.cleanUp());
+        if (this.customPanel) {
+            this.customPanel.close();
         }
     }
 
@@ -394,14 +437,14 @@ class Craft {
     makeSearchByKeyword() {
         var input = dom.tag("input");
         input.placeholder = T("search");
-        input.addEventListener("keyup", this.searchHandler.bind(this));
+        input.addEventListener("keyup", (event) => this.searchHandler(event));
         input.value = this.lastSearch;
         input.classList.add("search-input");
 
         this.searchInput = input;
 
         const clear =  dom.button("×", "clear-search", () => {
-            this.search("");
+            this.search();
             input.value = "";
             input.focus();
         });
@@ -414,9 +457,12 @@ class Craft {
     }
 
     makeSearchByIngredient() {
-        return dom.wrap(".search-by-ingredient", [
-            this.searchSlot,
+        return dom.wrap("search-by-ingredient", [
+            this.makeSearchSlot(),
             T("Search by ingredient"),
+            dom.button(T("Has\nitems"), "", () => {
+                this.repeatSearch(type => this.hasIngredients(Entity.recipes[type]));
+            }),
         ]);
     }
 
@@ -425,29 +471,18 @@ class Craft {
             T("Filters") + ":",
             dom.wrap(
                 "filters",
-                [
-                    "portable",
-                    "liftable",
-                    "static",
-                    "unavailable"
-                ].map(name => {
-                    const checkbox = dom.div("search-filter", {title: T(name)});
-                    const saved = playerStorage.getItem("craft.filter." + name);
-                    const checked = (saved === null) ? true : saved;
+                this.filters.map((filter) => {
+                    const element = dom.div("search-filter", {title: T(filter.name)});
+                    element.style.backgroundImage = `url(assets/icons/craft/${filter.name}.png)`;
 
-                    checkbox.style.backgroundImage = `url(assets/icons/craft/${name}.png)`;
+                    if (filter.enabled)
+                        element.classList.add("enabled");
 
-                    if (checked)
-                        checkbox.classList.add("checked");
-                    else
-                        this.list.classList.add("filter-" + name);
-
-                    checkbox.onclick = function(e) {
-                        checkbox.classList.toggle("checked");
-                        const checked = !this.list.classList.toggle("filter-"+name);
-                        playerStorage.setItem("craft.filter." + name, checked);
+                    element.onclick = () => {
+                        filter.enabled = element.classList.toggle("enabled");
+                        this.repeatSearch();
                     };
-                    return checkbox;
+                    return element;
 
                 })
             ),
@@ -455,54 +490,35 @@ class Craft {
     }
 
     makeSearchSlot() {
-        var self = this;
-        var slot = dom.wrap("slot plus");
+        const slot = dom.wrap("slot plus");
         slot.title = T("Search by ingredient");
-        slot.canUse = function() {
-            return true;
-        };
-        slot.use = function(entity) {
-            slot.entity = entity;
+        slot.canUse = () => true;
+        slot.use = (entity) => {
             dom.clear(slot);
+            this.searchEntity = entity;
+            slot.classList.remove("plus");
             slot.appendChild(entity.icon());
-            var searching = self.list.classList.contains("searching");
-            self.list.classList.add("searching");
-            for (var type in self.recipes) {
-                var li = self.recipes[type];
-                if (searching && !li.classList.contains("found"))
-                    continue;
-
-                li.classList.remove("found");
-                var recipe = Entity.recipes[type];
-                for (var ingredient in recipe.Ingredients) {
-                    if (entity.is(ingredient)) {
-                        li.classList.add("found");
-                        li.parentNode.parentNode.classList.add("found");
-                        continue;
-                    }
-                }
-            }
-            dom.forEach(".recipe-list > .found", function() {
-                if (this.querySelector(".found") == null)
-                    this.classList.remove("found");
-            });
+            this.repeatSearch();
             return true;
         };
-        slot.addEventListener("mousedown", function() {
-            slot.entity = null;
-            dom.clear(slot);
-            self.search(self.searchInput.value);
-        }, true);
+        slot.onmousedown = () => {
+            if (!game.controller.cursor.isActive()) {
+                this.searchEntity = null;
+                dom.clear(slot);
+                slot.classList.add("plus");
+                this.repeatSearch();
+            }
+        };
 
         return slot;
     }
 
-    searchHandler(e) {
-        if (e.target.value == this.lastSearch) {
+    searchHandler(event) {
+        if (event.target.value == this.lastSearch) {
             return true;
         }
-        this.lastSearch = e.target.value;
-        return this.search(e.target.value);
+        this.lastSearch = event.target.value;
+        return this.search(event.target.value);
     }
 
     searchOrHelp(pattern) {
@@ -510,64 +526,113 @@ class Craft {
         if (help) {
             // we need to defer panel showing because searchOrHelp will be called from click handler
             // which will focus previous panel
-            _.defer(function() {
-                new Panel("craft-help", T("Help"), dom.span(help)).show();
-            });
+            _.defer(() => new Panel("craft-help", T("Help"), dom.span(help)).show());
         } else if (pattern && pattern.match(/-wall-plan$/)) {
-            _.defer(function() {
-                game.controller.shop.search(pattern);
-            });
+            _.defer(() => game.controller.shop.search(pattern));
         } else {
-            this.search(pattern, true);
+            if (pattern in this.recipes) {
+                if (this.current) {
+                    this.history.push(this.current);
+                }
+                this.openRecipe({type: pattern, element: this.recipes[pattern]});
+            } else {
+                this.search(pattern, true);
+            }
         }
     }
 
-    search(pattern, selectMatching) {
+    search(pattern = "", selectMatching = false, filter = null) {
         // we do not want to show on load
         if (game.stage.name == "main") {
             this.panel.show();
         }
-        //TODO: fast solution; make another one
-        var id = "#" + this.panel.name + " ";
-        dom.removeClass(id + ".recipe-list .found", "found");
-        if (!pattern) {
-            this.list.classList.remove("searching");;
-            if (this.searchSlot.entity) {
-                this.searchSlot.use(this.searchSlot.entity);
-            }
-            return;
-        }
-        this.list.classList.add("searching");
 
-        pattern = pattern.toLowerCase().replace(" ", "-");
-        try {
-            var selector = id + ".recipe[type*='" + pattern + "']," +
-                id + ".recipe[data-search*='" + pattern + "']";
-            dom.addClass(selector, "found");
-        } catch(e) {
+        const re = pattern && new RegExp(_.escapeRegExp(pattern.replace(/-/g, " ")), "i");
+        const found = [];
+        const traverse = (subtree) => {
+            for (const child of subtree.children) {
+                child.classList.remove("found");
+                child.classList.remove("expanded");
+                child.classList.remove("first");
+                child.classList.remove("last");
+                if (child.classList.contains("recipe-subtree")) {
+                    traverse(child.querySelector(".recipe-tree"));
+                    continue;
+                }
+                const type = child.dataset.type;
+                let match = !filter || filter(type);
+                if (match) {
+                    match = this.filters.every(({test, enabled}) => !enabled || test(type));
+                }
+                if (match && this.selectEntity) {
+                    const recipe = Entity.recipes[type];
+                    match = _.some(recipe.Ingredients, (recipe, kind) => this.searchEntity.is(kind));
+                }
+                if (match && re) {
+                    match = re.test(type) || re.test(child.dataset.search);
+                }
+
+                if (match) {
+                    child.classList.add("found");
+                    found.push(child);
+                }
+            }
+        };
+
+        traverse(this.root);
+
+        if (!re && !this.searchEntity && !filter && this.filters.every(({enabled}) => !enabled)) {
+            this.root.classList.remove("searching");
             return;
         }
+
+        this.root.classList.add("searching");
 
         const value = (selectMatching) ? TS(pattern) : pattern;
         if (this.searchInput.value != value) {
             this.searchInput.value = value;
         }
 
-        var matching = null;
-        dom.forEach(id + ".recipe.found", function() {
-            if (selectMatching && (this.type == pattern || this.dataset.search == pattern)) {
+        found.forEach(element => {
+            if (selectMatching && (element.dataset.type == pattern || element.dataset.search == pattern)) {
                 selectMatching = false;
-                matching = this;
+                this.openRecipe({type: element.dataset.type, element});
             }
-            this.parentNode.parentNode.classList.add("found");
+            let parent = element.parentNode;
+            while (!parent.classList.contains("recipe-tree-root")) {
+                if (parent.classList.contains("recipe-subtree")) {
+                    parent.classList.add("found");
+                    parent.classList.add("expanded");
+                }
+                parent = parent.parentNode;
+            }
         });
 
-        if (this.searchSlot.entity) {
-            this.searchSlot.use(this.searchSlot.entity);
-        }
+        updateTree(this.root);
 
-        if (matching) {
-            this.openRecipe(matching, false);
+        function updateTree(subtree) {
+            let last = null;
+            let first = null;
+            for (const child of subtree.children) {
+                if (child.classList.contains("recipe") && child.classList.contains("found")) {
+                    if (!first) {
+                        first = child;
+                    }
+                    last = child;
+                } else if (child.classList.contains("expanded")) {
+                    last = child;
+                    if (!first) {
+                        first = child;
+                    }
+                    updateTree(child.lastChild);
+                }
+            }
+            if (first) {
+                first.classList.add("first");
+            }
+            if (last) {
+                last.classList.add("last");
+            }
         }
     }
 
@@ -575,205 +640,216 @@ class Craft {
         if (!e.target.recipe)
             return;
 
-        if (game.controller.modifier.shift) {
-            game.chat.linkRecipe(e.target.type);
-            return;
-        }
-        if (game.player.IsAdmin && game.controller.modifier.ctrl) {
-            game.controller.newCreatingCursor(e.target.type);
-            return;
-        }
         this.openRecipe(e.target, true);
     }
 
-    openRecipe(target, clearHistory, noHistory) {
-        var recipe = target.recipe;
-        target.classList.add("selected");
-
-        if (this.selected)
-            this.selected.classList.remove("selected");
-
-        if (clearHistory) {
-            this.history = [];
-        } else if (this.selected && !noHistory) {
-            this.history.push(this.selected);
+    openRecipe({type, recipe = Entity.recipes[type], element}) {
+        if (this.current && this.current.element) {
+            this.current.element.classList.remove("selected");
         }
-
-        this.selected = target;
-
+        this.current = {type, recipe, element};
         this.cleanUp();
-        this.current = {
-            recipe: recipe,
-            type: target.type,
-            title: target.title
-        };
-
-        var template = Entity.templates[target.type];
+        element.classList.add("selected");
+        const template = Entity.templates[type];
         if (template.MoveType == Entity.MT_PORTABLE)
             this.renderRecipe(this.recipeDetails);
         else
-            this.renderBuildRecipe(target, this.recipeDetails);
+            this.renderBuildRecipe(this.recipeDetails);
     }
 
     renderRecipe(element) {
-        var self = this;
-        this.requirements = null;
         this.slots = [];
 
-        var recipe = this.current.recipe;
+        const {type, recipe} = this.current;
 
-        var title = dom.span(T(this.current.title), "recipe-title");
-        if (recipe.Output)
-            title.textContent += " x" + recipe.Output;
         this.type = this.current.type;
-        var ingredients = dom.tag("ul");
-        var slots = [];
 
-        for(var group in recipe.Ingredients) {
-            var groupTitle = TS(group);
-            var required = T(recipe.Ingredients[group]);
-            var ingredient = dom.make("li", [required, "x ", this.makeLink(group)]);
-            dom.append(ingredients, ingredient);
+        this.availableIngredients = game.player.findItems(Object.keys(recipe.Ingredients));
+        const canCraft = _.reduce(this.availableIngredients, (max, {length: has}, kind) => {
+            const required = recipe.Ingredients[kind];
+            return Math.min(max, Math.floor(has/required));
+        }, +Infinity);
 
-            for(var j = 0; j < required; j++) {
-                var slot = dom.slot();
-                var image = Entity.getPreview(group);
+        const repeat = (this.repeatInput) ? this.repeatInput.value : 1;
+        this.repeatInput = dom.tag("input");
+        this.repeatInput.type = "number";
+        this.repeatInput.min = 1;
+        this.repeatInput.max = canCraft;
+        this.repeatInput.value = (canCraft) ? Math.min(repeat, canCraft) : 0;
 
-                image.title = groupTitle;
-                slot.image = image;
-                slot.item = null;
-                slot.appendChild(image);
-                slot.title = groupTitle;
-                slot.group = group;
-                slot.craft = true; //TODO: fix; required for controller (apply "use")
-                slot.used = false;
-                slots.push(slot);
-                slot.check = function(cursor) {
-                    return cursor.entity.is(this.group);
-                };
-                slot.onmousedown = function() {
-                    var slot = this;
-                    if (game.controller.cursor.isActive())
-                        return;
+        const controlls = dom.wrap("recipe-controlls", [
+            dom.make("a", "<", "less", {
+                onclick: () => this.repeatInput.value = Math.max(1, this.repeatInput.value - 1)
+            }),
+            this.repeatInput,
+            dom.make("a", ">", "more", {
+                onclick: () => this.repeatInput.value = Math.min(+this.repeatInput.value + 1, canCraft)
+            }),
+            dom.make("a", "≫", "max", {
+                onclick: () => this.repeatInput.value = canCraft
+            }),
+            dom.button(T("Craft"), "", () => this.craft(type, recipe, this.repeatInput.value)),
+        ]);
 
-                    if (slot.from) {
-                        self.cancel(this.from, slot);
-                        return;
-                    }
-
-                    self.searchOrHelp(slot.group);
-                }.bind(slot);
-            }
+        if (canCraft == 0) {
+            controlls.classList.add("disabled");
         }
 
-        this.slots = slots;
-
-        var auto = dom.button(
-            T("Auto"),
-            "recipe-auto",
-            () => game.controller.iterateContainers(slot => this.dwim(slot))
-        );
-        var create = dom.button(T("Create"), "recipe-create", () => this.create());
-        var all = dom.button(T("Craft all"), "recipe-craft-all", () => this.craftAll());
-        var buttons = dom.wrap("#recipe-buttons", [all, auto, create]);
+        const back = this.makeBackButton();
+        if (this.history.length == 0) {
+            back.disabled = true;
+        }
 
         dom.setContents(element, [
-            this.makePreview(this.current.type),
-            title,
+            this.makeRecipeHeader(type, recipe),
             dom.hr(),
-            this.makeRequirements(recipe),
-            dom.hr(),
-            T("Ingredients") + ":",
-            ingredients,
-            this.makeInfo(this.current.type),
-            this.makeEquipRequirementes(this.current.type),
-            dom.wrap(".slots-wrapper", slots),
-            dom.hr(),
-            buttons,
-            dom.hr(),
-            Entity.templates[this.current.type].makeDescription()
+            this.makeIngredients(type, recipe),
+            back,
+            controlls,
+            dom.scrollable("recipe-descr", Entity.templates[type].makeDescription()).element,
         ]);
-        this.renderBackButton(element);
     }
 
-    renderBuildRecipe(target, element) {
-        var recipe = target.recipe;
+    makeIngredients(type, recipe) {
+        return dom.wrap("recipe-ingredients", [
+            dom.wrap("recipe-ingredients-list", _.map(recipe.Ingredients, (required, kind) => {
+                const has = this.availableIngredients[kind].length;
+                return dom.wrap("recipe-ingredient", [
+                    required,
+                    "x ",
+                    this.makeLink(kind),
+                    dom.span(" (" + has + ")", (has > 0) ? "available" : "unavailable", T("Available")),
+                ]);
+            })),
+            dom.wrap("recipe-ingredients-slots", _.map(recipe.Ingredients, (required, kind) => {
+                const image = Entity.getPreview(kind);
+                const slot = dom.wrap("slot", image, {
+                    title: TS(kind),
+                    onclick: () => this.searchOrHelp(kind)
+                });
+                return slot;
+            })),
+            dom.make(
+                "button",
+                [
+                    dom.img("assets/icons/customization.png"),
+                ],
+                "recipe-open-custom",
+                {
+                    onclick: () => this.openCustom(type, recipe),
+                }
+            ),
+        ]);
+    }
 
-        var title = dom.span(target.title, "recipe-title");
+    openCustom(type, recipe) {
+        this.slots = [];
+        let slots = [];
+        const ingredients = dom.wrap(
+            "recipe-ingredients",
+            _.map(recipe.Ingredients, (required, kind) => {
+                const title = TS(kind);
+                slots = slots.concat(_.times(required, () => {
+                    const slot = new ContainerSlot({panel: this.panel, entity: {}, inspect: true}, 0);
+                    const preview = _.find(Entity.templates, (tmpl) => tmpl.is(kind));
+                    slot.setPlaceholder(preview.sprite.image.src, title);
+                    slot.placeholder.classList.add("item-preview");
 
-        this.blank.type = target.type;
+                    slot.element.check = ({entity}) => entity.is(kind);
+                    slot.element.cleanUp = () => {
+                        if (slot.entity) {
+                            const from = Container.getEntitySlot(slot.entity);
+                            from && from.unlock();
+                            slot.clear();
+                        }
+                    };
+                    slot.element.onmousedown = slot.element.cleanUp;
+                    slot.element.use = (entity) => {
+                        if (this.slots.some(slot => slot.entity == entity)) {
+                            return false;
+                        }
+                        const from = Container.getEntityContainer(entity);
+                        if (!from)
+                            return false;
 
-        var ingredients = dom.tag("ul");
-        var slots = [];
-        for(var name in recipe.Ingredients) {
-            var required = recipe.Ingredients[name];
-            var group = name.replace("meta-", "");
-            var ingredient = dom.make("li", [required, "x ", this.makeLink(group)]);
-            dom.append(ingredients, ingredient);
-        }
-        dom.setContents(
-            element,
-            [
-                this.makePreview(this.blank.type),
-                title,
-                dom.hr(),
-                this.makeRequirements(recipe),
-                ingredients,
-                dom.hr(),
-                dom.button(T("Create"), "recipe-create", this.build.bind(this)),
-                dom.hr(),
-                Entity.templates[this.current.type].makeDescription(),
-            ]
+                        from.findSlot(entity).lock();
+                        slot.set(entity);
+                        return true;
+                    };
+                    slot.element.craft = true; //TODO: fix; required for controller (apply "use")
+
+                    this.slots.push(slot);
+                    return slot.element;
+                }));
+                return dom.wrap("recipe-ingredient", [required, "x ", this.makeLink(kind)]);
+            })
         );
-        this.renderBackButton(element);
+        const container = document.body.querySelector(".recipe-ingredients-slots");
+        this.customPanel = new Panel("craft-custom-slots", TS(type), [
+            T("Use this items for craft"),
+            dom.hr(),
+            dom.wrap(".slots-wrapper", slots),
+        ]).show();
     }
 
-    renderBackButton(element) {
-        if (this.history.length == 0)
-            return;
+    renderBuildRecipe(element) {
+        const {type, recipe} = this.current;
 
-        var self = this;
+        this.blank.type = type;
+        this.availableIngredients = game.player.findItems(Object.keys(recipe.Ingredients));
 
-        dom.append(element, [
+        const back = this.makeBackButton();
+        if (this.history.length == 0) {
+            back.disabled = true;
+        }
+
+        dom.setContents(element, [
+            this.makeRecipeHeader(type, recipe),
             dom.hr(),
-            dom.button(T("Back"), "craft-history-back", function() {
-                self.openRecipe(self.history.pop(), false, true);
-            }),
+            this.makeIngredients(type, recipe),
+            back,
+            dom.wrap("recipe-controlls", [
+                dom.button(T("Build"), "recipe-create", () => this.build())
+            ]),
+            dom.scrollable("recipe-descr", Entity.templates[type].makeDescription()).element,
         ]);
     }
 
-    craftAll() {
-        game.controller.iterateContainers((slot) => this.dwim(slot));
-        this.create(true);
+    makeBackButton() {
+        return dom.button(T("Back"), "recipe-history-back", () => {
+            this.openRecipe(this.history.pop(), true);
+        });
     }
 
-    create(craftAll) {
-        var ingredients = [];
-        for(var i = 0, l = this.slots.length; i < l; i++) {
-            var ingredient = this.slots[i].firstChild;
-            if (!ingredient.id)
-                return false;
-            ingredients.push(parseInt(ingredient.id));
+    craft(type, recipe, num) {
+        // get hand added entities
+        const custom = {};
+        for (const {entity} of this.slots) {
+            if (entity) {
+                const kind = _.findKey(recipe.Ingredients, (required, kind) => entity.is(kind));
+                custom[kind] = (custom[kind] || []).concat(entity.Id);
+            }
         }
-        var done = function (data) {
-            this.cleanUp();
-            this.renderRecipe();
-            if (craftAll === true)
-                setTimeout(this.craftAll.bind(this), 100);
-        }.bind(this);
-
-        game.network.send("craft", {type: this.type, ingredients: ingredients}, done);
-        return true;
-    }
-
-    cancel(from, to) {
-        var index = this.slots.indexOf(to);
-        var slot = this.slots[index];
-        slot.used = false;
-        slot.from = null;
-        slot.unlock && slot.unlock();
-        dom.clear(to);
-        to.appendChild(to.image);
+        const ingredients =  _.flatMap(recipe.Ingredients, (required, kind) => {
+            const list = custom[kind] || [];
+            const items = this.availableIngredients[kind];
+            for (let i = 0; i < items.length && list.length < required; i++) {
+                const {Id: id} = items[i];
+                if (list.includes(id)) {
+                    continue;
+                }
+                list.push(id);
+            }
+            return list;
+        });
+        game.network.send("craft", {type, ingredients}, () => {
+            this.openRecipe(this.current);
+            num--;
+            if (num > 0) {
+                this.repeatInput.value = Math.max(1, num);
+                setTimeout(() => this.craft(type, recipe, num), 100);
+            }
+        });
     }
 
     safeToCreate(recipe) {
@@ -785,50 +861,27 @@ class Craft {
         return skill.Value.Current >= recipe.Lvl;
     }
 
-    makeRequirements(recipe) {
-        return dom.wrap("", [
-            T("Requirements") + ": ",
-            dom.make("ul", [
-                this.makeSkill(recipe),
-                this.makeTool(recipe),
-                this.makeEquipment(recipe),
-                this.makeLiquid(recipe),
+    hasIngredients(recipe) {
+        const ingredients = game.player.findItems(Object.keys(recipe.Ingredients));
+        return _.every(ingredients, ({length: has}, kind) => {
+            const required = recipe.Ingredients[kind];
+            return has >= required;
+        });
+    }
+
+    makeRequirements(type, recipe) {
+        return dom.wrap("recipe-requirements", [
+            dom.wrap("recipe-requirements-header", T("Required") + ": "),
+            dom.wrap("", [
+                this.makeSkillRequirementes(recipe),
+                this.makeToolRequirementes(recipe),
+                this.makeEquipmentRequirementes(recipe),
+                this.makeLiquidRequirementes(recipe),
             ]),
         ]);
     }
 
-    makeInfo(type) {
-        var tmpl = Entity.templates[type];
-        if ("Armor" in tmpl) {
-            return dom.wrap("", [
-                dom.hr(),
-                T("Base armor") + ": " + tmpl.Armor,
-            ]);
-        }
-        if ("Damage" in tmpl) {
-            return dom.wrap("", [
-                dom.hr(),
-                T("Base damage") + ": " + tmpl.Damage,
-                tmpl.Ammo && dom.wrap("", T("Ammo") + ": " + T(tmpl.Ammo.Type)),
-            ]);
-        }
-        return null;
-    }
-
-    makeEquipRequirementes(type) {
-        let tmpl = Entity.templates[type];
-        if (tmpl.EffectiveParam && tmpl.Lvl > 1) {
-            var canEquip = tmpl.nonEffective() ? "unavailable" : "";
-
-            return dom.wrap("equip-requirements", [
-                dom.wrap(canEquip, T("Requirements") + ": " + T(tmpl.EffectiveParam).toLowerCase() + ": " + tmpl.Lvl),
-                dom.hr(),
-            ]);
-        }
-        return null;
-    }
-
-    makeSkill(recipe) {
+    makeSkillRequirementes(recipe) {
         if (!recipe.Skill) {
             return null;;
         }
@@ -845,54 +898,70 @@ class Craft {
 
         var lvl = (recipe.Lvl > 0) ? recipe.Lvl : "";
 
-        return dom.tag(
-            "li",
-            (safeToCreate) ? "" : "unavailable",
-            {
-                title : title,
-                text : sprintf("%s: %s %s", T("Skill"), T(recipe.Skill), lvl),
+        return dom.wrap(
+            "skill-requirements" + ((safeToCreate) ? "" : " unavailable"),
+            T("Skill") + " - " + T(recipe.Skill) + " " + lvl,
+            {title}
+        );
+    }
+
+    makeToolRequirementes(recipe) {
+        return recipe.Tool && dom.wrap(
+            "skill-requirementes",
+            [T("Tool") + " - "].concat(this.makeLinks(recipe.Tool)),
+            {title : T("Must be equipped")}
+        );
+    }
+
+    makeEquipmentRequirementes(recipe) {
+        return recipe.Equipment && dom.wrap(
+            "equipment-requirementes",
+            [T("Equipment") + " - "].concat(this.makeLinks(recipe.Equipment)),
+            {title : T("You must be near equipment")}
+        );
+    }
+
+    makeLiquidRequirementes(recipe) {
+        return recipe.Liquid && dom.wrap(
+            "liquired-requirementes",
+            TS(recipe.Liquid.Type) + " : " + recipe.Liquid.Volume
+        );
+    }
+
+    makeRecipeHeader(type, recipe) {
+        const title = dom.span(TS(type), "recipe-title");
+        title.onclick = () => {
+            if (game.controller.modifier.shift) {
+                game.chat.linkRecipe(type);
             }
-        );
-    }
-
-    makeTool(recipe) {
-        if (!recipe.Tool) {
-            return null;
+        };
+        if (recipe.Output) {
+            title.textContent += ` (x${recipe.Output})`;
         }
-        return dom.append(
-            dom.tag("li", "", {text : T("Tool") + ": ", title : T("Must be equipped")}),
-            this.makeLinks(recipe.Tool)
-        );
-    }
 
-    makeEquipment(recipe) {
-        if (!recipe.Equipment) {
-            return null;
-        }
-        return dom.append(
-            dom.tag(
-                "li",
-                "",
-                {
-                    text : T("Equipment") + ": ",
-                    title : T("You must be near equipment")
-                }
+        return dom.wrap("recipe-header", [
+            dom.wrap("recipe-preview", Entity.templates[type].icon()),
+            dom.wrap("recipe-title", title),
+            this.makeInfo(type),
+            this.makeRequirements(type, recipe),
+        ]);
+    };
+
+    makeInfo(type) {
+        const tmpl = Entity.templates[type];
+        return dom.wrap("recipe-info", [
+            tmpl.Armor && dom.wrap("", [
+                T("Base armor") + ": " + tmpl.Armor
+            ]),
+            tmpl.Damage && dom.wrap("", [
+                T("Base damage") + ": " + tmpl.Damage,
+                tmpl.Ammo && dom.wrap("", T("Ammo") + ": " + T(tmpl.Ammo.Type)),
+            ]),
+            tmpl.EffectiveParam && tmpl.Lvl > 1 && dom.wrap(
+                tmpl.nonEffective() ? "unavailable" : "",
+                T(tmpl.EffectiveParam) + ": " + tmpl.Lvl
             ),
-            this.makeLinks(recipe.Equipment)
-        );
-    }
-
-    makeLiquid(recipe) {
-        if (!recipe.Liquid) {
-            return null;
-        }
-        return dom.tag(
-            "li",
-            "",
-            {
-                text : TS(recipe.Liquid.Type) + " : " + recipe.Liquid.Volume
-            }
-        );
+        ]);
     }
 
     makeLink(item) {
@@ -901,53 +970,53 @@ class Craft {
         }
         var title = TS(item);
         var link = dom.link("", title, "link-item");
-        var self = this;
-        link.onclick = function() {
-            self.searchOrHelp(item);
+        link.onclick = () => {
+            this.searchOrHelp(item);
         };
         return link;
     }
 
     makeLinks(s) {
-        if (!s)
-            return [];
-        var self = this;
-
-        return util.intersperse(s.split(",").map(this.makeLink.bind(this)), ", ");
-    }
-
-    makePreview(type) {
-        var preview = Entity.templates[type].icon();
-        preview.id = "item-preview";
-        return dom.wrap("preview-wrapper", preview);
+        return (s)
+            ? util.intersperse(s.split(",").map(x => this.makeLink(x)), ", ")
+            : [];
     }
 
     dwim(slot) {
-        var self = this;
-        if (!this.panel.visible)
-            return false;
-
-        if (slot.locked)
-            return false;
-        if (!slot.entity) {
-            console.log("dwimCraft: got empty slot");
+        if (!this.panel.visible) {
             return false;
         }
-        var entity = slot.entity;
+
+        if (slot.locked) {
+            console.warn("dwimCraft: got locked slot");
+            return false;
+        }
+
+        if (!slot.entity) {
+            console.warn("dwimCraft: got empty slot");
+            return false;
+        }
+
+        const entity = slot.entity;
 
         // skip non-empty containers
-        if (entity.isContainer() && _.some(entity.Props.Slots))
+        if (entity.isContainer() && _.some(entity.Props.Slots)) {
             return false;
+        }
 
         return this.slots.some(function(slot) {
-            if (slot.used || !entity.is(slot.group))
+            if (slot.entity) {
                 return false;
-            self.use(entity, slot);
-            return true;
+            }
+            const {check, use} = slot.element;
+            return check({entity}) && use(entity);
         });
     }
 
     save() {
+        this.filters.forEach(({name, enabled}) => {
+            playerStorage.setItem("craft.filter." + name, enabled);
+        });
         playerStorage.setItem("craft.search", this.searchInput.value);
     }
 }

@@ -71,6 +71,7 @@
     "./src/potential-fields.js",
     "./src/professions.js",
     "./src/game.js",
+    "./src/ui/trade.js",
     "./src/ui/vendor.js",
     "./src/ui/exchange.js",
     "./src/ui/bank.js",

@@ -103,8 +103,8 @@ var dom = {
         }
         return contents;
     },
-    make: function(tag, contents, classOrId) {
-        return this.append(this.tag(tag, classOrId), contents);
+    make: function(tag, contents, classOrId, cfg) {
+        return this.append(this.tag(tag, classOrId, cfg), contents);
     },
     append: function(element, contents) {
         if (Array.isArray(contents)) {
@@ -130,6 +130,7 @@ var dom = {
             contents,
             scroll,
         ]));
+
         element.addEventListener("mouseenter", update);
         element.addEventListener("mouseleave", update);
         element.addEventListener("click", update);
@@ -319,7 +320,7 @@ var dom = {
     /* * * * * */
     forEach: function(selector, callback) {
         [].forEach.call(document.querySelectorAll(selector), function(elem) {
-            callback.call(elem);
+            callback.call(elem, elem);
         });
     },
     addClass: function(selector, name) {

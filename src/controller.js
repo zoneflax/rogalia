@@ -99,7 +99,7 @@ function Controller(game) {
             this.entity = null;
             dom.clear(this.element);
         },
-        set: function(entity, x, y, cleanup) {
+        set: function(entity, x, y, cleanup = () => {}) {
             var icon = entity.icon();
             dom.clear(this.element);
             this.element.appendChild(icon);
@@ -110,8 +110,6 @@ function Controller(game) {
             this.element.style.marginTop = -entity.getDrawDy() + "px";
 
             this.entity = entity;
-
-            cleanup = cleanup || function(){};
 
             controller.callback[controller.RMB] = function(e) {
                 cleanup();
@@ -132,21 +130,19 @@ function Controller(game) {
                         return hovered.use(entity);
                     }
 
-                    if (hovered.mail) {
+                    if (hovered.mail || hovered.trade || hovered.craft) {
                         cleanup = function(){};
                         return hovered.use(entity);
                     }
 
-                    if (hovered.craft) {
-                        cleanup = function(){};
-                        return controller.craft.use(entity, hovered);
+                    if (hovered.vendor) {
+                        return hovered.use(entity, hovered);
                     }
 
-                    if (hovered.build)
+                    if (hovered.build) {
                         return controller.craft.blank.use(entity);
+                    }
 
-                    if (hovered.vendor)
-                        return hovered.use(entity, hovered);
 
                     if (hovered.containerSlot) {
                         var slot = hovered.containerSlot;
@@ -799,13 +795,13 @@ function Controller(game) {
         };
     };
 
-    this.newCreatingCursor = function(type, command, callback) {
+    this.newCreatingCursor = function(type, command, callback, cancel) {
         var entity = new Entity(type);
         entity.initSprite();
-        return this.creatingCursor(entity, command, callback);
+        return this.creatingCursor(entity, command, callback, cancel);
     };
 
-    this.creatingCursor = function(entity, command = "entity-add", callback) {
+    this.creatingCursor = function(entity, command = "entity-add", callback, cancel) {
         this.world.cursor = entity;
 
         if (this.lastAction.type != entity.Type)
@@ -816,8 +812,12 @@ function Controller(game) {
         }
 
         this.lastAction.set(() => {
-            this.newCreatingCursor(entity.Type, command, callback);
+            this.newCreatingCursor(entity.Type, command, callback, cancel);
         }, entity.Type);
+
+        if (cancel) {
+            this.callback[this.RMB] = () => { cancel(); return true; };
+        }
 
         this.callback[this.LMB] = function() {
             if (!controller.mouse.isValid())

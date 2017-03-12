@@ -1,4 +1,4 @@
-/* global game, Missile, FONT_SIZE, TT, Container, dom, T, Panel, util */
+/* global game, Missile, FONT_SIZE, TT, Container, dom, T, Panel, util, Trade */
 
 "use strict";
 function Info(message, character) {
@@ -133,6 +133,7 @@ function Info(message, character) {
         break;
     case ".invite":
         var name = this.data;
+        // TODO (simple): use popup.confirm
         var accept = dom.button(T("Accept"));
         accept.onclick = function() {
             game.chat.send("*accept-invite " + name);
@@ -149,6 +150,9 @@ function Info(message, character) {
             dom.wrap("buttons", [accept, deny]),
         ]);
         panel.show();
+        return;
+    case ".trade":
+        Trade.update(this.data);
         return;
     }
     this.value = util.toFixed(this.value, (this.value < 1) ? 2 : 0);

@@ -163,17 +163,11 @@ Entity.exists = function(id) {
     return !!Entity.get(id);
 };
 
-Entity.getPreview = function(group) {
-    var image = new Image();
-    for (var type in Entity.templates) {
-        var template = Entity.templates[type];
-        if (Entity.prototype.is.call(template, group)) {
-            image = template.icon();
-            break;
-        }
-    }
-    image.className = "item-preview";
-    return image;
+Entity.getPreview = function(kind) {
+    const tmpl = _.find(Entity.templates, (tmpl) => tmpl.is(kind));
+    const preview = tmpl.icon();
+    preview.classList.add("item-preview");
+    return preview;
 };
 
 Entity.find  = function(pattern) {

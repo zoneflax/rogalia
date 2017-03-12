@@ -86,8 +86,9 @@ ContainerSlot.prototype = {
             this.placeholder.title = title;
             this.setTitle(title);
             dom.append(this.element, this.placeholder);
+        } else {
+            this.placeholder.src = src;
         }
-        this.placeholder.src = src;
     },
     setSub: function(text) {
         if (this.sub == null) {
@@ -210,6 +211,6 @@ ContainerSlot.prototype = {
         this.element.dispatchEvent(new MouseEvent("mousedown", {
             clientX: game.controller.mouse.x,
             clientY: game.controller.mouse.y,
-        }))
+        }));
     },
 };
