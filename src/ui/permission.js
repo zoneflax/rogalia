@@ -11,7 +11,8 @@ class Permission {
                 color,
                 dom.img("assets/icons/key.png")
             ], {
-                onclick: function() {
+                onmousedown: function(event) {
+                    event.stopPropagation();
                     perm = (elem.classList.contains("enabled"))
                         ? perm & ~bit
                         : perm | bit;

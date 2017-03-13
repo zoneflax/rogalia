@@ -327,6 +327,11 @@ Character.spritesInfo = {
         height: 112,
         offset: 30,
     },
+    "pink-chopper": {
+        width: 146,
+        height: 112,
+        offset: 30,
+    },
     "player": {
         nameOffset: 40,
         offset: 28,

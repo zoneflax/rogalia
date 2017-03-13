@@ -177,6 +177,7 @@ function loginStage() {
             return;
         }
         self.panel && self.panel.close();
+        game.initAnalitics(data.Login);
         game.setStage("lobby", data);
     }
 

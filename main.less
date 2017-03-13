@@ -885,7 +885,7 @@ hr {
 }
 
 #craft {
-    min-width: 550px;
+    min-width: 600px;
 
     .contents {
         display: flex;
@@ -921,8 +921,12 @@ hr {
 
         .search-by-ingredient {
             display: flex;
-            width: 35%;
+            width: 40%;
             align-items: center;
+
+            .search-has-ingredients {
+                max-width: 70px;
+            }
 
             .slot {
                 background-color: #2f3237;
@@ -977,12 +981,12 @@ hr {
         }
 
         .recipe-tree-root {
-            width: 40%;
+            width: 235px
         }
 
         .recipe-container {
             background-color: #292b2f;
-            width: 60%;
+            width: 351px;
         }
     }
 
@@ -1123,12 +1127,26 @@ hr {
         .recipe-title {
             color: @button-color;
             font-size: 16px;
+            overflow: hidden;
+            max-width: 266px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .recipe-type-icon {
+            margin-right: 3px;
         }
 
         .recipe-preview {
+            .cursor-pointer;
             position: absolute;
             top: 0;
             right: 0;
+
+            canvas {
+                max-height: 97px;
+                max-width: 97px;
+            }
         }
 
         .recipe-info {
@@ -1146,8 +1164,6 @@ hr {
             position: relative;
 
             .recipe-ingredient {
-                white-space: nowrap;
-
                 .available, .unavailable {
                     font-size: 11px;
                 }
@@ -1547,16 +1563,14 @@ hl {
 }
 
 #users {
-    width: 314px;
+    width: 205px;
 
-    .tab-content {
-        max-height: 300px;
-        overflow: auto;
+    .user-list {
+        height: 150px;
     }
 
-    li {
+    .user {
         .cursor-pointer;
-        list-style-type: square;
 
         &:hover {
             color: lightgreen;

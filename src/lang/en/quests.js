@@ -22,12 +22,11 @@ Quest.quests =  {
     "craft-2": {
         name: "Making a knife blade",
         desc: "The knife should has a blade. Try to make it from the sharp stones.",
-        tip: "<lmb></lmb> on the sharp stone icon.<br>Move stones into the recipe and press <hl>Create</hl>",
+        tip: "<lmb></lmb> on the sharp stone icon.",
     },
     "craft-2-1": {
         name:  "Making a knife",
         desc: "Perfect, everything is ready. Finally let's make a knife.",
-        tip: "To simplify things you can click on the <hl>Auto</hl> button and then <hl>Create</hl>",
     },
     "craft-3": {
         name: "Making a weapon",

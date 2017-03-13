@@ -802,6 +802,7 @@ function Controller(game) {
     };
 
     this.creatingCursor = function(entity, command = "entity-add", callback, cancel) {
+
         this.world.cursor = entity;
 
         if (this.lastAction.type != entity.Type)
@@ -833,10 +834,16 @@ function Controller(game) {
                 x: p.x,
                 y: p.y,
             };
-            if (entity.Id)
+
+            if (entity.Id) {
                 args.Id = entity.Id;
-            if (entity.Orientation)
+            }
+            if (entity.Orientation) {
                 args.Orientation = entity.Orientation;
+            }
+            if (entity.hasOwnProperty("Variant")) {
+                args.Variant = entity.Variant;
+            }
 
             var pushToQueue = !!game.controller.modifier.shift;
             if (pushToQueue) {
@@ -897,7 +904,10 @@ function Controller(game) {
     this.clearCursors = function() {
         // clicking on player launches action, so don't cancel it
         if (this.world.hovered != game.player) {
-            game.sortedEntities.remove(this.world.cursor);
+            const {cursor} = this.world;
+            if (cursor && cursor.Id && cursor.inWorld()) {
+                game.sortedEntities.remove(cursor);
+            }
             this.world.cursor = null;
         }
 

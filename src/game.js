@@ -1,4 +1,4 @@
-/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree, Pixi, gameStorage */
+/* global Settings, config, DragManager, Screen, debug, Sound, Loader, Menu, WorldMap, Controller, Network, HashTable, BinarySearchTree, Quests, Point, IsoDrawer, Popup, T, Panel, Jukebox, util, Stage, FONT_SIZE, CELL_SIZE, sprintf, Professions, dom, Container, _, Quadtree, Pixi, gameStorage, ga */
 
 "use strict";
 
@@ -240,6 +240,15 @@ class Game {
 
         return _.merge(args, cmdArgs);
     };
+
+    initAnalitics(userId) {
+        ga.GameAnalytics.configureBuild("rogalia 0.31.0");
+        ga.GameAnalytics.configureUserId(userId);
+        ga.GameAnalytics.initialize(
+            "0d4565bf8c5354f2897950b82798b5eb",
+            "a2dad58f338a6f268a387df14b8441512c8ec91f"
+        );
+    }
 
     setFontSize(size) {
         this.ctx.font = (size || FONT_SIZE) + "px Dejavu Sans";

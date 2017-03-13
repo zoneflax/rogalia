@@ -303,12 +303,27 @@ Entity.prototype = {
         if (z != 0)
             return z;
 
-        // for topological sort test
-        // return (this.depth >= entity.depth) ? +1 : -1;
+        const self = box(this);
+        const other = box(entity);
+        if (other.minX < self.maxX && other.minY < self.maxY)
+            return +1;
+        else if (self.minX < other.maxX && self.minY < other.maxY)
+            return -1;
 
         var a = this.X + this.Y;
         var b = entity.X + entity.Y;
         return (a >= b) ? +1 : -1;
+
+        function box(entity) {
+            const width = (entity.Width/2 || entity.Radius);
+            const height = (entity.Height/2 || entity.Radius);
+            return {
+                maxX: entity.X + width,
+                maxY: entity.Y + height,
+                minX: entity.X - width,
+                minY: entity.Y - height,
+            };
+        }
     },
     getZ: function() {
         switch (this.Disposition) {
@@ -343,6 +358,15 @@ Entity.prototype = {
         case "bundle-of-wood":
         case "stone-pile":
         case "winepress":
+        case "bloody-altar":
+        case "bar-stand":
+        case "flower-pot":
+        case "wine-rack-small":
+        case "wine-rack-average":
+        case "wine-rack-big":
+        case "potions-cabinet-small":
+        case "potions-cabinet-average":
+        case "potions-cabinet-big":
             if (!this.Props.Slots)
                 break;
             if (this.Props.Slots.some(function(id){ return id != 0; }))
@@ -1277,6 +1301,7 @@ Entity.prototype = {
             "Get creator": send("get-creator"),
             "Set comment": prepare("set-comment"),
             "Finish building": send("finish-building"),
+            "Fill building": send("fill-building"),
             "Summon": send("summon"),
             "100q": function() {
                 game.chat.send("*set-quality " + self.Id + " " + 100);

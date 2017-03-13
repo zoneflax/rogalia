@@ -35,9 +35,9 @@ class ContainerSearch {
             }));
         };
 
-        name.onkeydown = search;
-        minQuality.onkeydown = search;
-        maxQuality.onkeydown = search;
+        name.onkeyup = search;
+        minQuality.onkeyup = search;
+        maxQuality.onkeyup = search;
 
         const panel = new Panel("container-item-search", T("Search") + " - " + T(container.name), [
             dom.wrap("container-search-header", [

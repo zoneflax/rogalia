@@ -1,4 +1,4 @@
-/* global game, T, _, ContainerSearch */
+/* global game, T, _, ContainerSearch, TS */
 
 "use strict";
 Entity.MT_PORTABLE = 0;
@@ -89,8 +89,15 @@ Entity.groupTags = {
     "playing-figure": ["game"],
 };
 
+Entity.miscGroups = [
+    "portable",
+    "liftable",
+    "static",
+    "liquid-container-liftable",
+    "converter",
+];
+
 Entity.recipes = {};
-Entity.sortedRecipes = [];
 
 Entity.tags = {};
 Entity.sortedTags = [];
@@ -114,13 +121,6 @@ Entity.init = function(templates, recipes) {
     }, {});
 
     Entity.sortedTags = _.toPairs(Entity.tags).sort(([, a], [, b]) => b.length - a.length);
-
-    Entity.sortedRecipes = _.toPairs(recipes).sort(
-        function([aType, {Lvl: aLvl = 0}],  [bType, {Lvl: bLvl = 0}]) {
-            const diff = aLvl - bLvl;
-            return (diff) ? diff : T(aType).localeCompare(T(bType));
-        }
-    );
 };
 
 

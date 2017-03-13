@@ -630,6 +630,15 @@ Character.prototype = {
                 dy = 16;
                 break;
             }
+        } else if (this.Effects.Sitting) {
+            const sit = Entity.get(this.Effects.Sitting.SeatId);
+            if (sit) {
+                switch (sit.Type) {
+                case "bar-stool":
+                    dy = 12;
+                    break;
+                }
+            }
         }
         return {
             p: p,

@@ -52,12 +52,12 @@ Quest.prototype = {
         };
 
         var list = dom.div();
-        var craft = game.controller.craft;
         var kinds = Object.keys(items);
         var found = game.player.findItems(kinds);
         updater = kinds.map(function(item) {
-            var slot = dom.wrap("slot", Entity.getPreview(item));
-            slot.onclick = craft.searchOrHelp.bind(craft, item);
+            var slot = dom.wrap("slot", Entity.getPreview(item), {
+                onclick: () => game.controller.craft.searchOrHelp(item),
+            });
 
             var count = (items[item] instanceof Object) ? items[item].Count : items[item];
             var desc = dom.wrap("quest-slot-desc", TS(item) + ": " + found[item].length + "/" + count);

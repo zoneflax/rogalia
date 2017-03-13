@@ -9,8 +9,9 @@ function Users() {
             content,
             (list)
                 ? [
-                    dom.make("p", T("Total") + ": " + list.length),
-                    isFriendList(list) ? makeFriendList(list) : makeSimpleList(list)
+                    isFriendList(list) ? makeFriendList(list) : makeSimpleList(list),
+                    dom.hr(),
+                    dom.wrap("user-total", T("Total") + ": " + list.length),
                 ] : T(empty)
         );
     }
@@ -20,26 +21,37 @@ function Users() {
     }
 
     function makeSimpleList(list) {
-        return dom.make("ul", list.sort().map(function(name) {
-            const li = dom.tag("li", "", {text: name});
-            li.onmousedown = function(e) {
-                return game.chat.nameMenu(e, name);
-            };
-            return li;
-        }));
+        return dom.scrollable("user-list", list.sort().map(function(name, i) {
+            return dom.wrap(
+                "user",
+                [
+                    (i + 1) + ". ",
+                    name,
+                ],
+                {
+                    onmousedown: (e) => game.chat.nameMenu(e, name),
+                }
+            );
+        })).element;
     }
 
     function makeFriendList(list) {
         list.sort(function(a, b) {
             return a.Name.localeCompare(b.Name);
         });
-        return dom.make("ul", list.map(function({Id, Name, Perm}) {
-            const name = dom.span(Name);
-            name.onmousedown = function(e) {
-                return game.chat.nameMenu(e, Name);
-            };
-            return dom.make("li", [name, Permission.make(Id, Perm)]);
-        }));
+        return dom.scrollable("user-list", list.map(function({Id, Name, Perm}, i) {
+            return dom.wrap(
+                "user",
+                [
+                    (i + 1) + ". ",
+                    Name,
+                    Permission.make(Id, Perm)
+                ],
+                {
+                    onmousedown: (e) => game.chat.nameMenu(e, Name),
+                }
+            );
+        })).element;
     }
 
     function render(content, data, selector, empty) {

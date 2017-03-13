@@ -16,6 +16,9 @@ var dom = {
             if (cfg.onclick !== undefined)
                 elem.onclick = cfg.onclick;
 
+            if (cfg.onmousedown !== undefined)
+                elem.onmousedown = cfg.onmousedown;
+
             if (cfg.title !== undefined)
                 elem.title = cfg.title;
         }
