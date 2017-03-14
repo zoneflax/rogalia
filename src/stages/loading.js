@@ -18,7 +18,6 @@ function loadingStage(version) {
         Character.skillLvls = data.SkillLvls;
         // game.initTime(data.Tick);
         Entity.init(data.EntitiesTemplates, data.Recipes); //for [*add item]
-
         game.network.send("enter", {Name: game.playerName}, sync);
     };
     req.send(null);

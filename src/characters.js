@@ -155,7 +155,7 @@ Character.npcActions = {
                     game.network.send("get-vendor-license", {Id: id});
                 }),
                 dom.button(T("Recipe"), "", function() {
-                    game.controller.craft.search("vendor-post", true);
+                    game.controller.craft.searchOrHelp("vendor-post");
                 }),
             ]
         ).setTemporary(true).show();

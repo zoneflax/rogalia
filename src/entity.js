@@ -303,27 +303,9 @@ Entity.prototype = {
         if (z != 0)
             return z;
 
-        const self = box(this);
-        const other = box(entity);
-        if (other.minX < self.maxX && other.minY < self.maxY)
-            return +1;
-        else if (self.minX < other.maxX && self.minY < other.maxY)
-            return -1;
-
         var a = this.X + this.Y;
         var b = entity.X + entity.Y;
         return (a >= b) ? +1 : -1;
-
-        function box(entity) {
-            const width = (entity.Width/2 || entity.Radius);
-            const height = (entity.Height/2 || entity.Radius);
-            return {
-                maxX: entity.X + width,
-                maxY: entity.Y + height,
-                minX: entity.X - width,
-                minY: entity.Y - height,
-            };
-        }
     },
     getZ: function() {
         switch (this.Disposition) {
@@ -446,6 +428,12 @@ Entity.prototype = {
         } else {
             gut();
         }
+    },
+    plunder: function() {
+        game.popup.confirm(
+            T("Warning: This action can cause bad karma, continue at your own risk!"),
+            () => this.queueActionMaybe("Plunder")
+        );
     },
     getActions: function() {
         var actions = [{}, {}, {}];

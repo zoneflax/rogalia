@@ -261,7 +261,8 @@ function Shop() {
 
     function recipeLink(product) {
         return dom.button(T("Recipe"), "product-recipe", function() {
-            game.controller.craft.search(product.Name.replace(/-wall$/, ""), true);
+            game.controller.craft.panel.show();
+            game.controller.craft.search(TS(product.Name.replace(/-wall$/, "")), true);
         });
     }
 }

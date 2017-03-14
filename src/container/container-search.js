@@ -61,6 +61,6 @@ class ContainerSearch {
     }
 
     static update() {
-
+        // implementation set in constructor()
     }
 }

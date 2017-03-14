@@ -12,6 +12,9 @@ class Craft {
 
         this.availableIngredients = {};
 
+        this.craftButton = dom.button(T("Create"), "", () => this.create());
+        this.crafting = false;
+
         this.searchInput = null;
         this.searchEntity = null;
         this.filters = this.initFilters();
@@ -116,14 +119,18 @@ class Craft {
                 name: "available",
                 test: (type) => this.safeToCreate(Entity.recipes[type]),
             },
+            {
+                name: "has-ingredients",
+                test: (type) => this.hasIngredients(Entity.recipes[type]),
+            }
         ].map(filter => {
             filter.enabled = playerStorage.getItem("craft.filter." + filter.name);
             return filter;
         });
     }
 
-    repeatSearch(filter = null) {
-        this.search(this.searchInput.value, true, filter);
+    repeatSearch() {
+        this.search(this.searchInput.value, true);
     }
 
     makeHeader() {
@@ -306,6 +313,12 @@ class Craft {
         }
     }
 
+    updateSearch() {
+        if (this.panel.visible) {
+            this.repeatSearch();
+        }
+    }
+
     open(blank, burden) {
         this.blank.entity = blank;
         var panel = this.blank.panel = new Panel("blank-panel", "Build");
@@ -407,13 +420,6 @@ class Craft {
         return dom.wrap("search-by-ingredient", [
             this.makeSearchSlot(),
             T("Search by ingredient"),
-            dom.button(T("Has items"), "search-has-ingredients", () => {
-                const items = [];
-                game.controller.iterateContainers(slot => {
-                    items.push(slot.entity);
-                });
-                this.repeatSearch(type => this.hasIngredients(items, Entity.recipes[type]));
-            }),
         ]);
     }
 
@@ -423,7 +429,7 @@ class Craft {
             dom.wrap(
                 "filters",
                 this.filters.map((filter) => {
-                    const element = dom.div("search-filter", {title: T("Only") + " " + T(filter.name)});
+                    const element = dom.div("search-filter", {title: T("Only") + " " + TS(filter.name)});
                     element.style.backgroundImage = `url(assets/icons/craft/${filter.name}.png)`;
 
                     if (filter.enabled)
@@ -473,6 +479,7 @@ class Craft {
     }
 
     searchOrHelp(pattern) {
+        console.trace(pattern);
         // we do not want to show on load
         if (game.stage.name == "main") {
             this.panel.show();
@@ -497,7 +504,7 @@ class Craft {
         }
     }
 
-    search(pattern = "", selectMatching = false, filter = null) {
+    search(pattern = "", selectMatching = false) {
         const re = pattern && new RegExp(_.escapeRegExp(pattern.replace(/-/g, " ")), "i");
         const found = [];
         const traverse = (subtree) => {
@@ -511,16 +518,16 @@ class Craft {
                     continue;
                 }
                 const type = child.dataset.type;
-                let match = !filter || filter(type);
-                if (match) {
-                    match = this.filters.every(({test, enabled}) => !enabled || test(type));
+                let match = true;
+                if (re) {
+                    match = re.test(type) || re.test(child.dataset.search);
                 }
                 if (match && this.searchEntity) {
                     const recipe = Entity.recipes[type];
                     match = _.some(recipe.Ingredients, (recipe, kind) => this.searchEntity.is(kind));
                 }
-                if (match && re) {
-                    match = re.test(type) || re.test(child.dataset.search);
+                if (match) {
+                    match = this.filters.every(({test, enabled}) => !enabled || test(type));
                 }
 
                 if (match) {
@@ -532,7 +539,7 @@ class Craft {
 
         traverse(this.root);
 
-        if (!re && !this.searchEntity && !filter && this.filters.every(({enabled}) => !enabled)) {
+        if (!re && !this.searchEntity && this.filters.every(({enabled}) => !enabled)) {
             this.root.classList.remove("searching");
             return;
         }
@@ -639,7 +646,7 @@ class Craft {
             dom.make("a", "≫", "max", {
                 onclick: () => this.repeatInput.value = canCraft
             }),
-            dom.button(T("Create"), "", () => this.craft(type, recipe, this.repeatInput.value)),
+            this.craftButton,
         ]);
 
         if (canCraft == 0) {
@@ -779,7 +786,24 @@ class Craft {
         });
     }
 
-    craft(type, recipe, num) {
+    create() {
+        if (this.crafting) {
+            this.stop();
+            game.network.send("set-dst", {X: game.player.X, Y: game.player.Y});
+            return;
+        }
+
+        this.crafting = true;
+        this.craftButton.textContent = T("Cancel");
+        this.craft();
+    }
+
+    stop() {
+        this.craftButton.textContent = T("Create");
+        this.crafting = false;
+    }
+
+    craft({type, recipe} = this.current) {
         // get hand added entities
         const custom = {};
         for (const {entity} of this.slots) {
@@ -802,10 +826,10 @@ class Craft {
         });
         game.network.send("craft", {type, ingredients, variant: this.variant}, () => {
             this.openRecipe(this.current);
-            num--;
-            if (num > 0) {
-                this.repeatInput.value = Math.max(1, num);
-                setTimeout(() => this.craft(type, recipe, num), 100);
+            const repeat = this.repeatInput.value - 1;
+            if (this.crafting && repeat > 0) {
+                this.repeatInput.value = Math.max(1, repeat);
+                setTimeout(() => this.craft(), 100);
             }
         });
     }
@@ -823,11 +847,11 @@ class Craft {
         return skill.Value.Current >= recipe.Lvl;
     }
 
-    hasIngredients(items, recipe) {
+    hasIngredients(recipe) {
         return _.every(recipe.Ingredients, (required, kind) => {
             let has = 0;
-            for (const entity of items) {
-                if (entity.is(kind) && ++has > required) {
+            for (const entity of game.entities.array) {
+                if (entity instanceof Entity && entity.is(kind) && game.player.canUse(entity) && ++has == required) {
                     return true;
                 }
             }

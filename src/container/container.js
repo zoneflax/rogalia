@@ -28,6 +28,7 @@ Container.SLOT_SIZE = 52; // .slot:width + 2*slot:margin
 
 Container.show = function(entity) {
     Container.open(entity).panel.show();
+    game.controller.craft.updateSearch();
 };
 
 Container.open = function(entity) {
@@ -190,7 +191,10 @@ Container.prototype = {
                 this._syncReq = false;
             }
         };
-        this.panel.hooks.close = () => { delete game.containers[this.id]; };
+        this.panel.hooks.close = () => {
+            game.controller.craft.updateSearch();
+            delete game.containers[this.id];
+        };
         this.panel.element.classList.add("container");
         this.panel.container = this;
 

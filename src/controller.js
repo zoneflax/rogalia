@@ -889,6 +889,7 @@ function Controller(game) {
         game.network.queue = [];
         this.clearActionQueue();
         this.hideUnnecessaryPanels();
+        this.craft.stop();
     };
 
     this.clearActionQueue = function(data) {

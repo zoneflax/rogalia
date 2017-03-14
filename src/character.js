@@ -135,7 +135,14 @@ Character.prototype = {
     },
     leftTopX: Entity.prototype.leftTopX,
     leftTopY: Entity.prototype.leftTopY,
-    compare: Entity.prototype.compare,
+    compare: function(entity) {
+        if (this.Effects.Sitting && this.Effects.Sitting.SeatId == entity.Id) {
+            return (entity.Orientation == "n" || entity.Orientation == "w")
+                ? +1
+                : -1;
+        }
+        return Entity.prototype.compare.call(this, entity);
+    },
     get statusPoints() {
         return {
             Current: this.Citizenship.StatusPoints,
@@ -216,6 +223,10 @@ Character.prototype = {
 
             if (data.Style) {
                 game.controller.initPlayerAvatar(this);
+            }
+
+            if (data.Equip && game.controller.craft) {
+                game.controller.craft.updateSearch();
             }
         }
     },
