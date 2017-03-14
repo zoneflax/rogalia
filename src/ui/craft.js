@@ -386,11 +386,6 @@ class Craft {
 
     cleanUp() {
         this.slots.forEach(slot => slot.element.cleanUp());
-        const custom = this.customPanel;
-        if (custom) {
-            this.customPanel = null;
-            custom.close();
-        }
     }
 
     makeSearchByKeyword() {
@@ -745,7 +740,23 @@ class Craft {
             "craft-custom-slots",
             TS(type),
             [
-                T("Use this items for craft"),
+                dom.button(T("Fill"), "", () => {
+                    _.some(recipe.Ingredients, (required, kind) => {
+                        for (let i = 0; i < required; i++) {
+                            const item = this.availableIngredients[kind][i];
+                            const slot = slots.find(slot => !slot.classList.contains("has-item"));
+                            if (!slot || !item) {
+                                return true;
+                            }
+                            slot.use(item);
+                        }
+                        return false;
+                    });
+                }),
+                dom.button(T("Create"), "", () => {
+                    this.craft();
+                    this.openCustom(type, recipe);
+                }),
                 dom.hr(),
                 dom.wrap(".slots-wrapper", slots),
             ],
@@ -827,9 +838,9 @@ class Craft {
             {type, ingredients, variant: this.variant},
             () => {
                 this.openRecipe(this.current);
-                const repeat = this.repeatInput.value - 1;
-                if (this.crafting && repeat > 0) {
-                    this.repeatInput.value = Math.max(1, repeat);
+                const repeat = this.repeatInput.value;
+                if (this.crafting && repeat > 1) {
+                    this.repeatInput.value = Math.max(1, repeat - 1);
                     setTimeout(() => this.craft(), 100);
                 }
             },

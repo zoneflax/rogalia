@@ -2,18 +2,19 @@
 
 "use strict";
 function Users() {
+    let onlineSet = new Set();
     var lists = {};
 
     function renderList(content, list, empty) {
-        dom.setContents(
-            content,
-            (list)
-                ? [
-                    isFriendList(list) ? makeFriendList(list) : makeSimpleList(list),
-                    dom.hr(),
-                    dom.wrap("user-total", T("Total") + ": " + list.length),
-                ] : T(empty)
-        );
+        if (!list) {
+            dom.setContents(content, T(empty));
+            return;
+        }
+        dom.setContents(content, [
+            isFriendList(list) ? makeFriendList(list) : makeSimpleList(list),
+            dom.hr(),
+            dom.wrap("user-total", T("Total") + ": " + list.length),
+        ]);
     }
 
     function isFriendList(list) {
@@ -45,6 +46,7 @@ function Users() {
                 [
                     (i + 1) + ". ",
                     Name,
+                    dom.wrap("user-online", onlineSet.has(Name) ? "✔" : "", {title: T("Online")}),
                     Permission.make(Id, Perm)
                 ],
                 {
@@ -60,6 +62,9 @@ function Users() {
             data: data[selector] || [],
             empty: empty,
         };
+        if (selector == "OnlinePlayers") {
+            onlineSet =  new Set(list.data);
+        }
         lists[selector] = list;
         renderList(list.content, list.data, list.empty);
     }
@@ -105,6 +110,7 @@ function Users() {
     this.addPlayer = function(name) {
         if (name == game.playerName)
             return;
+        onlineSet.add(name);
         var list = lists.OnlinePlayers;
         if (list && list.data.indexOf(name) == -1) {
             list.data.push(name);
@@ -115,6 +121,7 @@ function Users() {
     this.removePlayer = function(name) {
         if (name == game.playerName)
             return;
+        onlineSet.delete(name);
         var list = lists.OnlinePlayers;
         if (list) {
             var data = list.data;

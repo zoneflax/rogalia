@@ -784,7 +784,8 @@ function Chat() {
             element.appendChild(m);
 
             _.defer(function() {
-                if (element.scrollHeight - element.scrollTop == element.clientHeight + m.clientHeight) {
+                const diff = (element.scrollHeight - element.scrollTop) - (element.clientHeight + m.clientHeight);
+                if (Math.abs(diff) < 1) {
                     if (tab.isActive()) {
                         scrollToTheEnd(element);
                     }

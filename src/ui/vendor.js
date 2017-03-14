@@ -284,7 +284,7 @@ Vendor.prototype = {
                     ]),
                 ];
             })
-        )).element;
+        ));
     },
     manageView: function() {
         var self = this;

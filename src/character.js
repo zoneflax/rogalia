@@ -1233,10 +1233,10 @@ Character.prototype = {
     },
     updateBuilding: function() {
         if (!config.graphics.autoHideWalls) {
-            this.inBuilding = game.entities.some(entity => {
-                return entity.Disposition == "roof" && this.isNear(entity);
-            });
             return;
+            // this.inBuilding = game.entities.some(entity => {
+            //     return entity.Disposition == "roof" && this.isNear(entity);
+            // });
         }
         var n = false, w = false, s = false,  e = false;
         var x = this.X;
