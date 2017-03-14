@@ -1218,9 +1218,7 @@ Character.prototype = {
             if (this.target && !game.entities.has(this.target.Id))
                 this.setTarget(null);
 
-            if (config.graphics.autoHideWalls) {
-                this.updateBuilding();
-            }
+            this.updateBuilding();
             this.updateActionButton();
         }
 
@@ -1234,6 +1232,12 @@ Character.prototype = {
 
     },
     updateBuilding: function() {
+        if (!config.graphics.autoHideWalls) {
+            this.inBuilding = game.entities.some(entity => {
+                return entity.Disposition == "roof" && this.isNear(entity);
+            });
+            return;
+        }
         var n = false, w = false, s = false,  e = false;
         var x = this.X;
         var y = this.Y;

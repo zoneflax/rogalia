@@ -96,7 +96,6 @@ class Craft {
             game.controller.creatingCursor(
                 ghost,
                 "build",
-                () => { this.panel.show(); },
                 () => { this.panel.show(); }
             );
             this.panel.hide();
