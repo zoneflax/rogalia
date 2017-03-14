@@ -95,6 +95,7 @@ Entity.miscGroups = [
     "static",
     "liquid-container-liftable",
     "converter",
+    "processor",
 ];
 
 Entity.recipes = {};

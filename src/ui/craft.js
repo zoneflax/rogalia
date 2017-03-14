@@ -505,7 +505,7 @@ class Craft {
     }
 
     search(pattern = "", selectMatching = false) {
-        const re = pattern && new RegExp(_.escapeRegExp(pattern.replace(/-/g, " ")), "i");
+        const re = pattern && new RegExp(_.escapeRegExp(pattern).replace(/-/g, "[- ]"), "i");
         const found = [];
         const traverse = (subtree) => {
             for (const child of subtree.children) {

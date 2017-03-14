@@ -8,6 +8,7 @@ T.dict = {
     "Wolf fatty": "Fat wolf",
     "Furnace": "Smelter",
     "Liquid container": "Vessel",
+    "Liquid container liftable": "Big vessel",
     "Card ace": "Card: ace",
     "Card king": "Card: king",
     "Card queen": "Card: queen",
