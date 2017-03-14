@@ -2479,7 +2479,7 @@ big {
                     display: flex;
 
                     .avatar-icon {
-                        width: 18px;
+                        min-width: 18px;
                         text-align: center;
                         margin-left: 3px;
                     }
@@ -3420,8 +3420,6 @@ input[type=number], .lot-quantity > input, .price > input {
 /* vendors, lots */
 .lot-table, .lot-list {
     height: 500px;
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 .lot-table {
     text-align: center;
@@ -3432,7 +3430,6 @@ input[type=number], .lot-quantity > input, .price > input {
 .lot {
     overflow: auto;
     padding: 2px 5px 5px;
-    background: url("assets/bg/hr.png") repeat-x 0 100%;
 
     &:last-child, {
         background-image: none;
@@ -3987,7 +3984,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
     .scrollable-contents {
         height: 100%;
-        margin-right: -15px;
+        margin-right: -17px;
         overflow-x: hidden;
         overflow-y: scroll;
     }

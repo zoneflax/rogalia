@@ -637,6 +637,7 @@ T.dict = {
     "Steel pickaxe": "Стальная кирка",
     "Pickaxe": "Кирка",
     "Make window": "Сделать окно",
+    "Remove window": "Убрать окно",
     "Banana palm tree": "Банановая пальма",
     "Chop": "Рубить",
     "Get bark": "Содрать кору",
@@ -1879,4 +1880,6 @@ T.dict = {
     "Beekeeping": "Пчеловодство",
     "Feeder": "Кормушка",
     "Toilet": "Туалет",
+    "Sandbox": "Песочница",
+    "Relocate": "Переместить",
 };

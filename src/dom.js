@@ -163,6 +163,9 @@ var dom = {
             });
         };
 
+        element.contents = contents;
+        return element;
+
         function update() {
             if (contents.scrollHeight > contents.clientHeight) {
                 dom.show(scroll);
@@ -178,11 +181,6 @@ var dom = {
             const newY = Math.max(0, Math.min(event.pageY - y, maxY));
             const height = contents.scrollHeight - element.offsetHeight;
             contents.scrollTop = newY/maxY * height;
-        };
-
-        return {
-            element,
-            contents,
         };
     },
     // TODO: use dom.append() instead?
@@ -354,7 +352,7 @@ var dom = {
         var contents = dom.div("tabs-contents");
 
         cfg.forEach(function(tab, index) {
-            var title = dom.div("tab-title");
+            var title = dom.div("tab-title", {title: tab.title});
             title.style.zIndex = cfg.length - index;
             if (tab.icon) {
                 tab.icon.classList.add("tab-icon");

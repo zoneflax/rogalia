@@ -147,7 +147,9 @@ Character.npcActions = {
                 T("The license will allow you to set up a vendor post in your claim."),
                 dom.br(),
                 dom.hr(),
-                dom.wrap("slot", Entity.templates["vendor-license"].icon()),
+                dom.wrap("slot", Entity.templates["vendor-license"].icon(), {
+                    onclick: () => game.controller.craft.searchOrHelp("vendor-post"),
+                }),
                 T("Cost") + ": ",
                 Vendor.createPrice(2 * 100 * 100),
                 dom.br(),

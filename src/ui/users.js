@@ -32,7 +32,7 @@ function Users() {
                     onmousedown: (e) => game.chat.nameMenu(e, name),
                 }
             );
-        })).element;
+        }));
     }
 
     function makeFriendList(list) {
@@ -51,7 +51,7 @@ function Users() {
                     onmousedown: (e) => game.chat.nameMenu(e, Name),
                 }
             );
-        })).element;
+        }));
     }
 
     function render(content, data, selector, empty) {

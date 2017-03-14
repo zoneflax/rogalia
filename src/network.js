@@ -17,6 +17,7 @@ function Network() {
     this.socket = null;
 
     this.queue = [];
+    this.onwarn = null;
 
     this.run = function(host, onopen) {
         this.host = host;
@@ -83,6 +84,10 @@ function Network() {
                 this.queue.push(result);
         } else if (data.Warning) {
             this.queue = [];
+            if (this.onwarn) {
+                this.onwarn(data.Warning);
+            }
+            this.onwarn = null;
         }
     }
 
@@ -91,7 +96,7 @@ function Network() {
         this.socket.close();
     };
 
-    this.send = function(command, args, callback) {
+    this.send = function(command, args, callback, onwarn = null) {
         args = args || {};
         args.Command = command;
 
@@ -103,6 +108,8 @@ function Network() {
 
         if (callback)
             this.queue.push(callback);
+
+        this.onwarn = onwarn;
     };
 
     //for debug

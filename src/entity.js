@@ -549,6 +549,9 @@ Entity.prototype = {
         const ghost = new Entity(this.Type);
         ghost.initSprite();
         ghost.Id =  this.Id;
+        while (ghost.Orientation != this.Orientation) {
+            ghost.rotate(+1);
+        }
         game.controller.creatingCursor(ghost, "relocate");
     },
     actionApplySimple: function(action) {

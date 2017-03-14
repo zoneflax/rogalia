@@ -47,7 +47,7 @@ class ContainerSearch {
                 ]),
             ]),
             dom.hr(),
-            dom.scrollable("container-search-results", results).element,
+            dom.scrollable("container-search-results", results),
         ]).setTemporary(true).show();
 
         search();

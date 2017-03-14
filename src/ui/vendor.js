@@ -167,7 +167,7 @@ Vendor.prototype = {
         if (!lots)
             return T("Vendor is empty");
         var self = this;
-        return dom.wrap("lot-table", dom.table(
+        return dom.scrollable("lot-table", dom.table(
             ["", T("Name"), T("Quality"), T("Cost"), "", ""],
             lots.sort(Vendor.sort.byType).map(function(lot) {
                 var name = TS(lot.Type);
@@ -210,7 +210,7 @@ Vendor.prototype = {
         if (!lots)
             return T("Vendor is empty");
         var self = this;
-        return dom.wrap("lot-table", dom.table(
+        return dom.scrollable("lot-table", dom.table(
             ["", T("Name"), T("Quantity"), T("Cost"), "", ""],
             lots.sort(Vendor.sort.byType).map(function(lot) {
                 var canBeSold = Vendor.canBeSold(lot.Type);
@@ -284,7 +284,7 @@ Vendor.prototype = {
                     ]),
                 ];
             })
-        ));
+        )).element;
     },
     manageView: function() {
         var self = this;
@@ -420,17 +420,13 @@ Vendor.prototype = {
 };
 
 Vendor.canBeSold = function(type) {
-    var list = [];
-    Container.forEach(function(container) {
-        if (!container.entity.belongsTo(game.player))
-            return;
-        container.forEach(function(slot) {
-            var entity = slot.entity;
-            if (entity && entity.Type == type) {
-                list.push(entity);
-            }
-        });
+    const list = [];
+    game.controller.iterateContainers(slot => {
+        if (slot.entity.Type == type) {
+            list.push(slot.entity);
+        }
     });
+
     return list;
 };
 

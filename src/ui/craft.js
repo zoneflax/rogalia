@@ -211,7 +211,7 @@ class Craft {
         this.recipes = {};
         this.root = this.makeNode(root);
         return dom.wrap("recipe-tree-container", [
-            dom.scrollable("recipe-tree-root", this.root).element,
+            dom.scrollable("recipe-tree-root", this.root),
             recipeContainer,
             recipeContainer,
         ]);
@@ -479,7 +479,6 @@ class Craft {
     }
 
     searchOrHelp(pattern) {
-        console.trace(pattern);
         // we do not want to show on load
         if (game.stage.name == "main") {
             this.panel.show();
@@ -664,7 +663,7 @@ class Craft {
             this.makeIngredients(type, recipe),
             back,
             controlls,
-            dom.scrollable("recipe-descr", Entity.templates[type].makeDescription()).element,
+            dom.scrollable("recipe-descr", Entity.templates[type].makeDescription()),
         ]);
     }
 
@@ -676,7 +675,7 @@ class Craft {
                     required,
                     "x ",
                     this.makeLink(kind),
-                    dom.span(" (" + has + ")", (has > 0) ? "available" : "unavailable", T("Available")),
+                    dom.span(" (" + has + ")", (has >= required) ? "available" : "unavailable", T("Available")),
                 ]);
             })),
             dom.wrap("recipe-ingredients-slots", _.map(recipe.Ingredients, (required, kind) => {
@@ -776,7 +775,7 @@ class Craft {
             dom.wrap("recipe-controlls", [
                 dom.button(T("Build"), "recipe-create", () => this.build())
             ]),
-            dom.scrollable("recipe-descr", Entity.templates[type].makeDescription()).element,
+            dom.scrollable("recipe-descr", Entity.templates[type].makeDescription()),
         ]);
     }
 
@@ -824,14 +823,21 @@ class Craft {
             }
             return list;
         });
-        game.network.send("craft", {type, ingredients, variant: this.variant}, () => {
-            this.openRecipe(this.current);
-            const repeat = this.repeatInput.value - 1;
-            if (this.crafting && repeat > 0) {
-                this.repeatInput.value = Math.max(1, repeat);
-                setTimeout(() => this.craft(), 100);
+        game.network.send(
+            "craft",
+            {type, ingredients, variant: this.variant},
+            () => {
+                this.openRecipe(this.current);
+                const repeat = this.repeatInput.value - 1;
+                if (this.crafting && repeat > 0) {
+                    this.repeatInput.value = Math.max(1, repeat);
+                    setTimeout(() => this.craft(), 100);
+                }
+            },
+            () => {
+                this.stop();
             }
-        });
+        );
     }
 
     get variant() {

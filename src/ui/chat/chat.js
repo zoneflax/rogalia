@@ -526,7 +526,7 @@ function Chat() {
         const messagesElement = scrollable.contents;
         messagesElement.classList.add("messages");
         messagesElement.innerHTML = playerStorage.getItem("chat.log." + name) || "";
-        tab.contents = scrollable.element;
+        tab.contents = scrollable;
         tab.messagesElement = messagesElement;
 
         return tab;
@@ -783,12 +783,14 @@ function Chat() {
             var m = elem.cloneNode(true);
             element.appendChild(m);
 
-            if (element.scrollHeight - element.scrollTop == element.clientHeight + m.clientHeight) {
-                if (tab.isActive()) {
-                    scrollToTheEnd(element);
+            _.defer(function() {
+                if (element.scrollHeight - element.scrollTop == element.clientHeight + m.clientHeight) {
+                    if (tab.isActive()) {
+                        scrollToTheEnd(element);
+                    }
+                    cleanUpTab(element);
                 }
-                cleanUpTab(element);
-            }
+            });
         });
     }
 

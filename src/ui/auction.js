@@ -1,4 +1,4 @@
-/* global T, game, dom, Panel, ParamBar, Vendor */
+/* global T, game, dom, Panel, ParamBar, Vendor, TS */
 
 "use strict";
 
@@ -55,9 +55,9 @@ Auction.prototype = {
         var self = this;
         return [
             this.makeSearch(),
-            dom.wrap(".lot-list", Object.keys(lots).map(function(type) {
+            dom.scrollable("lot-list", Object.keys(lots).map(function(type) {
                 var count = lots[type];
-                var lot = dom.wrap(".lot", [
+                var lot = dom.wrap("lot", [
                     dom.wrap("slot lot-icon", [Entity.templates[type].icon()]),
                     dom.div("lot-type", {text: TS(type)}),
                     dom.div("lot-count", {text: T("Quantity") + ": " + count}),
@@ -96,7 +96,7 @@ Auction.prototype = {
             dom.wrap("slot lot-icon", [Entity.templates[type].icon()]),
             dom.div("lot-type", {text: TS(type)}),
             dom.hr(),
-            dom.wrap("lot-table", table),
+            dom.scrollable("lot-table", table),
         ];
     },
     buyFindView: function(lots, type) {
