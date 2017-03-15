@@ -54,7 +54,7 @@ Entity.groupTags = {
     "bow": ["weapon", "ranged-weapon"],
     "energy-gun": ["weapon", "ranged-weapon"],
 
-    "body-amor": ["armor"],
+    "body-armor": ["armor"],
     "head-armor": ["armor"],
     "legs-armor": ["armor"],
     "feet-armor": ["armor"],
