@@ -30,6 +30,11 @@ Entity.usable = function(entity) {
     return _.includes(["label"], entity.Group);
 };
 
+Entity.norelocate = ["blank", "claim", "exit", "entrance", "plant"];
+Entity.canRelocate = function(entity) {
+    return entity.MoveType == Entity.MT_STATIC && Entity.norelocate.every(kind => !entity.is(kind));
+};
+
 Entity.templates = {};
 
 Entity.groupTags = {
@@ -89,6 +94,13 @@ Entity.groupTags = {
     "playing-figure": ["game"],
 };
 
+Entity.craftGroups = [
+    "housing",
+    "weapon",
+    "armor",
+    "tool",
+];
+
 Entity.miscGroups = [
     "portable",
     "liftable",
@@ -99,12 +111,19 @@ Entity.miscGroups = [
 ];
 
 Entity.recipes = {};
+Entity.sortedRecipes = [];
 
 Entity.tags = {};
-Entity.sortedTags = [];
 
 Entity.init = function(templates, recipes) {
     Entity.recipes = recipes;
+
+    Entity.sortedRecipes = _.toPairs(recipes).sort(([aType, a], [bType, b]) => {
+        const lvl = (a.Lvl || 0) - (b.Lvl || 0);
+        return  (lvl != 0)
+            ? lvl
+            : TS(aType).localeCompare(TS(bType));
+    });
 
     templates.forEach(props => {
         var e = new Entity();
@@ -120,8 +139,6 @@ Entity.init = function(templates, recipes) {
         });
         return tags;
     }, {});
-
-    Entity.sortedTags = _.toPairs(Entity.tags).sort(([, a], [, b]) => b.length - a.length);
 };
 
 

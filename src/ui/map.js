@@ -1,4 +1,4 @@
-/* global game, Point, CELL_SIZE, config, loader, PIXI */
+/* global game, Point, CELL_SIZE, config, loader, PIXI, dom */
 
 "use strict";
 function WorldMap() {
@@ -28,11 +28,9 @@ function WorldMap() {
 
     this.tiles = [];
 
-
-
     var worker = new Worker("src/map-parser.js");
     worker.onmessage = (e) => {
-        var data = e.data;
+        const data = e.data;
         if (data.error) {
             game.error(data.error);
             return;
@@ -46,32 +44,25 @@ function WorldMap() {
         this.ready = true;
     };
 
-    this.sync = function(data, map) {
-        var width = Math.sqrt(data.length);
-        var height = width;
-        // TODO: dirty hack; fix server
-        if (width != width << 0) {
-            width = 48;
-            height = 64;
-        }
-        this.cells_x = width;
-        this.cells_y = height;
+    this.sync = function({Width, Height, Data}, map) {
+        this.cells_x = Width;
+        this.cells_y = Height;
 
-        this.width = width * CELL_SIZE;
-        this.height = height * CELL_SIZE;
+        this.width = Width * CELL_SIZE;
+        this.height = Height * CELL_SIZE;
 
-        this.syncMinimap(data, width, height);
+        this.syncMinimap(Data, Width, Height);
 
         if (config.graphics.fastRender) {
             var loc = game.player.Location;
             this.location.set(loc.X, loc.Y);
-            this.data = data;
+            this.data = Data;
             this.ready = true;
             game.pixi.updateMap(true);
         } else {
             worker.postMessage({
                 bioms: this.bioms,
-                pixels: data,
+                pixels: Data,
                 cells_x: this.cells_x,
                 cells_y: this.cells_y,
             });
@@ -100,8 +91,64 @@ function WorldMap() {
     };
 
     this.reset = function() {
-        //TODO: reuse valid chunks
-        this.chunks = {};
+        for (const index in this.chunks) {
+            this.chunks[index].dirty = true;
+        }
+    };
+
+    this.quant = {
+        current: 0,
+        max: 3,
+        idle: 0,
+    };
+    this.getChunk = function(x, y) {
+        var c = new Point(x * CHUNK_SIZE, y * CHUNK_SIZE);
+        const index = y * this.cells_x + x;
+        let chunk = this.chunks[index];
+        if (!chunk) {
+            this.quant.idle = 0;
+            if (this.quant.current == 0) {
+                return null;
+            }
+            this.quant.current--;
+            chunk = this.makeChunk(c);
+            this.chunks[index] = chunk;
+        }
+        return chunk;
+    };
+
+    this.updateChunks = function() {
+        this.quant.current = Math.max(this.quant.current, this.quant.max);
+        this.quant.idle = Math.max(this.quant.idle, this.quant.max - 1);
+        if (this.quant.idle == 0) {
+            return;
+        }
+        // const candidates = Object.keys(this.chunks).filter(index => this.chunks[index].dirty);
+        // // first check farest chunks
+        // const sorted = _.sortBy(candidates, index => {
+        //     const x = index % this.cells_x * CHUNK_SIZE;
+        //     const y = ((index / this.cells_x) << 0) * CHUNK_SIZE;
+        //     return -Math.hypot(x - game.player.X, y - game.player.Y);
+        // });
+        // for (const index of sorted) {
+        //     const x = index % this.cells_x;
+        //     const y = (index / this.cells_x) << 0;
+        //     delete this.chunks[index];
+        //     this.quant.idle--;
+        //     if (this.quant.idle == 0) {
+        //         break;
+        //     }
+        // };
+        for (const index in this.chunks) {
+            if (!this.chunks[index].dirty) {
+                continue;
+            }
+            delete this.chunks[index];
+            this.quant.idle--;
+            if (this.quant.idle == 0) {
+                break;
+            }
+        }
     };
 
     this.drawGrid = function() {
@@ -154,9 +201,9 @@ function WorldMap() {
 
 
     this.drawTile = function(ctx, x, y, p) {
-        var cell = this.data[y][x];
-        var tile = this.tiles[cell.id];
-        var variant = 0;
+        const {id, corners} = this.data[y*this.cells_x + x];
+        const tile = this.tiles[id];
+        let variant = 0;
 
         if (tile.width > 2*CELL_SIZE) {
             var lx = game.player.Location.X / CELL_SIZE;
@@ -188,8 +235,13 @@ function WorldMap() {
             [0, -CELL_SIZE/2],
         ];
 
-        cell.corners.forEach(function(offset, i) {
-            if (x != 0 && y != 0 && !cell.transition[i]) {
+        for (let i = 0; i < 4; i++) {
+            const offset = (corners >> (0x4 * i)) & 0xf;
+            if (offset == 0) {
+                continue;
+            }
+            const transition = (corners & (1 << i + 0x4*5));
+            if (x != 0 && y != 0 && !transition) {
                 // breaks ARE required
                 switch(offset) {
                 case  3: if (i != 2) return; break;
@@ -221,7 +273,7 @@ function WorldMap() {
                 CELL_SIZE * 2,
                 CELL_SIZE
             );
-        });
+        }
     };
 
     this.fastDraw = function() {
@@ -299,6 +351,7 @@ function WorldMap() {
     };
 
     this.layerDraw = function() {
+        // const started = Date.now();
         var layers = this.makeLayers();
 
         var scr = game.screen;
@@ -328,46 +381,30 @@ function WorldMap() {
             .div(CHUNK_SIZE)
             .ceil();
 
-        for (var x = leftTop.x; x < rightBottom.x; x++) {
-            for (var y = rightTop.y; y < leftBottom.y; y++) {
-                var c = new Point(x * CHUNK_SIZE, y * CHUNK_SIZE);
-                var p = c.clone().toScreen();
-
-                // if (p.x + CHUNK_SIZE < cam.x)
-                //     continue;
-                // if (p.y + CHUNK_SIZE < cam.y)
-                //     continue;
-                // if (p.x - CHUNK_SIZE > cam.x + scr.width)
-                //     continue;
-                // if (p.y > cam.y + scr.height)
-                //     continue;
-                var key = x + "." + y;
-                var chunk = this.chunks[key];
+        for (let x = leftTop.x; x < rightBottom.x; x++) {
+            for (let y = rightTop.y; y < leftBottom.y; y++) {
+                const chunk = this.getChunk(x, y);
                 if (!chunk) {
-                    chunk = this.makeChunk(p, c);
-                    this.chunks[key] = chunk;
+                    continue;
                 }
-                _.forEach(chunk.layers, function(tile) {
-                    if (!layers[tile.layer]) {
-                        game.sendErrorf(
-                            "layers[tile.layer] is null; layers: %j; tile.layer: %j",
-                            layers,
-                            tile.layer
-                        );
-                        layers[tile.layer] = [];
-                    }
+                for (const tile of chunk.layers) {
                     layers[tile.layer].push(tile);
-                });
+                }
             }
         }
-        _.forEach(layers, function(layer) {
-            _.forEach(layer, function(tile) {
+
+        for (const layer of layers) {
+            for (const tile of layer) {
                 game.ctx.drawImage(tile.canvas, tile.p.x, tile.p.y);
-                // var p = tile.p.clone().add({x: CHUNK_SIZE, y: 0}).toWorld();
-                // game.ctx.strokeStyle = "#000";
-                // game.iso.strokeRect(p.x, p.y, CHUNK_SIZE, CHUNK_SIZE);
-            });
-        });
+            }
+        }
+
+        this.updateChunks();
+
+        // const diff = Date.now() - started;
+        // if (diff > 30) {
+        //     console.log("last", diff);
+        // }
     };
 
     this.draw = function() {
@@ -391,16 +428,19 @@ function WorldMap() {
         });
     };
 
-    this.makeChunk = function(p, c) {
+    this.makeChunk = function(c) {
+        const p = c.clone().toScreen();
         p.x -= CHUNK_SIZE;
-        var chunk = {layers:[]};
-        let self = this;
-        _.forEach(this.layers, function(layer, lvl) {
+        var chunk = {layers: [], dirty: this.dirtyCounter};
+        _.forEach(this.layers, (layer, lvl) => {
             var canvas = null;
             var ctx = null;
-            _.forEach(layer, function(tile) {
-                var x = tile.x*CELL_SIZE - (c.x - self.location.x);
-                var y = tile.y*CELL_SIZE - (c.y - self.location.y);
+            _.forEach(layer, index => {
+                const tileX = index % this.cells_x;
+                const tileY = (index / this.cells_x) << 0;
+
+                const x = tileX*CELL_SIZE - (c.x - this.location.x);
+                const y = tileY*CELL_SIZE - (c.y - this.location.y);
                 if (x < 0 || x > CHUNK_SIZE || y < 0 || y > CHUNK_SIZE)
                     return;
                 if (!canvas) {
@@ -408,12 +448,12 @@ function WorldMap() {
                     ctx = canvas.ctx;
                     ctx.translate(CHUNK_SIZE, 0);
                 }
-                var p = new Point(x, y).toScreen();
+                const p = new Point(x, y).toScreen();
                 p.x -= CELL_SIZE;
-                self.drawTile(ctx, tile.x, tile.y, p);
+                this.drawTile(ctx, tileX, tileY, p);
             });
             if (canvas) {
-                chunk.layers.push({canvas: canvas, p: p, layer: lvl});
+                chunk.layers.push({canvas, p, layer: lvl});
             }
         });
         return chunk;
@@ -499,9 +539,9 @@ function WorldMap() {
         }
     };
 
-    this.initMap = function(map) {
-        this.full.width = map.Width;
-        this.full.height = map.Height;
+    this.initSize = function({Width, Height}) {
+        this.full.width = Width;
+        this.full.height = Height;
     };
 
     this.getCell = function(x, y) {
@@ -521,15 +561,7 @@ function WorldMap() {
             };
         }
 
-        if (!this.data[y]) {
-            // throw new Error("Map cell not found (y) " + x + ", " + y);
-            return null;
-        }
-        if (!this.data[y][x]) {
-            // throw new Error("Map cell not found (x+y) " + x + ", " + y);
-            return null;
-        }
-        return this.data[y][x];
+        return this.data[y*this.cells_x + x];
     };
 
     this.biomAt = function(x, y) {

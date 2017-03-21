@@ -25,7 +25,7 @@ function loadingStage(version) {
 
     function sync(data) {
         game.setTime(data.Time);
-        game.map.initMap(data.Map);
+        game.map.initSize(data.Map);
         Character.initSprites();
 
         loader.ready(function() {

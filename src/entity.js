@@ -291,10 +291,10 @@ Entity.prototype = {
         return this.sprite.height - r;
     },
     getDrawPoint: function() {
-        var p = new Point(this.x, this.y).toScreen();
-        p.x -= this.getDrawDx();
-        p.y -= this.getDrawDy();
-        return p.round();
+        return new Point(this.x, this.y)
+            .toScreen()
+            .sub({x: this.getDrawDx(), y: this.getDrawDy()})
+            .round();
     },
     compare: function(entity) {
         if (this == entity)
@@ -349,6 +349,7 @@ Entity.prototype = {
         case "potions-cabinet-small":
         case "potions-cabinet-average":
         case "potions-cabinet-big":
+        case "sandbox":
             if (!this.Props.Slots)
                 break;
             if (this.Props.Slots.some(function(id){ return id != 0; }))
@@ -373,6 +374,14 @@ Entity.prototype = {
             if (this.Variant) {
                 path += "-" + this.Variant;
             }
+
+            switch (this.Group) {
+            case "rogalik-card":
+            case "playing-card":
+                path = "cards/" + path.replace(/^card-/, "");
+                break;
+            }
+
         } else {
             switch (this.Orientation) {
             case "h":
@@ -463,7 +472,7 @@ Entity.prototype = {
         if (!(game.player.Instance && game.player.Instance.match(/^tutorial-/)) || game.player.IsAdmin) {
             actions[2]["Destroy"] = this.destroy;
 
-            if (this.MoveType == Entity.MT_STATIC) {
+            if (Entity.canRelocate(this)) {
                 actions[2]["Relocate"] = this.relocate;
             }
         }
@@ -698,6 +707,8 @@ Entity.prototype = {
         switch(this.Group) {
         case "jukebox":
             this.defaultActionSuccess = () => { game.jukebox.open(this); };
+            var time = (Date.now() - this.Started * 1000) / 1000;
+            game.jukebox.play(this.Props.Text, time >> 0);
             break;
         case "slot-machine":
             this.defaultActionSuccess = () => { new SlotMachine(this); };
@@ -772,10 +783,6 @@ Entity.prototype = {
         if ("Amount" in this && this.Amount > 1)
             this.Actions.push("split");
 
-        if (this.Group == "jukebox") {
-            var time = (Date.now() - this.Started * 1000) / 1000;
-            game.jukebox.play(this.Props.Text, time >> 0);
-        }
         game.controller.updateItemInfo(this);
     },
     autoHideable: function() {
@@ -1345,4 +1352,11 @@ Entity.prototype = {
             height
         );
     },
+    play: function() {
+        game.network.send("Play", {Id: this.Id}, ({PlayUrl, Cards}) => {
+            new Panel("play-rogalik", "Rogalik cards", [
+                dom.iframe(encodeURI(PlayUrl + "&deck=" + JSON.stringify(Cards)))
+            ]).show();
+        });
+    }
 };

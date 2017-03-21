@@ -26,6 +26,7 @@ class Craft {
         this.recipeDetails = dom.div("#recipe-details", {text : T("Select recipe")});
 
         this.history = [];
+        this.favorites = playerStorage.getItem("craft.favorites") || {};
 
         this.blank = {
             type: null,
@@ -53,32 +54,38 @@ class Craft {
             },
         };
 
+        this.tabs = [
+            {
+                title: T("by skill"),
+                update: (title, contents) => {
+                    dom.setContents(contents, this.makeRecipeTree(this.recipesBySkill()));
+                    this.repeatSearch();
+                },
+            },
+            {
+                title: T("by purpose"),
+                update: (title, contents) => {
+                    dom.setContents(contents, this.makeRecipeTree(this.recipesByPurpose()));
+                    this.repeatSearch();
+                },
+            },
+            {
+                id: "favorites",
+                title: T("favorites"),
+                update: (title, contents) => {
+                    dom.setContents(contents, this.makeRecipeTree(this.favorites));
+                    this.repeatSearch();
+                },
+            }
+        ];
+
         this.panel = new Panel(
             "craft",
             "Craft",
             [
                 this.makeHeader(),
                 dom.hr(),
-                dom.tabs([
-                    {
-                        title: T("by skill"),
-                        update: (title, contents) => {
-                            dom.setContents(contents, this.makeRecipeTree(this.recipesBySkill()));
-                            this.repeatSearch();
-                        },
-                    },
-                    {
-                        title: T("by purpose"),
-                        update: (title, contents) => {
-                            dom.setContents(contents, this.makeRecipeTree(this.recipesByPurpose()));
-                            this.repeatSearch();
-                        },
-                    },
-                    // {
-                    //     title: T("favourites"),
-                    //     contents: [],
-                    // }
-                ])
+                dom.tabs(this.tabs),
             ]
         );
         this.panel.hooks.hide = () => this.cleanUp();
@@ -167,42 +174,27 @@ class Craft {
     }
 
     recipesBySkill() {
-        const root = _.fromPairs(Skills.list.map(skill => [skill, {}]));
-        _.forEach(Entity.recipes, (recipe, type) => {
-            const group = Entity.templates[type].Group;
-            const node = root[recipe.Skill][group] || {};
-            node[type] = recipe;
-            root[recipe.Skill][group] = node;
-        });
-
-        return this.sort(this.moveMiscRecipes(root));
-    }
-
-    sort(root) {
-        for (const skill in root) {
-            for (const group in root[skill]) {
-                const items =  root[skill][group];
-                const sorted = _.sortBy(_.toPairs(items), ([type, recipe]) => recipe.Lvl || 0);
-                root[skill][group] = _.fromPairs(sorted);
-            }
-        }
-
+        const root = Entity.sortedRecipes.reduce((root, [type, recipe]) => {
+            root[recipe.Skill][type] = recipe;
+            return root;
+        }, _.fromPairs(Skills.list.map(skill => [skill, {}])));
         return root;
     }
 
     recipesByPurpose() {
-        const root = Entity.sortedTags.reduce(function(root, [tag, entities]) {
-            root[tag] = entities.reduce(function(group, entity) {
-                group[entity.Type] = entity.Recipe;
-                return group;
-            }, {});
+        const root = Entity.sortedRecipes.reduce((root, [type, recipe]) => {
+            const entity = Entity.templates[type];
+            const group = entity.tags.find(tag => Entity.craftGroups.includes(tag)) || "misc";
+            const subgroup = entity.tags.find(tag => !Entity.craftGroups.includes(tag)) || "misc";
+            const node = root[group][subgroup] || {};
+            node[type] = recipe;
+            root[group][subgroup] = node;
             return root;
-        }, {});
+        }, _.merge(_.fromPairs(Entity.craftGroups.map(group => [group, {}])), {misc: {}}));
 
         return root;
         // return this.moveMiscRecipes(root);
     }
-
 
     makeRecipeTree(root) {
         const recipeContainer = dom.wrap("recipe-container", T("Select recipe"));
@@ -833,15 +825,17 @@ class Craft {
             }
             return list;
         });
+        const repeat = this.repeatInput.value;
         game.network.send(
             "craft",
             {type, ingredients, variant: this.variant},
             () => {
                 this.openRecipe(this.current);
-                const repeat = this.repeatInput.value;
                 if (this.crafting && repeat > 1) {
                     this.repeatInput.value = Math.max(1, repeat - 1);
                     setTimeout(() => this.craft(), 100);
+                } else {
+                    this.stop();
                 }
             },
             () => {
@@ -877,7 +871,10 @@ class Craft {
 
     makeRequirements(type, recipe) {
         return dom.wrap("recipe-requirements", [
-            dom.wrap("recipe-requirements-header", T("Required") + ": "),
+            dom.wrap("recipe-requirements-header", [
+                this.makeRecipeTypeIcon(type),
+                T("Required") + ": "
+            ]),
             dom.wrap("", [
                 this.makeSkillRequirementes(recipe),
                 this.makeToolRequirementes(recipe),
@@ -964,7 +961,7 @@ class Craft {
         return dom.wrap(
             "recipe-title",
             [
-                this.makeRecipeTypeIcon(type),
+                this.makeToggleFavorite(type),
                 title,
                 recipe.Output && ` (x${recipe.Output})`,
             ],
@@ -984,6 +981,17 @@ class Craft {
               ? "craft"
               : "building";
         return dom.img(`assets/icons/craft/${icon}.png`, "recipe-type-icon");
+    }
+
+    makeToggleFavorite(type) {
+        const active = (this.favorites[type]) ? " active" : "";
+        const icon = dom.wrap("recipe-toggle-favorite" + active, "★", {
+            onclick: () => {
+                icon.classList.toggle("active");
+                this.toggleFavorite(type);
+            },
+        });
+        return icon;
     }
 
     makeInfo(type) {
@@ -1057,5 +1065,18 @@ class Craft {
             playerStorage.setItem("craft.filter." + name, enabled);
         });
         playerStorage.setItem("craft.search", this.searchInput.value);
+        playerStorage.setItem("craft.favorites", this.favorites);
+    }
+
+    toggleFavorite(type) {
+        if (this.favorites[type]) {
+            delete this.favorites[type];
+        } else {
+            this.favorites[type] = Entity.recipes[type];
+        }
+        const tab = this.tabs.find(tab => tab.id == "favorites");
+        if (tab.isActive()) {
+            tab.activate();
+        }
     }
 }

@@ -1130,7 +1130,22 @@ hr {
         }
 
         .recipe-type-icon {
+            vertical-align: middle;
             margin-right: 3px;
+        }
+
+        .recipe-toggle-favorite {
+            .cursor-pointer;
+            display: inline;
+            color: #85889f;
+
+            &.active {
+                color: lightgreen;
+            }
+
+            &:hover {
+                filter: brightness(115%);
+            }
         }
 
         .recipe-preview {
@@ -4011,5 +4026,19 @@ input[type=number], .lot-quantity > input, .price > input {
 
     .trade-theirs {
         text-align: right;
+    }
+}
+
+#admin-add {
+    height: 300px;
+}
+
+#play-rogalik {
+    max-width: none;
+
+    iframe {
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
     }
 }

@@ -567,7 +567,6 @@ Character.prototype = {
     see: function(character) {
         if (this == character)
             return true;
-        var p = this.getDrawPoint();
         var len_x = character.X - this.X;
         var len_y = character.Y - this.Y;
         return util.distanceLessThan(len_x, len_y, Math.hypot(game.screen.width, game.screen.height));
@@ -651,11 +650,10 @@ Character.prototype = {
                 }
             }
         }
-        return {
-            p: p,
-            x: Math.round(p.x - this.sprite.width / 2),
-            y: Math.round(p.y - this.sprite.height + this.sprite.offset) - dy
-        };
+        return new Point(
+            p.x - this.sprite.width / 2,
+            p.y - this.sprite.height + this.sprite.offset - dy
+        ).round();
     },
     draw: function(force) {
         if ("Sleeping" in this.Effects)
@@ -1439,9 +1437,9 @@ Character.prototype = {
 
     findMovePosition: function(k = 16/1000) {
         var delta = this.Speed.Current * k;
-        var cell = game.map.getCell(this.X, this.Y);
-        if (cell) {
-            delta *= cell.biom.Speed;
+        var biom = game.map.biomAt(this.X, this.Y);
+        if (biom) {
+            delta *= biom.Speed;
         }
 
         var p = new Point(this);

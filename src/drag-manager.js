@@ -2,7 +2,7 @@
 
 "use strict";
 function DragManager() {
-    var dragIgnoreTags = ["INPUT", "TEXTAREA", "BUTTON", "CODE"];
+    var dragIgnoreTags = ["INPUT", "TEXTAREA", "BUTTON", "CODE", "IFRAME"];
 
     var drag = {
         target: null,

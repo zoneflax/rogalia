@@ -22,8 +22,7 @@ function mainStage(data) {
 
         Entity.sync(data.Entities || [], data.RemoveEntities || null);
 
-
-        data.Location && game.map.sync(data.Location, data.Map);
+        data.Location && game.map.sync(data.Location);
 
         data.BG && game.controller.updateBG(data.BG);
 

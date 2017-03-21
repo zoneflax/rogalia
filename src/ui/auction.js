@@ -39,7 +39,7 @@ Auction.prototype = {
     makeSearch: function() {
         var input = dom.tag("input");
         input.onkeyup = function() {
-            var re = new RegExp(this.value, "i");
+            var re = new RegExp(_.escapeRegExp(this.value), "i");
             dom.forEach(".lot", function() {
                 if (re.test(this.querySelector(".lot-type").textContent))
                     dom.show(this);

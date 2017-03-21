@@ -347,17 +347,20 @@ function Chat() {
                     e.target.blur();
                     break;
                 }
-                new Panel(
-                    "add",
-                    arg,
-                    _.filter(Entity.templates, function(entity, type) {
-                        return entity.Type.contains(arg) || entity.title.contains(arg);
-                    }).map(function(entity) {
-                        return dom.button(entity.title + " / " + entity.Type, "add-entity-button", function() {
-                            game.controller.newCreatingCursor(entity.Type);
-                        });
-                    })
-                ).setTemporary(true).show();
+                new Panel("add", arg, dom.scrollable(
+                        "#admin-add",
+                        _.filter(
+                            Entity.templates,
+                            (entity, type) => entity.Type.contains(arg) || entity.title.contains(arg)
+                        ).map(entity =>  {
+                            return dom.button(
+                                entity.title + " / " + entity.Type,
+                                "add-entity-button", () =>  {
+                                    game.controller.newCreatingCursor(entity.Type);
+                                }
+                            );
+                        })
+                )).setTemporary(true).show();
                 break;
             case "clear-equip-slot":
                 var args = message.split(" ");
@@ -785,7 +788,7 @@ function Chat() {
 
             _.defer(function() {
                 const diff = (element.scrollHeight - element.scrollTop) - (element.clientHeight + m.clientHeight);
-                if (Math.abs(diff) < 1) {
+                if (Math.abs(diff) < element.clientHeight) {
                     if (tab.isActive()) {
                         scrollToTheEnd(element);
                     }

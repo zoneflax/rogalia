@@ -1,3 +1,5 @@
+/* global onmessage, postMessage */
+
 "use strict";
 
 onmessage = function (e) {
@@ -15,58 +17,52 @@ onmessage = function (e) {
 };
 
 function Parser(data, bioms, cells_x, cells_y) {
-    this.layers = bioms.map(function() {
-        return [];
-    });
+    this.layers = bioms.map(() => []);
 
-    var colorMap = bioms.reduce(function(map, biom, index) {
+    const colorMap = bioms.reduce(function(map, biom, index) {
         map[biom.Color] = [biom, index];
         return map;
     }, {});
 
-    this.data = new Array(cells_y);
-    for(var y = 0; y < cells_y; y++) {
-        this.data[y] = new Array(cells_x);
-        for(var x = 0; x < cells_x; x++) {
-            var color = data[y * cells_x + x];
-            var [biom, index] = colorMap[color];
+    this.data = new Array(cells_y * cells_x);
+    for (let y = 0; y < cells_y; y++) {
+        for (let x = 0; x < cells_x; x++) {
+            const color = data[y * cells_x + x];
+            const [biom, id] = colorMap[color];
             if (!biom) {
                 throw new Error("Unknown biom color: " + color);
             }
-	        this.data[y][x] = {
-                x: x,
-                y: y,
-                id: index,
-                corners: new Array(4),
-                transition: new Array(4),
-                biom: biom,
-            };
+	        this.data[y*cells_x + x] = {id, corners: 0};
         }
     }
 
-    for(var y = 0; y < cells_y; y++) {
-        for(var x = 0; x < cells_x; x++) {
-            var id = this.data[y][x].id;
-            for (var c = 0; c < 4; c++) {
-                var offset = 0;
-                var cx = 1 - (c & 0x1);
-                var cy = 1 - ((c >> 1) & 0x1);
-                for (var i = 0; i < 4; i++) {
-                    var dx = x + cx - (i & 0x1);
-                    var dy = y + cy - ((i >> 1) & 0x1);
-                    var other =
-                            this.data[dy] &&
-                            this.data[dy][dx] &&
-                            this.data[dy][dx].id;
+    for (let y = 0; y < cells_y; y++) {
+        for (let x = 0; x < cells_x; x++) {
+            const index = y*cells_x + x;
+            const cell = this.data[index];
+            const {id} = cell;
+            for (let c = 0; c < 4; c++) {
+                let offset = 0;
+                const cx = 1 - (c & 0x1);
+                const cy = 1 - ((c >> 1) & 0x1);
+                for (let i = 0; i < 4; i++) {
+                    const dx = x + cx - (i & 0x1);
+                    const dy = y + cy - ((i >> 1) & 0x1);
+                    if (dx < 0 || dy < 0 || dx >= cells_x || dy >= cells_y) {
+                        continue;
+                    }
+                    const neighbor = this.data[dy * cells_x + dx];
+                    const other = neighbor.id;
                     if (other >= id) {
                         offset |= 1 << i;
                     }
-                    if (other !== id)
-                        this.data[y][x].transition[4-c] = true;
+                    if (other != id) {
+                        cell.corners |= 1 << (4-c + 0x4*5); // transition flags
+                    }
                 }
-                this.data[y][x].corners[c] = offset;
+                cell.corners |= offset << (4*c);
             }
-            this.layers[id].push(this.data[y][x]);
+            this.layers[id].push(index);
         }
     }
 }

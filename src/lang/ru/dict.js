@@ -1503,6 +1503,7 @@ T.dict = {
     "Search by keyword": "Поиск по названию",
     "by skill": "по навыку",
     "by purpose": "по группе",
+    "favorites": "избранное",
     "search": "поиск",
     "Food": "Еда",
     "Part": "Часть",

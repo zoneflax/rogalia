@@ -33,9 +33,9 @@ class PathNode {
     }
 
     addBiomCost(cost) {
-        const cell = game.map.getCell(this.point.x, this.point.y);
-        return (cell)
-            ? cost / ((cell.biom.Speed + 3)/4)
+        const biom = game.map.biomAt(this.point.x, this.point.y);
+        return (biom)
+            ? cost / ((biom.Speed + 3)/4)
             : cost;
     }
 
@@ -52,20 +52,20 @@ class PathNode {
 
     static collide(point, step, gap = PathNode.gap) {
         const halfStep = step / 2;
-        let cell = game.map.getCell(point.x - halfStep, point.y - halfStep);
-        if (cell && cell.biom.Blocked)
+        let biom = game.map.biomAt(point.x - halfStep, point.y - halfStep);
+        if (biom ** biom.Blocked)
             return true;
 
-        cell = game.map.getCell(point.x - halfStep, point.y + halfStep);
-        if (cell && cell.biom.Blocked)
+        biom = game.map.biomAt(point.x - halfStep, point.y + halfStep);
+        if (biom && biom.Blocked)
             return true;
 
-        cell = game.map.getCell(point.x + halfStep, point.y - halfStep);
-        if (cell && cell.biom.Blocked)
+        biom = game.map.biomAt(point.x + halfStep, point.y - halfStep);
+        if (biom && biom.Blocked)
             return true;
 
-        cell = game.map.getCell(point.x + halfStep, point.y + halfStep);
-        if (cell && cell.biom.Blocked)
+        biom = game.map.getCell(point.x + halfStep, point.y + halfStep);
+        if (biom && biom.Blocked)
             return true;
 
         return game.player.willCollide(point, gap);
