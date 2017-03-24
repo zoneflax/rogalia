@@ -176,35 +176,38 @@ Character.npcActions = {
             game.controller.showWarning(T("No more quests"));
             return;
         }
-        var self = this;
         var talks = {};
-        quests.forEach(function(q) {
-            var quest = new Quest(q, self);
+        quests.forEach(q => {
+            var quest = new Quest(q, this);
             var name = quest.getName() + " (" + quest.getStatusMarker() + ")";
-            talks[name] = function() {
-                quest.showPanel();
-            };
+            talks[name] = () => quest.showPanel();
         });
         game.menu.show(talks);
     },
     "Talk": function() {
-        var self = this;
         var info = this.getTalks();
         var panel = new Panel(
             "interaction",
             this.Name,
             [
-                dom.wrap("", util.mklist(info.talks).map(function(html) {
-                    return dom.tag("p", "", {html});
-                })),
-                dom.make("ul", Object.keys(info.actions).map(function(title) {
-                    return dom.tag("li", "talk-link", {
-                        text: info.actions[title],
-                        onclick: function() {
-                            panel.close();
-                            Character.npcActions[title].call(self);
+                dom.wrap("interaction-talk-container", [
+                    dom.wrap("interaction-npc-avatar", [
+                        this.getFullName(),
+                        dom.img(`assets/characters/npcs/avatars/${this.Type}.png`),
+                    ]),
+                    dom.wrap("interaction-talk", util.mklist(info.talks).map(html => dom.tag("p", "", {html})))
+                ]),
+                dom.wrap("interaction-actions", Object.keys(info.actions).map((title, i) => {
+                    return dom.wrap(
+                        "interaction-talk-link",
+                        `${i+1}. ${info.actions[title]}`,
+                        {
+                            onclick: () =>  {
+                                panel.close();
+                                Character.npcActions[title].call(this);
+                            }
                         }
-                    });
+                    );
                 })),
             ]
         );

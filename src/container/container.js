@@ -335,9 +335,6 @@ Container.prototype = {
         }
 
         this.updateFuel();
-        if (this.entity.Location == Entity.LOCATION_TRADE) {
-            game.controller.trade.unconfirmed(this.entity.Owner == game.player.Id);
-        }
     },
     updateProgress() {
         this.slots.forEach(slot => slot.updateProgress());
@@ -350,6 +347,9 @@ Container.prototype = {
             this.update();
         } else {
             this._syncReq = true;
+        }
+        if (game.controller.trade) {
+            game.controller.trade.unconfirmed();
         }
     },
     updateFuel() {

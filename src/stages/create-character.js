@@ -13,6 +13,7 @@ function createCharacterStage() {
     var male = dom.radioButton("", "sex");
     male.label.className = "new-sex checked";
     male.label.id = "new-male";
+    male.label.title = T("Male");
     male.checked = true;
     male.onclick = function() {
         male.label.classList.add("checked");
@@ -22,6 +23,7 @@ function createCharacterStage() {
     var female = dom.radioButton("", "sex");
     female.label.className = "new-sex";
     female.label.id = "new-female";
+    female.label.title = T("Female");
     female.checked = false;
     female.onclick = function() {
         female.label.classList.add("checked");
@@ -35,40 +37,38 @@ function createCharacterStage() {
     var professions = document.createElement("div");
     professions.className = "professions";
     game.professions.forEach(function(prof) {
-        var icon = new Image();
-        icon.className = "profession-tab";
-        icon.src = "assets/icons/skills/" + prof.mainSkill + ".png";
-        icon.title = T(prof.name);
-
-        var desc = dom.make("p", [
-            T(prof.desc || T("No description yet")),
-            dom.br(),
-            dom.br(),
-            T("Main skills") + ":",
+        const li = dom.wrap("profession hidden", [
+            dom.wrap("profession-name", T(prof.name)),
+            dom.wrap("profession-desc-container", [
+                dom.wrap("profession-desc", T(prof.desc || T("No description yet"))),
+                dom.wrap("profession-skills-header", T("Main skills") + ":"),
+                dom.wrap("profession-skills", _.map(prof.skills, (_, skill) => {
+                    return dom.wrap("profession-skill", [
+                        dom.img(`assets/icons/skills/${skill.toLowerCase()}.png`, "profession-skill-icon"),
+                        T(skill),
+                    ]);
+                })),
+            ]),
+            dom.wrap(
+                "profession-tip",
+                T("Picking a profession gives you a little bonus of learning points. But you still can learn all the skills you need.")
+            ),
         ]);
-        for (var skill in prof.skills) {
-            var sli = document.createElement("li");
-            sli.textContent = T(skill);
-            desc.appendChild(sli);
-        }
 
-        var li = dom.wrap("profession hidden", [
-            dom.wrap("", T(prof.name)),
-            desc,
-            dom.make("p", T("Picking a profession gives you a little bonus of learning points. But you still can learn all the skills you need."))
-        ]);
+        const icon = dom.img(`assets/icons/skills/${prof.mainSkill}.png`, "profession-tab", {
+            title: T(prof.name),
+            onclick: () => {
+                selectedProf = prof;
+                dom.removeClass(".profession-tab", "active");
+                icon.classList.add("active");
+
+                dom.addClass(".profession", "hidden");
+                dom.show(li);
+            },
+        });
 
         professions.appendChild(li);
         tabs.appendChild(icon);
-
-        icon.onclick = function() {
-            selectedProf = prof;
-            dom.removeClass(".profession-tab", "active");
-            icon.classList.add("active");
-
-            dom.addClass(".profession", "hidden");
-            dom.show(li);
-        };
     });
     // activate default profession
     tabs.children[3].click();

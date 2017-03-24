@@ -7,23 +7,8 @@ var dom = {
         if (classOrId) {
             this.setClassOrId(elem, classOrId);
         }
-        if (cfg) {
-            if (cfg.text !== undefined)
-                elem.textContent = cfg.text;
-            else if (cfg.html !== undefined)
-                elem.innerHTML = cfg.html;
 
-            if (cfg.onclick !== undefined)
-                elem.onclick = cfg.onclick;
-
-            if (cfg.onmousedown !== undefined)
-                elem.onmousedown = cfg.onmousedown;
-
-            if (cfg.title !== undefined)
-                elem.title = cfg.title;
-        }
-
-        return elem;
+        return this.applyCfg(elem, cfg);
     },
     setClassOrId: function(elem, classOrId) {
         switch (classOrId.charAt(0)) {
@@ -36,6 +21,28 @@ var dom = {
         default:
             elem.className = classOrId;
         }
+    },
+    applyCfg: function(elem, cfg = null) {
+        if (cfg) {
+            if (cfg.text !== undefined) {
+                elem.textContent = cfg.text;
+            } else if (cfg.html !== undefined) {
+                elem.innerHTML = cfg.html;
+            }
+
+            if (cfg.onclick !== undefined) {
+                elem.onclick = cfg.onclick;
+            }
+
+            if (cfg.onmousedown !== undefined) {
+                elem.onmousedown = cfg.onmousedown;
+            }
+
+            if (cfg.title !== undefined) {
+                elem.title = cfg.title;
+            }
+        }
+        return elem;
     },
     text: function(text) {
         return document.createTextNode(text);
@@ -58,13 +65,13 @@ var dom = {
     span: function(text, classOrId, title) {
         return this.tag("span", classOrId, {text: text, title: title});
     },
-    img: function(src, classOrId) {
+    img: function(src, classOrId, cfg) {
         var img = new Image();
         img.src = src;
         if (classOrId) {
             this.setClassOrId(img, classOrId);
         }
-        return img;
+        return this.applyCfg(img, cfg);
     },
     link: function(url, text, classOrId) {
         var link = dom.tag("a", classOrId);

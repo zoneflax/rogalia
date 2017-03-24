@@ -1,4 +1,4 @@
-/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter, FONT_SIZE, astar, ContainerSlot */
+/* global util, RectPotentialField, CELL_SIZE, game, CirclePotentialField, Point, Info, dom, T, Panel, Talks, BBox, loader, config, Avatar, Effect, TS, TT, Customization, ImageFilter, FONT_SIZE, astar, ContainerSlot, Quest */
 
 "use strict";
 function Character(id) {
@@ -33,7 +33,6 @@ function Character(id) {
     };
 
     this.target = null;
-    this.interactTarget = {};
 
     this.Dx = 0;
     this.Dy = 0;
@@ -223,6 +222,10 @@ Character.prototype = {
 
             if (data.Style) {
                 game.controller.initPlayerAvatar(this);
+            }
+
+            if (data.ActiveQuests && game.controller.journal) {
+                game.controller.journal.update();
             }
 
             if (data.Equip && game.controller.craft) {
@@ -1754,7 +1757,6 @@ Character.prototype = {
     interact: function() {
         var self = this;
         game.player.setTarget(this);
-        game.player.interactTarget = this;
         game.network.send("follow", {Id: this.Id}, function interact() {
             switch (self.Type) {
             case "vendor":
@@ -1764,8 +1766,7 @@ Character.prototype = {
 
             var quests = self.getQuests();
             if (quests.length > 0 && self.Type == "plato") {
-                var quest = new Quest(quests[0], self);
-                quest.showPanel();
+                new Quest(quests[0], self).showPanel();
                 return;
             }
 
@@ -1788,7 +1789,7 @@ Character.prototype = {
             }
 
             var panel = new Panel(
-                "interraction",
+                "interaction",
                 self.Name,
                 actions.map(function(title) {
                     var cls = (title == "Quest") ? "quest-button" : "";
@@ -2037,7 +2038,10 @@ Character.prototype = {
         return _.includes(["iron", "steel", "titanium", "meteorite", "bloody"], armor);
     },
     synodProtection: function() {
-        return this.Z == 0 && this.Karma >= 0 && !this.inPvp();
+        if (this.Karma < 0 || this.inPvp()) {
+            return false;
+        }
+        return (this.Z == 0) || (this.Z == 3 && this.X < 2804 && this.Y < 3341);
     },
     bbox: function() {
         return new BBox(

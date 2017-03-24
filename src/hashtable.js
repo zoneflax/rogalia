@@ -54,4 +54,8 @@ HashTable.prototype = {
     map: function(predicate) {
         return this.array.map(predicate);
     },
+    find: function(predicate) {
+        return this.array.find(predicate);
+    },
+
 };

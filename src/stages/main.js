@@ -31,7 +31,6 @@ function mainStage(data) {
         game.controller.skills.update();
         game.controller.fight.update();
         game.controller.craft.update();
-        game.controller.journal.update();
         if (data.Players && game.player.Id in data.Players) {
             game.controller.stats.sync(data.Players[game.player.Id]);
         }

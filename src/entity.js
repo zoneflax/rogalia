@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point, Container, Character, BBox, TS, Permission, ParamBar, SlotMachine, CELL_SIZE */
+/* global dom, T, util, game, Panel, config, Point, Container, Character, BBox, TS, Permission, ParamBar, SlotMachine, CELL_SIZE, Sprite, ImageFilter */
 
 "use strict";
 function Entity(type, id) {
@@ -400,7 +400,7 @@ Entity.prototype = {
         }
 
         this.sprite = new Sprite(
-            path + ".png",
+            `entities/${path}.png`,
             this.Sprite.Width,
             this.Sprite.Height,
             this.Sprite.Speed

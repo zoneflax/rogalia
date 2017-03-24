@@ -300,11 +300,11 @@ class Craft {
 
     update() {
         // update blank after server confirmation of ingredient being added
-        if (this.blank.entity) {
+        if (this.blank.entity && this.blank.panel.visible) {
             this.render(this.blank.entity);
         }
 
-        if (this.current) {
+        if (this.current && this.panel.visible) {
             const ingredients = game.player.findItems(Object.keys(this.current.recipe.Ingredients));
             if (!_.isEqual(ingredients, this.availableIngredients)) {
                 this.openRecipe(this.current);
@@ -433,6 +433,7 @@ class Craft {
                         filter.enabled = element.classList.toggle("enabled");
                         this.repeatSearch();
                     };
+                    filter.element = element;
                     return element;
 
                 })
@@ -485,11 +486,16 @@ class Craft {
             this.panel.show();
         }
 
+        this.filters.forEach(filter => {
+            filter.enabled = false;
+            filter.element.classList.remove("enabled");
+        });
+
         if (pattern && pattern.match(/-wall-plan$/)) {
             _.defer(() => game.controller.shop.search(pattern));
         } else {
             if (pattern in this.recipes && this.current) {
-                    this.history.push(this.current);
+                this.history.push(this.current);
             }
             this.search(pattern, true);
         }
@@ -648,16 +654,11 @@ class Craft {
             controlls.classList.add("disabled");
         }
 
-        const back = this.makeBackButton();
-        if (this.history.length == 0) {
-            back.disabled = true;
-        }
-
         dom.setContents(element, [
             this.makeRecipeHeader(type, recipe),
             dom.hr(),
             this.makeIngredients(type, recipe),
-            back,
+            this.makeBackButton(),
             controlls,
             dom.scrollable("recipe-descr", Entity.templates[type].makeDescription()),
         ]);
@@ -814,16 +815,11 @@ class Craft {
         this.blank.type = type;
         this.availableIngredients = game.player.findItems(Object.keys(recipe.Ingredients));
 
-        const back = this.makeBackButton();
-        if (this.history.length == 0) {
-            back.disabled = true;
-        }
-
         dom.setContents(element, [
             this.makeRecipeHeader(type, recipe),
             dom.hr(),
             this.makeIngredients(type, recipe),
-            back,
+            this.makeBackButton(),
             dom.wrap("recipe-controlls", [
                 dom.button(T("Build"), "recipe-create", () => this.build())
             ]),
@@ -832,9 +828,11 @@ class Craft {
     }
 
     makeBackButton() {
-        return dom.button(T("Back"), "recipe-history-back", () => {
-            this.openRecipe(this.history.pop(), true);
+        const button =  dom.button(T("Back"), "recipe-history-back", () => {
+            this.search(this.history.pop().type, true);
         });
+        button.disabled = (this.history.length == 0);
+        return button;
     }
 
     create() {
@@ -852,6 +850,7 @@ class Craft {
     stop() {
         this.craftButton.textContent = T("Create");
         this.crafting = false;
+        this.cleanUp();
     }
 
     findIngredients(recipe) {

@@ -30,6 +30,7 @@ class Trade {
             hide: () => this.cancel(),
         }).setTemporary(true).show();
 
+        this.panel.entity = partner;
         this.panel.container = this.myContainer;
     }
 
@@ -57,6 +58,9 @@ class Trade {
             break;
         case "confirm":
             this.confirmed();
+            break;
+        case "unconfirm":
+            this.unconfirmed();
             break;
         case "canceled":
             this.canceled();
@@ -95,10 +99,10 @@ class Trade {
         this.panel.element.classList.add("their-confirmed");
     }
 
-    unconfirmed(me) {
+    unconfirmed() {
         if (this.panel) {
-            const who = (me) ? "our" : "their";
-            this.panel.element.classList.remove(who + "-confirmed");
+            this.panel.element.classList.remove("our-confirmed");
+            this.panel.element.classList.remove("their-confirmed");
         }
     }
 

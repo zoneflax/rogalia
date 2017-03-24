@@ -184,8 +184,12 @@ Entity.get = function(id) {
 };
 
 Entity.getPreview = function(kind, cls = "item-preview") {
+     // for tutorial-start quest
     const def = {
-        "bough": "apple-tree-bough" // for tutorial-start quest
+        "bough": "birch-tree-bough",
+        "branch": "birch-tree-branch" ,
+        "twig": "birch-tree-twig" ,
+        "stick": "birch-tree-stick" ,
     }[kind];
     const tmpl = (def) ? Entity.templates[def] : _.find(Entity.templates, (tmpl) => tmpl.is(kind));
     const preview = tmpl.icon();

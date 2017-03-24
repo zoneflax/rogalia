@@ -32,6 +32,10 @@
 @bg-transparent-text-shadow: 0 0 4px #000;
 @placeholder-color: #999;
 
+@quest-header-color: #8a9aa7;
+@quest-text-color: #d4d8db;
+
+
 .bg-transparent() {
     background-color: @bg-transparent-color;
     outline: 1px solid @bg-transparent-color;
@@ -2019,8 +2023,6 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 }
 
 .lobby-account {
-    height: 20px;
-    line-height: 32px;
     color: #e6a664;
     font-size: 16px;
 }
@@ -2069,58 +2071,88 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
 #create-character {
     text-align: center;
     width: 230px;
-}
-#create-character .profession-tab {
-    .cursor-pointer;
-    padding: 3px 5px;
-    border-radius: 4px 4px 0 0;
-    margin-bottom: 2px;
-}
-#create-character .profession-tab:hover {
-    -webkit-filter: brightness(120%);
-    filter: brightness(120%);
-}
-#create-character .profession-tab.active {
-    background: @dark-color;
-}
-#create-character .profession-tabs {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-around;
-}
-#create-character .professions {
-    background: @dark-color;
-    border-radius: 2px;
-    margin: -2px -1px 3px -1px;
-    padding: 5px 7px;
-    text-align: left;
-}
-#new-male {
-    background-image: url("assets/characters/avatars/new-male.png");
-}
-#new-female {
-    background-image: url("assets/characters/avatars/new-female.png");
-}
-.new-sex {
-    .bg-transparent;
-    .cursor-pointer;
-    background-position: center bottom;
-    background-repeat: no-repeat;
-    width: 77px;
-    height: 64px;
-    margin: 3px 7px;
-}
-.new-sex:hover {
-    -webkit-filter: brightness(110%);
-    filter: brightness(110%);
-}
-.new-sex.checked {
-    -webkit-filter: brightness(150%);
-    filter: brightness(150%);
-}
 
-.new-sex input {
-    display: none;
+    .profession-tab {
+        .cursor-pointer;
+        padding: 3px 5px;
+        margin-bottom: 2px;
+
+        &:hover {
+            filter: brightness(120%);
+        }
+
+        &.active {
+            background: @dark-color;
+        }
+    }
+
+    .profession-tabs {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+    }
+
+    .professions {
+        background: @dark-color;
+        border-radius: 2px;
+        margin: -2px -1px 3px -1px;
+        padding: 5px 7px;
+        text-align: left;
+    }
+
+    .profession {
+        .profession-name {
+            color: @button-color;
+            font-size: 15px;
+        }
+
+        .profession-skills-header {
+            color: @button-color;
+        }
+
+        .profession-skill-icon {
+            margin-right: 3px;
+            vertical-align: middle;
+        }
+
+        .profession-tip {
+            margin-top: 10px;
+            background: @bg-color;
+            padding: 5px;
+        }
+
+    }
+
+
+    #new-male {
+        background-image: url("assets/characters/avatars/new-male.png");
+    }
+
+    #new-female {
+        background-image: url("assets/characters/avatars/new-female.png");
+    }
+
+    .new-sex {
+        .bg-transparent;
+        .cursor-pointer;
+        background-position: center bottom;
+        background-repeat: no-repeat;
+        width: 77px;
+        height: 64px;
+        margin: 3px 7px;
+
+        &:hover {
+            filter: brightness(110%);
+        }
+
+        &.checked {
+            filter: brightness(150%);
+        }
+
+        input {
+            display: none;
+        }
+    }
 }
 
 #select-server {
@@ -2981,10 +3013,6 @@ input[type=number], .lot-quantity > input, .price > input {
 #talk, #story {
     max-width: 500px;
 }
-.talk-link:hover {
-    .cursor-pointer;
-    color: lightgreen;
-}
 
 #adsence-explanation {
     .cursor-pointer;
@@ -3162,9 +3190,6 @@ input[type=number], .lot-quantity > input, .price > input {
 .quest-container {
     width: 300px;
 
-    @quest-header-color: #8a9aa7;
-    @quest-text-color: #d4d8db;
-
     .quest-desc-container {
         background: #262b2c;
         padding: 7px;
@@ -3189,7 +3214,6 @@ input[type=number], .lot-quantity > input, .price > input {
         }
 
         .quest-desc {
-            font-style: italic;
             color: @quest-text-color;
             overflow: auto;
 
@@ -3204,7 +3228,8 @@ input[type=number], .lot-quantity > input, .price > input {
             }
 
             p {
-                margin-top: 0;
+                margin: 0 0 5px 0;
+                font-style: italic;
             }
         }
 
@@ -3242,6 +3267,7 @@ input[type=number], .lot-quantity > input, .price > input {
 
             .quest-tip-icon {
                 margin: 0 7px 0 2px;
+                flex: 0 0 19px;
                 width: 19px;
                 height: 19px;
             }
@@ -3297,15 +3323,27 @@ input[type=number], .lot-quantity > input, .price > input {
         min-height: 400px;
     }
 
-    #quest-list {
-        width: 34%;
+    .journal-list {
+        width: 150px;
         margin: 0;
-        padding: 0 0 0 18px;
 
-        li:hover, li.selected {
+        .journal-item {
             .cursor-pointer;
-            color: #ffae4a;
+
+            &.selected {
+                color: lightgreen;
+            }
+
+            &:hover {
+                color: lightgreen;
+                filter: brightness(110%);
+            }
         }
+
+    }
+
+    .journal-quest {
+        flex-grow: 1;
     }
 }
 
@@ -3580,14 +3618,47 @@ input[type=number], .lot-quantity > input, .price > input {
 .lot-info, .lot-buy, .lot-sell, .lot-cancel {
     min-width: 0;
 }
-#interraction {
+#interaction {
+    max-width: 300px;
+
     .contents {
         display: flex;
         flex-direction: column;
+    }
 
-        .quest-button:before {
-            content: "(!) ";
-            color: yellow;
+    .quest-button:before {
+        content: "(!) ";
+        color: yellow;
+    }
+
+    .interaction-talk-container {
+        background: #333;
+        padding: 5px;
+
+        .interaction-talk {
+            font-style: italic;
+            p {
+                margin: 0 0 10px 0;
+            }
+        }
+
+        .interaction-npc-avatar {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            float: right;
+            background: @bg-color;
+            color: @quest-header-color;
+            margin-left: 5px;
+        }
+    }
+
+    .interaction-talk-link {
+        .cursor-pointer;
+        color: @button-color;
+
+        &:hover {
+            color: lightgreen;
         }
     }
 }

@@ -6,7 +6,7 @@ main();
 
 function main() {
     const args = parseArgs();
-    const lang = gameStorage.getItem("lang") || defaultLang(args);
+    const lang = defaultLang(args);
 
     if (args["skewer"]) {
         util.loadScript("http://localhost:8888/skewer");
@@ -22,14 +22,16 @@ function main() {
         if (window.name.indexOf("fXD") == 0) {
             return "ru";
         }
+        const langs = config.ui.language();
+        const lang = [
+            args["lang"],
+            gameStorage.getItem("lang"),
+            navigator.language.substring(0, 2)
+        ].find(lang => langs.includes(lang));
 
-        const lang = args["lang"] || navigator.language.substring(0, 2);
-        if (config.ui.language().includes(lang)) {
-            return lang;
-        }
-
-        return config.ui.language()[0];
+        return lang || langs[0];
     }
+
 
     function parseArgs() {
         return document.location.search

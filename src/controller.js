@@ -1365,6 +1365,7 @@ function Controller(game) {
         if (questPanel && questPanel.visible) {
             questPanel.quest.update();
         }
+        this.journal.update();
     };
 
     this.updateMail = function(newMail) {

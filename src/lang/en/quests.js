@@ -25,7 +25,7 @@ Quest.quests =  {
     "craft-2": {
         name: "Making a knife blade",
         desc: "The knife should has a blade. Try to make it from the sharp stones.",
-        tip: "<lmb></lmb> on the sharp stone icon.",
+        tip: "<lmb></lmb> on the sharp stone icon or open craft window and search for sharp stone.",
     },
     "craft-2-1": {
         name:  "Making a knife",
@@ -33,7 +33,8 @@ Quest.quests =  {
     },
     "craft-3": {
         name: "Making a weapon",
-        desc: "Good, now let's craft a sharp stick — your first weapon. You will need it later.",
+        desc: "Good, now equip a knife and let's craft a sharp stick — your first weapon. You will need it later.",
+        tip: "<rmb>Equip</rmb> on a knife.",
     },
     "stat-1": {
         name: "Thirst",
@@ -42,7 +43,11 @@ Quest.quests =  {
     },
     "stat-2": {
         name: "Hunger",
-        desc: "It's the time to get some food. Pick some apples from a tree. Be careful, don't eat more then you need, otherwise, food won't give you vitamins and you become very slow. By the way, if you've overate, use the toilet next to me.",
+        desc: [
+            "It's the time to get some food. Pick some apples from a tree.",
+            "<hl>Be careful, don't eat more then you need, otherwise, food won't give you vitamins and you become  slow.</hl>",
+            "By the way, if you've overate, use the toilet next to me.",
+        ],
     },
     "fight": {
         name: "Fight and fighting combos",
@@ -55,17 +60,17 @@ Quest.quests =  {
         final: "It's time to move to the town."
     },
     "tp-return-home": {
-        name: "Teleportation: return to home" ,
+        name: "Return to home" ,
         desc: "Are you interested in portals? I'll tell you about the ways you travel around the world.<br> While you're on the surface and under the Synode protection you can easily return to your homestead. I mean, to your respawn stone, if you built one, or to the town. Give it a try.",
-        "tip": "<rmb>Click on your picture (see left top part of the screen)</rmb> to return to your home.",
+        "tip": "<rmb>Click on your picture</rmb> (see left top part of the screen) to return home.",
     },
     "tp-respawn": {
-        name: "Teleportation: respawn",
+        name: "Respawn",
         desc: "Town respawn stones are connected to your respawn stone.<br> You can travel using a respawn stone but its primary task is to ressurect you after death. When you build your own respawn stone you'll notice it's looks different from others.",
         tip: "<lmb></lmb> on the closest respawn."
     },
     "tp-scrolls": {
-        name: "Teleportation: scrolls",
+        name: "Scrolls",
         desc: "Teleportation scrolls allow you to return home from the very dangerous places. They make a good help when you're exploring underground levels.<br>I'll give you a couple but you can buy or make them yourself.",
     },
     "faction-daily-1": {

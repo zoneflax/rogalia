@@ -47,8 +47,25 @@ Quest.prototype = {
     update(){
         this.goal = dom.replace(this.goal, this.makeGoal());
     },
-    makeList: function makeList(items) {
-        const kinds = Object.keys(items).sort((a, b) => _.size(items[a]) - _.size(b));
+    makeRewardList(items) {
+        return dom.wrap("quest-items-container", [
+            dom.wrap("quest-item-list", _.map(items, (item, kind) => {
+                const required = (item instanceof Object) ? item.Count : item;
+                return dom.wrap("quest-item", `${required}x ${TS(kind)}`);
+            })),
+            this.makeSlots(Object.keys(items)),
+        ]);
+    },
+    makeSlots(kinds) {
+        return dom.wrap("quest-item-icons slots-wrapper", kinds.map(kind => {
+            return dom.wrap("slot", Entity.getPreview(kind, "quest-item-preview"), {
+                title: TS(kind),
+                onclick: () => game.controller.craft.searchOrHelp(kind),
+            });
+        }));
+    },
+    makeList(items) {
+        const kinds = Object.keys(items).sort((a, b) => _.size(items[a]) - _.size(items[b]));
         this.items = this.items.concat(kinds);
         const available = game.player.findItems(kinds);
         return dom.wrap("quest-items-container", [
@@ -61,26 +78,8 @@ Quest.prototype = {
                     `${has}/${required} ${TS(kind)}`
                 );
             })),
-            dom.wrap("quest-item-icons slots-wrapper", kinds.map(kind => {
-                return dom.wrap("slot", Entity.getPreview(kind, "quest-item-preview"), {
-                    title: TS(kind),
-                    onclick: () => game.controller.craft.searchOrHelp(kind),
-                });
-            }))
+            this.makeSlots(kinds),
         ]);
-    },
-    getDescContents(ready) {
-        return [
-            dom.wrap("quest-desc-container", [
-                dom.wrap("quest-header", [
-                    this.makeChainHeader(),
-                    dom.wrap("quest-name", this.data.name)
-                ]),
-                this.makeDesc(ready),
-                this.makeGoal(),
-            ]),
-            this.makeReward(),
-        ];
     },
     makeChainHeader() {
         return this.Chain.Name && dom.wrap("quest-chain", [
@@ -94,7 +93,7 @@ Quest.prototype = {
     },
     makeNpcAvatar() {
         return dom.wrap("quest-npc-avatar", [
-            T(this.End),
+            TS(this.End),
             dom.img(`assets/characters/npcs/avatars/${this.End}.png`),
         ]);
     },
@@ -155,7 +154,7 @@ Quest.prototype = {
 
             function haveItems() {
                 return goal.HaveItems && dom.wrap("quest-collect-items", [
-                    dom.text(TT("Collect{quest}") + ":"),
+                    dom.text(T("Required") + ":"),
                     self.makeList(goal.HaveItems),
                 ]);
             }
@@ -190,7 +189,7 @@ Quest.prototype = {
                     dom.wrap("slot", dom.img("assets/icons/quests/gold.png")),
                     Vendor.createPrice(reward.Currency)
                 ]),
-                reward.Items && this.makeList(reward.Items),
+                reward.Items && this.makeRewardList(reward.Items),
                 reward.Custom && this.data.customReward,
             ]),
         ]);
@@ -205,21 +204,18 @@ Quest.prototype = {
         return this.nearEndNpc() && this.npc.getQuests().length > 0;
     },
     showNextQuest() {
-        new Quest(this.npc.getQuests()[0], this.npc).showPanel();
+        // if player was teleported to a next quest instance, we must update npc to a new one
+        const npc = game.characters.get(this.npc.Id) || game.characters.find(c => c.Type == this.npc.Type);
+        new Quest(npc.getQuests()[0], npc).showPanel();
     },
-    getContents() {
+    makeButton(canEnd) {
         const canStart = !this.active();
-        const canEnd = this.canEnd();
-
-        const action = (canStart) ? "Accept" : "Finish";
-        const button = dom.button(T(action), "quest-button");
-
-
+        const button =  dom.button(T((canStart) ? "Accept" : "Finish"), "quest-button");
         if (canStart || canEnd) {
             button.onclick = () => {
                 game.network.send(
                     "quest",
-                    {Id: game.player.interactTarget.Id, QuestId: this.Id},
+                    {Id: this.npc.Id, QuestId: this.Id},
                     (data) => {
                         if (this.canEnd())
                             this.panel.setContents(this.getContents());
@@ -233,18 +229,30 @@ Quest.prototype = {
         } else {
             button.disabled = true;
         }
+        return button;
+    },
+    getContents(useButton = true) {
+        const canEnd = this.canEnd();
 
-
-        return dom.wrap("quest-container", this.getDescContents(canEnd).concat([
+        return dom.wrap("quest-container", [
+            dom.wrap("quest-desc-container", [
+                dom.wrap("quest-header", [
+                    this.makeChainHeader(),
+                    dom.wrap("quest-name", this.data.name)
+                ]),
+                this.makeDesc(canEnd),
+                this.makeGoal(),
+            ]),
+            this.makeReward(),
             dom.hr(),
             dom.wrap("quest-footer", [
                 dom.wrap("quest-ender-container", [
                     T("Quest ender") + ":",
                     dom.wrap("quest-ender", TS(this.End)),
                 ]),
-                button
+                useButton && this.makeButton(canEnd),
             ]),
-        ]));
+        ]);
     },
     // makeSound(autoplay) {
     //     if (this.data.voice) {

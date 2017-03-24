@@ -1,10 +1,11 @@
-/* global dom, game, T */
+/* global dom, game, T, playerStorage */
 
 "use strict";
-//TODO: make panels linked via back button
 function Panel(name, title, elements, hooks) {
     if (name in game.panels) {
-        game.panels[name].temporary = true; //dont save position
+        // TODO: why? remove me
+        // dont save position
+        // game.panels[name].temporary = true;
         game.panels[name].close();
     }
 
@@ -136,9 +137,10 @@ Panel.prototype = {
             this.button.classList.remove("active");
         }
         this.visible = false;
-        var next = Panel.stack.pop();
-        if (next)
+        const next = Panel.stack.pop();
+        if (next) {
             Panel.top = next;
+        }
     },
     hideCloseButton: function() {
         dom.hide(this.closeButton);
@@ -154,8 +156,9 @@ Panel.prototype = {
     },
     close: function() {
         this.hide();
-        if (this.element && this.element.parentNode)
+        if (this.element && this.element.parentNode) {
             dom.remove(this.element);
+        }
 
         delete game.panels[this.name];
         this.hooks.close && this.hooks.close.call(this);

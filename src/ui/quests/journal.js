@@ -1,76 +1,88 @@
-/* global game, Quest, dom, T, util */
+/* global game, Quest, dom, T, util, Panel */
 
 "use strict";
 function Journal() {
-    this.list = document.createElement("ol");
-    this.list.id = "quest-list";
-    this.view = document.createElement("div");
-    this.view.id = "quest-desc";
+    this.list = dom.div("journal-list");
+    this.view = dom.div("journal-quest");
     this.panel = new Panel("journal", "Journal", [
         this.list,
         dom.vr(),
         this.view,
     ]);
-    this.update();
-    this.hash = "";
-    this.selected = null;
-    this.selectedQuest = null;
+    this.quests = [];
 
-    var self = this;
-    this.panel.hooks.show = function() {
-        self.update();
-        selectFirst();
+    this.hash = "";
+    this.selected = {
+        id: null,
+        item: null,
+        quest: null,
     };
 
-    selectFirst();
+    this.update();
 
-    function selectFirst() {
-        if (!self.selected && self.list.firstElementChild) {
-            self.list.firstElementChild.click();
-        }
-    }
+    this.panel.hooks.show = () => {
+        this.update();
+    };
 }
 
 Journal.prototype = {
-    update: function() {
+    select(id) {
+        const {item, quest} = this.quests[id];
+        this.selected.id = id;
+        this.selected.quest = quest;
+        this.selected.item = item;
+        item.classList.add("selected");
+        dom.setContents(this.view, dom.wrap("quest-container", quest.getContents(false)));
+    },
+    deselect() {
+        if (this.selected.item) {
+            this.selected.item.classList.remove("selected");
+        }
+        this.selected.item = null;
+    },
+    update() {
         if (this.panel && !this.panel.visible)
             return;
 
-        if (this.selectedQuest) {
-            this.selectedQuest.update();
+        if (this.selected.quest) {
+            this.selected.quest.update();
         }
 
-        var hash = JSON.stringify(game.player.ActiveQuests);
-        if (hash == this.hash)
+        const hash = JSON.stringify(game.player.ActiveQuests);
+        if (hash == this.hash) {
             return;
+        }
         this.hash = hash;
 
-        if (Object.keys(game.player.ActiveQuests).length == 0) {
+        if (this.selected.item && !game.player.ActiveQuests[this.selected.id]) {
+            dom.clear(this.view);
+            this.deselect();
+        }
+
+        if (_.size(game.player.ActiveQuests) == 0) {
             dom.setContents(this.list, T("No quests"));
             return;
         }
-        dom.clear(this.list);
 
-        var self = this;
-        Object.keys(game.player.ActiveQuests).forEach(function(id) {
-            var quest = new Quest(game.player.ActiveQuests[id].Quest);
-            var name = document.createElement("li");
-            name.className = "quest";
+        dom.setContents(this.list, this.makeList());
+    },
+    makeList() {
+        this.quests = {};
+        return _.map(game.player.ActiveQuests, ({Quest: data}, id) => {
+            const quest = new Quest(data);
+            const item = dom.wrap("journal-item", quest.getName(), {
+                onclick: () => this.select(id)
+            });
+            if (id == this.selected) {
+                item.classList.add("selected");
+            }
+            this.quests[id] = {quest, item};
 
+            if (!this.selected.item) {
+                this.select(id);
+            }
 
-            if (id == self.selected)
-                name.classList.add("selected");
-
-            name.textContent = quest.getName();
-            name.onclick = function() {
-                dom.removeClass(".quest", "selected");
-                self.selected = id;
-                self.selectedQuest = quest;
-                name.classList.add("selected");
-
-                dom.setContents(self.view, dom.wrap("quest-container", quest.getDescContents()));
-            };
-            self.list.appendChild(name);
+            return item;
         });
     },
 };

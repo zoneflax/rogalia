@@ -174,7 +174,7 @@ ContainerSlot.prototype = {
         }
     },
     onmousedown: function(event) {
-        if (this.locked || this.readonly)
+        if (this.locked)
             return;
 
         var entity = this.entity;
@@ -186,6 +186,9 @@ ContainerSlot.prototype = {
 
         if (event.button == game.controller.RMB) {
             game.menu.show(entity);
+            return;
+        }
+        if (this._readonly) {
             return;
         }
         // character.js inspect

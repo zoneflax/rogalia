@@ -11,7 +11,7 @@ window.TT = function(text, args) {
         return "";
     args = args || {};
     var substs = {};
-    text = text.replace(/{(.*?)(?:=(.*?))?}/g, function(_, name, value = args[name] = "") {
+    text = text.replace(/{(.*?)(?:=(.*?))?}/g, function(_, name, value = (args[name] || "")) {
         substs[name] = (T.hasOwnProperty(name) && T[name] instanceof Function)
             ? T[name](value)
             : TS(value);
