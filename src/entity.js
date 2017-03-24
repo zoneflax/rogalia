@@ -377,7 +377,6 @@ Entity.prototype = {
 
             switch (this.Group) {
             case "rogalik-card":
-            case "playing-card":
                 path = "cards/" + path.replace(/^card-/, "");
                 break;
             }
@@ -845,6 +844,9 @@ Entity.prototype = {
         if ((this.MoveType == Entity.MT_STATIC || this.CanCollide) && game.controller.hideStatic) {
             this.drawBox(this.getDrawBoxColor());
         } else if (this.shouldBeAutoHidden()) {
+            if (config.graphics.semiTransparentWalls) {
+                this.sprite.drawAlpha(p, 0.3);
+            }
             this.drawBox(this.getDrawBoxColor());
         } else {
             if (this.Type == "blank") {

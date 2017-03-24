@@ -18,4 +18,11 @@ T.dict = {
     "Card eight": "Card: eight",
     "Card seven": "Card: seven",
     "Card six": "Card: six",
+    "R": "R atom",
+    "O": "O atom",
+    "G": "G atom",
+    "A": "A atom",
+    "L": "L atom",
+    "I": "I atom",
+    "K": "K atom",
 };

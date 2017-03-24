@@ -227,6 +227,7 @@ Character.prototype = {
 
             if (data.Equip && game.controller.craft) {
                 game.controller.craft.updateSearch();
+                game.controller.updateActiveQuest();
             }
         }
     },

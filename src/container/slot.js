@@ -19,11 +19,24 @@ function ContainerSlot(container, index) {
     this.sub = null;
     this.bar = null;
     this.placeholder = null;
+
+    this._readonly = false;
 }
 
 ContainerSlot.prototype = {
     setTitle: function(title) {
         this.element.title = title;
+    },
+    get readonly() {
+        return this._readonly;
+    },
+    set readonly(value) {
+        this._readonly = value;
+        if (value) {
+            this.element.classList.add("readonly");
+        } else {
+            this.element.classList.remove("readonly");
+        }
     },
     markAsUnseen: function() {
         this.element.classList.add("new");
@@ -161,7 +174,7 @@ ContainerSlot.prototype = {
         }
     },
     onmousedown: function(event) {
-        if (this.locked)
+        if (this.locked || this.readonly)
             return;
 
         var entity = this.entity;

@@ -10,6 +10,9 @@ Entity.LOCATION_IN_CONTAINER = 1;
 Entity.LOCATION_EQUIPPED = 2;
 Entity.LOCATION_BURDEN = 3;
 Entity.LOCATION_VENDOR = 4;
+Entity.LOCATION_BANK = 5;
+Entity.LOCATION_POST = 6;
+Entity.LOCATION_TRADE = 7;
 
 Entity.queueable = function(action) {
     return _.includes([
@@ -96,9 +99,15 @@ Entity.groupTags = {
 
 Entity.craftGroups = [
     "housing",
+    "furniture",
     "weapon",
     "armor",
     "tool",
+    "food",
+    "container",
+    "consumable",
+    "decoration",
+    "spell-scroll",
 ];
 
 Entity.miscGroups = [
@@ -165,26 +174,22 @@ Entity.sync = function(data, remove) {
         return;
     }
 
-    containers.forEach(function(container) {
-        if (container.panel.visible)
-            container.update();
-        else
-            container.syncReq();
-    });
+    containers.forEach(container => container.syncReq());
     ContainerSearch.update();
+    game.controller.updateActiveQuest();
 },
 
 Entity.get = function(id) {
     return game.entities.get(parseInt(id));
 };
-Entity.exists = function(id) {
-    return !!Entity.get(id);
-};
 
-Entity.getPreview = function(kind) {
-    const tmpl = _.find(Entity.templates, (tmpl) => tmpl.is(kind));
+Entity.getPreview = function(kind, cls = "item-preview") {
+    const def = {
+        "bough": "apple-tree-bough" // for tutorial-start quest
+    }[kind];
+    const tmpl = (def) ? Entity.templates[def] : _.find(Entity.templates, (tmpl) => tmpl.is(kind));
     const preview = tmpl.icon();
-    preview.classList.add("item-preview");
+    preview.classList.add(cls);
     return preview;
 };
 

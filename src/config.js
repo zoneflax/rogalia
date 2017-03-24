@@ -39,6 +39,7 @@ var config = {
         centerScreen: true,
         autoHideWalls: true,
         autoHideObjects: true,
+        semiTransparentWalls: true,
         fastRender: false,
         topologicalSort: false,
         // drawPath: true,

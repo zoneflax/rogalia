@@ -152,7 +152,7 @@ function Info(message, character) {
         panel.show();
         return;
     case ".trade":
-        Trade.update(this.data);
+        game.controller.trade.update(this.data);
         return;
     }
     this.value = util.toFixed(this.value, (this.value < 1) ? 2 : 0);

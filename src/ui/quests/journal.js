@@ -36,8 +36,9 @@ Journal.prototype = {
         if (this.panel && !this.panel.visible)
             return;
 
-        if (this.selectedQuest)
+        if (this.selectedQuest) {
             this.selectedQuest.update();
+        }
 
         var hash = JSON.stringify(game.player.ActiveQuests);
         if (hash == this.hash)
@@ -67,11 +68,7 @@ Journal.prototype = {
                 self.selectedQuest = quest;
                 name.classList.add("selected");
 
-                dom.setContents(self.view, [
-                    dom.wrap("quest-title", quest.getName()),
-                    dom.hr(),
-                    dom.wrap("quest-start", util.ucfirst(T(quest.Start)) + ":"),
-                ].concat(quest.getDescContents()));
+                dom.setContents(self.view, dom.wrap("quest-container", quest.getDescContents()));
             };
             self.list.appendChild(name);
         });

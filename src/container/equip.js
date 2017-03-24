@@ -1,4 +1,4 @@
-/* global Container */
+/* global Container, game, TS */
 
 "use strict";
 

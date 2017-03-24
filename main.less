@@ -449,7 +449,7 @@ hr {
         filter: brightness(135%);
     }
 
-    &.locked {
+    &.locked, &.readonly {
         background-color: @border-color;
     }
 
@@ -926,7 +926,7 @@ hr {
 
             .slot {
                 background-color: #2f3237;
-                margin-right: 3px;
+                margin: 1px 5px 1px 2px;
             }
         }
 
@@ -958,7 +958,6 @@ hr {
     }
 
     .tabs {
-        margin-top: 5px;
         flex-grow: 1;
     }
 
@@ -1175,9 +1174,7 @@ hr {
             position: relative;
 
             .recipe-ingredient {
-                .available, .unavailable {
-                    font-size: 11px;
-                }
+                font-size: 12px;
 
                 .available {
                     color: lightgreen;
@@ -1186,13 +1183,23 @@ hr {
                 .unavailable {
                     color: grey;
                 }
+
+                .link-item {
+                    font-size: 13px;
+                    max-width: 130px;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: inline-block;
+                    vertical-align: top;
+                }
             }
 
-            .recipe-ingredients-list {
+            .recipe-ingredient-list {
                 padding: 1px;
             }
 
-            .recipe-ingredients-slots {
+            .recipe-ingredient-slots {
                 padding: 1px;
                 border-left: 1px solid @dark-color;
                 display: flex;
@@ -1200,17 +1207,29 @@ hr {
                 align-content: flex-start;
                 width: 150px;
                 min-width: 150px;
+                position: relative;
 
                 .slot {
                     margin: 1px;
                 }
             }
 
-            .recipe-open-custom {
+            .recipe-customs-slots {
+                height: 140px;
+                width: 100%;
+            }
+
+            .recipe-toggle-custom {
                 position: absolute;
                 bottom: 2px;
                 right: 2px;
                 min-width: auto;
+            }
+
+            .recipe-ingredients-fill {
+                position: absolute;
+                bottom: 2px;
+                left: 2px;
             }
         }
 
@@ -1255,10 +1274,6 @@ hr {
             top: 4px;
         }
     }
-}
-
-#craft-custom-slots {
-    max-width: 266px;
 }
 
 #craft-help {
@@ -1538,15 +1553,34 @@ hr {
     position: relative;
     top: 4px;
 }
-lmb, .lmb {
+
+.lmb {
     background: url("assets/bg/lmb.png") no-repeat 0 0;
 }
-rmb, .rmb {
+.rmb {
     background: url("assets/bg/rmb.png") no-repeat 0 0;
 }
+
 lmb, rmb {
-    padding-left: 16px;
     color: #ffb151;
+    white-space: nowrap;
+
+    &:before {
+        width: 12px;
+        height: 16px;
+        content: "";
+        display: inline-block;
+        vertical-align: sub;
+        margin-right: 1px;
+    }
+}
+
+lmb:before {
+    background-image: url("assets/bg/lmb.png");
+}
+
+rmb:before {
+    background-image: url("assets/bg/rmb.png");
 }
 
 hl {
@@ -1864,7 +1898,7 @@ meter:-moz-meter-sub-sub-optimum::-moz-meter-bar {
     width: 314px;
 
     .square, .circle {
-        background: #3f4244;
+        background: @bg-color;
         width: 30px;
         height: 30px;
         display: flex;
@@ -3125,69 +3159,154 @@ input[type=number], .lot-quantity > input, .price > input {
     margin: 1px 3px;
 }
 
-#journal {
-    width: 500px;
-}
-#journal .contents {
-    display: flex;
-    justify-content: space-around;
-    min-height: 500px;
-}
-.desc p {
-    margin-top: 0;
-}
-.desc i {
-    color: #FFA41B;
-    font-style: normal;
-}
-#quest {
+.quest-container {
     width: 300px;
-}
-#quest-list {
-    width: 34%;
-    margin: 0;
-    padding: 0 0 0 18px;
-}
-#quest-list li:hover, #quest-list li.selected {
-    .cursor-pointer;
-    color: #ffae4a;
-}
-#quest-desc, .quest-goal {
-    .slot {
-        float: left;
+
+    @quest-header-color: #8a9aa7;
+    @quest-text-color: #d4d8db;
+
+    .quest-desc-container {
+        background: #262b2c;
+        padding: 7px;
+
+        .quest-header {
+            display: flex;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+
+            .quest-chain {
+                color: @quest-header-color;
+                font-size: 15px;
+                margin-right: 5px;
+                text-transform: capitalize;
+                white-space: nowrap;
+            }
+
+            .quest-name {
+                color: @button-color;
+                white-space: nowrap;
+            }
+        }
+
+        .quest-desc {
+            font-style: italic;
+            color: @quest-text-color;
+            overflow: auto;
+
+            .quest-npc-avatar {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                float: right;
+                background: @bg-color;
+                color: @quest-header-color;
+                margin-left: 5px;
+            }
+
+            p {
+                margin-top: 0;
+            }
+        }
+
+        .quest-goal {
+            margin-top: 7px;
+            color: @quest-header-color;
+
+            i {
+                font-style: normal;
+                color: @button-color;
+                text-transform: lowercase;
+            }
+        }
+
+        .quest-items-container {
+            display: flex;
+            justify-content: space-between;
+
+            .quest-item-list {
+                color: @button-color;
+
+                .quest-item.ready {
+                    color: lightgreen;
+                }
+            }
+        }
+
+        .quest-tip-container {
+            background: @bg-color;
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            padding: 5px;
+            color: @quest-text-color;
+
+            .quest-tip-icon {
+                margin: 0 7px 0 2px;
+                width: 19px;
+                height: 19px;
+            }
+        }
+    }
+
+    .quest-reward-container {
+        padding: 7px;
+        color: @quest-text-color;
+        margin-bottom: 5px;
+
+        .quest-reward-header {
+            color: @quest-header-color;
+        }
+
+        .quest-rewards {
+            display: flex;
+        }
+
+        .quest-xp, .quest-gold {
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            margin-right: 7px;
+
+            .slot {
+                margin-right: 3px;
+            }
+        }
+
+    }
+    .quest-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: @quest-header-color;
+        padding: 0 7px 1px;
+
+        .quest-ender {
+            color: @quest-text-color;
+            display: inline-block;
+            margin-left: 5px;
+        }
     }
 }
-.quest-button:before {
-    content: "(!) ";
-    color: yellow;
-}
-.quest-slot-desc {
-    line-height: 48px;
-    margin-left: 3px;
-    float: left;
-}
-.quest-item {
-    overflow: auto;
-}
-.quest-start {
-    float: left;
-    font-style: italic;
-    margin-right: 0.5em;
-}
 
-.quest-goal ul {
-    padding: 0 20px;
-}
+#journal {
+    width: 450px;
 
-.quest-voice {
-    position: absolute;
-    bottom: 4px;
-    right: 10px;
-}
+    .contents {
+        display: flex;
+        justify-content: space-around;
+        min-height: 400px;
+    }
 
-.quest-wiki-link {
-    float: right;
-    margin-left: 5px;
+    #quest-list {
+        width: 34%;
+        margin: 0;
+        padding: 0 0 0 18px;
+
+        li:hover, li.selected {
+            .cursor-pointer;
+            color: #ffae4a;
+        }
+    }
 }
 
 #server-info {
@@ -3461,10 +3580,18 @@ input[type=number], .lot-quantity > input, .price > input {
 .lot-info, .lot-buy, .lot-sell, .lot-cancel {
     min-width: 0;
 }
-#interraction > .contents {
-    display: flex;
-    flex-direction: column;
+#interraction {
+    .contents {
+        display: flex;
+        flex-direction: column;
+
+        .quest-button:before {
+            content: "(!) ";
+            color: yellow;
+        }
+    }
 }
+
 #vendor {
     max-width: none;
 }
@@ -4012,8 +4139,10 @@ input[type=number], .lot-quantity > input, .price > input {
 
 
 #trade {
-    .contents {
-        width: 491px;
+    max-width: none;
+
+    > .contents {
+        width: 503px;
         display: flex;
     }
 
@@ -4024,9 +4153,18 @@ input[type=number], .lot-quantity > input, .price > input {
         justify-content: center;
     }
 
-    .trade-theirs {
+    .trade-partner {
         text-align: right;
     }
+
+    &.their-confirmed .trade-partner {
+        outline: 1px solid lightgreen;
+    }
+
+    &.our-confirmed .trade-my {
+        outline: 1px solid lightgreen;
+    }
+
 }
 
 #admin-add {

@@ -72,8 +72,17 @@ Container.save = function() {
 
 Container.load = function() {
     var saved = playerStorage.getItem("containers");
-    if (saved) {
-        saved.filter(Entity.exists).map(Entity.get).forEach(Container.open);
+    if (!saved) {
+        return;
+    }
+    for (const id of saved) {
+        const entity = Entity.get(id);
+        if (!entity) {
+            continue;
+        }
+        if (game.player.canUse(entity)) {
+            Container.open(entity);
+        }
     }
 };
 
@@ -268,8 +277,9 @@ Container.prototype = {
             return;
         }
 
-        if (game.controller.craft.dwim(slot))
+        if (game.controller.craft.dwim(slot)) {
             return;
+        }
 
         var blank = game.controller.craft.blank;
         if (blank.panel && blank.panel.visible) {
@@ -325,15 +335,22 @@ Container.prototype = {
         }
 
         this.updateFuel();
+        if (this.entity.Location == Entity.LOCATION_TRADE) {
+            game.controller.trade.unconfirmed(this.entity.Owner == game.player.Id);
+        }
     },
     updateProgress() {
         this.slots.forEach(slot => slot.updateProgress());
     },
-    syncReq() {
-        this._syncReq = true;
-    },
     sync() {
         this._slots = this.entity.Props.Slots;
+    },
+    syncReq() {
+        if (this.panel.visible || this.entity.Location == Entity.LOCATION_TRADE) {
+            this.update();
+        } else {
+            this._syncReq = true;
+        }
     },
     updateFuel() {
         var fuel = this.entity.Fuel;

@@ -1,4 +1,4 @@
-/* global game, dom, T, TS, Panel, ParamBar, playerStorage, Skills, util, ContainerSlot, Container */
+/* global game, dom, T, TS, Panel, ParamBar, playerStorage, Skills, util, ContainerSlot, Container, _ */
 
 "use strict";
 class Craft {
@@ -10,6 +10,9 @@ class Craft {
         this.current = null;
         this.recipes = {};
 
+        this.useCustomSlots = playerStorage.getItem("craft.useCustomslots");
+
+        this.ingredientCounters = {};
         this.availableIngredients = {};
 
         this.craftButton = dom.button(T("Create"), "", () => this.create());
@@ -21,7 +24,10 @@ class Craft {
         this.lastSearch = playerStorage.getItem("craft.search") || "";
 
         this.titleElement = dom.div();
-        this.ingredientsList = dom.tag("ul", "ingredients-list");
+        this.ingredientList = dom.tag("ul", "ingredient-list");
+
+        this.ingredientSlots = null;
+
 
         this.recipeDetails = dom.div("#recipe-details", {text : T("Select recipe")});
 
@@ -100,11 +106,7 @@ class Craft {
                 ghost.Variant = this.current.variant;
             }
             ghost.initSprite();
-            game.controller.creatingCursor(
-                ghost,
-                "build",
-                () => { this.panel.show(); }
-            );
+            game.controller.creatingCursor(ghost, "build");
             this.panel.hide();
         };
 
@@ -150,10 +152,10 @@ class Craft {
     }
 
     moveMiscRecipes(root) {
-        for (const skill in root) {
-            const group = root[skill];
-            if (_.size(group) == 0) {
-                delete root[skill];
+        for (const groupName in root) {
+            const group = root[groupName];
+            if (_.size(group) == 1) {
+                root[groupName] = group[Object.keys(group)[0]];
                 continue;
             }
             let misc = {};
@@ -167,7 +169,7 @@ class Craft {
                 }
             }
             if (_.size(misc) > 0) {
-                root[skill] = _.merge({misc}, group);
+                root[groupName] = _.merge({misc}, group);
             }
         }
         return root;
@@ -178,22 +180,30 @@ class Craft {
             root[recipe.Skill][type] = recipe;
             return root;
         }, _.fromPairs(Skills.list.map(skill => [skill, {}])));
+        for (const skill in root) {
+            if (_.size(root[skill]) == 0) {
+                delete root[skill];
+                continue;
+            }
+        }
         return root;
     }
 
     recipesByPurpose() {
+        const prioritize = ["knife"];
         const root = Entity.sortedRecipes.reduce((root, [type, recipe]) => {
             const entity = Entity.templates[type];
             const group = entity.tags.find(tag => Entity.craftGroups.includes(tag)) || "misc";
-            const subgroup = entity.tags.find(tag => !Entity.craftGroups.includes(tag)) || "misc";
+            const subgroup = prioritize.find(tag => tag == entity.Group) ||
+                  entity.tags.find(tag => !Entity.craftGroups.includes(tag)) ||
+                  "misc";
             const node = root[group][subgroup] || {};
             node[type] = recipe;
             root[group][subgroup] = node;
             return root;
         }, _.merge(_.fromPairs(Entity.craftGroups.map(group => [group, {}])), {misc: {}}));
 
-        return root;
-        // return this.moveMiscRecipes(root);
+        return this.moveMiscRecipes(root);
     }
 
     makeRecipeTree(root) {
@@ -243,9 +253,7 @@ class Craft {
                 }
                 if (game.player.IsAdmin && game.controller.modifier.ctrl) {
                     this.panel.hide();
-                    game.controller.newCreatingCursor(type,  undefined, () => {
-                        this.panel.show();
-                    });
+                    game.controller.newCreatingCursor(type);
                     return;
                 }
                 this.openRecipe({type, recipe, element});
@@ -273,7 +281,7 @@ class Craft {
             return;
         this.titleElement.textContent = TS(type);
 
-        dom.clear(this.ingredientsList);
+        dom.clear(this.ingredientList);
         var canBuild = true;
         for(var group in ingredients) {
             var has = ingredients[group];
@@ -285,7 +293,7 @@ class Craft {
             );
             ingredient.title = name;
             canBuild = canBuild && (has == required);
-            this.ingredientsList.appendChild(ingredient);
+            this.ingredientList.appendChild(ingredient);
         }
         this.buildButton.disabled = !canBuild;
     }
@@ -361,7 +369,7 @@ class Craft {
             slotHelp,
             this.slot,
             dom.hr(),
-            this.ingredientsList,
+            this.ingredientList,
             dom.wrap("buttons", [
                 auto,
                 this.buildButton,
@@ -465,27 +473,25 @@ class Craft {
     }
 
     searchOrHelp(pattern) {
-        // we do not want to show on load
-        if (game.stage.name == "main") {
-            this.panel.show();
-        }
-
         var help = Craft.help[pattern];
         if (help) {
             // we need to defer panel showing because searchOrHelp will be called from click handler
             // which will focus previous panel
             _.defer(() => new Panel("craft-help", T("Help"), dom.span(help)).show());
-        } else if (pattern && pattern.match(/-wall-plan$/)) {
+            return;
+        }
+
+        if (game.stage.name == "main") {
+            this.panel.show();
+        }
+
+        if (pattern && pattern.match(/-wall-plan$/)) {
             _.defer(() => game.controller.shop.search(pattern));
         } else {
-            if (pattern in this.recipes) {
-                if (this.current) {
+            if (pattern in this.recipes && this.current) {
                     this.history.push(this.current);
-                }
-                this.openRecipe({type: pattern, element: this.recipes[pattern]});
-            } else {
-                this.search(pattern, true);
             }
+            this.search(pattern, true);
         }
     }
 
@@ -608,17 +614,21 @@ class Craft {
         this.type = this.current.type;
 
         this.availableIngredients = game.player.findItems(Object.keys(recipe.Ingredients));
+        this.ingredientCounters = {};
         const canCraft = _.reduce(this.availableIngredients, (max, {length: has}, kind) => {
             const required = recipe.Ingredients[kind];
             return Math.min(max, Math.floor(has/required));
         }, +Infinity);
 
-        const repeat = (this.repeatInput) ? this.repeatInput.value : 1;
+        const repeat = (this.repeatInput) ? Math.max(1, this.repeatInput.value) : 1;
         this.repeatInput = dom.tag("input");
         this.repeatInput.type = "number";
         this.repeatInput.min = 1;
         this.repeatInput.max = canCraft;
         this.repeatInput.value = (canCraft) ? Math.min(repeat, canCraft) : 0;
+        this.repeatInput.onchange = () => {
+            this.repeatInput.value = Math.min(+this.repeatInput.value, canCraft);
+        };
 
         const controlls = dom.wrap("recipe-controlls", [
             dom.make("a", "<", "less", {
@@ -655,107 +665,147 @@ class Craft {
 
     makeIngredients(type, recipe) {
         return dom.wrap("recipe-ingredients", [
-            dom.wrap("recipe-ingredients-list", _.map(recipe.Ingredients, (required, kind) => {
-                const has = this.availableIngredients[kind].length;
-                return dom.wrap("recipe-ingredient", [
-                    required,
-                    "x ",
-                    this.makeLink(kind),
-                    dom.span(" (" + has + ")", (has >= required) ? "available" : "unavailable", T("Available")),
-                ]);
+            dom.wrap("recipe-ingredient-list", _.map(recipe.Ingredients, (required, kind) => {
+                return this.makeIngredientCounter(kind, required);
             })),
-            dom.wrap("recipe-ingredients-slots", _.map(recipe.Ingredients, (required, kind) => {
-                const image = Entity.getPreview(kind);
-                const slot = dom.wrap("slot", image, {
-                    title: TS(kind),
-                    onclick: () => this.searchOrHelp(kind)
-                });
-                return slot;
-            })),
+            this.makeIngredientSlots(type, recipe),
             (Entity.templates[type].MoveType == Entity.MT_PORTABLE) && dom.make(
                 "button",
                 [
                     dom.img("assets/icons/customization.png"),
                 ],
-                "recipe-open-custom",
+                "recipe-toggle-custom",
                 {
-                    onclick: () => this.openCustom(type, recipe),
+                    onclick: () => this.toggleCustomSlots(type, recipe),
                 }
             ),
         ]);
     }
 
-    openCustom(type, recipe) {
+    updateIngredientCounters(recipe) {
+        _.forEach(recipe.Ingredients, (required, kind) => {
+            this.updateIngredientCounter(kind, required);
+        });
+    }
+
+    updateIngredientCounter(kind, required) {
+        this.ingredientCounters[kind] = dom.replace(
+            this.ingredientCounters[kind],
+            this.makeIngredientCounter(kind, required)
+        );
+    }
+
+    makeIngredientCounter(kind, required) {
+        const has = this.availableIngredients[kind].length;
+        const used = this.slots.reduce((used, slot) => {
+            return used +(slot.entity && slot.entity.is(kind));
+        }, 0);
+        return this.ingredientCounters[kind] = dom.wrap("recipe-ingredient", [
+            (this.useCustomSlots)
+                ? dom.span(
+                    ` ${used}/${required} `,
+                    (used >= required) ? "available" : ""
+                ) : required + "x ",
+            this.makeLink(kind),
+            dom.span(
+                ` (${has})`,
+                (has >= required) ? "available" : "unavailable",
+                T("Available")
+            ),
+        ]);
+    }
+
+    makeIngredientSlots(type, recipe) {
+        return this.ingredientSlots = (this.useCustomSlots)
+            ? this.makeCustomIngredientSlots(type, recipe)
+            : this.makeSimpleIngredientSlots(type, recipe);
+    }
+
+    makeSimpleIngredientSlots(type, recipe) {
+        this.cleanUp();
         this.slots = [];
-        let slots = [];
-        const ingredients = dom.wrap(
-            "recipe-ingredients",
+        return dom.wrap(
+            "recipe-ingredient-slots",
             _.map(recipe.Ingredients, (required, kind) => {
-                const title = TS(kind);
-                slots = slots.concat(_.times(required, () => {
-                    const slot = new ContainerSlot({panel: this.panel, entity: {}, inspect: true}, 0);
-                    const preview = _.find(Entity.templates, (tmpl) => tmpl.is(kind));
-                    slot.setPlaceholder(preview.sprite.image.src, title);
-                    slot.placeholder.classList.add("item-preview");
-
-                    slot.element.check = ({entity}) => entity.is(kind);
-                    slot.element.cleanUp = (event) => {
-                        if (slot.entity) {
-                            const from = Container.getEntitySlot(slot.entity);
-                            from && from.unlock();
-                            slot.clear();
-                        }
-                    };
-                    slot.element.onmousedown = slot.element.cleanUp;
-                    slot.element.use = (entity) => {
-                        if (this.slots.some(slot => slot.entity == entity)) {
-                            return false;
-                        }
-                        const from = Container.getEntityContainer(entity);
-                        if (!from)
-                            return false;
-
-                        from.findSlot(entity).lock();
-                        slot.set(entity);
-                        return true;
-                    };
-                    slot.element.craft = true;
-
-                    this.slots.push(slot);
-                    return slot.element;
-                }));
-                return dom.wrap("recipe-ingredient", [required, "x ", this.makeLink(kind)]);
+                const image = Entity.getPreview(kind, "search-or-help-preview");
+                const slot = dom.wrap("slot", image, {
+                    title: TS(kind),
+                    onclick: () => this.searchOrHelp(kind)
+                });
+                return slot;
             })
         );
-        const container = document.body.querySelector(".recipe-ingredients-slots");
-        this.customPanel = new Panel(
-            "craft-custom-slots",
-            TS(type),
-            [
-                dom.button(T("Fill"), "", () => {
-                    _.some(recipe.Ingredients, (required, kind) => {
-                        for (let i = 0; i < required; i++) {
-                            const item = this.availableIngredients[kind][i];
-                            const slot = slots.find(slot => !slot.classList.contains("has-item"));
-                            if (!slot || !item) {
-                                return true;
-                            }
-                            slot.use(item);
-                        }
+    }
+
+    makeCustomIngredientSlots(type, recipe) {
+        this.slots = _.reduce(recipe.Ingredients, (slots, required, kind) => {
+            const title = TS(kind);
+            return slots.concat(_.times(required, () => {
+                const slot = new ContainerSlot({panel: this.panel, entity: {}, inspect: true}, 0);
+                const preview = _.find(Entity.templates, (tmpl) => tmpl.is(kind));
+                preview.initSprite();
+                slot.setPlaceholder(preview.sprite.image.src, title);
+                slot.placeholder.classList.add("item-preview");
+
+                slot.element.check = ({entity}) => entity.is(kind);
+                slot.element.cleanUp = (event) => {
+                    if (slot.entity) {
+                        const from = Container.getEntitySlot(slot.entity);
+                        from && from.unlock();
+                        slot.clear();
+                        this.updateIngredientCounter(kind, required);
+                    }
+                };
+                slot.element.onmousedown = slot.element.cleanUp;
+                slot.element.use = (entity) => {
+                    if (this.slots.some(slot => slot.entity == entity)) {
                         return false;
-                    });
-                }),
-                dom.button(T("Create"), "", () => {
-                    this.craft();
-                    this.openCustom(type, recipe);
-                }),
-                dom.hr(),
-                dom.wrap(".slots-wrapper", slots),
-            ],
-            {
-                hide: () => { this.cleanUp(); },
+                    }
+                    const from = Container.getEntityContainer(entity);
+                    if (!from)
+                        return false;
+
+                    from.findSlot(entity).lock();
+                    slot.set(entity);
+                    this.updateIngredientCounter(kind, required);
+                    return true;
+                };
+                slot.element.craft = true;
+                return slot;
+            }));
+        }, []);
+        return dom.wrap(
+            "recipe-ingredient-slots",
+            [
+                dom.scrollable(
+                    "recipe-customs-slots",
+                    dom.wrap("slots-wrapper", this.slots.map(slot => slot.element))
+                ),
+                dom.button(T("Fill"), "recipe-ingredients-fill", () => this.fillIngredients(recipe)),
+            ]
+        );
+    }
+
+    fillIngredients(recipe) {
+        _.forEach(recipe.Ingredients, (required, kind) => {
+            for (let i = 0; i < required; i++) {
+                const entity = this.availableIngredients[kind][i];
+                if (!entity) {
+                    return;
+                }
+                const slot = this.slots.find(slot => !slot.entity && slot.element.check({entity}));
+                if (!slot) {
+                    return;
+                }
+                slot.element.use(entity);
             }
-        ).show();
+        });
+    }
+
+    toggleCustomSlots(type, recipe) {
+        this.useCustomSlots = !this.useCustomSlots;
+        this.ingredientSlots = dom.replace(this.ingredientSlots, this.makeIngredientSlots(type, recipe));
+        this.updateIngredientCounters(recipe);
     }
 
     renderBuildRecipe(element) {
@@ -804,27 +854,55 @@ class Craft {
         this.crafting = false;
     }
 
-    craft({type, recipe} = this.current) {
-        // get hand added entities
-        const custom = {};
-        for (const {entity} of this.slots) {
-            if (entity) {
-                const kind = _.findKey(recipe.Ingredients, (required, kind) => entity.is(kind));
-                custom[kind] = (custom[kind] || []).concat(entity.Id);
-            }
-        }
-        const ingredients =  _.flatMap(recipe.Ingredients, (required, kind) => {
-            const list = custom[kind] || [];
-            const items = this.availableIngredients[kind];
-            for (let i = 0; i < items.length && list.length < required; i++) {
-                const {Id: id} = items[i];
-                if (list.includes(id)) {
-                    continue;
+    findIngredients(recipe) {
+        return (this.useCustomSlots)
+            ? this.findCustomIngredients(recipe)
+            : this.autoFindIngredients(recipe);
+    }
+
+    findCustomIngredients(recipe) {
+        const ingredients = [];
+        const success = _.every(recipe.Ingredients, (required, kind) => {
+            let found = 0;
+            return _.some(this.slots, ({entity}) => {
+                if (entity && entity.is(kind)) {
+                    ingredients.push(entity.Id);
+                    if (++found == required) {
+                        return true;
+                    }
                 }
-                list.push(id);
-            }
-            return list;
+                return false;
+            });
         });
+        return success && ingredients;
+    }
+
+    autoFindIngredients(recipe) {
+        let totalRequired = 0;
+        const ingredients = _.flatMap(recipe.Ingredients, (required, kind) => {
+            totalRequired += required;
+            return this.availableIngredients[kind].slice(0, required);
+        });
+        if (ingredients.length != totalRequired) {
+            return null;
+        }
+        this.slots = ingredients.map(entity => {
+            const slot = Container.getEntitySlot(entity);
+            slot.element.cleanUp = () => {
+                slot.unlock();
+            };
+            slot.lock();
+            return slot;
+        });
+        return ingredients.map(entity => entity.Id);
+    }
+
+    craft({type, recipe} = this.current) {
+        this.fillIngredients(recipe);
+        const ingredients = this.findIngredients(recipe);
+        if (!ingredients) {
+            return;
+        }
         const repeat = this.repeatInput.value;
         game.network.send(
             "craft",
@@ -1017,6 +1095,7 @@ class Craft {
         }
         var title = TS(item).toLocaleLowerCase();
         var link = dom.link("", title, "link-item");
+        link.title = title;
         link.onclick = () => {
             this.searchOrHelp(item);
         };
@@ -1066,6 +1145,7 @@ class Craft {
         });
         playerStorage.setItem("craft.search", this.searchInput.value);
         playerStorage.setItem("craft.favorites", this.favorites);
+        playerStorage.setItem("craft.useCustomslots", this.useCustomSlots);
     }
 
     toggleFavorite(type) {

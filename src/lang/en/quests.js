@@ -2,7 +2,7 @@
 
 Quest.quests =  {
     "tutorial-start": {
-        name: "Tutorial start",
+        name: "Start",
         desc: [
             "Hello, settler.",
             "Everyone who arrives here gets my Academy. My job here is to teach you survival basics.",
@@ -11,8 +11,11 @@ Quest.quests =  {
     },
     "craft-1": {
         name: "Picking resources",
-        desc: "You need some tools to survive this wild lands; and for tools you need resources. Pick four stones, two boughs and a branch.",
-        tip: "<rmb>Get bough</rmb> and <rmb>Get branch</rmb> on a tree.<br><lmb></lmb> on a stone to pick it up from the ground.",
+        desc: [
+            "You need some tools to survive this wild lands; and for tools you need resources.",
+            "Pick four stones, two boughs and a branch.",
+        ],
+        tip: "<rmb>Get bough/branch</rmb> on a tree.<br><lmb></lmb> on a stone to pick it up from the ground.",
     },
     "craft-1-2": {
         name: "Making a knife handle",

@@ -146,6 +146,9 @@ function Controller(game) {
 
                     if (hovered.containerSlot) {
                         var slot = hovered.containerSlot;
+                        if (slot.readonly) {
+                            return false;
+                        }
                         // dropped back to it's place
                         if (slot.entity == entity)
                             return true;
@@ -429,7 +432,7 @@ function Controller(game) {
         },
         G: {
             callback() {
-                this.toggleDrawpMapGrid();
+                this.toggleDrawMapGrid();
             },
             help: "Toggle map grid drawing",
         },
@@ -604,9 +607,9 @@ function Controller(game) {
             }, () => game.player.pickUp()),
 
             this.makeHotbarButton({
-                name: "lift",
-                hotkey: "V",
-            }, () => game.player.liftStart()),
+                name: "repeat",
+                hotkey: "R",
+            }, () => this.lastAction.repeat()),
 
             this.makeHotbarButton({
                 name: "detector",
@@ -621,7 +624,7 @@ function Controller(game) {
             this.makeHotbarButton({
                 name: "grid",
                 hotkey: "G",
-            }, () => this.toggleDrawpMapGrid()),
+            }, () => this.toggleDrawMapGrid()),
         ]);
         dom.append(document.getElementById("hotbars-container"), this.xpBar.element);
     };
@@ -688,6 +691,7 @@ function Controller(game) {
         this.vendor = new Vendor();
         this.mail = new Mail();
         this.shop = new Shop();
+        this.trade = new Trade();
         this.fpsStats = this.system.fps;
         this.inventory = {panel: {}};
 
@@ -1246,7 +1250,7 @@ function Controller(game) {
         }
     });
 
-    this.toggleDrawpMapGrid = function() {
+    this.toggleDrawMapGrid = function() {
         this._drawMapGrid = !this._drawMapGrid;
         document.getElementById("action-button-grid").classList.toggle("active");
     };
@@ -1357,9 +1361,10 @@ function Controller(game) {
     };
 
     this.updateActiveQuest = function() {
-        var questPanel = game.panels.quest;
-        if (questPanel && questPanel.visible)
+        const questPanel = game.panels.quest;
+        if (questPanel && questPanel.visible) {
             questPanel.quest.update();
+        }
     };
 
     this.updateMail = function(newMail) {

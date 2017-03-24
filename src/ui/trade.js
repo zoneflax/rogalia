@@ -6,124 +6,104 @@ class TradeSlot extends ContainerSlot {
 }
 
 class Trade {
-    constructor(trader) {
-        this.trader = trader;
+    init(partner, {MyContainer, PartnerContainer}) {
+        this.partner = partner;
 
-        this.ours = this.makeSlots(false);
-        this.theirs = this.makeSlots(true);
+        this.myContainer = Container.open(Entity.get(MyContainer));
+        this.partnerContainer = Container.open(Entity.get(PartnerContainer));
+        this.partnerContainer.slots.forEach(slot => slot.readonly = true);
+
         this.panel = new Panel("trade", "Trade", [
-            dom.wrap("trade-ours", [
+            dom.wrap("trade-my", [
                 game.playerName,
-                this.ours,
+                this.myContainer.panel.contents,
             ]),
             dom.wrap("trade-buttons", [
-                dom.button(T("Confirm")),
-                dom.button(T("Cancel")),
+                dom.button(T("Confirm"), "", () => this.confirm()),
+                dom.button(T("Cancel"), "", () => this.panel.close()),
             ]),
-            dom.wrap("trade-theirs", [
-                trader.Name,
-                this.theirs,
+            dom.wrap("trade-partner", [
+                partner.Name,
+                this.partnerContainer.panel.contents,
             ])
         ], {
             hide: () => this.cancel(),
         }).setTemporary(true).show();
 
-        Trade.instance = this;
+        this.panel.container = this.myContainer;
     }
 
-    add(item) {
-        const data = JSON.parse(item);
-        const entity = new Entity(data.Type);
-        entity.sync(data);
-        entity.initSprite();
-        for (const child of this.theirs.children) {
-            const slot = child.containerSlot;
-            if (!slot.entity) {
-                slot.set(entity);
-                return;
-            }
-        }
-        console.warn("Cannot add new item to trade");
-        // TODO: <<<<<<<<<<<<<<<<<< REMOVE entity on cancel
+    getContainer() {
+        return this.panel.visible && this.myContainer;
     }
 
-    cancel() {
-        game.network.send("trade", {Name: "cancel"});
-    }
-
-    makeSlots(readonly) {
-        return dom.wrap("slots-wrapper", _.times(16, (i) => {
-            const slot = new ContainerSlot({panel: this.panel, entity: {}}, i);
-            slot.element.trade = true;
-            slot.element.onmousedown = () => {
-                if (slot.entity) {
-                    Container.getEntitySlot(slot.entity).unlock();
-                    slot.clear();
-                }
-            };
-            slot.element.use = (entity) => {
-                if (readonly) {
-                    return false;
-                }
-                const from = Container.getEntityContainer(entity);
-                if (!from)
-                    return false;
-
-                from.findSlot(entity).lock();
-                slot.set(entity);
-                game.network.send("trade", {Name: "add", Trader: this.trader.Id, Id: entity.Id});
-                return true;
-            };
-            return slot.element;
-        }));
-    }
-
-    static update({Name, Trader, Item = null}) {
-        switch (Name) {
-        case "added":
-            if (Trade.instance)
-                Trade.instance.add(Item);
-            else
-                console.warn("Trying to add item to trade added, but no Trade.instance is null");
-            return;
-        }
-
-        const trader = game.characters.get(Trader);
-        if (!trader) {
-            console.warn(`Trader ${Trader} not found`);
+    update(data) {
+        const {Name, Partner} = data;
+        const partner = game.characters.get(Partner);
+        if (!partner) {
+            console.warn(`Partner ${Partner} not found`);
             return;
         }
 
         switch (Name) {
         case "offer":
-            Trade.offer(trader);
+            this.offer(partner);
             break;
         case "denied":
-            Trade.denied(trader);
+            this.denied(partner);
             break;
-        case "accepted":
-            Trade.start(trader);
+        case "init":
+            this.init(partner, data);
+            break;
+        case "confirm":
+            this.confirmed();
+            break;
+        case "canceled":
+            this.canceled();
+            break;
         }
 
     }
 
-    static offer(trader) {
+    offer(partner) {
         game.popup.confirm(
-            TT("{name} offers you trade", {name: trader.Name}),
-            function() {
-                game.network.send("trade", {Name: "accept", Trader: trader.Id}, Trade.start);
+            TT("{name} offers you trade", {name: partner.Name}),
+            () => {
+                game.network.send("trade", {Name: "accept", Partner: partner.Id});
             },
-            function() {
-                game.network.send("trade", {Name: "deny", Trader: trader.Id});
+            () => {
+                game.network.send("trade", {Name: "deny", Partner: partner.Id});
             }
         );
     }
 
-    static denied(trader) {
-        game.popup.alert(TT("{name} denied trade", {name: trader.Name}));
+    cancel() {
+        game.network.send("trade", {Name: "cancel", Partner: this.partner.Id});
     }
 
-    static start(trader) {
-        new Trade(trader);
+
+    confirm() {
+        this.panel.element.classList.add("our-confirmed");
+        game.network.send("trade", {Name: "confirm", Partner: this.partner.Id});
+    }
+
+    denied(partner) {
+        game.popup.alert(TT("{name} denied trade", {name: partner.Name}));
+    }
+
+    confirmed() {
+        this.panel.element.classList.add("their-confirmed");
+    }
+
+    unconfirmed(me) {
+        if (this.panel) {
+            const who = (me) ? "our" : "their";
+            this.panel.element.classList.remove(who + "-confirmed");
+        }
+    }
+
+    canceled() {
+        this.panel.hooks.hide = null;
+        this.panel.close();
     }
 }
