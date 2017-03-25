@@ -234,7 +234,6 @@ function Fight() {
                         title: T(required),
                     }
                 ));
-                console.log(currentCombo);
                 chain.push(dom.wrap(
                     "combo-arrow" + ((progress && currentLength == 0) ? " active" : ""),
                     "+"
