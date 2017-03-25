@@ -30,11 +30,29 @@ T.help = {
         ]);
     },
     combos: {
-        de: "Buff (+absorb, +shield block chance)",
-        su: "Buff (+damage, +crit chance)",
-        nya: "AOE Buff (+crit chance for De, +absorb for Su)",
-        ikkyo: "Strike (taunt, pvp: 50% stun for 1-5 secs)",
-        shihonage: "Strike (a lot of damage, slow for 5 secs)",
-        iriminage: "Strike (20% stun for 2 secs)",
+        de: {
+            desc: "Buff",
+            effect: "+absorb, +shield block chance",
+        },
+        su: {
+            desc: "Buff",
+            effect: "+damage, +crit chance",
+        },
+        nya: {
+            desc: "AoE Buff",
+            effect: "+crit chance for [de], +absorb for [su]",
+        },
+        ikkyo: {
+            desc: "Strike",
+            effect: "taunt, pvp: 50% stun for 1-5 secs",
+        },
+        shihonage: {
+            desc: "Strike",
+            effect: "a lot of damage, slow for 5 secs",
+        },
+        iriminage: {
+            desc: "Strike",
+            effect: "20% stun for 2 secs",
+        },
     },
 };

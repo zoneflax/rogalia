@@ -133,8 +133,12 @@ function Fight() {
         }
     };
 
+    this.getAction = function(name) {
+        return _.find(actions, {name});
+    };
+
     this.hotkey = function(key) {
-        var action = _.find(actions, {hotkey: key});
+        const action = _.find(actions, {hotkey: key});
         apply(action.name);
     };
 
@@ -172,19 +176,36 @@ function Fight() {
                 actions: "irimi-tenkan-kaiten",
                 require: "Nya",
             },
-        ],
+        ].map(combo => {
+            combo.icon = () => (combo.require)
+                ? dom.wrap(
+                    "combo-icon combo-attack",
+                    dom.img(`assets/icons/combos/${combo.name}.png`),
+                    {
+                        title: T(combo.name)
+                    }
+                )
+            : dom.wrap(
+                "combo-icon effect effect-fight",
+                dom.img(`assets/icons/effects/${combo.name}.png`),
+                {
+                    title: T(combo.name)
+                }
+            );
+            return combo;
+        }),
         timeout: null,
         sync: function(waza) {
             clearTimeout(this.timeout);
 
             var duration = 5000;
             var possible = [];
-            if (waza.Combo == "") {
+            var effects = game.player.Effects;
+            var buf = effects["De"] || effects["Su"] || effects["Nya"];
+            if (waza.Combo == "" && !buf) {
                 possible = this.possibleStarts();
             } else {
                 possible = this.possibleContinuations(waza.Combo);
-                var effects = game.player.Effects;
-                var buf = effects["De"] || effects["Su"] || effects["Nya"];
                 if (buf) {
                     duration = buf.Duration / 1e6 - (Date.now() - buf.Added*1000);
                 }
@@ -195,32 +216,52 @@ function Fight() {
                 return;
             }
 
-            this.timeout = setTimeout(function() {
-                dom.clear(this.elem);
-            }.bind(this), duration);
-
-            dom.setContents(this.elem, dom.wrap("possible-actions", this.renderActions(possible, waza.Combo)));
+            this.timeout = setTimeout(() => dom.clear(this.elem), duration);
+            dom.setContents(this.elem, dom.wrap("possible-actions", this.makeActions(possible, waza.Combo)));
         },
-        renderActions: function(actions, currentCombo) {
-            return actions.map(function(combo) {
-                var current = _.compact(currentCombo.split("-"));
-                var actions = combo.actions.split("-");
-                var l = Math.max(current.length, actions.length);
-                var chain = [];
-                var action = "";
-                for (var i = 0; i < l; i++) {
-                    chain.push(dom.span(T(actions[i]), (i < current.length) ? "done" : ""));
-                    chain.push(" → ");
-                    if (i == current.length)
-                        action = actions[i];
-                }
+        makeCombo: function(combo, currentCombo = "", progress = true) {
+            var currentLength = _.compact(currentCombo.split("-")).length;
+            var comboActions = combo.actions.split("-");
+            var l = Math.max(currentLength, comboActions.length);
+            var chain = [];
+            var action = "";
+            if (combo.require) {
+                const required = combo.require.toLowerCase();
+                chain.push(dom.wrap(
+                    "effect effect-fight" + ((progress) ? " done" : ""),
+                    dom.img(`assets/icons/effects/${required}.png`),
+                    {
+                        title: T(required),
+                    }
+                ));
+                console.log(currentCombo);
+                chain.push(dom.wrap(
+                    "combo-arrow" + ((progress && currentLength == 0) ? " active" : ""),
+                    "+"
+                ));
+            }
+            for (var i = 0; i < l; i++) {
+                const name = comboActions[i];
+                const hotkey = _.find(actions, {name}).hotkey;
+                chain.push(dom.wrap(
+                    "button" + ((i < currentLength) ? " done" : ""),
+                    [
+                        dom.img(`assets/icons/actions/${comboActions[i]}.png`),
+                        dom.make("i", hotkey),
+                    ],
+                    {
+                        title: T(name),
+                    }
+                ));
+                const active = i == (currentLength - 1);
+                chain.push(dom.wrap("combo-arrow" + ((active) ? " active" : ""), "→"));
+            }
+            chain.push(combo.icon());
+            return dom.wrap("combo", chain);
 
-                chain.push(dom.span(T(combo.name), "finishing"));
-                return dom.wrap("combo", [
-                    dom.img("assets/icons/actions/" + action + ".png"),
-                    dom.wrap("chain", chain),
-                ]);
-            });
+        },
+        makeActions: function(comboActions, currentCombo) {
+            return comboActions.map(combo => this.makeCombo(combo, currentCombo));
         },
         possibleStarts: function() {
             return this.combos.filter(function(combo) {

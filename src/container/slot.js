@@ -16,6 +16,7 @@ function ContainerSlot(container, index) {
     this.element.containerSlot = this;
     this.element.onmousedown = this.onmousedown.bind(this);
 
+    this.sup = null;
     this.sub = null;
     this.bar = null;
     this.placeholder = null;
@@ -55,6 +56,7 @@ ContainerSlot.prototype = {
     clear: function() {
         this.entity = null;
         this.sub = null;
+        this.sup = null;
         this.bar = null;
         dom.setContents(this.element, this.placeholder);
         this.element.classList.remove("has-item");
@@ -81,15 +83,16 @@ ContainerSlot.prototype = {
         this.entity = entity;
         this.element.classList.add("has-item");
 
-        var quality = dom.tag("sup", "quality", {text: entity.Quality});
-        if (entity.almostBroken())
-            quality.classList.add("almost-broken");
+        this.sup = dom.tag("sup", "quality", {text: entity.Quality});
+        if (entity.almostBroken()) {
+            this.sup.classList.add("almost-broken");
+        }
 
         var icon = entity.icon();
         icon.classList.add("item");
         icon.containerSlot = this;
 
-        dom.append(this.element, [icon, quality]);
+        dom.append(this.element, [icon, this.sup]);
 
         this.update();
     },
@@ -159,6 +162,7 @@ ContainerSlot.prototype = {
             this.setSub(this.entity.Type);
         } else if ("Amount" in this.entity) {
             this.setSub(this.entity.Amount);
+            dom.hide(this.sup);
         } else if (this.entity.SpawnChance > 0) {
             this.setSub(this.entity.SpawnChance);
         } else if (this.entity.isTool()) {

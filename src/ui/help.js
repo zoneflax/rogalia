@@ -98,16 +98,14 @@ function Help() {
 
     function makeFight() {
         var combos = _.map(game.controller.fight.combo.combos, function(combo) {
+            const help = T.help.combos[combo.name];
             return [
                 util.ucfirst(T(combo.name)),
-                combo.actions
-                    .split("-")
-                    .map(action => util.ucfirst(T(action)))
-                    .join(" "),
-                T.help.combos[combo.name],
+                game.controller.fight.combo.makeCombo(combo, "", false),
+                `${help.desc} (${help.effect})`,
             ];
         });
-        return T.help.fight(combos);
+        return dom.scrollable("help-fight", T.help.fight(combos));
 
     }
 }

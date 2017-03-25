@@ -5,36 +5,54 @@
 T.help = {
     fight: function(combos) {
         return dom.wrap("", [
-            dom.make("h3", "Ближний бой"),
-            dom.make("p", "Бафы активируются попаданием по противнику (кроме Ня)."),
-            dom.make("p", "Ирими дает небольшое ускорение если на персонаже висит любой баф."),
-            dom.table(["Имя", "Комбо", "Описание"], combos),
+            dom.make("h3", "Melee fighting"),
+            dom.make("p", "Buffs can be activated by hitting an enemy (except for Nya)."),
+            dom.make("p", "Irimi gives small speed up if character has any buff."),
+            dom.table(["Name", "Combo", "Description"], combos),
             dom.hr(),
-            dom.make("h3", "Дальний бой"),
-            dom.make("p", "Для использования дальнобойного оружия вторая рука должна быть пустой."),
-            dom.make("p", "Для выстрела используются снаряды, в зависимости от оружия."),
-            dom.make("p", "На арене и в пвп инстансах снаряды не тратятся."),
+            dom.make("h3", "Ranged fighting"),
+            dom.make("p", "To use ranged weapon your second hand must be empty."),
+            dom.make("p", "Ammo is used to make a shot. It depends on weapon type."),
+            dom.make("p", "You don't need ammo in the arena."),
             dom.wrap("", [
-                "У каждого дальнобойного оружия есть следующие характеристики:",
+                "Every range weapon has:",
                 dom.ul([
-                    "Максимальная дальность: если цель вне этого радиуса, стрелять по ней нельзя.",
-                    "Эффективная дальность: внутри этого радиуса точность максимальна.",
-                    "Скорострельность: с какой скоростью выпускается снаряд",
-                    "Тип снаряда: например, камни, стрелы, атомы",
-                    "Скорость снаряда: скорость с которой снаряд дотелит до цели.",
+                    "Maximum range: targets outside it cannot be shot.",
+                    "Effective range: inside this radius you got 100% accuracy.",
+                    "Shooting speed: how fast you can launch a missile",
+                    "Ammo type: for example stones, arrows, atoms",
+                    "Ammo speed: how fast missile will reach the target.",
                 ])
             ]),
-            dom.make("p", "Максимальнаю и эффективную дистанции можно посмотреть зажав ctrl+shift."),
-            dom.make("p", "Цель может уклонится от попадания, выйдя из небольшого радиуса, по которому был нанесен выстрел."),
-            dom.make("p", "Чем дальше цель от эффективной зоны, тем вы меньше шанс попадания."),
+            dom.make("p", "To see maximum and effective range press ctrl+shift."),
+            dom.make("p", "The target can evade your if it leaves shot radius."),
+            dom.make("p", "Outside of the effective zone you get increasing chance of missing."),
         ]);
     },
     combos: {
-        de: "Баф (+поглощение, +блок с щита)",
-        su: "Баф (+урон, +шанс крита)",
-        nya:"Аое Баф (+шанс крита для De, +поглощение для Su)",
-        ikkyo: "Удар (агро моба на себя, в пвп 50% стан 1-5 сек)",
-        shihonage: "Удар (много урона, замедление на 5 сек)",
-        iriminage: "Удар (20% стан на 2 сек)",
+        de: {
+            desc: "Buff",
+            effect: "+absorb, +shield block chance",
+        },
+        su: {
+            desc: "Buff",
+            effect: "+damage, +crit chance",
+        },
+        nya: {
+            desc: "AoE Buff",
+            effect: "+crit chance for [de], +absorb for [su]",
+        },
+        ikkyo: {
+            desc: "Strike",
+            effect: "taunt, pvp: 50% stun for 1-5 secs",
+        },
+        shihonage: {
+            desc: "Strike",
+            effect: "a lot of damage, slow for 5 secs",
+        },
+        iriminage: {
+            desc: "Strike",
+            effect: "20% stun for 2 secs",
+        },
     },
 };

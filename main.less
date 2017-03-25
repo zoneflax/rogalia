@@ -422,7 +422,7 @@ hr {
     }
 
     &.non-effective {
-        background-color: #7f1d07;
+        background-color: #7f1d07!important;
     }
 
     > .quality, > sub {
@@ -613,7 +613,6 @@ hr {
         }
     }
 
-
     .contents {
 	background-color: @bg-color;
 	padding: 3px; /* update Panel.setWidth(); pad = 2*(padding) */
@@ -633,6 +632,10 @@ hr {
 
 #container-item-search {
     width: 370px;
+
+    .scrollable-contents {
+        padding: 0;
+    }
 
     .container-search-results {
         height: 196px;
@@ -1221,6 +1224,10 @@ hr {
             .recipe-customs-slots {
                 height: 140px;
                 width: 100%;
+
+                .scrollable-contents {
+                    padding: 0;
+                }
             }
 
             .recipe-toggle-custom {
@@ -1247,7 +1254,7 @@ hr {
         }
 
         .recipe-descr {
-            height: 55px;
+            height: 72px;
         }
 
         .recipe-controlls {
@@ -1518,7 +1525,6 @@ hr {
 
 .message {
     word-wrap: break-word;
-    padding: 0 2em 0 0;
     line-height: 16px;
 }
 .message .from {
@@ -2470,6 +2476,7 @@ big {
 .effect-fight {
     background-color: #31688b;
     border-color: #103758;
+    color: #65b9e0;
 }
 
 .effect-effect {
@@ -2905,6 +2912,10 @@ input[type=number], .lot-quantity > input, .price > input {
     .contents {
 	width: 1000px;
 	height: 600px;
+    }
+
+    .help-fight {
+        height: 573px;
     }
 
     iframe {
@@ -3707,37 +3718,53 @@ input[type=number], .lot-quantity > input, .price > input {
     bottom: 3px;
     left: 0;
     right: 0;
-    width: 100px;
-    margin: auto;
 
     display: flex;
-    flex-direction: column-reverse;
+    justify-content: center;
+}
 
+.combo {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
 
+    margin: 3px;
+    padding: 2px;
+    background: #202326;
+    border: 1px solid #393e44;
+    border-radius: 3px;
 
-    .possible-actions {
-        display: flex;
-        justify-content: space-around;
+    .combo-icon {
+        margin-right: 1px;
     }
 
-    .combo {
-        white-space: nowrap;
-        padding: 1px 5px;
-
-        margin: 3px;
-        background: #202326;
-        border: 1px solid #393e44;
-        border-radius: 3px;
+    .button {
+        width: 41px;
+        height: 36px;
     }
 
     .done {
-        color: lightgreen;
+        filter: grayscale(80%);
     }
 
-    .finishing {
-        color: #e7aa69;
+    .combo-arrow {
+        margin: 0 5px;
+        color: #888;
+
+        &.active {
+            color: lightgreen;
+        }
+    }
+
+    .combo-attack {
+        margin-right: 3px;
+        width: 29px;
+        height: 28px;
+        outline: 1px solid #b6220a;
+        background: #671a0d;
     }
 }
+
 
 #barbershop {
     .shop-panel;
@@ -3799,15 +3826,21 @@ input[type=number], .lot-quantity > input, .price > input {
 }
 
 .shop-panel() {
-    .title-bar {
+    &.top {
+        border-color: #286f60;
     }
 
-    .title-text {
-	color: #78d8d9;
+    .title-bar {
+        border-color: #286f60;
+    }
+
+    .title-text, .close {
+	color: #13463b;
+        background-color: #51af9a;
     }
 
     .close {
-	border-color: #172220;
+        border-left-color: #286f60;
     }
 
     .contents {
@@ -3829,6 +3862,10 @@ input[type=number], .lot-quantity > input, .price > input {
 
     .tab-content {
 	padding: 3px;
+
+        .scrollable-contents {
+            padding: 0;
+        }
     }
 
     .products {
@@ -3867,7 +3904,7 @@ input[type=number], .lot-quantity > input, .price > input {
 	    background: rgba(27, 70, 64, 0.8);
 	    font-size: 14px;
             text-shadow: 0 0 2px #000;
-            overflow: hidden;
+            overflow: visible;
             text-overflow: ellipsis;
             white-space: nowrap;
 	}
@@ -3890,8 +3927,28 @@ input[type=number], .lot-quantity > input, .price > input {
 	margin-right: 0;
     }
 
+    .product-discount {
+        display: inline-block;
+        position: absolute;
+        top: 10px;
+        left: 0;
+        padding: 2px 3px;
+        background: #92d6c7;
+        color: #166b58;
+        font-weight: bold;
+        text-shadow: none;
+        font-size: 15px;
+    }
+
     .product-cost {
-	color: #ecd16e;
+	color: @button-color;
+
+        .product-original-cost {
+            display: inline-block;
+            margin-right: 5px;
+            color: #b18d63;
+            text-decoration: line-through;
+        }
     }
 
     .product-cost.big {
@@ -3923,6 +3980,16 @@ input[type=number], .lot-quantity > input, .price > input {
 
     .product-recipe {
         display: block;
+    }
+
+    .product-buy-container {
+        position: relative;
+
+        .product-discount {
+            position: relative;
+            top: 0px;
+            left: 8px;
+        }
     }
 
     .product-buy {
@@ -4203,6 +4270,7 @@ input[type=number], .lot-quantity > input, .price > input {
     .scrollable-contents {
         height: 100%;
         margin-right: -17px;
+        padding-right: 17px;
         overflow-x: hidden;
         overflow-y: scroll;
     }
@@ -4213,8 +4281,11 @@ input[type=number], .lot-quantity > input, .price > input {
     max-width: none;
 
     > .contents {
-        width: 503px;
         display: flex;
+
+        .slots-wrapper {
+            width: 208px;
+        }
     }
 
     .trade-buttons {
@@ -4250,4 +4321,8 @@ input[type=number], .lot-quantity > input, .price > input {
         height: 720px;
         overflow: hidden;
     }
+}
+
+#effect-description {
+    width: 300px;
 }

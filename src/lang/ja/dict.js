@@ -99,6 +99,7 @@ T.dict = {
     "Pay": "領地税を支払う",
     "Last paid": "最後に支払った",
     "Confirm?": "よろしいですか？",
+    "Confirm": "確認",
     "Paid till": "権利失効日",
     "Rent": "領地税",
     "Deposit": "預金",

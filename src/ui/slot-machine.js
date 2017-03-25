@@ -153,7 +153,7 @@ class SlotMachine {
             "I",
             "K",
             "energy",
-        ].map(type => game.loader.loadImage(type + ".png"));
+        ].map(type => game.loader.loadImage(`entities/${type}.png`));
     }
 
 }

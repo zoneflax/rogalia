@@ -667,7 +667,7 @@ class Craft {
     makeIngredients(type, recipe) {
         return dom.wrap("recipe-ingredients", [
             dom.wrap("recipe-ingredient-list", _.map(recipe.Ingredients, (required, kind) => {
-                return this.makeIngredientCounter(kind, required);
+                return this.makeIngredientCounter(kind, required, recipe.IsBuilding);
             })),
             this.makeIngredientSlots(type, recipe),
             (Entity.templates[type].MoveType == Entity.MT_PORTABLE) && dom.make(
@@ -685,24 +685,24 @@ class Craft {
 
     updateIngredientCounters(recipe) {
         _.forEach(recipe.Ingredients, (required, kind) => {
-            this.updateIngredientCounter(kind, required);
+            this.updateIngredientCounter(kind, required, recipe.IsBuilding);
         });
     }
 
-    updateIngredientCounter(kind, required) {
+    updateIngredientCounter(kind, required, isBuilding) {
         this.ingredientCounters[kind] = dom.replace(
             this.ingredientCounters[kind],
-            this.makeIngredientCounter(kind, required)
+            this.makeIngredientCounter(kind, required, isBuilding)
         );
     }
 
-    makeIngredientCounter(kind, required) {
+    makeIngredientCounter(kind, required, isBuilding) {
         const has = this.availableIngredients[kind].length;
         const used = this.slots.reduce((used, slot) => {
             return used +(slot.entity && slot.entity.is(kind));
         }, 0);
         return this.ingredientCounters[kind] = dom.wrap("recipe-ingredient", [
-            (this.useCustomSlots)
+            (this.useCustomSlots && !isBuilding)
                 ? dom.span(
                     ` ${used}/${required} `,
                     (used >= required) ? "available" : ""
@@ -717,7 +717,7 @@ class Craft {
     }
 
     makeIngredientSlots(type, recipe) {
-        return this.ingredientSlots = (this.useCustomSlots)
+        return this.ingredientSlots = (this.useCustomSlots && !recipe.IsBuilding)
             ? this.makeCustomIngredientSlots(type, recipe)
             : this.makeSimpleIngredientSlots(type, recipe);
     }
@@ -754,7 +754,7 @@ class Craft {
                         const from = Container.getEntitySlot(slot.entity);
                         from && from.unlock();
                         slot.clear();
-                        this.updateIngredientCounter(kind, required);
+                        this.updateIngredientCounter(kind, required, recipe.IsBuilding);
                     }
                 };
                 slot.element.onmousedown = slot.element.cleanUp;
@@ -768,7 +768,7 @@ class Craft {
 
                     from.findSlot(entity).lock();
                     slot.set(entity);
-                    this.updateIngredientCounter(kind, required);
+                    this.updateIngredientCounter(kind, required, recipe.IsBuilding);
                     return true;
                 };
                 slot.element.craft = true;

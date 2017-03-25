@@ -7,7 +7,7 @@ class Missile {
         this.to = new Point(To);
         this.point = this.from.clone();
         this.speed = Speed;
-        this.sprite = new Sprite(Type + ".png");
+        this.sprite = new Sprite(`entities/${Type}.png`);
 
         var velocity = this.to.clone().sub(this.from);
         this.angle = Math.atan2(velocity.y, velocity.x) + Math.PI/4;

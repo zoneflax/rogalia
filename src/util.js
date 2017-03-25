@@ -319,18 +319,18 @@ var util = new function() {
     };
 
     this.imageToCanvas = function(image) {
-	var canvas = document.createElement("canvas");
-	canvas.width = image.width;
-	canvas.height = image.height;
-	canvas.getContext("2d").drawImage(image, 0, 0);
+        var canvas = document.createElement("canvas");
+        canvas.width = image.width;
+        canvas.height = image.height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
 
-	return canvas;
+        return canvas;
     };
 
     this.canvasToImage = function(canvas) {
-	var image = new Image();
-	image.src = canvas.toDataURL("image/png");
-	return image;
+        var image = new Image();
+        image.src = canvas.toDataURL("image/png");
+        return image;
     };
 
     this.dotimes = function(n, callback) {

@@ -365,6 +365,8 @@ Entity.prototype = {
         if (this.Type != "blank") {
             if (this.State) {
                 path += "-" + this.State;
+            } else if ("Locked" in this.Props) {
+                path += "-locked"; // defaults for gate/doors
             }
 
             if (this.Orientation) {

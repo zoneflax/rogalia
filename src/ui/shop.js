@@ -4,7 +4,7 @@
 
 function Shop() {
     var self = this;
-    var currency = (cost) => "$" + cost;
+    var currency = (cost) => "$" + util.toFixed(cost, 2);
 
     this.tabs = null;
 
@@ -86,10 +86,15 @@ function Shop() {
                         tag = product.Tag;
                         contents.push(dom.wrap("product-tag", TS(tag)));
                     }
+                    const totalCost = product.Cost * (100 - product.Discount)/100;
                     var card = dom.wrap("product-card product-card-" + tag, [
+                        product.Discount && dom.wrap("product-discount", `-${product.Discount}%`),
                         dom.wrap("product-info", [
                             productName(product),
-                            dom.wrap("product-cost", currency(product.Cost)),
+                            dom.wrap("product-cost", [
+                                product.Discount && dom.wrap("product-original-cost", currency(product.Cost)),
+                                currency(totalCost)
+                            ]),
                         ]),
                     ]);
                     card.name = product.Name;
@@ -122,11 +127,18 @@ function Shop() {
             return false;
         };
         const desc = Shop.descriptions[product.Tag];
+        const totalCost = product.Cost * (100 - product.Discount)/100;
         self.panel.setContents([
             dom.wrap("product-name", productName(product)),
             dom.hr(),
-            dom.wrap("product-cost big", currency(product.Cost)),
-            buyButton,
+            dom.wrap("product-cost big", [
+                product.Discount && dom.wrap("product-original-cost", currency(product.Cost)),
+                currency(totalCost)
+            ]),
+            dom.wrap("product-buy-container", [
+                buyButton,
+                product.Discount && dom.wrap("product-discount", `-${product.Discount}%`),
+            ]),
             (product.Tag == "hairstyle" && hairstylePreview(product)),
             dom.wrap("product-images", _.range(1, 4).map(function(index) {
                 return dom.img(`assets/shop/${product.Name}/${index}.png`);

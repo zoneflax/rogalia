@@ -1,4 +1,4 @@
-/* global Effects */
+/* global Effects, T */
 
 Effects.descriptions = {
     "Overeat": {
@@ -129,14 +129,22 @@ Effects.descriptions = {
     },
     "De": {
         "class": "fight",
+        "effect": T.help.combos.de.effect,
+        "desc": T.help.combos.de.desc,
     },
     "Su": {
         "class": "fight",
+        "effect": T.help.combos.su.effect,
+        "desc": T.help.combos.su.desc,
     },
     "Nya": {
         "class": "fight",
+        "effect": T.help.combos.nya.effect,
+        "desc": T.help.combos.nya.desc,
     },
     "Inspiration": {
         "class": "fight",
+        "effect": "Увеличивает шанс крита; вместе с [де] увеличивает поглощение урона.",
+        "desc": "Аое Баф"
     },
 };
