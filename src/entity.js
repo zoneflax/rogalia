@@ -379,6 +379,7 @@ Entity.prototype = {
 
             switch (this.Group) {
             case "rogalik-card":
+            case "playing-card":
                 path = "cards/" + path.replace(/^card-/, "");
                 break;
             }
@@ -461,9 +462,9 @@ Entity.prototype = {
             actions[0]["To equip"] = this.equip;
         }
 
-        this.Actions.forEach(function(action) {
+        this.Actions.forEach(action => {
             actions[1][action] = this.actionApply(action);
-        }.bind(this));
+        });
 
         if (this.Orientation != "" && this.MoveType != Entity.MT_STATIC) {
             actions[1]["Rotate"] = function() {
@@ -499,7 +500,7 @@ Entity.prototype = {
             "taming",
             "insect-net",
             "fishing-rod",
-            "prospector"
+            "prospector",
         ];
         return this.tags.some(tag => tags.includes(tag));
     },

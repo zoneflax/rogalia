@@ -17,7 +17,15 @@ class Permission {
                         ? perm & ~bit
                         : perm | bit;
                     game.network.send("set-perm", {id, perm}, function() {
-                        elem.classList.toggle("enabled");
+                        // server won't notify us if perm == 0, so force update here
+                        if (perm == 0) {
+                            const entity = Entity.get(id);
+                            if (entity) {
+                                entity.Perm = 0;
+                                game.controller.updateItemInfo();
+                            }
+
+                        }
                     });
                 },
             });

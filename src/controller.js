@@ -319,7 +319,7 @@ function Controller(game) {
 
     this.updateItemInfo = function(entity = null) {
         var info = game.panels["item-info"];
-        if (info && info.visible && info.entity.Group == "food" && (!entity || info.entity == entity)) {
+        if (info && info.visible && (!entity || info.entity == entity)) {
             info.entity.showInfo();
         }
     };

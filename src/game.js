@@ -452,9 +452,11 @@ class Game {
             delete this.containers[id];
         }
 
-        var entity = Entity.get(id);
-        entity.onremove();
-        this.sortedEntities.remove(entity);
+        const entity = Entity.get(id);
+        if (entity) {
+            entity.onremove();
+            this.sortedEntities.remove(entity);
+        }
         // this.quadtree.remove(entity);
         this.entities.remove(id);
         this.claims.remove(id);

@@ -789,16 +789,21 @@ class Craft {
 
     fillIngredients(recipe) {
         _.forEach(recipe.Ingredients, (required, kind) => {
+            const used = new Set();
             for (let i = 0; i < required; i++) {
-                const entity = this.availableIngredients[kind][i];
-                if (!entity) {
-                    return;
+                const entity = this.availableIngredients[kind].find(entity => {
+                    if (used.has(entity)) {
+                        return false;
+                    }
+                    if (entity.isContainer() && _.some(entity.Props.Slots)) {
+                        return false;
+                    }
+                    return true;
+                });
+
+                if (entity && this.useEntity(entity)) {
+                    used.add(entity);
                 }
-                const slot = this.slots.find(slot => !slot.entity && slot.element.check({entity}));
-                if (!slot) {
-                    return;
-                }
-                slot.element.use(entity);
             }
         });
     }
@@ -1129,7 +1134,11 @@ class Craft {
             return false;
         }
 
-        return this.slots.some(function(slot) {
+        return this.useEntity(entity);
+    }
+
+    useEntity(entity) {
+        return this.slots.some(slot =>  {
             if (slot.entity) {
                 return false;
             }
