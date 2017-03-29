@@ -53,7 +53,7 @@ class PathNode {
     static collide(point, step, gap = PathNode.gap) {
         const halfStep = step / 2;
         let biom = game.map.biomAt(point.x - halfStep, point.y - halfStep);
-        if (biom ** biom.Blocked)
+        if (biom && biom.Blocked)
             return true;
 
         biom = game.map.biomAt(point.x - halfStep, point.y + halfStep);

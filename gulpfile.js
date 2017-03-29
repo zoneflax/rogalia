@@ -5,6 +5,7 @@ var concat = require("gulp-concat");
 var uglify = require("gulp-uglify");
 var less = require("gulp-less");
 var rename = require("gulp-rename");
+var gutil = require("gulp-util");
 
 var fs = require("fs");
 
@@ -26,6 +27,7 @@ gulp.task("js", function() {
         }))
         .pipe(concat("bundle.js"))
         .pipe(uglify())
+        .on("error", gutil.log)
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest("."));
 });
