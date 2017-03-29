@@ -21,7 +21,9 @@ gulp.task("js", function() {
     var sources = JSON.parse(fs.readFileSync("./sources.json"));
     return gulp.src(sources)
         .pipe(sourcemaps.init())
-        .pipe(babel())
+        .pipe(babel({
+            presets: ["es2015"],
+        }))
         .pipe(concat("bundle.js"))
         .pipe(uglify())
         .pipe(sourcemaps.write("."))

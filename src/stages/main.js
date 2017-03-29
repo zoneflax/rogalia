@@ -22,7 +22,7 @@ function mainStage(data) {
 
         Entity.sync(data.Entities || [], data.RemoveEntities || null);
 
-        data.Location && game.map.sync(data.Location);
+        data.Location && game.map.sync(data.Location, data.Map);
         data.BG && game.controller.updateBG(data.BG);
         data.Shop && game.controller.shop.sync(data.Shop);
 
@@ -119,7 +119,7 @@ function mainStage(data) {
             game.map.drawDarkness();
 
         game.characters.forEach(drawUI);
-        game.controller.draw();
+        game.controller.draw(true);
         // this.debug();
         game.ctx.restore();
     };

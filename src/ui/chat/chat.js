@@ -660,7 +660,6 @@ function Chat() {
         "i:": makeTagParser("i"),
         "u:": makeTagParser("u"),
         "s:": makeTagParser("s"),
-        "img:": imgParser,
     };
 
     function parseComplexMatch(match) {
@@ -736,20 +735,6 @@ function Chat() {
         link.textContent = "#" + data;;
         link.dataset.channel = data;
         return link;
-    }
-
-    function imgParser(data) {
-        var img = Entity.getPreview(data);
-        img.className = "";
-
-        var title = T(data);
-        var cnt = dom.make("span", dom.tag("code", "", {text : title, title : title}));
-
-        if (img.width) {
-            cnt.appendChild(img);
-        }
-
-        return cnt;
     }
 
     function fromMe(message) {

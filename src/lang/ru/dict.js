@@ -1914,7 +1914,6 @@ T.dict = {
     "Repeat": "Повторить",
     "Bloody altar": "Кровавый алтарь",
     "Sacrifice": "Жертвоприношение",
-    "No corpse": "Нет трупа",
-    "Place quintessence of evil inside": "Поместите внутрь квинтэссенцию зла",
-    "Can revive only rabbits and chickens": "Можно оживить только кроликов и куриц",
+    "Place daemon essence inside": "Поместите внутрь демоническую эссенцию",
+    "Can revive only domestical animals": "Можно оживить только домашних животных",
 };

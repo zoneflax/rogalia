@@ -1118,6 +1118,7 @@ function Controller(game) {
         }
     };
 
+
     this.draw = function() {
         if (this.world.menuHovered) {
             this.world.menuHovered.drawHovered();

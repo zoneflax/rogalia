@@ -986,6 +986,7 @@ Entity.prototype = {
             return;
         case "feeder":
         case "beehive":
+        case "altar":
             game.ctx.fillStyle = "rgba(20, 200, 20, 0.3)";
             game.iso.fillCircle(this.X, this.Y, this.WorkRadius);
             break;
