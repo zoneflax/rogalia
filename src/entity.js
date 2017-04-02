@@ -964,6 +964,11 @@ Entity.prototype = {
         var x = p.x - game.ctx.measureText(this.title).width / 2;
         var y = p.y - (this.sprite.height - this.Radius) - FONT_SIZE;
 
+        var title = this.title;
+        if(this.isContainer()){
+            var fullnes = this.Props.Slots.filter(e => e != 0).length;
+            title += " ["+fullnes+"/"+this.Props.Slots.length+"]";
+        }
         switch (this.Group) {
         case "sign":
         case "grave":
@@ -985,6 +990,9 @@ Entity.prototype = {
             game.ctx.fillText(text, x + padding, y + padding + FONT_SIZE);
             return;
         case "feeder":
+                game.ctx.fillStyle = "rgba(" + Math.floor(235-255/64*fullnes)+", "+Math.floor(20+235/64*fullnes)+", 20, 0.3)";
+                game.iso.fillCircle(this.X, this.Y, this.WorkRadius);
+                break;
         case "beehive":
         case "altar":
             game.ctx.fillStyle = "rgba(20, 200, 20, 0.3)";
@@ -992,7 +1000,6 @@ Entity.prototype = {
             break;
         }
         game.ctx.fillStyle = "#e2e9ec";
-        var title = this.title;
         if (game.controller.modifier.shift)
             title += " | " + T("Quality") + ":" + this.Quality;
         game.drawStrokedText(title, x, y);
