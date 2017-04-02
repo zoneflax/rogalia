@@ -76,8 +76,8 @@ class Pixi {
         this.leftTop.fromPoint(leftTop);
         this.camera.fromPoint(cam);
         this.stage.position.set(0, 0);
+        this.stage.removeChildren();
 
-        this.stage = new PIXI.Container();
         for (let x = leftTop.x; x < rightBottom.x; x++) {
             for (let y = rightTop.y; y < leftBottom.y; y++) {
                 var p = new Point(x * CELL_SIZE, y * CELL_SIZE).toScreen();

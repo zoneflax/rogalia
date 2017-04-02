@@ -35,7 +35,9 @@ Entity.usable = function(entity) {
 
 Entity.norelocate = ["blank", "claim", "exit", "entrance", "plant"];
 Entity.canRelocate = function(entity) {
-    return entity.MoveType == Entity.MT_STATIC && Entity.norelocate.every(kind => !entity.is(kind));
+    return entity.MoveType == Entity.MT_STATIC &&
+        entity.Creator &&
+        Entity.norelocate.every(kind => !entity.is(kind));
 };
 
 Entity.templates = {};
@@ -213,6 +215,14 @@ Entity.wipe = function(pattern) {
             clearInterval(interval);
         }
     }, 500);
+};
+
+Entity.containerSize = function(entity) {
+    const slots = entity.Props.Slots || [];
+    return {
+        current: slots.reduce((sum, id) => sum + (id && 1), 0),
+        max: slots.length,
+    };
 };
 
 Entity.books = {

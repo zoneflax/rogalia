@@ -24,7 +24,7 @@ class Craft {
         this.lastSearch = playerStorage.getItem("craft.search") || "";
 
         this.titleElement = dom.div();
-        this.ingredientList = dom.tag("ul", "ingredient-list");
+        this.ingredientList = dom.div("ingredient-list");
 
         this.ingredientSlots = null;
 
@@ -842,14 +842,18 @@ class Craft {
 
     create() {
         if (this.crafting) {
-            this.stop();
-            game.network.send("set-dst", {X: game.player.X, Y: game.player.Y});
+            this.cancel();
             return;
         }
 
         this.crafting = true;
         this.craftButton.textContent = T("Cancel");
         this.craft();
+    }
+
+    cancel() {
+        this.stop();
+        game.network.send("set-dst", {X: game.player.X, Y: game.player.Y});
     }
 
     stop() {

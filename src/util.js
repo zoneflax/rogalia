@@ -351,6 +351,10 @@ var util = new function() {
         return [x];
     };
 
+    this.rgba = function(r, g, b, a) {
+        return `rgba(${r}, ${g}, ${b}, ${a})`;
+    };
+
     /**
      * Creates an array in which the contents of the given array are interspersed
      * with... something. If that something is a function, it will be called on each
