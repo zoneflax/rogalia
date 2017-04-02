@@ -381,9 +381,51 @@ function Controller(game) {
         game.network.send("wasd", v.clamp().json());
     };
 
+    this.harvest = function() {
+        var self = game.player;
+        var list = game.findItemsNear(self.X, self.Y).filter(function(e) {
+            return e.Actions.indexOf("Harvest")!=-1 && e.State =="adult";
+        }).sort(function(a, b) {
+            return a.distanceTo(self) - b.distanceTo(self);
+        });
+        if (list.length > 0)
+            game.network.send("Harvest", {Id: list[0].Id})
+    };
+
+    this.harvestByType = function(type = "grass") {
+        var self = game.player;
+        var plants = game.entities.filter(function(e){
+                return e.Type==type && e.State=="adult"
+            }).sort(function(a, b) {
+                return a.distanceTo(self) - b.distanceTo(self);
+            });
+        if(plants.length > 0)
+            game.network.send("Harvest", {Id: plants[0].Id}, function(e){
+            if(e.Ok==2)
+               this.harvestByType(type);
+        }.bind(this));
+    };
+
     this.wasd.point = new Point();
 
     this.hotkeys = {
+        E: {
+            callback(e) {
+                if(e.ctrlKey){
+                    var self = game.player;
+                    var list = game.findItemsNear(self.X, self.Y).filter(function(e) {
+                        return e.Actions.indexOf("Harvest")!=-1 && e.State =="adult";
+                    }).sort(function(a, b) {
+                        return a.distanceTo(self) - b.distanceTo(self);
+                    });
+                    if (list.length > 0)
+                        this.harvestByType(list[0].Type)
+                }   else {
+                    this.harvest();
+                }
+            },
+            allowedModifiers:["ctrl"]
+        },
         W: {
             callback() {
                 this.wasd(0, -1);
