@@ -24,7 +24,7 @@ class Craft {
         this.lastSearch = playerStorage.getItem("craft.search") || "";
 
         this.titleElement = dom.div();
-        this.ingredientList = dom.tag("ul", "ingredient-list");
+        this.ingredientList = dom.div("ingredient-list");
 
         this.ingredientSlots = null;
 

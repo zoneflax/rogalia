@@ -83,7 +83,7 @@ Quest.prototype = {
     },
     makeChainHeader() {
         return this.Chain.Name && dom.wrap("quest-chain", [
-            this.data.chain,
+            TS(this.data.chain),
             " ",
             this.Chain.Num,
             "/",
@@ -106,6 +106,7 @@ Quest.prototype = {
     makeGoal() {
         var self = this;
         var goal = this.Goal;
+        const progress = (this.getLog() || {}).Progress || {};
         this.items = [];
 
         return this.goal = dom.wrap("quest-goal", [
@@ -115,14 +116,16 @@ Quest.prototype = {
         ]);
 
         function goals() {
-            if (!goal.HaveItems && !goal.BringItems && !goal.Cmd && !goal.Use) {
+            if (!goal.HaveItems && !goal.BringItems && !goal.Cmd && !goal.Use && !goal.Build) {
                 return null;
             }
+
 
             return dom.wrap("quest-goals", [
                 haveItems(),
                 bringItems(),
                 cmd(),
+                build(),
                 use(),
             ]);
 
@@ -135,14 +138,29 @@ Quest.prototype = {
                     waza: "hit a training dummy",
                 };
                 var what = goals[goal.Cmd] || goal.Cmd;
-                return dom.wrap("quest-cmd", [
+                const done = (progress.Cmd) ? " quest-ok" : "";
+                return dom.wrap("quest-cmd" + done, [
+                    progress.Cmd && dom.wrap("quest-ok-mark", "✔"),
                     T("You need to") + " ",
-                    dom.make("i", TS(what))
+                    dom.make("i", TS(what)),
+                ]);
+            }
+
+            function build() {
+                const done = (progress.Build) ? " quest-ok" : "";
+                return goal.Build && dom.wrap("quest-build" + done, [
+                    progress.Build && dom.wrap("quest-ok-mark", "✔"),
+                    T("To build") + ": ",
+                    game.controller.craft.makeLink(goal.Build),
                 ]);
             }
 
             function use() {
-                return goal.Use && dom.wrap("quest-use", T("You need to") + " " + T("use") + " " + TS(goal.Use));
+                const done = (progress.Use) ? " quest-ok" : "";
+                return goal.Use && dom.wrap("quest-use" + done, [
+                    progress.Use && dom.wrap("quest-ok-mark", "✔"),
+                    T("You need to") + " " + T("use") + " " + TS(goal.Use)
+                ]);
             }
 
             function bringItems() {
@@ -154,7 +172,7 @@ Quest.prototype = {
 
             function haveItems() {
                 return goal.HaveItems && dom.wrap("quest-collect-items", [
-                    dom.text(T("Required") + ":"),
+                    T("Required") + ":",
                     self.makeList(goal.HaveItems),
                 ]);
             }

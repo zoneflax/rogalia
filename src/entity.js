@@ -1360,8 +1360,9 @@ Entity.prototype = {
     },
     play: function() {
         game.network.send("Play", {Id: this.Id}, ({PlayUrl, Cards}) => {
+            const url = encodeURI(PlayUrl + "&deck=" + JSON.stringify(Cards));
             new Panel("play-rogalik", "Rogalik cards", [
-                dom.iframe(encodeURI(PlayUrl + "&deck=" + JSON.stringify(Cards)))
+                dom.iframe(url)
             ]).show();
         });
     }

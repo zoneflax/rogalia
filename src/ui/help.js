@@ -5,6 +5,10 @@ function Help() {
     var self = this;
     var tabs = dom.tabs([
         {
+            title: T("Fight"),
+            contents: makeFight(),
+        },
+        {
             title: T("Help"),
             init: dashboard,
         },
@@ -15,10 +19,6 @@ function Help() {
         {
             title: T("Feedback"),
             update: feedback,
-        },
-        {
-            title: T("Fight"),
-            contents: makeFight(),
         },
     ]);
     window.tabs = tabs;
