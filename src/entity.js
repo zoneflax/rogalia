@@ -1,4 +1,4 @@
-/* global dom, T, util, game, Panel, config, Point, Container, Character, BBox, TS, Permission, ParamBar, SlotMachine, CELL_SIZE, Sprite, ImageFilter */
+/* global dom, T, util, game, Panel, config, Point, Container, Character, BBox, TS, Permission, ParamBar, SlotMachine, CELL_SIZE, Sprite, ImageFilter, FONT_SIZE */
 
 "use strict";
 function Entity(type, id) {
@@ -134,6 +134,12 @@ Entity.prototype = {
             }
             break;
         }
+
+        if (this.isContainer()) {
+            const {current, max} = Entity.containerSize(this);
+            title += ` [${current}/${max}]`;
+        }
+
         if (this.Type.contains("-corpse") || this.Type == "head")
             return T(title);
 
@@ -958,6 +964,25 @@ Entity.prototype = {
         if (reinsert)
             game.sortedEntities.add(this);
     },
+    drawAura: function() {
+        switch (this.Group) {
+        case "feeder":
+            const {current} = Entity.containerSize(this);
+            game.ctx.fillStyle = util.rgba(
+                Math.floor(235-255/64*current),
+                Math.floor(20+235/64*current),
+                20,
+                0.3
+            );
+            game.iso.fillCircle(this.X, this.Y, this.WorkRadius);
+            break;
+        case "beehive":
+        case "altar":
+            game.ctx.fillStyle = "rgba(20, 200, 20, 0.3)";
+            game.iso.fillCircle(this.X, this.Y, this.WorkRadius);
+            break;
+        }
+    },
     drawHovered: function() {
         this.sprite.drawOutline(this.getDrawPoint());
         var p = this.screen();
@@ -965,10 +990,7 @@ Entity.prototype = {
         var y = p.y - (this.sprite.height - this.Radius) - FONT_SIZE;
 
         var title = this.title;
-        if(this.isContainer()){
-            var fullnes = this.Props.Slots.filter(e => e != 0).length;
-            title += " ["+fullnes+"/"+this.Props.Slots.length+"]";
-        }
+
         switch (this.Group) {
         case "sign":
         case "grave":
@@ -989,15 +1011,6 @@ Entity.prototype = {
             game.ctx.fillStyle = "#e2e9ec";
             game.ctx.fillText(text, x + padding, y + padding + FONT_SIZE);
             return;
-        case "feeder":
-                game.ctx.fillStyle = "rgba(" + Math.floor(235-255/64*fullnes)+", "+Math.floor(20+235/64*fullnes)+", 20, 0.3)";
-                game.iso.fillCircle(this.X, this.Y, this.WorkRadius);
-                break;
-        case "beehive":
-        case "altar":
-            game.ctx.fillStyle = "rgba(20, 200, 20, 0.3)";
-            game.iso.fillCircle(this.X, this.Y, this.WorkRadius);
-            break;
         }
         game.ctx.fillStyle = "#e2e9ec";
         if (game.controller.modifier.shift)

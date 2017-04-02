@@ -1599,6 +1599,23 @@ Character.prototype = {
         if (list.length > 0)
             list[0].pickUp();
     },
+    harvest: function(dontStop = false, type = null) {
+        const plant = game.findItemsNear(this.X, this.Y, 4*CELL_SIZE)
+              .filter(function(entity) {
+                  if (entity.State != "adult") {
+                      return false;
+                  }
+                  return (type) ? entity.is(type) : entity.Actions.includes("Harvest");
+              })
+              .sort((a, b) => a.distanceTo(this) - b.distanceTo(this))[0];
+
+        plant && game.network.send("Harvest", {Id: plant.Id}, ({Ok}) => {
+            // skip confirm (Ok == 1)
+            if (Ok == 2 && dontStop) {
+                game.player.harvest(true, plant.Type);
+            }
+        });
+    },
     liftStart: function() {
         var self = this;
         var list = game.findItemsNear(this.X, this.Y).filter(function(e) {

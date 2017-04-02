@@ -217,6 +217,14 @@ Entity.wipe = function(pattern) {
     }, 500);
 };
 
+Entity.containerSize = function(entity) {
+    const slots = entity.Props.Slots || [];
+    return {
+        current: slots.reduce((sum, id) => sum + (id && 1), 0),
+        max: slots.length,
+    };
+};
+
 Entity.books = {
     $intro: "Именем Императора и Его Синода",
 };

@@ -94,6 +94,7 @@ function mainStage(data) {
         this.drawGlobalEffects();
 
         game.map.draw();
+        game.controller.drawAura();
         game.characters.forEach(drawAura);
         game.claims.forEach(drawClaim);
 
@@ -119,7 +120,7 @@ function mainStage(data) {
             game.map.drawDarkness();
 
         game.characters.forEach(drawUI);
-        game.controller.draw(true);
+        game.controller.draw();
         // this.debug();
         game.ctx.restore();
     };

@@ -842,14 +842,18 @@ class Craft {
 
     create() {
         if (this.crafting) {
-            this.stop();
-            game.network.send("set-dst", {X: game.player.X, Y: game.player.Y});
+            this.cancel();
             return;
         }
 
         this.crafting = true;
         this.craftButton.textContent = T("Cancel");
         this.craft();
+    }
+
+    cancel() {
+        this.stop();
+        game.network.send("set-dst", {X: game.player.X, Y: game.player.Y});
     }
 
     stop() {
